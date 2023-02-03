@@ -1,0 +1,21 @@
+:root {
+	--wallpaper: url();
+	--background: #1f1f28;
+	--foreground: #dcd7ba;
+	--color0: #16161d;
+	--color1: #223249;
+	--color2: #54546d;
+	--color3: #727169;
+	--color4: #c8c093;
+	--color5: #717c7c;
+	--color6: #c34043;
+	--color7: #ffa066;
+	--color8: #c0a36e;
+	--color9: #76946a;
+	--color10: #6a9589;
+	--color11: #7e9cd8;
+	--color12: #957fb8;
+	--color13: #d27e99;
+	--color14: #1f1f28;
+	--color15: #dcd7ba;
+}

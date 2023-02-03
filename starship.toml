@@ -1,0 +1,20 @@
+[line_break]
+disabled = false
+
+[character]
+success_symbol = "[ ➜](white)"
+error_symbol = "[ ➜](red)"
+
+[directory]
+truncation_length = 10
+# truncation_symbol = "…/"
+style = "cyan"
+home_symbol = "  "
+read_only_style = "red"
+read_only = "  "
+format = "[$read_only]($read_only_style)[$path]($style) "
+
+# SYMBOLS
+[python]
+symbol = " "
+
