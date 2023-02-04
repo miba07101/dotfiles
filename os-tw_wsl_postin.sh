@@ -611,9 +611,9 @@ echo "${color} ${hash} Dotfiles ${hash} ${endcolor}"
 sleep 1
 echo
 
-cd $HOME
-git_url="https://github.com/miba07101/dotfiles.git"
-git clone $git_url
+# cd $HOME
+# git_url="https://github.com/miba07101/dotfiles.git"
+# git clone $git_url
 
 stow --dir $HOME/dotfiles/ */
 
