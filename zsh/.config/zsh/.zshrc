@@ -11,7 +11,7 @@ compinit
 # End of lines added by compinstall
 
 #############
-# WSL hhh
+# WSL
 #############
 
 # zistim ci som na WSL
