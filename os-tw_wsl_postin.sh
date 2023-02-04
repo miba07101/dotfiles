@@ -629,7 +629,8 @@ for DIR in "${DIRECTORIES[@]}"; do
     [[ ! -d $HOME/.config/$DIR ]] && mkdir -p $HOME/.config/$DIR
 done
 
-stow --adopt --dir $HOME/dotfiles/ */
+cd $HOME/dotfiles
+stow --adopt */
 
 echo
 echo "${color} ${star} Appimage-launcher install OK ${star} ${endcolor}"
