@@ -172,6 +172,7 @@ echo "${color} ${star} Ticker installing ... ${star} ${endcolor}"
 sleep 1
 echo
 
+cd $HOME
 curl -Ls https://api.github.com/repos/achannarasappa/ticker/releases/latest | grep -wo "https.*linux-amd64*.tar.gz" | wget -qi -
 tar -xvf ticker*.tar.gz ticker
 chmod +x ./ticker
@@ -615,7 +616,20 @@ echo
 # git_url="https://github.com/miba07101/dotfiles.git"
 # git clone $git_url
 
-stow --dir $HOME/dotfiles/ */
+# create directories
+DIRECTORIES=(
+'zsh'
+'musikcube'
+'cava'
+'ranger'
+'nvim'
+)
+
+for DIR in "${DIRECTORIES[@]}"; do
+    [[ ! -d $HOME/.config/$DIR ]] && mkdir -p $HOME/.config/$DIR
+done
+
+stow --adopt --dir $HOME/dotfiles/ */
 
 echo
 echo "${color} ${star} Appimage-launcher install OK ${star} ${endcolor}"
