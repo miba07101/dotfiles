@@ -117,7 +117,7 @@ alias ex='exit'
 alias fd='fd -Hi'
 alias ls='exa -la --icons'
 
-alias gh='cd $HOME/'
+# alias gh='cd $HOME/'
 alias gp='cd $HOME/Python/'
 alias web='cd $OneDrive_DIR/00-website/00-design/02-web-epd/ && nvim index.html'
 alias math='cd $HOME/Python/jupyter/ && source jupyter-venv/bin/activate && jupyter-lab'
