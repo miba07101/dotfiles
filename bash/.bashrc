@@ -11,4 +11,3 @@
 # ridden in every subshell.
 
 test -s ~/.alias && . ~/.alias || true
-PS1="\w > "
