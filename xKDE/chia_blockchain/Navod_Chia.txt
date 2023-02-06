@@ -1,0 +1,6 @@
+Len vtedy ak manualne instalujem chia, napr. OpenSuse, Ubuntu distro
+
+skopirujem "chia_run_wallet" do /usr/bin/
+skopirujem "chia_run_wallet.desktop" do /usr/share/applications/
+
+

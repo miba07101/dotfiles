@@ -1,0 +1,21 @@
+[Desktop Entry]
+Comment[en_US]=Run chia-blockchain wallet
+Comment=Run chia-blockchain wallet
+Exec=chia_run_wallet %F
+GenericName[en_US]=
+GenericName=
+Icon=atom
+MimeType=
+Name[en_US]=Chia-blockchain wallet
+Name=Chia-blockchain wallet
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+Version=1.0
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-RunOnDiscreteGpu=false
+X-KDE-SubstituteUID=false
+X-KDE-Username=

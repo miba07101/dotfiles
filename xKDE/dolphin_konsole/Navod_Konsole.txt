@@ -1,0 +1,4 @@
+do suboru ./config/konsolerc pridam toto (nebude zobrazovat MenuBar pri spusteni):
+
+[KonsoleWindow]
+ShowMenuBarByDefault=false

@@ -1,0 +1,77 @@
+{
+    "accounts": [
+        {
+            "color": "#55ffff",
+            "path": "/home/vimi/.thunderbird/xbtxsbka.default-release/ImapMail/imap.gmail-1.com/INBOX.msf"
+        },
+        {
+            "color": "#55ffff",
+            "path": "/home/vimi/.thunderbird/xbtxsbka.default-release/ImapMail/imap.gmail-1.com.sbd/INBOX.msf"
+        },
+        {
+            "color": "#ffffff",
+            "path": "/home/vimi/.thunderbird/xbtxsbka.default-release/ImapMail/imap.gmail.com/INBOX.msf"
+        },
+        {
+            "color": "#ffffff",
+            "path": "/home/vimi/.thunderbird/xbtxsbka.default-release/ImapMail/imap.gmail.com.sbd/INBOX.msf"
+        },
+        {
+            "color": "#ff0000",
+            "path": "/home/vimi/.thunderbird/xbtxsbka.default-release/ImapMail/mail.inetadmin.eu/INBOX.msf"
+        },
+        {
+            "color": "#ff0000",
+            "path": "/home/vimi/.thunderbird/xbtxsbka.default-release/ImapMail/mail.inetadmin.eu.sbd/INBOX.msf"
+        },
+        {
+            "color": "#0000ff",
+            "path": "/home/vimi/.thunderbird/xbtxsbka.default-release/ImapMail/outlook.office365-1.com.sbd/INBOX.msf"
+        },
+        {
+            "color": "#0000ff",
+            "path": "/home/vimi/.thunderbird/xbtxsbka.default-release/ImapMail/outlook.office365.com/INBOX.msf"
+        },
+        {
+            "color": "#5500ff",
+            "path": "/home/vimi/.thunderbird/xbtxsbka.default-release/ImapMail/outlook.office365.com.sbd/INBOX.msf"
+        }
+    ],
+    "advanced/blinkingusealpha": false,
+    "advanced/forcedRereadInterval": 0,
+    "advanced/ignoreUpdateVersion": "",
+    "advanced/notificationfontmaxsize": 512,
+    "advanced/notificationfontminsize": 4,
+    "advanced/onlyShowIconOnUnreadMessages": false,
+    "advanced/runProcessOnChange": "",
+    "advanced/tbcmdline": [
+        "/usr/bin/thunderbird"
+    ],
+    "advanced/tbwindowmatch": " Mozilla Thunderbird",
+    "advanced/unreadopacitylevel": 0.75,
+    "advanced/updateOnStartup": false,
+    "advanced/watchfiletimeout": 150,
+    "common/allowsuppressingunread": false,
+    "common/blinkspeed": 0,
+    "common/bordercolor": "#000000",
+    "common/borderwidth": 0,
+    "common/defaultcolor": "#ffaa00",
+    "common/exitthunderbirdonquit": true,
+    "common/forceIgnoreUnreadEmailsOnMinimize": true,
+    "common/hidewhenminimized": true,
+    "common/hidewhenrestarted": true,
+    "common/hidewhenstarted": true,
+    "common/ignoreStartUnreadCount": false,
+    "common/launchthunderbird": true,
+    "common/launchthunderbirddelay": 0,
+    "common/monitorthunderbirdwindow": true,
+    "common/newemailEnabled": false,
+    "common/notificationfont": "Noto Sans,70,-1,5,50,0,0,0,0,0,Regular",
+    "common/notificationfontweight": 50,
+    "common/notificationicon": "iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEa0lEQVR4nO3dsWtbVxTH8XMuEqozpZBBVVGtlwcdMmRxOnlLBkMgkKV7OnWNSyBT5lAojddM/QMyZvKQLqGT6ZLBgYJy7TyqajB1p6RC4p0O1Skx2K1Unad377u/zxZwzjP3fC3ZD5tHBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADR4KovMBqNLk0mkztEtCMi10Wky8ytqq8bIxGZMfOYmV8R0X6n03ne6/XeVXnNygLw3n8kIg+I6Bsi+riq6zTcKRF9z8zfZVn2ZxUXqCSA4+Pja7PZ7BkzX6tifmpE5LDVan25ubl5aD3bPIDhcPgFM+8TvuqtnYrITp7nB5ZDTQMYDoefMfPPRHTFci7840REtvI8f2s10FkNIiJyzv1AWH6VrszP2IxZAN77uyJy02oenE9Ebnrv71rNMwtARHatZsG/szxrk+8Bjo6OPinL8lerefCfxDn36WAw+G3VQSavAGVZbhOWv048P/OVWb0FfG40BxZncuZWAVxe8uN/N7pukyx7Jsue+bmsAlhqjnPuBjPvEtHY6PoxGzPzrnPuxpL/z2R3pvcBFiUi77Ms22u321cTDmHMzLvtdvtqlmV7IvK+jk+ilgBUv99PMYQzi+/3+7UsXtUagEokhKAWr4IIQDU0hCAXr4IKQDUkhKAXr4IMQEUaQhSLV0EHoCIJIarFqygCUIGGEOXiVVQBqEBCiHrxKsoAVE0hNGLxqpYAyrK8VxTFhtW8NYVQ2eKLotgoy/Ke1bxl1BIAMz+eTqdvvPf3Iwih0sV77+9Pp9M3zPzYau4y6nwL6IrIk4BDWMviReQJEXWtZi8rhO8BQgshicWrEAJQdYeQ1OJVSAGodYeQ5OJVyH+kqSE89N5/22q1nlotZz5nryiKpx/820xRFBuz2ezr6XT6kAJc+odCDkBVHYKZmBavQnwLuEhlbw2riuGl/iIxBaCCCSHmxasYA1C1hdCExauYA1BrC6FJi1dNCEBVFkITF6+aFIAyC6HJi1dNDED97xBSWLxqcgBq4RBSWrxKIQB1YQgpLl7FcCfQ2pk7i0REMd25s5ZiAKo7/2pPWkpvAXAOBJA4BJA4BJA4BJA4BJA4BJA4BJA4BJA4BJA4BJA4BJA4BJA4BJA4BJA4BJA4qwBKozmwOJMztwrgD6M5sDiTM7cK4BejObA4kzO3eeiAcz8RkVjMgoXI/MxXZhLA/OlVLy1mwUJeWjwxjMjwpwBmTv43bNfF8qxNH/XmvX+Bp4dWi5l/zLLsltU80/sAZVl+RUQnljPhjJP5GZsxDSDP87cicpuITi3nAhH9/fj425ZPDieq4E5gnucHzrltETm0np0qETl0zm3neX5gPbuSW8GDweC1c26LiB4RXg1WcUpEj5xzW4PB4HUVF6j8eb+j0ejSZDK5Q0Q7InJdRLrMnPLfJF5IRGbMPGbmV0S03+l0nvd6vXd1f14AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEIi/ACAG8UdHfHCDAAAAAElFTkSuQmCC",
+    "common/notificationiconunread": "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",
+    "common/restartthunderbird": true,
+    "common/showDialogIfNoAccountsConfigured": false,
+    "common/showhidethunderbird": true,
+    "common/showunreademailcount": true
+}

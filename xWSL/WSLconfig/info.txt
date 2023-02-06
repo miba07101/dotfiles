@@ -1,0 +1,2 @@
+umiestnit subor .wslconfig:
+C:\Users\<UserName>\

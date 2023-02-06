@@ -1,0 +1,9 @@
+[Desktop Entry]
+Comment=Start Salome-meca
+Exec=/home/vimi/salome-meca/./salome_meca-lgpl-2021.0.0-2-20211014-scibian-9
+GenericName=Salome-Meca
+# Icon=firefox
+Icon=figma
+Name=Salome-Meca
+# TryExec=firefox
+Type=Application

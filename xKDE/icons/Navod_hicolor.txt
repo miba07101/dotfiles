@@ -1,0 +1,8 @@
+ikony pre megasync:
+    - vypnem megasync
+    - rozbalim a skopirujem obsah "megasync_HIcolor_icons.7z" do /home/vimi/.local/share/icons/hicolor/
+    - zapnem megasync - malo by zmenit ikony v system tray, ak nie tak mozem zadat prikaz:
+        sudo gtk-update-icon-cache -f /usr/share/icons/hicolor/
+
+
+
