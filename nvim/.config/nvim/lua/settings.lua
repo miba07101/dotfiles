@@ -24,7 +24,7 @@ local settings = {
     pumheight = 10,                           -- Set the height of the completion menu
     scrolloff = 5,                            -- Set how many lines are always displayed on the upper and lower sides of the cursor
     sessionoptions = "buffers,curdir,folds,help,tabpages,winsize,globals",    -- Set options for saving sessions
-    shell = "/bin/bash",                      -- Set shell
+    shell = "/bin/zsh",                      -- Set shell
     shiftwidth = 2,                           -- Number of space inserted for indentation
     showmode = false,                         -- Allows to display the current vim mode (no need)
     sidescrolloff = 8,                        -- Number of columns to keep at the sides of the cursor
@@ -42,7 +42,7 @@ local settings = {
     wrap = false,                             -- Disable wrapping of lines longer than the width of window
     wrapscan = true,                          -- Allows to search the entire file repeatedly (continuation of the search after the last result will return to the first result)
     writebackup = false,                      -- Whether to create backups when writing files
-    guicursor = {"n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150"},  -- Cursor help: guicursor
+    -- guicursor = {"n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150"},  -- Cursor help: guicursor
   },
   disable_builtin_plugins = {
     "2html_plugin",

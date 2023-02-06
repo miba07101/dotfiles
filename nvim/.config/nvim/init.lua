@@ -28,3 +28,10 @@ require "plugins_conf.telescope"
 require "plugins_conf.toggleterm"
 require "plugins_conf.treesitter"
 require "plugins_conf.which-key"
+
+local is_wsl = vim.fn.has("wsl")
+if is_wsl == 1
+  then
+    vim.opt.guicursor = {"n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150"}  -- Cursor help: guicursor
+end
+
