@@ -930,6 +930,9 @@ wsl_dotfiles(){
     ln -sf ${CWD}/home/.bashrc                      ${HOME}/.bashrc
     ln -sf ${CWD}/home/.ticker.yaml                 ${HOME}/.ticker.yaml
     ln -sf ${CWD}/home/.zprofile                    ${HOME}/.zprofile
+
+    # OneDrive
+    ln -sf /mnt/c/Users/vimi/OneDrive               ${HOME}/OneDrive
 }
 
 qtile_dotfiles(){
@@ -1182,11 +1185,15 @@ EOF
 sleep 1
 }
 
+final_touch(){
+  [[ ! -d $HOME/Downloads ]] && mkdir -p $HOME/Downloads
+}
+
+
 # HLAVNA INSTALACNA FUNKCIA
 which_distro(){
     echo
-    echo "Which distro install?\n
-          [w]wsl, [q]qtile, [k]kde, [Q]Quit: "
+    echo "Which distro install?\n[w]wsl, [q]qtile, [k]kde, [Q]Quit: "
     read -n 1 distro
     echo
 
@@ -1233,6 +1240,7 @@ which_distro(){
                 wsl_dotfiles
                 # qtile_dotfiles
                 # kde_dotfiles
+                final_touch
                 ;;
               q )
                 root
@@ -1263,6 +1271,7 @@ which_distro(){
                 run_software
                 qtile_install_theme
                 qtile_dotfiles
+                final_touch
                 ;;
               k )
                 root
@@ -1299,6 +1308,7 @@ which_distro(){
                 kde_install_theme
                 kde_install_widgets
                 kde_dotfiles
+                final_touch
                 ;;
               Q )
                 exit
