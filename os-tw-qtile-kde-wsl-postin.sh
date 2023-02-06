@@ -310,6 +310,13 @@ wsl_gnome(){
     gsettings set org.gnome.desktop.interface cursor-size 15
 }
 
+github_cli(){
+    info "GITHUB CLI"
+    repourl="https://cli.github.com/packages/rpm/gh-cli.repo"
+    sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
+    sudo -S <<< ${mypassword} zypper ${REFRESH}
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y gh
+}
 
 win_disk_share(){
     info "WIN DISK SHARE SETUP"
@@ -1193,6 +1200,7 @@ which_distro(){
                 # qtile_settings
                 wsl_utilities
                 # wsl_gnome
+                github_cli
                 # win_disk_share
                 # brave
                 # jdownloader
@@ -1232,6 +1240,7 @@ which_distro(){
                 packman_packages
                 basic_desktop_settings
                 qtile_settings
+                github_cli
                 win_disk_share
                 brave
                 jdownloader
@@ -1260,6 +1269,7 @@ which_distro(){
                 desktop_packages
                 packman_packages
                 basic_desktop_settings
+                github_cli
                 # win_disk_share
                 brave
                 jdownloader
