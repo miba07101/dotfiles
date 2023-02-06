@@ -35,6 +35,7 @@ root(){
     then
         echo "Enter ROOT password: "
         read mypassword
+        echo
     else
         info "You are ROOT user"
         echo
@@ -1183,9 +1184,11 @@ sleep 1
 
 # HLAVNA INSTALACNA FUNKCIA
 which_distro(){
-    echo "Which distro install?\n\
+    echo
+    echo "Which distro install?\n
           [w]wsl, [q]qtile, [k]kde, [Q]Quit: "
     read -n 1 distro
+    echo
 
     case "$distro" in
               w )
