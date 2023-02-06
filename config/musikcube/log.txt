@@ -1,0 +1,134 @@
+20:31:40 [info] [LOG SESSION] ---------- START ----------
+20:31:40 [info] [PluginFactory] loading plugins
+20:31:40 [info] [PluginFactory] loaded: /usr/share/musikcube/plugins/libalsaout.so
+20:31:40 [info] [PluginFactory] loaded: /usr/share/musikcube/plugins/libopenmptdecoder.so
+20:31:40 [info] [PluginFactory] loaded: /usr/share/musikcube/plugins/libserver.so
+20:31:40 [info] [PluginFactory] loaded: /usr/share/musikcube/plugins/libtaglibreader.so
+20:31:40 [error] [PluginFactory] could not load shared library /usr/share/musikcube/plugins/libpipewireout.so error: libpipewire-0.3.so.0: cannot open shared object file: No such file or directory
+20:31:40 [info] [PluginFactory] loaded: /usr/share/musikcube/plugins/libffmpegdecoder.so
+20:31:40 [info] [PluginFactory] loaded: /usr/share/musikcube/plugins/libhttpdatastream.so
+20:31:40 [info] [PluginFactory] loaded: /usr/share/musikcube/plugins/libstockencoders.so
+20:31:40 [info] [PluginFactory] loaded: /usr/share/musikcube/plugins/libsupereqdsp.so
+20:31:40 [info] [PluginFactory] loaded: /usr/share/musikcube/plugins/libpulseout.so
+20:31:40 [info] [PluginFactory] loaded: /usr/share/musikcube/plugins/libnullout.so
+20:31:40 [info] [PluginFactory] loaded: /usr/share/musikcube/plugins/libgmedecoder.so
+20:31:40 [info] [Indexer] indexer source 155697690 running...
+20:31:40 [info] [GaplessTransport] starting track at /mnt/c/Documents and Settings/vimi/Mega/Hudba/Vyber/Bitter Sweet Symphony.mp3
+20:31:40 [info] [Player] new instance created
+20:31:40 [info] [GaplessTransport] stop
+20:31:40 [info] [Stream] opening /mnt/c/Documents and Settings/vimi/Mega/Hudba/Vyber/Bitter Sweet Symphony.mp3
+20:31:40 [info] [LocalFileStream] opening file: /mnt/c/Documents and Settings/vimi/Mega/Hudba/Vyber/Bitter Sweet Symphony.mp3
+20:31:40 [info] [ffmpegdecoder] parsing data stream...
+20:31:40 [info] [ffmpegdecoder] found audio stream!
+20:31:40 [info] [ffmpegdecoder] resolved codec: MP3 (MPEG audio layer 3)
+20:31:40 [info] [Streams] found a decoder for /mnt/c/Documents and Settings/vimi/Mega/Hudba/Vyber/Bitter Sweet Symphony.mp3
+20:31:40 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+20:31:41 [info] [Indexer] indexer source 155697690 finished
+20:31:41 [info] [Indexer] indexer source -1303229654 running...
+20:31:42 [info] [Indexer] indexer source -1303229654 finished
+20:31:42 [info] [Indexer] scanning /mnt/c/Documents and Settings/vimi/Mega/Hudba/
+20:31:43 [info] [Indexer] scan completed successfully
+20:31:43 [info] [Indexer] cleanup 1/2
+20:31:44 [info] [GaplessTransport] resume
+20:31:44 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+20:31:44 [info] [Player] new instance created
+20:31:44 [info] [Stream] opening /mnt/c/Documents and Settings/vimi/Mega/Hudba/Soundtracks/Trainspotting/Trainspotting/01 Lust For Life.mp3
+20:31:44 [info] [LocalFileStream] opening file: /mnt/c/Documents and Settings/vimi/Mega/Hudba/Soundtracks/Trainspotting/Trainspotting/01 Lust For Life.mp3
+20:31:44 [info] [ffmpegdecoder] parsing data stream...
+20:31:44 [info] [ffmpegdecoder] found audio stream!
+20:31:44 [info] [ffmpegdecoder] resolved codec: MP3 (MPEG audio layer 3)
+20:31:44 [info] [Streams] found a decoder for /mnt/c/Documents and Settings/vimi/Mega/Hudba/Soundtracks/Trainspotting/Trainspotting/01 Lust For Life.mp3
+20:31:44 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+20:31:45 [info] [Indexer] cleanup 2/2
+20:31:45 [info] [Indexer] optimizing
+20:31:45 [info] [Indexer] done!
+20:32:23 [info] [Player] new instance created
+20:32:23 [info] [Stream] opening /mnt/c/Documents and Settings/vimi/Mega/Hudba/Guns N' Roses/Greatest Hits/08 Dont Cry.mp3
+20:32:23 [info] [LocalFileStream] opening file: /mnt/c/Documents and Settings/vimi/Mega/Hudba/Guns N' Roses/Greatest Hits/08 Dont Cry.mp3
+20:32:23 [info] [ffmpegdecoder] parsing data stream...
+20:32:23 [info] [ffmpegdecoder] found audio stream!
+20:32:23 [info] [ffmpegdecoder] resolved codec: MP3 (MPEG audio layer 3)
+20:32:23 [info] [Streams] found a decoder for /mnt/c/Documents and Settings/vimi/Mega/Hudba/Guns N' Roses/Greatest Hits/08 Dont Cry.mp3
+20:32:23 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+20:35:51 [info] [ffmpegdecoder] finished decoding.
+20:35:54 [info] [GaplessTransport] stop
+20:35:54 [info] [Player] new instance created
+20:35:54 [info] [Stream] opening /mnt/c/Documents and Settings/vimi/Mega/Hudba/Vyber/Hallelujah.mp3
+20:35:54 [info] [LocalFileStream] opening file: /mnt/c/Documents and Settings/vimi/Mega/Hudba/Vyber/Hallelujah.mp3
+20:35:54 [info] [ffmpegdecoder] parsing data stream...
+20:35:54 [info] [ffmpegdecoder] found audio stream!
+20:35:54 [info] [ffmpegdecoder] resolved codec: MP3 (MPEG audio layer 3)
+20:35:54 [info] [Streams] found a decoder for /mnt/c/Documents and Settings/vimi/Mega/Hudba/Vyber/Hallelujah.mp3
+20:35:54 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+20:40:37 [info] [ffmpegdecoder] finished decoding.
+20:40:40 [info] [GaplessTransport] stop
+20:40:40 [info] [Player] new instance created
+20:40:40 [info] [Stream] opening /mnt/c/Documents and Settings/vimi/Mega/Hudba/Bob Dylan/The Best Of/07 All Along the Watchtower.mp3
+20:40:40 [info] [LocalFileStream] opening file: /mnt/c/Documents and Settings/vimi/Mega/Hudba/Bob Dylan/The Best Of/07 All Along the Watchtower.mp3
+20:40:40 [info] [ffmpegdecoder] parsing data stream...
+20:40:40 [info] [ffmpegdecoder] found audio stream!
+20:40:40 [info] [ffmpegdecoder] resolved codec: MP3 (MPEG audio layer 3)
+20:40:40 [info] [Streams] found a decoder for /mnt/c/Documents and Settings/vimi/Mega/Hudba/Bob Dylan/The Best Of/07 All Along the Watchtower.mp3
+20:40:40 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+20:47:30 [info] [ffmpegdecoder] finished decoding.
+20:47:33 [info] [GaplessTransport] stop
+20:47:33 [info] [Player] new instance created
+20:47:33 [info] [Stream] opening /mnt/c/Documents and Settings/vimi/Mega/Hudba/Nirvana/Unplugged In New York/Polly.mp3
+20:47:33 [info] [LocalFileStream] opening file: /mnt/c/Documents and Settings/vimi/Mega/Hudba/Nirvana/Unplugged In New York/Polly.mp3
+20:47:33 [info] [ffmpegdecoder] parsing data stream...
+20:47:33 [info] [ffmpegdecoder] found audio stream!
+20:47:33 [info] [ffmpegdecoder] resolved codec: MP3 (MPEG audio layer 3)
+20:47:33 [info] [Streams] found a decoder for /mnt/c/Documents and Settings/vimi/Mega/Hudba/Nirvana/Unplugged In New York/Polly.mp3
+20:47:33 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+20:50:04 [info] [ffmpegdecoder] finished decoding.
+20:50:06 [info] [GaplessTransport] stop
+20:50:07 [info] [Player] new instance created
+20:50:07 [info] [Stream] opening /mnt/c/Documents and Settings/vimi/Mega/Hudba/Nirvana/Unplugged In New York/Lake Of Fire.mp3
+20:50:07 [info] [LocalFileStream] opening file: /mnt/c/Documents and Settings/vimi/Mega/Hudba/Nirvana/Unplugged In New York/Lake Of Fire.mp3
+20:50:07 [info] [ffmpegdecoder] parsing data stream...
+20:50:07 [info] [ffmpegdecoder] found audio stream!
+20:50:07 [info] [ffmpegdecoder] resolved codec: MP3 (MPEG audio layer 3)
+20:50:07 [info] [Streams] found a decoder for /mnt/c/Documents and Settings/vimi/Mega/Hudba/Nirvana/Unplugged In New York/Lake Of Fire.mp3
+20:50:07 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+20:53:18 [info] [ffmpegdecoder] finished decoding.
+20:53:23 [info] [GaplessTransport] stop
+20:53:23 [info] [Player] new instance created
+20:53:23 [info] [Stream] opening /mnt/c/Documents and Settings/vimi/Mega/Hudba/Nirvana/Unplugged In New York/The Man Who Sold The World.mp3
+20:53:23 [info] [LocalFileStream] opening file: /mnt/c/Documents and Settings/vimi/Mega/Hudba/Nirvana/Unplugged In New York/The Man Who Sold The World.mp3
+20:53:23 [info] [ffmpegdecoder] parsing data stream...
+20:53:23 [info] [ffmpegdecoder] found audio stream!
+20:53:23 [info] [ffmpegdecoder] resolved codec: MP3 (MPEG audio layer 3)
+20:53:23 [info] [Streams] found a decoder for /mnt/c/Documents and Settings/vimi/Mega/Hudba/Nirvana/Unplugged In New York/The Man Who Sold The World.mp3
+20:53:23 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+20:56:14 [info] [ffmpegdecoder] finished decoding.
+20:56:18 [info] [GaplessTransport] stop
+20:56:19 [info] [Player] new instance created
+20:56:19 [info] [Stream] opening /mnt/c/Documents and Settings/vimi/Mega/Hudba/Oasis/Be here now/04 Stand by me.mp3
+20:56:19 [info] [LocalFileStream] opening file: /mnt/c/Documents and Settings/vimi/Mega/Hudba/Oasis/Be here now/04 Stand by me.mp3
+20:56:19 [info] [ffmpegdecoder] parsing data stream...
+20:56:19 [info] [ffmpegdecoder] found audio stream!
+20:56:19 [info] [ffmpegdecoder] resolved codec: MP3 (MPEG audio layer 3)
+20:56:19 [info] [Streams] found a decoder for /mnt/c/Documents and Settings/vimi/Mega/Hudba/Oasis/Be here now/04 Stand by me.mp3
+20:56:19 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+21:00:35 [info] [ffmpegdecoder] finished decoding.
+21:00:40 [info] [GaplessTransport] stop
+21:00:40 [info] [Player] new instance created
+21:00:40 [info] [Stream] opening /mnt/c/Documents and Settings/vimi/Mega/Hudba/INXS/Greatest Hits/12 Beautiful Girl.mp3
+21:00:40 [info] [LocalFileStream] opening file: /mnt/c/Documents and Settings/vimi/Mega/Hudba/INXS/Greatest Hits/12 Beautiful Girl.mp3
+21:00:40 [info] [ffmpegdecoder] parsing data stream...
+21:00:40 [info] [ffmpegdecoder] found audio stream!
+21:00:40 [info] [ffmpegdecoder] resolved codec: MP3 (MPEG audio layer 3)
+21:00:40 [info] [Streams] found a decoder for /mnt/c/Documents and Settings/vimi/Mega/Hudba/INXS/Greatest Hits/12 Beautiful Girl.mp3
+21:00:40 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+21:00:40 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+21:06:34 [info] [ffmpegdecoder] finished decoding.
+21:06:36 [info] [GaplessTransport] stop
+21:06:36 [info] [Player] new instance created
+21:06:36 [info] [Stream] opening /mnt/c/Documents and Settings/vimi/Mega/Hudba/Johnny Cash/The Essential Johnny Cash/1-15 Ring of fire.mp3
+21:06:36 [info] [LocalFileStream] opening file: /mnt/c/Documents and Settings/vimi/Mega/Hudba/Johnny Cash/The Essential Johnny Cash/1-15 Ring of fire.mp3
+21:06:36 [info] [ffmpegdecoder] parsing data stream...
+21:06:36 [info] [ffmpegdecoder] found audio stream!
+21:06:36 [info] [ffmpegdecoder] resolved codec: MP3 (MPEG audio layer 3)
+21:06:36 [info] [Streams] found a decoder for /mnt/c/Documents and Settings/vimi/Mega/Hudba/Johnny Cash/The Essential Johnny Cash/1-15 Ring of fire.mp3
+21:06:36 [warning] [ffmpegdecoder] invalid packet detected, discarding.
+21:07:53 [info] [GaplessTransport] stop
