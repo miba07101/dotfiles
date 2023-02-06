@@ -924,11 +924,11 @@ wsl_dotfiles(){
     ln -sf ${CWD}/config/zsh/.zshrc                 ${HOME}/.config/zsh/.zshrc
     ln -sf ${CWD}/config/nvim/init.lua              ${HOME}/.config/nvim/init.lua
     ln -sf ${CWD}/config/nvim/lua                   ${HOME}/.config/nvim/lua
-    ln -sf ${CWD}/config/xWSL/.config/ranger        ${HOME}/.config/ranger
-    ln -sf ${CWD}/config/xWSL/.config/starship.toml ${HOME}/.config/starship.toml
-    ln -sf ${CWD}/config/home/.bashrc               ${HOME}/.bashrc
-    ln -sf ${CWD}/config/home/.ticker.yaml          ${HOME}/.ticker.yaml
-    ln -sf ${CWD}/config/home/.zprofile             ${HOME}/.zprofile
+    ln -sf ${CWD}/xWSL/.config/ranger               ${HOME}/.config/ranger
+    ln -sf ${CWD}/xWSL/.config/starship.toml        ${HOME}/.config/starship.toml
+    ln -sf ${CWD}/home/.bashrc                      ${HOME}/.bashrc
+    ln -sf ${CWD}/home/.ticker.yaml                 ${HOME}/.ticker.yaml
+    ln -sf ${CWD}/home/.zprofile                    ${HOME}/.zprofile
 }
 
 qtile_dotfiles(){
@@ -971,12 +971,12 @@ qtile_dotfiles(){
     ln -sf ${CWD}/config/starship.toml          ${HOME}/.config/starship.toml
     ln -sf ${CWD}/config/mimeapps.list          ${HOME}/.config/mimeapps.list
 
-    ln -sf ${CWD}/config/home/newsboat          ${HOME}/newsboat
-    ln -sf ${CWD}/config/home/.bashrc           ${HOME}/.bashrc
-    ln -sf ${CWD}/config/home/.ticker.yaml      ${HOME}/.ticker.yaml
-    ln -sf ${CWD}/config/home/.zprofile         ${HOME}/.zprofile
-    ln -sf ${CWD}/config/home/gtkrc-2.0         ${HOME}/gtkrc-2.0
-    ln -sf ${CWD}/config/home/Xresources        ${HOME}/Xresources
+    ln -sf ${CWD}/home/newsboat                 ${HOME}/newsboat
+    ln -sf ${CWD}/home/.bashrc                  ${HOME}/.bashrc
+    ln -sf ${CWD}/home/.ticker.yaml             ${HOME}/.ticker.yaml
+    ln -sf ${CWD}/home/.zprofile                ${HOME}/.zprofile
+    ln -sf ${CWD}/home/gtkrc-2.0                ${HOME}/gtkrc-2.0
+    ln -sf ${CWD}/home/Xresources               ${HOME}/Xresources
 
     # vytvorenie symlinku pre power-menu script
     ln -s ${CWD}/config/qtile/scripts/power-menu.sh ${HOME}/.local/bin/power-menu.sh
