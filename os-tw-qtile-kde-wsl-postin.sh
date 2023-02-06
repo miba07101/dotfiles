@@ -264,22 +264,22 @@ wsl_utilities(){
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y wslu
 
     # Nastavenie wslview - vytvori subor wslview.desktop a potom nastavi ako default
-    set -eu -o pipefail
+#     set -eu -o pipefail
 
-    sudo -S <<< ${mypassword} sh -c 'cat >/usr/share/applications/wslview.desktop' <<EOF
-    [Desktop Entry]
-    Version=1.0
-    Name=WSLview
-    Exec=wslview %u
-    Terminal=false
-    X-MultipleArgs=false
-    Type=Application
-    Categories=GNOME;GTK;Network;WebBrowser;
-    MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
-EOF
+#     sudo -S <<< ${mypassword} sh -c 'cat >/usr/share/applications/wslview.desktop' <<EOF
+#     [Desktop Entry]
+#     Version=1.0
+#     Name=WSLview
+#     Exec=wslview %u
+#     Terminal=false
+#     X-MultipleArgs=false
+#     Type=Application
+#     Categories=GNOME;GTK;Network;WebBrowser;
+#     MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+# EOF
 
     # Nastavi wslview ako default pre otvaranie suborov web, image ..
-    xdg-settings set default-web-browser wslview.desktop
+    # xdg-settings set default-web-browser wslview.desktop
 }
 
 wsl_gnome(){
