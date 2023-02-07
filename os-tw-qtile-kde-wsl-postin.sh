@@ -171,15 +171,15 @@ packman_packages(){
     sudo -S <<< ${mypassword} zypper addrepo -cfp 90 ${repourl} packman
     sudo -S <<< ${mypassword} zypper ${REFRESH}
 
-    if [ WSL -eq 2 ]
-    then
+    # if [ WSL -eq 2 ]
+    # then
       PAC_PKGS=(
-        # 'ffmpeg'
-        # 'gstreamer-plugins-good'
-        # 'gstreamer-plugins-bad'
-        # 'gstreamer-plugins-libav'
-        # 'gstreamer-plugins-ugly'
-        # 'libavcodec-full'
+        'ffmpeg'
+        'gstreamer-plugins-good'
+        'gstreamer-plugins-bad'
+        'gstreamer-plugins-libav'
+        'gstreamer-plugins-ugly'
+        'libavcodec-full'
         # 'handbrake-gtk'
       )
 
@@ -187,13 +187,13 @@ packman_packages(){
           echo "Installing ${PAC_PKG}"
           sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PAC_PKG}
       done
-    fi
+    # fi
 
 # Codecs
-    sudo -S <<< ${mypassword} zypper ${INSTALL} -y opi
-    opi codecs
+    # sudo -S <<< ${mypassword} zypper ${INSTALL} -y opi
+    # opi codecs
 }
-
+#
 basic_desktop_settings(){
     info "BASIC DESKTOP SETTINGS"
     # Dissable GRUB delay
@@ -972,12 +972,8 @@ qtile_dotfiles(){
     ln -sf ${CWD}/config/gtk-2.0                ${HOME}/.config/gtk-2.0
     ln -sf ${CWD}/config/gtk-3.0                ${HOME}/.config/gtk-3.0
     ln -sf ${CWD}/config/kitty                  ${HOME}/.config/kitty
-
-    [[ ! -d $HOME/.config/mpv/scripts ]] && mkdir -p $HOME/.config/mpv/scripts
-    ln -sf ${CWD}/config/mpv/script-opts        ${HOME}/.config/mpv/script-opts
-    ln -sf ${CWD}/config/mpv/scripts/autoload_playlist.lua            ${HOME}/.config/mpv/scripts/autoload_playlist.lua
-    ln -sf ${CWD}/config/mpv/scripts/osd-bar.lua            ${HOME}/.config/mpv/scripts/osd-bar.lua
-    ln -sf ${CWD}/config/mpv/scripts/persist-properties.lua            ${HOME}/.config/mpv/scripts/persist-properties.lua
+    # ln -sf ${CWD}/config/mpv/script-opts        ${HOME}/.config/mpv/script-opts
+    ln -sf ${CWD}/config/mpv/scripts            ${HOME}/.config/mpv/scripts
     ln -sf ${CWD}/config/mpv/input.conf         ${HOME}/.config/mpv/input.conf
     ln -sf ${CWD}/config/mpv/mpv.conf           ${HOME}/.config/mpv/mpv.conf
 
