@@ -120,9 +120,9 @@ alias ls='exa -la --icons'
 # alias gh='cd $HOME/'
 alias gp='cd $HOME/Python/'
 alias web='cd $OneDrive_DIR/00-website/00-design/02-web-epd/ && nvim index.html'
-alias math='cd $HOME/Python/jupyter/ && source jupyter-venv/bin/activate && jupyter-lab'
-alias epd='source $HOME/Python/epd/epd-venv/bin/activate && cd $OneDrive_DIR/00-website/01-python/'
-alias yafin='source $HOME/Python/yafin/yafin-venv/bin/activate && python3 $SCRIPTS_DIR/yafin.py'
+alias math='source $HOME/python-venv/jupyter-venv/bin/activate && jupyter-lab'
+alias epd='source $HOME/python-venv/epd-venv/bin/activate && cd $OneDrive_DIR/00-website/01-python/'
+alias yafin='source $HOME/python-venv/yafin-venv/bin/activate && python3 $SCRIPTS_DIR/yafin.py'
 alias dea='deactivate'
 
 case $isWSL in

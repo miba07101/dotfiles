@@ -807,8 +807,7 @@ EOF
     [[ ! -d ${CURSOR_DIR} ]] && mkdir -p ${CURSOR_DIR}
     git_url="https://github.com/alvatip/Nordzy-cursors"
     git clone ${git_url} ${TEMP_DIR}/Nordzy-cursors
-
-    cp -rf ${TEMP_DIR}/Nordzy-cursors/* ${CURSORS_DIR}
+    ${TEMP_DIR}/Nordzy-cursors/./install.sh
 
 #     # nefunguje to - treba pouzit lxappearance - nastavi nordzy cursor ako default
 #     mkdir -p ${CURSOR_DIR}/default
@@ -978,6 +977,7 @@ qtile_dotfiles(){
     ln -sf ${CWD}/config/mpv/mpv.conf           ${HOME}/.config/mpv/mpv.conf
     ln -sf ${CWD}/config/nvim/init.lua          ${HOME}/.config/nvim/init.lua
     ln -sf ${CWD}/config/nvim/lua               ${HOME}/.config/nvim/lua
+    ln -sf ${CWD}/config/qt5ct                  ${HOME}/.config/qt5ct
     ln -sf ${CWD}/config/qtile                  ${HOME}/.config/qtile
     ln -sf ${CWD}/config/qutebrowser            ${HOME}/.config/qutebrowser
     ln -sf ${CWD}/config/ranger                 ${HOME}/.config/ranger
@@ -991,8 +991,8 @@ qtile_dotfiles(){
     ln -sf ${CWD}/home/.bashrc                  ${HOME}/.bashrc
     ln -sf ${CWD}/home/.ticker.yaml             ${HOME}/.ticker.yaml
     ln -sf ${CWD}/home/.zprofile                ${HOME}/.zprofile
-    ln -sf ${CWD}/home/gtkrc-2.0                ${HOME}/gtkrc-2.0
-    ln -sf ${CWD}/home/Xresources               ${HOME}/Xresources
+    ln -sf ${CWD}/home/.gtkrc-2.0               ${HOME}/.gtkrc-2.0
+    ln -sf ${CWD}/home/.Xresources              ${HOME}/.Xresources
 
     # vytvorenie symlinku pre power-menu script
     ln -sf ${CWD}/config/qtile/scripts/power-menu.sh ${HOME}/.local/bin/power-menu.sh
@@ -1004,12 +1004,14 @@ qtile_dotfiles(){
     cp -rfv ${CWD}/config/mpv/mpv-single-instance/mpv-single.desktop  ${HOME}/.local/share/applications/mpv-single.desktop
 
     # Firefox / najprv treba spustit, aby vytvoril .mozilla....
-    # mala by riesit f-cia run_software
-    ln -sf ${CWD}/firefox/{bookmarkbackups,chrome,extensions,prefs.js} $HOME/.mozilla/firefox/*.default-release/{bookmarkbackups,chrome,extensions,prefs.js}
+    # * treba nahradit presnym cislom/oznacenim
+    # ln -sf ${CWD}/firefox/bookmarkbackups   $HOME/.mozilla/firefox/*.default-release/bookmarkbackups
+    # ln -sf ${CWD}/firefox/chrome            $HOME/.mozilla/firefox/*.default-release/chrome
+    # ln -sf ${CWD}/firefox/extensions        $HOME/.mozilla/firefox/*.default-release/extensions
+    # ln -sf ${CWD}/firefox/prefs.js          $HOME/.mozilla/firefox/*.default-release/prefs.js
 
-    # Thunderfbird / najprv treba spustit, aby vytvoril .thunderbird....
-    # mala by riesit f-cia run_software
-    ln -sf ${CWD}/thunderbird/extensions $HOME/.thunderbird/*.default-release/extensions
+    # Thunderfbird / plati to co firefox
+    # ln -sf ${CWD}/thunderbird/extensions $HOME/.thunderbird/*.default-release/extensions
 }
 
 kde_dotfiles(){
