@@ -1,13 +1,20 @@
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+
 [user]
-	; name = Pavan Kumar Sunkara
-	email = milan.balaz@outlook.com
+; 	; name = Pavan Kumar Sunkara
+	email = vimi.vimi@dell
 	username = miba07101
-[init]
-	defaultBranch = master
-[core]
-	editor = nvim
-	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
-	pager = delta
+; [init]
+; 	defaultBranch = master
+; [core]
+; 	editor = nvim
+; 	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+; 	pager = delta
 ; [sendemail]
 ; 	smtpencryption = tls
 ; 	smtpserver = smtp.gmail.com
