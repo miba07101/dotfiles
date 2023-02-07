@@ -359,7 +359,7 @@ brave(){
   }
 
 jdownloader(){
-    info "JDOWNLOADE 2"
+    info "JDOWNLOADER 2"
     repourl="https://download.opensuse.org/repositories/home:X0F:branches:network/openSUSE_Tumbleweed/home:X0F:branches:network.repo"
     sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
     sudo -S <<< ${mypassword} zypper ${REFRESH}
