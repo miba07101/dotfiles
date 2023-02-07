@@ -20,8 +20,14 @@ CWD=$(pwd)
 TEMP_DIR=$(cd ${HOME}/Temp && pwd)
 
 # Nastavenie oznameni
-info () {
-  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
+  color=$'\e[1;35m'
+  endcolor=$'\e[0m'
+  star="--------------------------------"
+info(){
+  printf "${color}${star}${endcolor}\n"
+  printf "${color} $1 ${endcolor}\n"
+  printf "${color}${star}${endcolor}\n"
+  # printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
 }
 
 # Alias pre zypper
@@ -33,7 +39,7 @@ INSTALL='--ignore-unknown install --auto-agree-with-licenses --allow-unsigned-rp
 root(){
     if [[ "${UID}" -ne 0 ]]
     then
-        echo "Enter ROOT password: "
+        printf "${color}Enter ROOT password:${endcolor}\n"
         read mypassword
         echo
     else
@@ -1193,7 +1199,8 @@ final_touch(){
 # HLAVNA INSTALACNA FUNKCIA
 which_distro(){
     echo
-    echo "Which distro install?\n[w]wsl, [q]qtile, [k]kde, [Q]Quit: "
+    printf "${color}Which distro install?\n[w]sl, [q]tile, [k]de, [Q]uit:${endcolor}\n"
+    # info "Which distro install?\n[w]sl, [q]tile, [k]de, [Q]uit: "
     read -n 1 distro
     echo
 
