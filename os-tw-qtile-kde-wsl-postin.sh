@@ -174,7 +174,13 @@ packman_packages(){
     if [ WSL -eq 2 ]
     then
       PAC_PKGS=(
-        'handbrake-gtk'
+        'ffmpeg'
+        'gstreamer-plugins-good'
+        'gstreamer-plugins-bad'
+        'gstreamer-plugins-libav'
+        'gstreamer-plugins-ugly'
+        'libavcodec-full'
+        # 'handbrake-gtk'
       )
 
       for PAC_PKG in "${PAC_PKGS[@]}"; do
@@ -184,8 +190,8 @@ packman_packages(){
     fi
 
 # Codecs
-    sudo -S <<< ${mypassword} zypper ${INSTALL} -y opi
-    opi codecs
+    # sudo -S <<< ${mypassword} zypper ${INSTALL} -y opi
+    # opi codecs
 }
 
 basic_desktop_settings(){
@@ -670,11 +676,11 @@ python(){
     pip3 install flake8
     pip3 install black
 
-    # Pre web-epipingdesign
-    [[ ! -d $HOME/Python/epd ]] && mkdir -p $HOME/Python/epd
+    # env pre web-epipingdesign
+    [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
 
-    python3 -m venv $HOME/Python/epd/epd-venv
-    source $HOME/Python/epd/epd-venv/bin/activate
+    python3 -m venv $HOME/python-venv/epd-venv
+    source $HOME/python-venv/epd-venv/bin/activate
 
     pip3 install --upgrade pip
     pip3 install flask
@@ -682,10 +688,10 @@ python(){
     deactivate
 
     # Pre yafin
-    [[ ! -d $HOME/Python/yafin ]] && mkdir -p $HOME/Python/yafin
+    [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
 
-    python3 -m venv $HOME/Python/yafin/yafin-venv
-    source $HOME/Python/yafin/yafin-venv/bin/activate
+    python3 -m venv $HOME/python-venv/yafin-venv
+    source $HOME/python-venv/yafin-venv/bin/activate
 
     pip3 install --upgrade pip
     pip3 install yfinance
@@ -734,10 +740,10 @@ jupyter_latex(){
     done
 
     # Pre Jupyterlab
-    [[ ! -d $HOME/Python/jupyter ]] && mkdir -p $HOME/Python/jupyter
+    [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
 
-    python3 -m venv $HOME/Python/jupyter/jupyter-venv
-    source $HOME/Python/jupyter/jupyter-venv/bin/activate
+    python3 -m venv $HOME/python-venv/jupyter-venv
+    source $HOME/python-venv/jupyter-venv/bin/activate
 
     pip3 install --upgrade pip
     pip3 install jupyterlab
@@ -989,7 +995,7 @@ qtile_dotfiles(){
     ln -sf ${CWD}/home/Xresources               ${HOME}/Xresources
 
     # vytvorenie symlinku pre power-menu script
-    ln -s ${CWD}/config/qtile/scripts/power-menu.sh ${HOME}/.local/bin/power-menu.sh
+    ln -sf ${CWD}/config/qtile/scripts/power-menu.sh ${HOME}/.local/bin/power-menu.sh
 
     # MPV single instance
     chmod +x ${CWD}/config/mpv/mpv-single-instance/{mpv-single,mpv-single.desktop}
@@ -1003,7 +1009,7 @@ qtile_dotfiles(){
 
     # Thunderfbird / najprv treba spustit, aby vytvoril .thunderbird....
     # mala by riesit f-cia run_software
-    ln -sf ${CWD}/thunderbird/{extensions,prefs.js} $HOME/.thunderbird/*.default-release/{extensions,prefs.js}
+    ln -sf ${CWD}/thunderbird/extensions $HOME/.thunderbird/*.default-release/extensions
 }
 
 kde_dotfiles(){
