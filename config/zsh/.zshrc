@@ -129,13 +129,13 @@ case $isWSL in
   1)
     alias mpv='/mnt/c/Users/$WIN_USERNAME/AppData/Local/Microsoft/WindowsApps/519Ezhik.mpvUnofficial_xfkyq1j2kc7zp/mpv.exe'
     alias stv='mpv "C:\Users\\$WIN_USERNAME\\OneDrive\Linux\IPTV\sk-cz.m3u"'
-    alias ptv='mpv "C:\Users\\$WIN_USERNAME\\OneDrive\Linux\IPTV\xxx.m3u"'
+    alias ptv='mpv "C:\Users\\$WIN_USERNAME\\OneDrive\Linux\IPTV\ptv.m3u"'
     alias ulozto='ulozto-downloader --parts 50 --parts-progress --auto-captcha --output "/mnt/c/Users/$WIN_USERNAME/Downloads/"'
     alias backup='$HOME/OneDrive/Linux/Qtile/./qtile-backup.sh'
     ;;
   2)
     alias stv='mpv "$HOME/OneDrive/Linux/IPTV/sk-cz.m3u"'
-    alias ptv='mpv "$HOME/OneDrive/Linux/IPTV/xxx.m3u"'
+    alias ptv='mpv "$HOME/OneDrive/Linux/IPTV/ptv.m3u"'
     # alias ulozto='ulozto-downloader --parts 50 --parts-progress --auto-captcha --output "/mnt/c/Users/$WIN_USERNAME/Downloads/"'
     alias backup='$HOME/OneDrive/Linux/Qtile/./qtile-backup.sh'
     ;;
