@@ -791,7 +791,7 @@ EOF
     rm ${FONTS_DIR}/Hack.zip
 
     # Win10 fonts
-    7z x -y ${CWD}/fonts/win_fonts.7z -o${FONTS_DIR}
+    7z x -y ${CWD}/win-fonts/win-fonts.7z.001 -o${FONTS_DIR}
 
     # update fontov
     sudo -S <<< ${mypassword} fc-cache -f -v
