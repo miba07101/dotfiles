@@ -972,10 +972,15 @@ qtile_dotfiles(){
     ln -sf ${CWD}/config/gtk-2.0                ${HOME}/.config/gtk-2.0
     ln -sf ${CWD}/config/gtk-3.0                ${HOME}/.config/gtk-3.0
     ln -sf ${CWD}/config/kitty                  ${HOME}/.config/kitty
+
+    [[ ! -d $HOME/.config/mpv/scripts ]] && mkdir -p $HOME/.config/mpv/scripts
     ln -sf ${CWD}/config/mpv/script-opts        ${HOME}/.config/mpv/script-opts
-    ln -sf ${CWD}/config/mpv/scripts            ${HOME}/.config/mpv/scripts
+    ln -sf ${CWD}/config/mpv/scripts/autoload_playlist.lua            ${HOME}/.config/mpv/scripts/autoload_playlist.lua
+    ln -sf ${CWD}/config/mpv/scripts/osd-bar.lua            ${HOME}/.config/mpv/scripts/osd-bar.lua
+    ln -sf ${CWD}/config/mpv/scripts/persist-properties.lua            ${HOME}/.config/mpv/scripts/persist-properties.lua
     ln -sf ${CWD}/config/mpv/input.conf         ${HOME}/.config/mpv/input.conf
     ln -sf ${CWD}/config/mpv/mpv.conf           ${HOME}/.config/mpv/mpv.conf
+
     ln -sf ${CWD}/config/nvim/init.lua          ${HOME}/.config/nvim/init.lua
     ln -sf ${CWD}/config/nvim/lua               ${HOME}/.config/nvim/lua
     ln -sf ${CWD}/config/qt5ct                  ${HOME}/.config/qt5ct
