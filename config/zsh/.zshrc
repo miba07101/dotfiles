@@ -136,7 +136,7 @@ case $isWSL in
   2)
     alias stv='mpv "$HOME/OneDrive/Linux/IPTV/sk-cz.m3u"'
     alias ptv='mpv "$HOME/OneDrive/Linux/IPTV/ptv.m3u"'
-    # alias ulozto='ulozto-downloader --parts 50 --parts-progress --auto-captcha --output "/mnt/c/Users/$WIN_USERNAME/Downloads/"'
+    alias ulozto='ulozto-downloader --parts 50 --parts-progress --auto-captcha --output "${HOME}/Downloads/"'
     alias backup='$HOME/OneDrive/Linux/Qtile/./qtile-backup.sh'
     ;;
 esac
