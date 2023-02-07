@@ -1,0 +1,2 @@
+1) win10 fonty - skopiruj zlozku "fonts" do ~/.local/share/ 
+2) update fontov - v terminaly zadaj: fc-cache -f

@@ -78,6 +78,7 @@ basic_packages(){
         'gcc-c++' # C++ compiler
         'clang'
         'make'
+        '7zip'
     )
 
     for PKG in "${BASIC_PKGS[@]}"; do
@@ -151,7 +152,6 @@ desktop_packages(){
         'inkscape'
         'sioyek' # pdf reader
         'bleachbit' # cistenie systemu
-        '7zip'
         'xdotool' # napr. zistim nazov okna
         'megatools' # stahovanie z mega.nz z terminalu
         'transmission' # torrent client
