@@ -472,7 +472,8 @@ only_office(){
                 ail-cli integrate ${TEMP_DIR}/DesktopEditors-x86_64.AppImage
                 rm -rf ${TEMP_DIR}/*.AppImage
               else
-                down_url="https://github.com/ONLYOFFICE/DesktopEditors/releases/download/${latest_version}/onlyoffice-desktopeditors.x86_64.rpm"
+                old_version="v7.3.0"
+                down_url="https://github.com/ONLYOFFICE/DesktopEditors/releases/download/${old_version}/onlyoffice-desktopeditors.x86_64.rpm"
                 wget ${down_url} -P ${TEMP_DIR}
                 sudo -S <<< ${mypassword} zypper ${INSTALL} ${TEMP_DIR}/*.rpm
                 rm -rf ${TEMP_DIR}/*.rpm
@@ -1264,8 +1265,8 @@ which_distro(){
                 qtile_packages
                 desktop_packages
                 packman_packages
-                basic_desktop_settings
                 qtile_settings
+                basic_desktop_settings
                 github_cli
                 win_disk_share
                 brave
