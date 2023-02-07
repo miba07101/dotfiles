@@ -174,12 +174,12 @@ packman_packages(){
     if [ WSL -eq 2 ]
     then
       PAC_PKGS=(
-        'ffmpeg'
-        'gstreamer-plugins-good'
-        'gstreamer-plugins-bad'
-        'gstreamer-plugins-libav'
-        'gstreamer-plugins-ugly'
-        'libavcodec-full'
+        # 'ffmpeg'
+        # 'gstreamer-plugins-good'
+        # 'gstreamer-plugins-bad'
+        # 'gstreamer-plugins-libav'
+        # 'gstreamer-plugins-ugly'
+        # 'libavcodec-full'
         # 'handbrake-gtk'
       )
 
@@ -190,8 +190,8 @@ packman_packages(){
     fi
 
 # Codecs
-    # sudo -S <<< ${mypassword} zypper ${INSTALL} -y opi
-    # opi codecs
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y opi
+    opi codecs
 }
 
 basic_desktop_settings(){
