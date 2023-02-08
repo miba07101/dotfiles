@@ -999,6 +999,9 @@ qtile_dotfiles(){
     # vytvorenie symlinku pre power-menu script
     ln -sf ${CWD}/config/qtile/scripts/power-menu.sh ${HOME}/.local/bin/power-menu
 
+    # vytvorenie symlinku pre translate script
+    ln -sf ${CWD}/config/qtile/scripts/translate.sh ${HOME}/.local/bin/translate
+
     # MPV single instance
     chmod +x ${CWD}/config/mpv/mpv-single-instance/{mpv-single,mpv-single.desktop}
     ln -sf ${CWD}/config/mpv/mpv-single-instance/mpv-single   ${HOME}/.local/bin/mpv-single
