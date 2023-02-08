@@ -118,6 +118,7 @@ qtile_packages(){
         'redshift' # nocny jas
         'hack-fonts'
         'newsboat' # rss reader aj youtube reader
+        'intel-hybrid-driver' # nie som isty ucinkom
     )
 
     for PKG in "${QTILE_PKGS[@]}"; do
@@ -805,7 +806,7 @@ EOF
     [[ ! -d ${CURSOR_DIR} ]] && mkdir -p ${CURSOR_DIR}
     git_url="https://github.com/alvatip/Nordzy-cursors"
     git clone ${git_url} ${TEMP_DIR}/Nordzy-cursors
-    ${TEMP_DIR}/Nordzy-cursors/./install.sh
+    cd ${TEMP_DIR}/Nordzy-cursors/ && ./install.sh
 
 #     # nefunguje to - treba pouzit lxappearance - nastavi nordzy cursor ako default
 #     mkdir -p ${CURSOR_DIR}/default
@@ -992,6 +993,8 @@ qtile_dotfiles(){
     ln -sf ${CWD}/home/.zprofile                ${HOME}/.zprofile
     ln -sf ${CWD}/home/.gtkrc-2.0               ${HOME}/.gtkrc-2.0
     ln -sf ${CWD}/home/.Xresources              ${HOME}/.Xresources
+    ln -sf ${CWD}/.gitconfig                    ${HOME}/.gitconfig
+    ln -sf ${CWD}/icons/default                 ${HOME}/.icons/default
 
     # vytvorenie symlinku pre power-menu script
     ln -sf ${CWD}/config/qtile/scripts/power-menu.sh ${HOME}/.local/bin/power-menu.sh
@@ -1282,7 +1285,6 @@ which_distro(){
                 live_server
                 python
                 # jupyter_latex
-                run_software
                 qtile_install_theme
                 qtile_dotfiles
                 final_touch
