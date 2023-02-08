@@ -943,6 +943,7 @@ wsl_dotfiles(){
     ln -sf ${CWD}/home/.bashrc                      ${HOME}/.bashrc
     ln -sf ${CWD}/home/.ticker.yaml                 ${HOME}/.ticker.yaml
     ln -sf ${CWD}/home/.zprofile                    ${HOME}/.zprofile
+    ln -sf ${CWD}/.gitconfig                        ${HOME}/.gitconfig
 
     # OneDrive
     ln -sf /mnt/c/Users/vimi/OneDrive               ${HOME}/OneDrive
