@@ -79,6 +79,7 @@ basic_packages(){
         'clang'
         'make'
         '7zip'
+        'at-spi2-core'
     )
 
     for PKG in "${BASIC_PKGS[@]}"; do
