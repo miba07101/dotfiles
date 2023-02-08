@@ -997,7 +997,7 @@ qtile_dotfiles(){
     ln -sf ${CWD}/icons/default                 ${HOME}/.icons/default
 
     # vytvorenie symlinku pre power-menu script
-    ln -sf ${CWD}/config/qtile/scripts/power-menu.sh ${HOME}/.local/bin/power-menu.sh
+    ln -sf ${CWD}/config/qtile/scripts/power-menu.sh ${HOME}/.local/bin/power-menu
 
     # MPV single instance
     chmod +x ${CWD}/config/mpv/mpv-single-instance/{mpv-single,mpv-single.desktop}
