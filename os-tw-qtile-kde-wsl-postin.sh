@@ -331,6 +331,9 @@ github_cli(){
     sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
     sudo -S <<< ${mypassword} zypper ${REFRESH}
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y gh
+
+    # manualne potom v git priecinku:
+    # gh auth login
 }
 
 win_disk_share(){
@@ -1010,13 +1013,14 @@ qtile_dotfiles(){
 
     # Firefox / najprv treba spustit, aby vytvoril .mozilla....
     # * treba nahradit presnym cislom/oznacenim
-    # ln -sf ${CWD}/firefox/bookmarkbackups   $HOME/.mozilla/firefox/*.default-release/bookmarkbackups
-    # ln -sf ${CWD}/firefox/chrome            $HOME/.mozilla/firefox/*.default-release/chrome
-    # ln -sf ${CWD}/firefox/extensions        $HOME/.mozilla/firefox/*.default-release/extensions
-    # ln -sf ${CWD}/firefox/prefs.js          $HOME/.mozilla/firefox/*.default-release/prefs.js
+    # ln -sf ~/.dotfiles/firefox/bookmarkbackups   $HOME/.mozilla/firefox/*.default-release/bookmarkbackups
+    # ln -sf ~/.dotfiles/firefox/chrome            $HOME/.mozilla/firefox/*.default-release/chrome
+    # ln -sf ~/.dotfiles/firefox/extensions        $HOME/.mozilla/firefox/*.default-release/extensions
+    # ln -sf ~/.dotfiles/firefox/prefs.js          $HOME/.mozilla/firefox/*.default-release/prefs.js
 
     # Thunderfbird / plati to co firefox
-    # ln -sf ${CWD}/thunderbird/extensions $HOME/.thunderbird/*.default-release/extensions
+    # ln -sf ~/.dotfiles/thunderbird/extensions $HOME/.thunderbird/*.default-release/extensions
+    # ln -sf ~/.dotfiles/thunderbird/prefs.js $HOME/.thunderbird/ovhwieeq.default-release/prefs.js
 }
 
 kde_dotfiles(){
