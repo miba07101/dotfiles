@@ -759,10 +759,6 @@ jupyter_latex(){
 run_software(){
     info "RUN SOFTWARE"
     case "$distro" in
-              q )
-                nohup firefox &> /dev/null &
-                nohup thunderbird &> /dev/null &
-                ;;
               k )
                 nohup firefox &> /dev/null &
                 nohup thunderbird &> /dev/null &
