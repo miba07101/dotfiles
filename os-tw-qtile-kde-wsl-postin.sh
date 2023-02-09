@@ -336,6 +336,16 @@ github_cli(){
     # gh auth login
 }
 
+lazygit(){
+    info "LAZYGIT"
+    repourl="https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo"
+    sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
+    sudo -S <<< ${mypassword} zypper ${REFRESH}
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y lazygit
+
+    # manualne potom v git priecinku:
+    # gh auth login
+}
 win_disk_share(){
     info "WIN DISK SHARE SETUP"
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y cifs-utils
@@ -1229,46 +1239,47 @@ which_distro(){
               w )
                 root
                 update_system
-                basic_packages
-                # qtile_packages
-                # kde_packages
-                # desktop_packages
-                packman_packages
-                # basic_desktop_settings
-                # qtile_settings
-                wsl_utilities
-                # wsl_gnome
-                github_cli
-                # win_disk_share
-                # brave
-                # jdownloader
-                # birdtray_stacer
-                # newsflash
-                # hypnotix
-                # plasma_eventcalendar
-                # psensor
-                appimage_launcher
-                ticker
-                ulozto_downloader
-                # only_office
-                # freetube
-                # ledger_live
-                # freecad
-                # salome_meca
-                # chia_blockchain
-                zsh_config
-                # postgresql
-                live_server
-                python
-                # jupyter_latex
-                # run_software
-                # qtile_install_theme
-                # kde_install_theme
-                # kde_install_widgets
-                wsl_dotfiles
-                # qtile_dotfiles
-                # kde_dotfiles
-                final_touch
+                # basic_packages
+                # # qtile_packages
+                # # kde_packages
+                # # desktop_packages
+                # packman_packages
+                # # basic_desktop_settings
+                # # qtile_settings
+                # wsl_utilities
+                # # wsl_gnome
+                # github_cli
+                lazygit
+                # # win_disk_share
+                # # brave
+                # # jdownloader
+                # # birdtray_stacer
+                # # newsflash
+                # # hypnotix
+                # # plasma_eventcalendar
+                # # psensor
+                # appimage_launcher
+                # ticker
+                # ulozto_downloader
+                # # only_office
+                # # freetube
+                # # ledger_live
+                # # freecad
+                # # salome_meca
+                # # chia_blockchain
+                # zsh_config
+                # # postgresql
+                # live_server
+                # python
+                # # jupyter_latex
+                # # run_software
+                # # qtile_install_theme
+                # # kde_install_theme
+                # # kde_install_widgets
+                # wsl_dotfiles
+                # # qtile_dotfiles
+                # # kde_dotfiles
+                # final_touch
                 ;;
               q )
                 root
@@ -1280,6 +1291,7 @@ which_distro(){
                 qtile_settings
                 basic_desktop_settings
                 github_cli
+                lazygit
                 win_disk_share
                 brave
                 jdownloader
@@ -1309,6 +1321,7 @@ which_distro(){
                 packman_packages
                 basic_desktop_settings
                 github_cli
+                lazygit
                 # win_disk_share
                 brave
                 jdownloader
