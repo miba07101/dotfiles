@@ -1239,47 +1239,47 @@ which_distro(){
               w )
                 root
                 update_system
-                # basic_packages
-                # # qtile_packages
-                # # kde_packages
-                # # desktop_packages
-                # packman_packages
-                # # basic_desktop_settings
-                # # qtile_settings
-                # wsl_utilities
-                # # wsl_gnome
-                # github_cli
+                basic_packages
+                # qtile_packages
+                # kde_packages
+                # desktop_packages
+                packman_packages
+                # basic_desktop_settings
+                # qtile_settings
+                wsl_utilities
+                # wsl_gnome
+                github_cli
                 lazygit
-                # # win_disk_share
-                # # brave
-                # # jdownloader
-                # # birdtray_stacer
-                # # newsflash
-                # # hypnotix
-                # # plasma_eventcalendar
-                # # psensor
-                # appimage_launcher
-                # ticker
-                # ulozto_downloader
-                # # only_office
-                # # freetube
-                # # ledger_live
-                # # freecad
-                # # salome_meca
-                # # chia_blockchain
-                # zsh_config
-                # # postgresql
-                # live_server
-                # python
-                # # jupyter_latex
-                # # run_software
-                # # qtile_install_theme
-                # # kde_install_theme
-                # # kde_install_widgets
-                # wsl_dotfiles
-                # # qtile_dotfiles
-                # # kde_dotfiles
-                # final_touch
+                # win_disk_share
+                # brave
+                # jdownloader
+                # birdtray_stacer
+                # newsflash
+                # hypnotix
+                # plasma_eventcalendar
+                # psensor
+                appimage_launcher
+                ticker
+                ulozto_downloader
+                # only_office
+                # freetube
+                # ledger_live
+                # freecad
+                # salome_meca
+                # chia_blockchain
+                zsh_config
+                # postgresql
+                live_server
+                python
+                # jupyter_latex
+                # run_software
+                # qtile_install_theme
+                # kde_install_theme
+                # kde_install_widgets
+                wsl_dotfiles
+                # qtile_dotfiles
+                # kde_dotfiles
+                final_touch
                 ;;
               q )
                 root
