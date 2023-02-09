@@ -938,15 +938,18 @@ wsl_dotfiles(){
     ln -sf ${CWD}/config/zsh/.zshrc                 ${HOME}/.config/zsh/.zshrc
     ln -sf ${CWD}/config/nvim/init.lua              ${HOME}/.config/nvim/init.lua
     ln -sf ${CWD}/config/nvim/lua                   ${HOME}/.config/nvim/lua
-    ln -sf ${CWD}/xWSL/.config/ranger               ${HOME}/.config/ranger
-    ln -sf ${CWD}/xWSL/.config/starship.toml        ${HOME}/.config/starship.toml
+    ln -sf ${CWD}/config/ranger                     ${HOME}/.config/ranger
+    ln -sf ${CWD}/xWSL/starship.toml                ${HOME}/.config/starship.toml
     ln -sf ${CWD}/home/.bashrc                      ${HOME}/.bashrc
     ln -sf ${CWD}/home/.ticker.yaml                 ${HOME}/.ticker.yaml
     ln -sf ${CWD}/home/.zprofile                    ${HOME}/.zprofile
     ln -sf ${CWD}/.gitconfig                        ${HOME}/.gitconfig
 
-    # OneDrive
+    # OneDrive, Downloads, Megasync, Videos
     ln -sf /mnt/c/Users/vimi/OneDrive               ${HOME}/OneDrive
+    ln -sf /mnt/c/Users/vimi/Downloads              ${HOME}/Downloads
+    # ln -sf /mnt/c/Users/vimi/Mega                   ${HOME}/Mega
+    # ln -sf /mnt/d/Videos                            ${HOME}/Videos
 }
 
 qtile_dotfiles(){
