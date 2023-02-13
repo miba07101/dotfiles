@@ -250,7 +250,7 @@ extension_defaults = widget_defaults.copy()
 
 screens = [
     Screen(
-        wallpaper='~/.config/qtile/wallpapers/building_in_the_mountains_theme_blue.jpg',
+        wallpaper='~/.config/qtile/wallpapers/mountains-orange.png',
         wallpaper_mode='fill',
         top=bar.Bar(
             [
