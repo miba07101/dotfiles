@@ -12,91 +12,107 @@ end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require("lazy").setup({
+-- Colorscheme
+    {
+      "rebelot/kanagawa.nvim",
+      priority = 1000,
+      config = function()
+        require("kanagawa").setup()
+        vim.cmd("colorscheme kanagawa")
+      end,
+    },
+    { "AlexvZyl/nordic.nvim" },
+    { "aktersnurra/no-clown-fiesta.nvim" },
+
 -- UI
     { "nvim-lua/plenary.nvim" },
 
-    { "goolord/alpha-nvim",
-        config = function()
-          local dashboard = require "alpha.themes.dashboard"
+    {
+      "goolord/alpha-nvim",
+      config = function()
+        local dashboard = require "alpha.themes.dashboard"
 
-          -- header
-          dashboard.section.header.val = {
-          [[      .__        .__ ]],
-          [[___  _|__| _____ |__|]],
-          [[\  \/ /  |/     \|  |]],
-          [[ \   /|  |  Y Y  \  |]],
-          [[  \_/ |__|__|_|  /__|]],
-          [[               \/    ]],
-          }
+        -- header
+        dashboard.section.header.val = {
+        [[      .__        .__ ]],
+        [[___  _|__| _____ |__|]],
+        [[\  \/ /  |/     \|  |]],
+        [[ \   /|  |  Y Y  \  |]],
+        [[  \_/ |__|__|_|  /__|]],
+        [[               \/    ]],
+        }
 
-          -- buttons
-          dashboard.section.buttons.val = {
-            dashboard.button("r", " " .. " Recent files", "<cmd>Telescope oldfiles<cr>"),
-            dashboard.button("e", " " .. " New file", "<cmd>ene <bar> startinsert <cr>"),
-            dashboard.button("f", " " .. " Find file", "<cmd>Telescope find_files<cr>"),
-            dashboard.button("p", " " .. " Python", "<cmd>Telescope file_browser path=~/git-repos/python/<cr>"),
-            dashboard.button("c", " " .. " Config", "<cmd>e ~/.config/nvim/lua/plugin-manager.lua<cr>"),
-            dashboard.button("q", " " .. " Quit", ":qa<CR>"),
-          }
+        -- buttons
+        dashboard.section.buttons.val = {
+          dashboard.button("r", " " .. " Recent files", "<cmd>Telescope oldfiles<cr>"),
+          dashboard.button("e", " " .. " New file", "<cmd>ene <bar> startinsert <cr>"),
+          dashboard.button("f", " " .. " Find file", "<cmd>Telescope find_files<cr>"),
+          dashboard.button("p", " " .. " Python", "<cmd>Telescope file_browser path=~/git-repos/python/<cr>"),
+          dashboard.button("c", " " .. " Config", "<cmd>e ~/.config/nvim/lua/plugin-manager.lua<cr>"),
+          dashboard.button("q", " " .. " Quit", ":qa<CR>"),
+        }
 
-          -- footer
-          local function footer()
-            return "Učiť sa, učiť sa, učiť sa! --V.I.Lenin"
-          end
-
-          dashboard.section.footer.val = footer()
-
-          dashboard.section.header.opts.hl = "Include"
-          dashboard.section.buttons.opts.hl = "Keyword"
-          dashboard.section.footer.opts.hl = "Type"
-
-          dashboard.opts.opts.noautocmd = true
-          require("alpha").setup(dashboard.opts)
+        -- footer
+        local function footer()
+          return "Učiť sa, učiť sa, učiť sa! --V.I.Lenin"
         end
+
+        dashboard.section.footer.val = footer()
+
+        dashboard.section.header.opts.hl = "Include"
+        dashboard.section.buttons.opts.hl = "Keyword"
+        dashboard.section.footer.opts.hl = "Type"
+
+        dashboard.opts.opts.noautocmd = true
+        require("alpha").setup(dashboard.opts)
+      end
     },
 
-    { "rcarriga/nvim-notify",
-        config = function()
-          require("notify").setup({
-            opts = {
-                  timeout = 1000,
-                  max_height = function()
-                    return math.floor(vim.o.lines * 0.75)
-                  end,
-                  max_width = function()
-                    return math.floor(vim.o.columns * 0.75)
-                  end,
-                  stages = "static",
-                },
-          })
-        end,
-        init = function()
-          vim.notify = require("notify")
-        end,
+    {
+      "rcarriga/nvim-notify",
+      config = function()
+        require("notify").setup({
+          opts = {
+                timeout = 1000,
+                max_height = function()
+                  return math.floor(vim.o.lines * 0.75)
+                end,
+                max_width = function()
+                  return math.floor(vim.o.columns * 0.75)
+                end,
+                stages = "static",
+              },
+        })
+      end,
+      init = function()
+        vim.notify = require("notify")
+      end,
     },
 
 -- Statusline, bufferline
     {
       "nvim-lualine/lualine.nvim",
-        config = function()
-          require("plugins.lualine")
-        end,
-    },
-
--- Comment, AutoPairs, AutoTags
-    { "numToStr/Comment.nvim",
       config = function()
-        require("Comment").setup({
-        toggler = {
-          line = '<leader>/',
-        },
-        opleader = {
-          line = '<leader>/',
-        },
-      })
+        require("plugins.lualine")
       end,
     },
 
+-- Comment
+    {
+      "numToStr/Comment.nvim",
+      config = function()
+        require("Comment").setup({
+          toggler = {
+            line = '<leader>/',
+          },
+          opleader = {
+            line = '<leader>/',
+          },
+        })
+      end,
+    },
+
+-- AutoPairs
     {
       "windwp/nvim-autopairs",
       config = function()
@@ -158,18 +174,6 @@ require("lazy").setup({
         require("colorizer").setup()
       end,
     },
-
--- Colorscheme
-    {
-      "rebelot/kanagawa.nvim",
-      priority = 1000,
-      config = function()
-        require("kanagawa").setup()
-        vim.cmd("colorscheme kanagawa")
-      end,
-    },
-    { "AlexvZyl/nordic.nvim" },
-    { "aktersnurra/no-clown-fiesta.nvim" },
 
 -- Treesitter
     {
