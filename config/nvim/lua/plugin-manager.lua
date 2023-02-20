@@ -34,7 +34,7 @@ require("lazy").setup({
             dashboard.button("r", " " .. " Recent files", "<cmd>Telescope oldfiles<cr>"),
             dashboard.button("e", " " .. " New file", "<cmd>ene <bar> startinsert <cr>"),
             dashboard.button("f", " " .. " Find file", "<cmd>Telescope find_files<cr>"),
-            dashboard.button("p", " " .. " Python", '<cmd>Telescope file_browser path="~/git-repos/python/"<cr>'),
+            dashboard.button("p", " " .. " Python", "<cmd>Telescope file_browser path=~/git-repos/python/<cr>"),
             dashboard.button("c", " " .. " Config", "<cmd>e ~/.config/nvim/lua/plugin-manager.lua<cr>"),
             dashboard.button("q", " " .. " Quit", ":qa<CR>"),
           }
