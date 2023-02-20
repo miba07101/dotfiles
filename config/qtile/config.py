@@ -22,6 +22,7 @@ myFonts = "Hack Nerd Font"
 myMenu = "rofi -show drun"
 myScreenshot = "flameshot gui"
 
+
 ### KEYS ###
 
 keys = [
