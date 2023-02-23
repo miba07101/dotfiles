@@ -107,6 +107,7 @@ map("n", "<leader>tl", "<cmd>ToggleTermSendCurrentLine<cr>", { desc = "Send line
 map("v", "<leader>tb", "<cmd>ToggleTermSendVisualLines<cr>", { desc = "Send block lines" })
 map("v", "<leader>ts", "<cmd>ToggleTermSendVisualSelection<cr>", { desc = "Send selection" })
 map("n", "<leader>tp", "<cmd>lua _BPYTHON_TOGGLE()<cr>", { desc = "BPython Term" })
+map("n", "<leader>tr", "<cmd>lua _RANGER_TOGGLE()<cr>", { desc = "Ranger" })
 
 -- Improved Terminal Mappings
 map("t", "<esc>", "<C-\\><C-n>", { desc = "Terminal normal mode" })

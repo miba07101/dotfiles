@@ -132,23 +132,41 @@ require("lazy").setup({
               return vim.o.columns * 0.4
             end
           end,
-      })
-      local Terminal = require("toggleterm.terminal").Terminal
-      local bpython = Terminal:new({ direction = "horizontal", cmd = "bpython", hidden = true })
-      local web = Terminal:new({ direction = "horizontal", cmd = "live-server ." })
-      local lazygit = Terminal:new({ direction = "float", cmd = "lazygit", dir = "git_dir", hidden = true })
+        })
+        local Terminal = require("toggleterm.terminal").Terminal
+        local Path = require 'plenary.path'
+        local path = vim.fn.tempname()
 
-        function _BPYTHON_TOGGLE()
-          bpython:toggle()
-        end
+        local ranger = Terminal:new({
+          direction = "float",
+          cmd = ('ranger --choosefiles "%s"'):format(path),
+          close_on_exit = true,
+          on_close = function()
+            Data = Path:new(path):read()
+            vim.schedule(function()
+              vim.cmd('e ' .. data)
+            end)
+          end
+        })
 
-        function _WEB_TOGGLE()
-          web:toggle()
-        end
+          function _RANGER_TOGGLE()
+            ranger:toggle()
+          end
 
-        function _LAZYGIT_TOGGLE()
-          lazygit:toggle()
-        end
+        local bpython = Terminal:new({ direction = "horizontal", cmd = "bpython", hidden = true })
+          function _BPYTHON_TOGGLE()
+            bpython:toggle()
+          end
+
+        local web = Terminal:new({ direction = "horizontal", cmd = "live-server ." })
+          function _WEB_TOGGLE()
+            web:toggle()
+          end
+
+        local lazygit = Terminal:new({ direction = "float", cmd = "lazygit", dir = "git_dir", hidden = true })
+          function _LAZYGIT_TOGGLE()
+            lazygit:toggle()
+          end
 
       end,
     },
