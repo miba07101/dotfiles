@@ -99,14 +99,14 @@ map("n", "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", { desc = "Set
 map("n", "<leader>ll", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Diagnostic open float" })
 
 -- Terminal
-map("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "Toggle Term" })
-map("n", "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", { desc = "Term float" })
-map("n", "<leader>th", "<cmd>ToggleTerm direction=horizontal<cr>", { desc = "Term horizontal" })
-map("n", "<leader>tv", "<cmd>ToggleTerm direction=vertical<cr>", { desc = "Term vertical" })
+map("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "Toggle" })
+map("n", "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", { desc = "Float" })
+map("n", "<leader>th", "<cmd>ToggleTerm direction=horizontal<cr>", { desc = "Horizontal" })
+map("n", "<leader>tv", "<cmd>ToggleTerm direction=vertical<cr>", { desc = "Vertical" })
 map("n", "<leader>tl", "<cmd>ToggleTermSendCurrentLine<cr>", { desc = "Send line" })
 map("v", "<leader>tb", "<cmd>ToggleTermSendVisualLines<cr>", { desc = "Send block lines" })
 map("v", "<leader>ts", "<cmd>ToggleTermSendVisualSelection<cr>", { desc = "Send selection" })
-map("n", "<leader>tp", "<cmd>lua _BPYTHON_TOGGLE()<cr>", { desc = "BPython Term" })
+map("n", "<leader>tp", "<cmd>lua _BPYTHON_TOGGLE()<cr>", { desc = "BPython" })
 map("n", "<leader>tr", "<cmd>lua _RANGER_TOGGLE()<cr>", { desc = "Ranger" })
 
 -- Improved Terminal Mappings

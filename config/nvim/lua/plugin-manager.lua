@@ -144,7 +144,7 @@ require("lazy").setup({
           on_close = function()
             Data = Path:new(path):read()
             vim.schedule(function()
-              vim.cmd('e ' .. data)
+              vim.cmd('e ' .. Data)
             end)
           end
         })
