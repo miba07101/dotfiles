@@ -58,8 +58,8 @@ lots:
     quantity: 1000
     unit_cost: 10.50
   - symbol: "INTC"
-    quantity: 200
-    unit_cost: 32.38
+    quantity: 300
+    unit_cost: 30.09
 # colors:
 #   text: "#005fff"
 #   text-light: "#0087ff"
