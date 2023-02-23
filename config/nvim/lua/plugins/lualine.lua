@@ -112,7 +112,7 @@ lualine.setup({
       { "diff",
         colored = false,
         symbols = { added = " ", modified = "柳 ", removed = " " },
-        cond = conditions.hide_in_width,
+        -- cond = conditions.hide_in_width,
       },
     },
     lualine_x = {},
