@@ -35,10 +35,19 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 --  desc = "Automatically source vim file whenever you save it",
 --})
 
+-- unfold at open
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  pattern =  "*",
+  command = [[:normal zR]],
+  group = mygroup,
+  desc = "Unfold",
+})
+
+
 -- autoformat code on save
 vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = {
-    "py", "php", "vue", "js", "ts", "tsx", "json", "css",
+    "*.py", "php", "vue", "js", "ts", "tsx", "json", "css",
     "scss", "*.html"
   },
   callback = function()
@@ -59,7 +68,7 @@ vim.api.nvim_create_autocmd("FileType", {
   desc = "Set shiftwidth to 4 in these filetypes",
 })
 
--- resotre cursor position
+-- restore cursor position
 vim.api.nvim_create_autocmd("BufReadPost", {
   callback = function()
     if vim.fn.line("'\"") >= 1 and vim.fn.line("'\"") <= vim.fn.line("$") and vim.fn.expand("&ft") ~= "commit" then
@@ -71,12 +80,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 })
 
 -- show cursor line only in active window
-vim.api.nvim_create_autocmd( { "InsertLeave", "WinEnter" }, {
-  pattern = "*",
-  command = "set cursorline",
-  group = mygroup,
-  desc = "Show cursorline in active window",
-})
 
 vim.api.nvim_create_autocmd( { "InsertEnter", "WinLeave" }, {
   pattern = "*",

@@ -45,7 +45,13 @@ opt.wrap = false                             -- Disable wrapping of lines longer
 opt.wrapscan = true                          -- Allows to search the entire file repeatedly (continuation of the search after the last result will return to the first result)
 opt.writebackup = false                      -- Whether to create backups when writing files
 
--- nastavenia pre WSL a klasicky linux
+-- opt.foldmethod = "indent"
+-- opt.foldexpr = "nvim_treesitter#foldexpr()"
+opt.foldmethod = "expr"
+opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- vim.o.foldnestmax = 2
+
+-- nastavenia pre WSL a klasicky linuxW
 if is_wsl == 1
   then
     opt.guicursor = {"n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150"}  -- Cursor help: guicursor
