@@ -66,6 +66,7 @@ basic_packages(){
         'starship'
         'exa'
         'fd'
+        'tealdeer' # tldr pre man pages
         'curl'
         'yt-dlp' # stahovanie youtube videi
         'ranger' # python terminal filemanager
@@ -86,6 +87,9 @@ basic_packages(){
         echo "Installing ${PKG}"
         sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
     done
+
+    # update tealdeer cache
+    tldr --update
 }
 
 qtile_packages(){
