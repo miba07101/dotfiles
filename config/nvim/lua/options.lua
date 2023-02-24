@@ -1,5 +1,5 @@
 local opt = vim.opt
-local g = vim.g
+-- local g = vim.g
 local is_wsl = vim.fn.has("wsl")
 
 opt.backup = false                           -- Whether to create a backup file
