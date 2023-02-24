@@ -119,7 +119,15 @@ require("lazy").setup({
         require("nvim-autopairs").setup()
       end,
     },
-
+{
+    "kevinhwang91/rnvimr",
+    init = function() require("plugins.ranger") end,
+    keys = {
+      {
+        "<leader>o",":RnvimrToggle<CR>", desc = "Ranger",
+      },
+    },
+},
 
 -- Terminal
     {
