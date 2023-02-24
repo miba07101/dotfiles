@@ -67,7 +67,6 @@ map("v", "p", '"_dP', { desc = "Paste no yank" })
 map("i", "ii", "<ESC>", { desc = "INSERT mode toggle" })
 map("n", "<A-a>", "<ESC>ggVG<CR>", { desc = "Select all text" })
 map("n", "<BS>", "X", { desc = "TAB as X in NORMAL mode" })
-map("n", "zz", "za", { desc = "Folding" })
 
 -- Comment - ak by nefungovalo nastavenie v plugin-manager.lua
 -- map('n', '<leader>/', '<CMD>lua require("Comment.api").toggle.linewise.current()<CR>', { desc = "Comment line"})
