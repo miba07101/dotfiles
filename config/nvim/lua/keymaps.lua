@@ -96,6 +96,7 @@ map("n", "<leader>ln", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", { de
 map("n", "<leader>lp", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", { desc = "Go to prev" })
 map("n", "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", { desc = "Set loc list" })
 map("n", "<leader>ll", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Diagnostic open float" })
+map("n", "<leader>le", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "Python envs" })
 
 -- Terminal
 map("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "Toggle" })
@@ -135,3 +136,4 @@ map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", {
 map("n", "<leader>cp", "<cmd>TermExec cmd='python3 %'<cr>", { desc = "Python"} )
 map("n", "<leader>cw", "<cmd>lua _WEB_TOGGLE()<cr>", { desc = "Web Preview"} )
 map("n", "<leader>gd", "<cmd>Gitsigns diffthis HEAD<cr>", { desc = "Diff" })
+

@@ -24,8 +24,16 @@ require("lazy").setup({
     { "AlexvZyl/nordic.nvim" },
     { "aktersnurra/no-clown-fiesta.nvim" },
 
+
 -- UI
     { "nvim-lua/plenary.nvim" },
+
+    {
+      "stevearc/dressing.nvim",
+      config = function()
+        require("dressing").setup()
+      end
+    },
 
     {
       "goolord/alpha-nvim",
@@ -117,6 +125,22 @@ require("lazy").setup({
       "windwp/nvim-autopairs",
       config = function()
         require("nvim-autopairs").setup()
+      end,
+    },
+
+-- Swenv - change python environments
+    {
+      "AckslD/swenv.nvim",
+      config = function()
+        require("swenv").setup({
+          get_venvs = function(venvs_path)
+            return require("swenv.api").get_venvs(venvs_path)
+          end,
+          venvs_path = vim.fn.expand("~/python-venv"), -- zadat cestu k envs
+          post_set_venv = function ()
+            vim.cmd(":LspRestart<cr>")
+          end
+        })
       end,
     },
 

@@ -116,7 +116,7 @@ lualine.setup({
       },
     },
     lualine_x = {},
-    lualine_y = {},
+    lualine_y = {"swenv"},
     lualine_z = {
       { lsp_server, icon = " ", },
       { "location" },
