@@ -81,6 +81,7 @@ map("n", "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "Words" })
 map("n", "<leader>fo", "<cmd>Telescope oldfiles<cr>", { desc = "Recent files" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Buffers" })
 map("n", "<leader>fc", "<cmd>Telescope colorscheme<cr>", { desc = "Colorscheme" })
+map("n", "<leader>fp", "<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<cr>", { desc = "Projects" })
 
 -- LSP
 map("n", "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Definition" })

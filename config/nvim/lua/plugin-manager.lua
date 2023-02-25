@@ -54,7 +54,8 @@ require("lazy").setup({
           dashboard.button("r", " " .. " Recent files", "<cmd>Telescope oldfiles<cr>"),
           dashboard.button("e", " " .. " New file", "<cmd>ene <bar> startinsert <cr>"),
           dashboard.button("f", " " .. " Find file", "<cmd>Telescope find_files<cr>"),
-          dashboard.button("p", " " .. " Python", "<cmd>Telescope file_browser path=~/git-repos/python/<cr>"),
+          -- dashboard.button("p", " " .. " Python", "<cmd>Telescope file_browser path=~/git-repos/python/<cr>"),
+          dashboard.button("p", " " .. " Projects", "<cmd>Telescope project<cr>"),
           dashboard.button("c", " " .. " Config", "<cmd>e ~/.config/nvim/lua/plugin-manager.lua<cr>"),
           dashboard.button("q", " " .. " Quit", ":qa<CR>"),
         }
@@ -233,6 +234,7 @@ require("lazy").setup({
       dependencies = {
         "nvim-telescope/telescope-file-browser.nvim",
         "nvim-tree/nvim-web-devicons",
+        "nvim-telescope/telescope-project.nvim",
       },
       lazy = false,
       config = function()
@@ -257,9 +259,17 @@ require("lazy").setup({
               hidden = true,
               grouped = true, -- show directories first
             },
+            project = {
+              base_dirs = {
+                {path = "~/git-repos/epd/"},
+                {path = "~/git-repos/python/"},
+              },
+              -- hidden_files = true,
+            },
           },
         })
         require("telescope").load_extension("file_browser")
+        require("telescope").load_extension("project")
         require("telescope").load_extension("notify")
       end,
     },
