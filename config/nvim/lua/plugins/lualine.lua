@@ -75,6 +75,7 @@ local lsp_server = function()
   return msg
 end
 
+-- Python environments plugin - swenv.lua
 local function python_venvs()
   local msg = ""
   local venv = require('swenv.api').get_current_venv()
@@ -84,7 +85,6 @@ local function python_venvs()
     return msg
   end
 end
-
 
 -- Conditions
 local conditions = {
