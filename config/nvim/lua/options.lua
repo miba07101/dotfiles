@@ -8,18 +8,27 @@ opt.cmdheight = 1                            -- Set command line height
 opt.completeopt = { "menuone" , "noselect" } -- Set completion options
 opt.cursorline = true                        -- Highlight the current line
 opt.expandtab = true                         -- Convert tabs to spaces
+opt.fillchars:append({
+  eob = " ",
+  fold = " ",
+  foldopen = "",
+  foldsep = " ",
+  foldclose = ""
+})
 opt.fileencoding = "utf-8"                   -- Set the character encoding of the file where the current buffer is located
 opt.filetype = "plugin"                      -- Allow plugin loading of file types
--- opt.fillchars = { eob = " " }                -- Disable `~` on nonexistent lines
-opt.foldmethod = "expr"
-opt.foldexpr = "nvim_treesitter#foldexpr()"
 opt.foldenable = true
 opt.foldlevel = 1
--- opt.foldlevelstart = 0
-opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
--- opt.foldtext=[[v:folddashes.substitute(getline(v:foldstart),'/\\*\\\|\\*/\\\|{{{\\d\\=','','g')]]
+opt.foldmethod = "expr"
+opt.foldexpr = "nvim_treesitter#foldexpr()"
 -- opt.foldcolumn = "1"
--- opt.foldnestmax = 0
+opt.foldtext=[[getline(v:foldstart)]]
+
+-- function MyFoldText()
+-- return vim.fn.getline(vim.v.foldstart)
+-- end
+-- opt.foldtext = "v:lua.MyFoldText()"
+
 opt.hidden = true                            -- Allow switching from unsaved buffers
 opt.hlsearch = true                          -- Allow search highlighting
 opt.ignorecase = true                        -- Ignore case when searching

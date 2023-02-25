@@ -60,20 +60,31 @@ end
 
 -- Lsp server name
 local lsp_server = function()
-    local msg = "-"
-    local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
-    local clients = vim.lsp.get_active_clients()
-    if next(clients) == nil then
-      return msg
-    end
-    for _, client in ipairs(clients) do
-      local filetypes = client.config.filetypes
-      if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-        return client.name
-      end
-    end
+  local msg = "-"
+  local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
+  local clients = vim.lsp.get_active_clients()
+  if next(clients) == nil then
     return msg
+  end
+  for _, client in ipairs(clients) do
+    local filetypes = client.config.filetypes
+    if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+      return client.name
+    end
+  end
+  return msg
 end
+
+local function python_venvs()
+  local msg = ""
+  local venv = require('swenv.api').get_current_venv()
+  if venv then
+    return string.format(venv.name)
+  else
+    return msg
+  end
+end
+
 
 -- Conditions
 local conditions = {
@@ -108,17 +119,20 @@ lualine.setup({
       { "diagnostics", colored = false },
     },
     lualine_c = {
-      { "branch", icon = "" },
+      { "branch", icon = "" },
       { "diff",
         colored = false,
-        symbols = { added = " ", modified = "柳 ", removed = " " },
+        symbols = { added = " ", modified = " ", removed = " " },
+        -- symbols = { added = " ", modified = "柳 ", removed = " " },
         -- cond = conditions.hide_in_width,
       },
     },
     lualine_x = {},
-    lualine_y = {"swenv"},
+    lualine_y = {
+      { python_venvs, icon = "" }
+    },
     lualine_z = {
-      { lsp_server, icon = " ", },
+      { lsp_server, icon = "" },
       { "location" },
       { "progress" },
     },

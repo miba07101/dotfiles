@@ -136,4 +136,3 @@ map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", {
 map("n", "<leader>cp", "<cmd>TermExec cmd='python3 %'<cr>", { desc = "Python"} )
 map("n", "<leader>cw", "<cmd>lua _WEB_TOGGLE()<cr>", { desc = "Web Preview"} )
 map("n", "<leader>gd", "<cmd>Gitsigns diffthis HEAD<cr>", { desc = "Diff" })
-

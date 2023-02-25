@@ -36,13 +36,15 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 --})
 
 -- unfold at open
--- vim.api.nvim_create_autocmd("BufWinEnter", {
---   pattern =  "*",
---   command = [[:normal zR]], -- zR-open, zM-close folds
---   group = mygroup,
---   desc = "Unfold",
--- })
-
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  pattern = {
+    "*.py", "php", "vue", "js", "ts", "tsx", "json", "css",
+    "scss", "*.html"
+  },
+  command = [[:normal zR]], -- zR-open, zM-close folds
+  group = mygroup,
+  desc = "Unfold",
+})
 
 -- autoformat code on save
 vim.api.nvim_create_autocmd("BufWritePre", {
