@@ -1,42 +1,41 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable",
-    lazypath,
-  })
-end
+  if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+      "git",
+      "clone",
+      "--filter=blob:none",
+      "https://github.com/folke/lazy.nvim.git",
+      "--branch=stable",
+      lazypath,
+    })
+  end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require("lazy").setup({
 -- Colorscheme
-    {
-      "rebelot/kanagawa.nvim",
+    { "rebelot/kanagawa.nvim",
       priority = 1000,
       config = function()
         require("kanagawa").setup()
         vim.cmd("colorscheme kanagawa")
       end,
     },
-    { "AlexvZyl/nordic.nvim" },
-    { "aktersnurra/no-clown-fiesta.nvim" },
-
+    { "AlexvZyl/nordic.nvim"
+      },
+    { "aktersnurra/no-clown-fiesta.nvim"
+      },
 
 -- UI
-    { "nvim-lua/plenary.nvim" },
+    { "nvim-lua/plenary.nvim"
+      },
 
-    {
-      "stevearc/dressing.nvim",
+    { "stevearc/dressing.nvim",
       config = function()
         require("dressing").setup()
       end
     },
 
-    {
-      "goolord/alpha-nvim",
+    { "goolord/alpha-nvim",
       config = function()
         local dashboard = require "alpha.themes.dashboard"
 
@@ -76,8 +75,7 @@ require("lazy").setup({
       end
     },
 
-    {
-      "rcarriga/nvim-notify",
+    { "rcarriga/nvim-notify",
       config = function()
         require("notify").setup({
           opts = {
@@ -98,16 +96,14 @@ require("lazy").setup({
     },
 
 -- Statusline, bufferline
-    {
-      "nvim-lualine/lualine.nvim",
+    { "nvim-lualine/lualine.nvim",
       config = function()
         require("plugins.lualine")
       end,
     },
 
 -- Comment
-    {
-      "numToStr/Comment.nvim",
+    { "numToStr/Comment.nvim",
       config = function()
         require("Comment").setup({
           toggler = {
@@ -121,16 +117,14 @@ require("lazy").setup({
     },
 
 -- AutoPairs
-    {
-      "windwp/nvim-autopairs",
+    { "windwp/nvim-autopairs",
       config = function()
         require("nvim-autopairs").setup()
       end,
     },
 
 -- Swenv - change python environments
-    {
-      "AckslD/swenv.nvim",
+    { "AckslD/swenv.nvim",
       config = function()
         require("swenv").setup({
           get_venvs = function(venvs_path)
@@ -145,8 +139,7 @@ require("lazy").setup({
     },
 
 -- Terminal
-    {
-      "akinsho/toggleterm.nvim",
+    { "akinsho/toggleterm.nvim",
       config = function()
         require("toggleterm").setup({
           size = function(term)
@@ -196,8 +189,7 @@ require("lazy").setup({
     },
 
 -- Indent blank line
-    {
-      "lukas-reineke/indent-blankline.nvim",
+    { "lukas-reineke/indent-blankline.nvim",
       config = function()
         require("indent_blankline").setup({
           show_trailing_blankline_indent = false,
@@ -210,16 +202,14 @@ require("lazy").setup({
     },
 
 -- Colorizer
-    {
-      "norcalli/nvim-colorizer.lua",
+    { "norcalli/nvim-colorizer.lua",
       config = function()
         require("colorizer").setup()
       end,
     },
 
 -- Treesitter
-    {
-      "nvim-treesitter/nvim-treesitter",
+    { "nvim-treesitter/nvim-treesitter",
       build = ":TSUpdate",
       dependencies = {
         "JoosepAlviste/nvim-ts-context-commentstring",
@@ -239,8 +229,7 @@ require("lazy").setup({
     },
 
 -- Telescope
-    {
-      "nvim-telescope/telescope.nvim",
+    { "nvim-telescope/telescope.nvim",
       dependencies = {
         "nvim-telescope/telescope-file-browser.nvim",
         "nvim-tree/nvim-web-devicons",
@@ -276,8 +265,7 @@ require("lazy").setup({
     },
 
 -- LSP
-    {
-      "neovim/nvim-lspconfig",
+    { "neovim/nvim-lspconfig",
       dependencies = {
         -- LSP
         "williamboman/mason.nvim",
@@ -291,8 +279,7 @@ require("lazy").setup({
   },
 
 -- CMP Completitions
-    {
-      "hrsh7th/nvim-cmp",
+    { "hrsh7th/nvim-cmp",
       dependencies = {
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
@@ -310,8 +297,7 @@ require("lazy").setup({
     },
 
 -- Keybidings WhichKey
-    {
-      "folke/which-key.nvim",
+    { "folke/which-key.nvim",
       lazy = false,
       config = function()
         require("which-key").setup({

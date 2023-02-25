@@ -10,10 +10,16 @@ opt.cursorline = true                        -- Highlight the current line
 opt.expandtab = true                         -- Convert tabs to spaces
 opt.fileencoding = "utf-8"                   -- Set the character encoding of the file where the current buffer is located
 opt.filetype = "plugin"                      -- Allow plugin loading of file types
-opt.fillchars = { eob = " " }                -- Disable `~` on nonexistent lines
-opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- opt.fillchars = { eob = " " }                -- Disable `~` on nonexistent lines
 opt.foldmethod = "expr"
-opt.foldnestmax = 2
+opt.foldexpr = "nvim_treesitter#foldexpr()"
+opt.foldenable = true
+opt.foldlevel = 1
+-- opt.foldlevelstart = 0
+opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+-- opt.foldtext=[[v:folddashes.substitute(getline(v:foldstart),'/\\*\\\|\\*/\\\|{{{\\d\\=','','g')]]
+-- opt.foldcolumn = "1"
+-- opt.foldnestmax = 0
 opt.hidden = true                            -- Allow switching from unsaved buffers
 opt.hlsearch = true                          -- Allow search highlighting
 opt.ignorecase = true                        -- Ignore case when searching
