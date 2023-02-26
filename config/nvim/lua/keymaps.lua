@@ -56,11 +56,7 @@ map("x", "<A-k>", ":move '<-2<CR>gv-gv", { desc = "Move text DOWN" })
 map("n", "<ESC>", "<cmd>nohlsearch<CR>", { desc = "No highlight" })
 map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
 
--- Clear search, diff update and redraw
--- taken from runtime/lua/_editor.lua
-map("n", "<leader>ur", "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>", { desc = "Redraw / clear hlsearch / diff update" })
-
-  -- Paste over currently selected text without yanking it
+-- Paste over currently selected text without yanking it
 map("v", "p", '"_dP', { desc = "Paste no yank" })
 
 -- MIX
@@ -68,72 +64,74 @@ map("i", "ii", "<ESC>", { desc = "INSERT mode toggle" })
 map("n", "<A-a>", "<ESC>ggVG<CR>", { desc = "Select all text" })
 map("n", "<BS>", "X", { desc = "TAB as X in NORMAL mode" })
 
--- Comment - ak by nefungovalo nastavenie v plugin-manager.lua
--- map('n', '<leader>/', '<CMD>lua require("Comment.api").toggle.linewise.current()<CR>', { desc = "Comment line"})
--- map('x', '<leader>/', '<ESC><CMD>lua require("Comment.api").toggle.linewise(vim.fn.visualmode())<CR>', { desc = "Comment line" })
+-- Comment - mozem pouzit aj nastavenie v plugin-manager.lua
+map('n', '<leader>/', '<CMD>lua require("Comment.api").toggle.linewise.current()<CR>', { desc = "comment"})
+map('x', '<leader>/', '<ESC><CMD>lua require("Comment.api").toggle.linewise(vim.fn.visualmode())<CR>', { desc = "comment" })
+
+-- Lazy
+map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "lazy" })
 
 -- Telescope
-map("n", "<leader>fx", "<cmd>Telescope<cr>", { desc = "Telescope" })
-map("n", "<leader>fe", "<cmd>Telescope file_browser<cr>", { desc = "File browser" })
-map("n", "<leader>fn", "<cmd>Telescope notify<cr>", { desc = "Notifications" })
-map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Files" })
-map("n", "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "Words" })
-map("n", "<leader>fo", "<cmd>Telescope oldfiles<cr>", { desc = "Recent files" })
-map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Buffers" })
-map("n", "<leader>fc", "<cmd>Telescope colorscheme<cr>", { desc = "Colorscheme" })
-map("n", "<leader>fp", "<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<cr>", { desc = "Projects" })
+map("n", "<leader>fx", "<cmd>Telescope<cr>", { desc = "telescope" })
+map("n", "<leader>fe", "<cmd>Telescope file_browser<cr>", { desc = "file browser" })
+map("n", "<leader>fn", "<cmd>Telescope notify<cr>", { desc = "notifications" })
+map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "files" })
+map("n", "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "words" })
+map("n", "<leader>fo", "<cmd>Telescope oldfiles<cr>", { desc = "recent files" })
+map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "buffers" })
+map("n", "<leader>fc", "<cmd>Telescope colorscheme<cr>", { desc = "colorscheme" })
+map("n", "<leader>fp", "<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<cr>", { desc = "projects" })
 
 -- LSP
-map("n", "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Definition" })
-map("n", "<leader>lD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Declaration" })
-map("n", "<leader>lk", "<cmd>lua vim.lsp.buf.hover()<cr>", { desc = "Hoover" })
-map("n", "<leader>lI", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "Implementation" })
-map("n", "<leader>lr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "References" })
-map("n", "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "Rename" })
-map("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format()<cr>", { desc = "Formatting" })
-map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code action" })
-map("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "Signature help" })
-map("n", "<leader>ln", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", { desc = "Go to next" })
-map("n", "<leader>lp", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", { desc = "Go to prev" })
-map("n", "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", { desc = "Set loc list" })
-map("n", "<leader>ll", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Diagnostic open float" })
-map("n", "<leader>le", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "Python envs" })
+map("n", "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "definition" })
+map("n", "<leader>lD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "declaration" })
+map("n", "<leader>lk", "<cmd>lua vim.lsp.buf.hover()<cr>", { desc = "hoover" })
+map("n", "<leader>lI", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "implementation" })
+map("n", "<leader>lr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "references" })
+map("n", "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "rename" })
+map("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format()<cr>", { desc = "formatting" })
+map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "code action" })
+map("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "signature help" })
+map("n", "<leader>ln", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", { desc = "go to next" })
+map("n", "<leader>lp", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", { desc = "go to prev" })
+map("n", "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", { desc = "set loc list" })
+map("n", "<leader>ll", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "diagnostic open float" })
+map("n", "<leader>le", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "python envs" })
 
 -- Terminal
-map("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "Toggle" })
-map("n", "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", { desc = "Float" })
-map("n", "<leader>th", "<cmd>ToggleTerm direction=horizontal<cr>", { desc = "Horizontal" })
-map("n", "<leader>tv", "<cmd>ToggleTerm direction=vertical<cr>", { desc = "Vertical" })
-map("n", "<leader>tl", "<cmd>ToggleTermSendCurrentLine<cr>", { desc = "Send line" })
-map("v", "<leader>tb", "<cmd>ToggleTermSendVisualLines<cr>", { desc = "Send block lines" })
-map("v", "<leader>ts", "<cmd>ToggleTermSendVisualSelection<cr>", { desc = "Send selection" })
-map("n", "<leader>tp", "<cmd>lua _BPYTHON_TOGGLE()<cr>", { desc = "BPython" })
-map("n", "<leader>tr", "<cmd>lua _RANGER_TOGGLE()<cr>", { desc = "Ranger" })
+map("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "toggle" })
+map("n", "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", { desc = "float" })
+map("n", "<leader>th", "<cmd>ToggleTerm direction=horizontal<cr>", { desc = "horizontal" })
+map("n", "<leader>tv", "<cmd>ToggleTerm direction=vertical<cr>", { desc = "vertical" })
+map("n", "<leader>tl", "<cmd>ToggleTermSendCurrentLine<cr>", { desc = "send line" })
+map("v", "<leader>tb", "<cmd>ToggleTermSendVisualLines<cr>", { desc = "send block lines" })
+map("v", "<leader>ts", "<cmd>ToggleTermSendVisualSelection<cr>", { desc = "send selection" })
+map("n", "<leader>tp", "<cmd>lua _BPYTHON_TOGGLE()<cr>", { desc = "bpython" })
+map("n", "<leader>tr", "<cmd>lua _RANGER_TOGGLE()<cr>", { desc = "ranger" })
 
 -- Improved Terminal Mappings
-map("t", "<esc>", "<C-\\><C-n>", { desc = "Terminal normal mode" })
+map("t", "<esc>", "<C-\\><C-n>", { desc = "terminal normal mode" })
 
 -- GIT
-map("n", "<leader>tl", "<cmd>lua _LAZYGIT_TOGGLE()<cr>", { desc = "LazyGit" })
+map("n", "<leader>tl", "<cmd>lua _LAZYGIT_TOGGLE()<cr>", { desc = "lazygit" })
 
-map("n", "<leader>gj", "<cmd>lua require 'gitsigns'.next_hunk()<cr>", { desc = "Next Hunk" })
-map("n", "<leader>gk", "<cmd>lua require 'gitsigns'.prev_hunk()<cr>", { desc = "Prev Hunk" })
-map("n", "<leader>gl", "<cmd>lua require 'gitsigns'.blame_line()<cr>", { desc = "Blame" })
-map("n", "<leader>gp", "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", { desc = "Preview Hunk" })
-map("n", "<leader>gr", "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", { desc = "Reset Hunk" })
-map("n", "<leader>gR", "<cmd>lua require 'gitsigns'.reset_buffer()<cr>", { desc = "Reset Buffer" })
-map("n", "<leader>gs", "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", { desc = "Stage Hunk" })
-map("n", "<leader>gu", "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>", { desc = "Undo Stage Hunk" })
-map("n", "<leader>go", "<cmd>Telescope git_status<cr>", { desc = "Open changed file" })
-map("n", "<leader>gb", "<cmd>Telescope git_branches<cr>", { desc = "Checkout branch" })
-map("n", "<leader>gc", "<cmd>Telescope git_commits<cr>", { desc = "Checkout commit" })
+map("n", "<leader>gj", "<cmd>lua require 'gitsigns'.next_hunk()<cr>", { desc = "next hunk" })
+map("n", "<leader>gk", "<cmd>lua require 'gitsigns'.prev_hunk()<cr>", { desc = "prev hunk" })
+map("n", "<leader>gl", "<cmd>lua require 'gitsigns'.blame_line()<cr>", { desc = "blame" })
+map("n", "<leader>gp", "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", { desc = "preview hunk" })
+map("n", "<leader>gr", "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", { desc = "reset hunk" })
+map("n", "<leader>gR", "<cmd>lua require 'gitsigns'.reset_buffer()<cr>", { desc = "reset buffer" })
+map("n", "<leader>gs", "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", { desc = "stage hunk" })
+map("n", "<leader>gu", "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>", { desc = "undo stage hunk" })
+map("n", "<leader>go", "<cmd>Telescope git_status<cr>", { desc = "open changed file" })
+map("n", "<leader>gb", "<cmd>Telescope git_branches<cr>", { desc = "checkout branch" })
+map("n", "<leader>gc", "<cmd>Telescope git_commits<cr>", { desc = "checkout commit" })
 
 -- NeoVim
-map("n", "<leader>vn", "<cmd>set relativenumber!<cr>", { desc = "Numbers toggle" })
-map("n", "<leader>vl", "<cmd>IndentBlanklineToggle<cr>", { desc = "Indent Blankline toggle" })
-map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", { desc = "Backround toggle" })
+map("n", "<leader>vn", "<cmd>set relativenumber!<cr>", { desc = "numbers toggle" })
+map("n", "<leader>vl", "<cmd>IndentBlanklineToggle<cr>", { desc = "blankline toggle" })
+map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", { desc = "backround toggle" })
 
 -- Code Run
-map("n", "<leader>cp", "<cmd>TermExec cmd='python3 %'<cr>", { desc = "Python"} )
-map("n", "<leader>cw", "<cmd>lua _WEB_TOGGLE()<cr>", { desc = "Web Preview"} )
-map("n", "<leader>gd", "<cmd>Gitsigns diffthis HEAD<cr>", { desc = "Diff" })
+map("n", "<leader>cp", "<cmd>TermExec cmd='python3 %'<cr>", { desc = "python"} )
+map("n", "<leader>cw", "<cmd>lua _WEB_TOGGLE()<cr>", { desc = "web preview"} )

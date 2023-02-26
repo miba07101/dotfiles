@@ -107,12 +107,12 @@ require("lazy").setup({
     { "numToStr/Comment.nvim",
       config = function()
         require("Comment").setup({
-          toggler = {
-            line = '<leader>/',
-          },
-          opleader = {
-            line = '<leader>/',
-          },
+          -- toggler = {
+          --   line = '<leader>/',
+          -- },
+          -- opleader = {
+          --   line = '<leader>/',
+          -- },
         })
       end,
     },
@@ -322,15 +322,14 @@ require("lazy").setup({
           nowait = true, -- use `nowait` when creating keymaps
         }
         local mappings = {
-          b = { name = "Buffers" },
-          c = { name = "Code" },
-          f = { name = "Telescope" },
-          g = { name = "Git" },
-          l = { name = "LSP" },
-          p = { name = "Lazy" },
-          t = { name = "Terminal" },
-          v = { name = "NeoVim" },
-          w = { name = "Windows" },
+          b = { name = "buffers" },
+          c = { name = "code" },
+          f = { name = "telescope" },
+          g = { name = "git" },
+          l = { name = "lsp" },
+          t = { name = "terminal" },
+          v = { name = "neovim" },
+          w = { name = "windows" },
         }
         require("which-key").register(mappings,opts)
       end,
