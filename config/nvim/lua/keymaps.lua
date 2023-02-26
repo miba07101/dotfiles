@@ -132,6 +132,19 @@ map("n", "<leader>vn", "<cmd>set relativenumber!<cr>", { desc = "numbers toggle"
 map("n", "<leader>vl", "<cmd>IndentBlanklineToggle<cr>", { desc = "blankline toggle" })
 map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", { desc = "backround toggle" })
 
+-- enable / disable diagnostic
+local diagnostics_active = true
+local toggle_diagnostics = function()
+  diagnostics_active = not diagnostics_active
+  if diagnostics_active then
+    vim.diagnostic.enable()
+  else
+    vim.diagnostic.disable()
+  end
+end
+
+map('n', '<leader>vd', toggle_diagnostics, { desc = "diagnostic toggle" })
+
 -- Code Run
 map("n", "<leader>cp", "<cmd>TermExec cmd='python3 %'<cr>", { desc = "python"} )
 map("n", "<leader>cw", "<cmd>lua _WEB_TOGGLE()<cr>", { desc = "web preview"} )
