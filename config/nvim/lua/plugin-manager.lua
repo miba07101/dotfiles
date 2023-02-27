@@ -215,6 +215,7 @@ require("lazy").setup({
       dependencies = {
         "JoosepAlviste/nvim-ts-context-commentstring",
         "windwp/nvim-ts-autotag",
+        "HiPhish/nvim-ts-rainbow2",
       },
       config = function()
         require("nvim-treesitter.configs").setup({
@@ -223,6 +224,12 @@ require("lazy").setup({
           context_commentstring = { enable = true },
           autopairs = { enable = true },
           autotag = { enable = true },
+          rainbow = { enable = true,
+                      disable = {},
+                      query = 'rainbow-parens',
+                      strategy = require 'ts-rainbow.strategy.global',
+                      max_file_lines = 3000
+          },
           incremental_selection = { enable = true },
           indent = { enable = true },
         })
