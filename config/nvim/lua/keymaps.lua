@@ -92,11 +92,24 @@ map("n", "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "rename" })
 map("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format()<cr>", { desc = "formatting" })
 map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "code action" })
 map("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "signature help" })
-map("n", "<leader>ln", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", { desc = "go to next" })
-map("n", "<leader>lp", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", { desc = "go to prev" })
-map("n", "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", { desc = "set loc list" })
-map("n", "<leader>ll", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "diagnostic open float" })
-map("n", "<leader>le", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "python envs" })
+
+-- Diagnostic
+-- enable / disable diagnostic
+local diagnostics_active = true
+local toggle_diagnostics = function()
+  diagnostics_active = not diagnostics_active
+  if diagnostics_active then
+    vim.diagnostic.enable()
+  else
+    vim.diagnostic.disable()
+  end
+end
+
+map('n', '<leader>dd', toggle_diagnostics, { desc = "diagnostic toggle" })
+map("n", "<leader>dn", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", { desc = "next" })
+map("n", "<leader>dp", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", { desc = "prev" })
+map("n", "<leader>dl", "<cmd>lua vim.diagnostic.setloclist()<cr>", { desc = "loc list" })
+map("n", "<leader>df", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "open float" })
 
 -- Terminal
 map("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "toggle" })
@@ -106,18 +119,16 @@ map("n", "<leader>tv", "<cmd>ToggleTerm direction=vertical<cr>", { desc = "verti
 map("n", "<leader>tl", "<cmd>ToggleTermSendCurrentLine<cr>", { desc = "send line" })
 map("v", "<leader>tb", "<cmd>ToggleTermSendVisualLines<cr>", { desc = "send block lines" })
 map("v", "<leader>ts", "<cmd>ToggleTermSendVisualSelection<cr>", { desc = "send selection" })
-map("n", "<leader>tp", "<cmd>lua _BPYTHON_TOGGLE()<cr>", { desc = "bpython" })
 map("n", "<leader>tr", "<cmd>lua _RANGER_TOGGLE()<cr>", { desc = "ranger" })
 
 -- Improved Terminal Mappings
 map("t", "<esc>", "<C-\\><C-n>", { desc = "terminal normal mode" })
 
 -- GIT
-map("n", "<leader>tl", "<cmd>lua _LAZYGIT_TOGGLE()<cr>", { desc = "lazygit" })
-
+map("n", "<leader>gl", "<cmd>lua _LAZYGIT_TOGGLE()<cr>", { desc = "lazygit" })
 map("n", "<leader>gj", "<cmd>lua require 'gitsigns'.next_hunk()<cr>", { desc = "next hunk" })
 map("n", "<leader>gk", "<cmd>lua require 'gitsigns'.prev_hunk()<cr>", { desc = "prev hunk" })
-map("n", "<leader>gl", "<cmd>lua require 'gitsigns'.blame_line()<cr>", { desc = "blame" })
+map("n", "<leader>gb", "<cmd>lua require 'gitsigns'.blame_line()<cr>", { desc = "blame line" })
 map("n", "<leader>gp", "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", { desc = "preview hunk" })
 map("n", "<leader>gr", "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", { desc = "reset hunk" })
 map("n", "<leader>gR", "<cmd>lua require 'gitsigns'.reset_buffer()<cr>", { desc = "reset buffer" })
@@ -130,21 +141,12 @@ map("n", "<leader>gc", "<cmd>Telescope git_commits<cr>", { desc = "checkout comm
 -- NeoVim
 map("n", "<leader>vn", "<cmd>set relativenumber!<cr>", { desc = "numbers toggle" })
 map("n", "<leader>vl", "<cmd>IndentBlanklineToggle<cr>", { desc = "blankline toggle" })
-map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", { desc = "backround toggle" })
-
--- enable / disable diagnostic
-local diagnostics_active = true
-local toggle_diagnostics = function()
-  diagnostics_active = not diagnostics_active
-  if diagnostics_active then
-    vim.diagnostic.enable()
-  else
-    vim.diagnostic.disable()
-  end
-end
-
-map('n', '<leader>vd', toggle_diagnostics, { desc = "diagnostic toggle" })
+map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", { desc = "background toggle" })
 
 -- Code Run
 map("n", "<leader>cp", "<cmd>TermExec cmd='python3 %'<cr>", { desc = "python"} )
 map("n", "<leader>cw", "<cmd>lua _WEB_TOGGLE()<cr>", { desc = "web preview"} )
+
+-- Python
+map("n", "<leader>pe", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "python envs" })
+map("n", "<leader>pt", "<cmd>lua _BPYTHON_TOGGLE()<cr>", { desc = "bpython term" })

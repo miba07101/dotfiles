@@ -4,7 +4,7 @@ local is_wsl = vim.fn.has("wsl")
 
 opt.backup = false                           -- Whether to create a backup file
 opt.clipboard = "unnamedplus"                -- Use the system clipboard
-opt.cmdheight = 1                            -- Set command line height
+opt.cmdheight = 0                            -- Set command line height
 opt.completeopt = { "menuone" , "noselect" } -- Set completion options
 opt.cursorline = true                        -- Highlight the current line
 opt.expandtab = true                         -- Convert tabs to spaces

@@ -55,7 +55,7 @@ require("lazy").setup({
           dashboard.button("e", " " .. " New file", "<cmd>ene <bar> startinsert <cr>"),
           dashboard.button("f", " " .. " Find file", "<cmd>Telescope find_files<cr>"),
           -- dashboard.button("p", " " .. " Python", "<cmd>Telescope file_browser path=~/git-repos/python/<cr>"),
-          dashboard.button("p", " " .. " Projects", "<cmd>Telescope project<cr>"),
+          dashboard.button("p", " " .. " Projects", "<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<cr>"),
           dashboard.button("c", " " .. " Config", "<cmd>e ~/.config/nvim/lua/plugin-manager.lua<cr>"),
           dashboard.button("q", " " .. " Quit", ":qa<CR>"),
         }
@@ -324,9 +324,11 @@ require("lazy").setup({
         local mappings = {
           b = { name = "buffers" },
           c = { name = "code" },
+          d = { name = "diagnostic" },
           f = { name = "telescope" },
           g = { name = "git" },
           l = { name = "lsp" },
+          p = { name = "python" },
           t = { name = "terminal" },
           v = { name = "neovim" },
           w = { name = "windows" },
