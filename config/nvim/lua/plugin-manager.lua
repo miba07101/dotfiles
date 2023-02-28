@@ -167,7 +167,7 @@ require("lazy").setup({
 
         local ranger = Terminal:new({
           direction = "float",
-          dir = cwd_dir,
+          -- dir = cwd_dir,
           cmd = ('ranger --choosefiles "%s"'):format(path),
           close_on_exit = true,
           on_close = function()

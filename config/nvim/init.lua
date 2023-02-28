@@ -1,4 +1,4 @@
-require('options')
-require('keymaps')
-require('autocommands')
-require('plugin-manager')
+require("options")
+require("keymaps")
+require("autocommands")
+require("plugin-manager")
