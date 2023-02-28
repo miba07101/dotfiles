@@ -5,7 +5,7 @@
 (("local"    @keyword) (#set! conceal "~"))
 (("function" @keyword) (#set! conceal ""))
 (("and"      @keyword) (#set! conceal "▼"))
-(("end"      @keyword) (#set! conceal "–"))
+(("end"      @keyword) (#set! conceal "–E"))
 (("in"       @keyword) (#set! conceal "i"))
 
 ; Repeat
