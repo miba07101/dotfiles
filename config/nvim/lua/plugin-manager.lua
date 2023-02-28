@@ -150,13 +150,16 @@ require("lazy").setup({
               return vim.o.columns * 0.4
             end
           end,
+          open_mapping = [[<c-\>]],
         })
         local Terminal = require("toggleterm.terminal").Terminal
+        local cwd_dir = vim.fn.expand("%:p")
         local Path = require 'plenary.path'
         local path = vim.fn.tempname()
 
         local ranger = Terminal:new({
           direction = "float",
+          dir = cwd_dir,
           cmd = ('ranger --choosefiles "%s"'):format(path),
           close_on_exit = true,
           on_close = function()
@@ -245,6 +248,8 @@ require("lazy").setup({
       },
       lazy = false,
       config = function()
+      local actions = require "telescope.actions"
+      local fb_actions = require "telescope".extensions.file_browser.actions
         require("telescope").setup({
           defaults = {
             path_display = { "truncate" },
@@ -265,6 +270,12 @@ require("lazy").setup({
             file_browser = {
               hidden = true,
               grouped = true, -- show directories first
+              mappings = {
+                ["n"] = {
+                  ["<RIGHT>"] = actions.select_default,
+                  ["<LEFT>"] = fb_actions.goto_parent_dir,
+                },
+              },
             },
             project = {
               base_dirs = {
