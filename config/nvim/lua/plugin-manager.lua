@@ -96,6 +96,14 @@ require("lazy").setup({
       end,
     },
 
+    { "ziontee113/icon-picker.nvim",
+      config = function()
+        require("icon-picker").setup({
+          disable_legacy_commands = true
+        })
+      end,
+    },
+
 -- Statusline, bufferline
     { "nvim-lualine/lualine.nvim",
       config = function()
@@ -211,14 +219,14 @@ require("lazy").setup({
         require("colorizer").setup()
       end,
     },
-
+--
 -- Treesitter
     { "nvim-treesitter/nvim-treesitter",
       build = ":TSUpdate",
       dependencies = {
         "JoosepAlviste/nvim-ts-context-commentstring",
         "windwp/nvim-ts-autotag",
-        "HiPhish/nvim-ts-rainbow2",
+        -- "HiPhish/nvim-ts-rainbow2",
         "nvim-treesitter/playground",
       },
       config = function()
@@ -229,19 +237,19 @@ require("lazy").setup({
           context_commentstring = { enable = true },
           autopairs = { enable = true },
           autotag = { enable = true },
-          rainbow = { enable = true,
-                      disable = {},
-                      query = 'rainbow-parens',
-                      strategy = require 'ts-rainbow.strategy.global',
-                      max_file_lines = 3000
-          },
+          -- rainbow = { enable = true,
+          --             disable = {},
+          --             query = 'rainbow-parens',
+          --             strategy = require 'ts-rainbow.strategy.global',
+          --             max_file_lines = 3000
+          -- },
           playground = { enable = true },
           incremental_selection = { enable = true },
           indent = { enable = true },
         })
       end,
     },
-
+--
 -- Telescope
     { "nvim-telescope/telescope.nvim",
       dependencies = {
@@ -348,6 +356,7 @@ require("lazy").setup({
           d = { name = "diagnostic" },
           f = { name = "telescope" },
           g = { name = "git" },
+          i = { name = "icons" },
           l = { name = "lsp" },
           p = { name = "python" },
           t = { name = "terminal" },

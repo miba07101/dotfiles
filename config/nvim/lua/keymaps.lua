@@ -71,6 +71,11 @@ map('x', '<leader>/', '<ESC><CMD>lua require("Comment.api").toggle.linewise(vim.
 -- Lazy
 map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "lazy" })
 
+-- Icon Picker
+map("n", "<leader>in", "<cmd>IconPickerNormal<cr>", { desc = "icon normal mode" })
+map("n", "<leader>iy", "<cmd>IconPickerYank<cr>", { desc = " yank icon into register" })
+map("i", "<A-i>", "<cmd>IconPickerInsert<cr>", { desc = "icon insert mode" })
+
 -- Telescope
 map("n", "<leader>fx", "<cmd>Telescope<cr>", { desc = "telescope" })
 map("n", "<leader>fe", "<cmd>Telescope file_browser<cr>", { desc = "file browser" })
@@ -142,6 +147,19 @@ map("n", "<leader>gc", "<cmd>Telescope git_commits<cr>", { desc = "checkout comm
 map("n", "<leader>vn", "<cmd>set relativenumber!<cr>", { desc = "numbers toggle" })
 map("n", "<leader>vl", "<cmd>IndentBlanklineToggle<cr>", { desc = "blankline toggle" })
 map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", { desc = "background toggle" })
+map("n", "<leader>vc", function()
+  if vim.o.conceallevel > 0 then
+    vim.o.conceallevel = 0
+  else vim.o.conceallevel = 1
+	end
+end, { desc = "conceal level toggle" })
+map("n",  "<leader>vk" , function()
+	if vim.o.concealcursor == "n" then
+		vim.o.concealcursor = ""
+	else
+		vim.o.concealcursor = "n"
+	end
+end, { desc = "conceal cursor toggle" })
 
 -- Code Run
 map("n", "<leader>cp", "<cmd>TermExec cmd='python3 %'<cr>", { desc = "python"} )
@@ -150,20 +168,3 @@ map("n", "<leader>cw", "<cmd>lua _WEB_TOGGLE()<cr>", { desc = "web preview"} )
 -- Python
 map("n", "<leader>pe", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "python envs" })
 map("n", "<leader>pt", "<cmd>lua _BPYTHON_TOGGLE()<cr>", { desc = "bpython term" })
-
--- For Conceal enable/disable
-map("n",  "<leader>." , function()
-	if vim.o.conceallevel > 0 then
-		vim.o.conceallevel = 0
-	else
-		vim.o.conceallevel = 2
-	end
-end)
-
-map("n",  "<leader>," , function()
-	if vim.o.concealcursor == "n" then
-		vim.o.concealcursor = ""
-	else
-		vim.o.concealcursor = "n"
-	end
-end)
