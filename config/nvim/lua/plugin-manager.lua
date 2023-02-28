@@ -153,7 +153,7 @@ require("lazy").setup({
           open_mapping = [[<c-\>]],
         })
         local Terminal = require("toggleterm.terminal").Terminal
-        local cwd_dir = vim.fn.expand("%:p")
+        local cwd_dir = vim.fn.expand("%:p") -- nefunguje ak spustim nvim z rangera
         local Path = require 'plenary.path'
         local path = vim.fn.tempname()
 
@@ -219,11 +219,13 @@ require("lazy").setup({
         "JoosepAlviste/nvim-ts-context-commentstring",
         "windwp/nvim-ts-autotag",
         "HiPhish/nvim-ts-rainbow2",
+        "nvim-treesitter/playground",
       },
       config = function()
         require("nvim-treesitter.configs").setup({
           ensure_installed = { "python", "bash", "lua", "html", "css" },
           highlight = { enable = true },
+          additional_vim_regex_highlighting = false,
           context_commentstring = { enable = true },
           autopairs = { enable = true },
           autotag = { enable = true },
@@ -233,6 +235,7 @@ require("lazy").setup({
                       strategy = require 'ts-rainbow.strategy.global',
                       max_file_lines = 3000
           },
+          playground = { enable = true },
           incremental_selection = { enable = true },
           indent = { enable = true },
         })

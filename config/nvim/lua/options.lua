@@ -62,6 +62,8 @@ opt.updatetime = 100                         -- Speed up response time
 opt.wrap = false                             -- Disable wrapping of lines longer than the width of window
 opt.wrapscan = true                          -- Allows to search the entire file repeatedly (continuation of the search after the last result will return to the first result)
 opt.writebackup = false                      -- Whether to create backups when writing files
+opt.conceallevel = 1
+opt.concealcursor = "n"
 
 -- nastavenia pre WSL a klasicky linuxW
 if is_wsl == 1

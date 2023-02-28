@@ -150,3 +150,20 @@ map("n", "<leader>cw", "<cmd>lua _WEB_TOGGLE()<cr>", { desc = "web preview"} )
 -- Python
 map("n", "<leader>pe", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "python envs" })
 map("n", "<leader>pt", "<cmd>lua _BPYTHON_TOGGLE()<cr>", { desc = "bpython term" })
+
+-- For Conceal enable/disable
+map("n",  "<leader>." , function()
+	if vim.o.conceallevel > 0 then
+		vim.o.conceallevel = 0
+	else
+		vim.o.conceallevel = 2
+	end
+end)
+
+map("n",  "<leader>," , function()
+	if vim.o.concealcursor == "n" then
+		vim.o.concealcursor = ""
+	else
+		vim.o.concealcursor = "n"
+	end
+end)
