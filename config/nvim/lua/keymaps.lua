@@ -78,7 +78,7 @@ map("i", "<A-i>", "<cmd>IconPickerInsert<cr>", { desc = "icon insert mode" })
 
 -- Telescope
 map("n", "<leader>fx", "<cmd>Telescope<cr>", { desc = "telescope" })
-map("n", "<leader>fe", "<cmd>Telescope file_browser<cr>", { desc = "file browser" })
+map("n", "<leader>fe", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", { desc = "file browser" })
 map("n", "<leader>fn", "<cmd>Telescope notify<cr>", { desc = "notifications" })
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "files" })
 map("n", "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "words" })
