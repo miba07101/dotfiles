@@ -94,6 +94,7 @@ ranger-cd() {
 export EDITOR="nvim"
 export VISUAL="nvim"
 export RANGER_LOAD_DEFAULT_RC=false
+export PATH=$PATH:$HOME/.npm/bin export NODE_PATH=$NODE_PATH:$HOME/.npm/lib/node_modules
 
 #############
 # ALIASES
@@ -146,7 +147,7 @@ alias salome='$HOME/salome-meca/./salome_meca-lgpl-2021.0.0-2-20211014-scibian-9
 alias freecad='$HOME/Applications/FreeCAD_0.20-1-2022-08-20-conda-Linux-x86_64-py310_b6b0ddf25121b8cf8cc18f02e81151b7.AppImage'
 alias pg='sudo -i -u postgres'
 
-alias lg='lazygit'
+alias gl='lazygit'
 
 #############
 # KLAVESOVE SKRATKY
