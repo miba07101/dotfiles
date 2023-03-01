@@ -351,6 +351,7 @@ lazygit(){
     # manualne potom v git priecinku:
     # gh auth login
 }
+
 win_disk_share(){
     info "WIN DISK SHARE SETUP"
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y cifs-utils
@@ -464,7 +465,7 @@ ticker(){
     curl -Ls https://api.github.com/repos/achannarasappa/ticker/releases/latest | grep -wo "https.*linux-amd64*.tar.gz" | wget -qi -
     tar -xvf ticker*.tar.gz ticker
     chmod +x ./ticker
-    sudo -S <<< ${mypassword} mv ticker /usr/local/bin/
+    mv ticker ${HOME}/.local/bin/
     rm -f ticker*.tar.gz
 }
 
@@ -682,11 +683,6 @@ postgresql(){
       # sudo su postgres
       # psql -c "CREATE ROLE vimi LOGIN CREATEDB PASSWORD '8992';"
     fi
-}
-
-live_server(){
-    info "LIVE SERVER"
-    sudo -S <<< ${mypassword} npm i -g live-server
 }
 
 python(){
@@ -954,11 +950,13 @@ wsl_dotfiles(){
     ln -sf ${CWD}/config/zsh/.zshrc                 ${HOME}/.config/zsh/.zshrc
     ln -sf ${CWD}/config/nvim/init.lua              ${HOME}/.config/nvim/init.lua
     ln -sf ${CWD}/config/nvim/lua                   ${HOME}/.config/nvim/lua
+    ln -sf ${CWD}/config/nvim/after                 ${HOME}/.config/nvim/after
     ln -sf ${CWD}/config/ranger                     ${HOME}/.config/ranger
     ln -sf ${CWD}/xWSL/starship.toml                ${HOME}/.config/starship.toml
     ln -sf ${CWD}/home/.bashrc                      ${HOME}/.bashrc
     ln -sf ${CWD}/home/.ticker.yaml                 ${HOME}/.ticker.yaml
     ln -sf ${CWD}/home/.zprofile                    ${HOME}/.zprofile
+    ln -sf ${CWD}/home/.npmrc                       ${HOME}/.npmrc
     ln -sf ${CWD}/.gitconfig                        ${HOME}/.gitconfig
 
     # OneDrive, Downloads, Megasync, Videos
@@ -1000,6 +998,7 @@ qtile_dotfiles(){
 
     ln -sf ${CWD}/config/nvim/init.lua          ${HOME}/.config/nvim/init.lua
     ln -sf ${CWD}/config/nvim/lua               ${HOME}/.config/nvim/lua
+    ln -sf ${CWD}/config/nvim/after             ${HOME}/.config/nvim/after
     ln -sf ${CWD}/config/qt5ct                  ${HOME}/.config/qt5ct
     ln -sf ${CWD}/config/qtile                  ${HOME}/.config/qtile
     ln -sf ${CWD}/config/qutebrowser            ${HOME}/.config/qutebrowser
@@ -1014,6 +1013,7 @@ qtile_dotfiles(){
     ln -sf ${CWD}/home/.bashrc                  ${HOME}/.bashrc
     ln -sf ${CWD}/home/.ticker.yaml             ${HOME}/.ticker.yaml
     ln -sf ${CWD}/home/.zprofile                ${HOME}/.zprofile
+    ln -sf ${CWD}/home/.npmrc                   ${HOME}/.npmrc
     ln -sf ${CWD}/home/.gtkrc-2.0               ${HOME}/.gtkrc-2.0
     ln -sf ${CWD}/home/.Xresources              ${HOME}/.Xresources
     ln -sf ${CWD}/.gitconfig                    ${HOME}/.gitconfig
@@ -1228,6 +1228,13 @@ EOF
 sleep 1
 }
 
+npm_servers(){
+    info "LIVE, BASH, CSS SERVERS, "
+    npm i -g live-server
+    npm i -g bash-language-server
+    npm i -g vscode-css-languageserver-bin
+}
+
 final_touch(){
   [[ ! -d $HOME/Downloads ]] && mkdir -p $HOME/Downloads
 }
@@ -1275,7 +1282,6 @@ which_distro(){
                 # chia_blockchain
                 zsh_config
                 # postgresql
-                live_server
                 python
                 # jupyter_latex
                 # run_software
@@ -1285,6 +1291,7 @@ which_distro(){
                 wsl_dotfiles
                 # qtile_dotfiles
                 # kde_dotfiles
+                npm_servers
                 final_touch
                 ;;
               q )
@@ -1311,11 +1318,11 @@ which_distro(){
                 # chia_blockchain
                 zsh_config
                 # postgresql
-                live_server
                 python
                 # jupyter_latex
                 qtile_install_theme
                 qtile_dotfiles
+                npm_servers
                 final_touch
                 ;;
               k )
@@ -1347,13 +1354,13 @@ which_distro(){
                 # chia_blockchain
                 zsh_config
                 # postgresql
-                live_server
                 python
                 # jupyter_latex
                 run_software
                 kde_install_theme
                 kde_install_widgets
                 kde_dotfiles
+                npm_servers
                 final_touch
                 ;;
               Q )
