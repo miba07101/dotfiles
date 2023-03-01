@@ -116,7 +116,7 @@ null_ls.setup({
 		formatting.beautysh,
 		diagnostics.shellcheck,
 		-- Lua
-		formatting.stylua,
+		-- formatting.stylua,
 		-- JavaScript, HTML, CSS
 		formatting.prettier.with({
 			extra_filetypes = { "toml" },

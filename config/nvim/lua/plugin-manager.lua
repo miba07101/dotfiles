@@ -1,18 +1,18 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-  if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-      "git",
-      "clone",
-      "--filter=blob:none",
-      "https://github.com/folke/lazy.nvim.git",
-      "--branch=stable",
-      lazypath,
-    })
-  end
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require("lazy").setup({
--- Colorscheme
+  -- Colorscheme
   { "rebelot/kanagawa.nvim",
     priority = 1000,
     config = function()
@@ -20,33 +20,38 @@ require("lazy").setup({
       vim.cmd("colorscheme kanagawa")
     end,
   },
-  { "AlexvZyl/nordic.nvim"
-    },
-  { "aktersnurra/no-clown-fiesta.nvim"
-    },
 
--- UI
+  { "AlexvZyl/nordic.nvim"
+
+  },
+
+  { "aktersnurra/no-clown-fiesta.nvim"
+
+  },
+
+  -- UI
   { "nvim-lua/plenary.nvim"
-    },
+
+  },
 
   { "stevearc/dressing.nvim",
     config = function()
       require("dressing").setup()
-    end
+    end,
   },
 
   { "goolord/alpha-nvim",
     config = function()
-      local dashboard = require "alpha.themes.dashboard"
+      local dashboard = require("alpha.themes.dashboard")
 
       -- header
       dashboard.section.header.val = {
-      [[      .__        .__ ]],
-      [[___  _|__| _____ |__|]],
-      [[\  \/ /  |/     \|  |]],
-      [[ \   /|  |  Y Y  \  |]],
-      [[  \_/ |__|__|_|  /__|]],
-      [[               \/    ]],
+        [[      .__        .__ ]],
+        [[___  _|__| _____ |__|]],
+        [[\  \/ /  |/     \|  |]],
+        [[ \   /|  |  Y Y  \  |]],
+        [[  \_/ |__|__|_|  /__|]],
+        [[               \/    ]],
       }
 
       -- buttons
@@ -55,7 +60,11 @@ require("lazy").setup({
         dashboard.button("e", " " .. " New file", "<cmd>ene <bar> startinsert <cr>"),
         dashboard.button("f", " " .. " Find file", "<cmd>Telescope find_files<cr>"),
         -- dashboard.button("p", " " .. " Python", "<cmd>Telescope file_browser path=~/git-repos/python/<cr>"),
-        dashboard.button("p", " " .. " Projects", "<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<cr>"),
+        dashboard.button(
+          "p",
+          " " .. " Projects",
+          "<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<cr>"
+        ),
         dashboard.button("c", " " .. " Config", "<cmd>e ~/.config/nvim/lua/plugin-manager.lua<cr>"),
         dashboard.button("q", " " .. " Quit", ":qa<CR>"),
       }
@@ -73,22 +82,22 @@ require("lazy").setup({
 
       dashboard.opts.opts.noautocmd = true
       require("alpha").setup(dashboard.opts)
-    end
+    end,
   },
 
   { "rcarriga/nvim-notify",
     config = function()
       require("notify").setup({
         opts = {
-              timeout = 1000,
-              max_height = function()
-                return math.floor(vim.o.lines * 0.75)
-              end,
-              max_width = function()
-                return math.floor(vim.o.columns * 0.75)
-              end,
-              stages = "static",
-            },
+          timeout = 1000,
+          max_height = function()
+            return math.floor(vim.o.lines * 0.75)
+          end,
+          max_width = function()
+            return math.floor(vim.o.columns * 0.75)
+          end,
+          stages = "static",
+        },
       })
     end,
     init = function()
@@ -99,19 +108,19 @@ require("lazy").setup({
   { "ziontee113/icon-picker.nvim",
     config = function()
       require("icon-picker").setup({
-        disable_legacy_commands = true
+        disable_legacy_commands = true,
       })
     end,
   },
 
--- Statusline, bufferline
+  -- Statusline, bufferline
   { "nvim-lualine/lualine.nvim",
     config = function()
       require("plugins.lualine")
     end,
   },
 
--- Comment
+  -- Comment
   { "numToStr/Comment.nvim",
     config = function()
       require("Comment").setup({
@@ -125,7 +134,7 @@ require("lazy").setup({
     end,
   },
 
--- AutoPairs
+  -- AutoPairs
   { "windwp/nvim-autopairs",
     config = function()
       require("nvim-autopairs").setup({})
@@ -138,7 +147,7 @@ require("lazy").setup({
     end,
   },
 
--- Swenv - change python environments
+  -- Swenv - change python environments
   { "AckslD/swenv.nvim",
     config = function()
       require("swenv").setup({
@@ -146,14 +155,14 @@ require("lazy").setup({
           return require("swenv.api").get_venvs(venvs_path)
         end,
         venvs_path = vim.fn.expand("~/python-venv"), -- zadat cestu k envs
-        post_set_venv = function ()
+        post_set_venv = function()
           vim.cmd(":LspRestart<cr>")
-        end
+        end,
       })
     end,
   },
 
--- Terminal
+  -- Terminal
   { "akinsho/toggleterm.nvim",
     config = function()
       require("toggleterm").setup({
@@ -169,7 +178,7 @@ require("lazy").setup({
       local Terminal = require("toggleterm.terminal").Terminal
 
       function _RANGER_TOGGLE()
-        local Path = require 'plenary.path'
+        local Path = require("plenary.path")
         local path = vim.fn.tempname()
         local ranger = Terminal:new({
           direction = "float",
@@ -178,9 +187,9 @@ require("lazy").setup({
           on_close = function()
             Data = Path:new(path):read()
             vim.schedule(function()
-              vim.cmd('e ' .. Data)
+              vim.cmd("e " .. Data)
             end)
-          end
+          end,
         })
         ranger:toggle()
       end
@@ -189,7 +198,7 @@ require("lazy").setup({
         local bpython = Terminal:new({
           direction = "horizontal",
           cmd = "bpython",
-          hidden = true
+          hidden = true,
         })
         bpython:toggle()
       end
@@ -197,7 +206,7 @@ require("lazy").setup({
       function _WEB_TOGGLE()
         local web = Terminal:new({
           direction = "horizontal",
-          cmd = "live-server ."
+          cmd = "live-server .",
         })
         web:toggle()
       end
@@ -207,15 +216,14 @@ require("lazy").setup({
           direction = "float",
           cmd = "lazygit",
           dir = "git_dir",
-          hidden = true
+          hidden = true,
         })
         lazygit:toggle()
       end
-
     end,
   },
 
--- Indent blank line
+  -- Indent blank line
   { "lukas-reineke/indent-blankline.nvim",
     config = function()
       require("indent_blankline").setup({
@@ -228,20 +236,20 @@ require("lazy").setup({
     end,
   },
 
--- Colorizer
+  -- Colorizer
   { "norcalli/nvim-colorizer.lua",
     config = function()
       require("colorizer").setup()
     end,
   },
 
--- Treesitter
+  -- Treesitter
   { "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     dependencies = {
       "JoosepAlviste/nvim-ts-context-commentstring",
       "windwp/nvim-ts-autotag",
-      -- "HiPhish/nvim-ts-rainbow2",
+      "HiPhish/nvim-ts-rainbow2",
       "nvim-treesitter/playground",
     },
     config = function()
@@ -252,12 +260,12 @@ require("lazy").setup({
         context_commentstring = { enable = true },
         autopairs = { enable = true },
         autotag = { enable = true },
-        -- rainbow = { enable = true,
-        --             disable = {},
-        --             query = 'rainbow-parens',
-        --             strategy = require 'ts-rainbow.strategy.global',
-        --             max_file_lines = 3000
-        -- },
+        rainbow = { enable = true,
+          disable = {},
+          query = 'rainbow-parens',
+          strategy = require 'ts-rainbow.strategy.global',
+          max_file_lines = 3000
+        },
         playground = { enable = true },
         incremental_selection = { enable = true },
         indent = { enable = true },
@@ -265,7 +273,7 @@ require("lazy").setup({
     end,
   },
 
--- Telescope
+  -- Telescope
   { "nvim-telescope/telescope.nvim",
     dependencies = {
       "nvim-telescope/telescope-file-browser.nvim",
@@ -274,8 +282,8 @@ require("lazy").setup({
     },
     lazy = false,
     config = function()
-    local actions = require "telescope.actions"
-    local fb_actions = require "telescope".extensions.file_browser.actions
+      local actions = require("telescope.actions")
+      local fb_actions = require("telescope").extensions.file_browser.actions
       require("telescope").setup({
         defaults = {
           path_display = { "truncate" },
@@ -305,8 +313,8 @@ require("lazy").setup({
           },
           project = {
             base_dirs = {
-              {path = "~/git-repos/epd/"},
-              {path = "~/git-repos/python/"},
+              { path = "~/git-repos/epd/" },
+              { path = "~/git-repos/python/" },
             },
             -- hidden_files = true,
           },
@@ -318,7 +326,7 @@ require("lazy").setup({
     end,
   },
 
--- LSP
+  -- LSP
   { "neovim/nvim-lspconfig",
     dependencies = {
       -- LSP
@@ -331,9 +339,9 @@ require("lazy").setup({
     config = function()
       require("plugins.lsp")
     end,
-},
+  },
 
--- CMP Completitions
+  -- CMP Completitions
   { "hrsh7th/nvim-cmp",
     dependencies = {
       "hrsh7th/cmp-buffer",
@@ -351,7 +359,7 @@ require("lazy").setup({
     end,
   },
 
--- Keybidings WhichKey
+  -- Keybidings WhichKey
   { "folke/which-key.nvim",
     lazy = false,
     config = function()
@@ -379,7 +387,15 @@ require("lazy").setup({
         v = { name = "neovim" },
         w = { name = "windows" },
       }
-      require("which-key").register(mappings,opts)
+      require("which-key").register(mappings, opts)
     end,
   },
+
+  -- Keybidings WhichKey
+  { "j-hui/fidget.nvim",
+    config = function()
+      require("fidget").setup()
+    end,
+  }
+
 })
