@@ -326,6 +326,7 @@ require("lazy").setup({
       "williamboman/mason-lspconfig.nvim",
       -- Linters / Formaters
       "jose-elias-alvarez/null-ls.nvim",
+      "jay-babu/mason-null-ls.nvim",
     },
     config = function()
       require("plugins.lsp")
