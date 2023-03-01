@@ -2,11 +2,11 @@
 
 # zistim ci som na WSL
 if [[ "$(</proc/version)" == *WSL* ]]; then
-  WSL=1
-  # Meno win pouzivatela
-  WIN_USER=$(powershell.exe -NoProfile -NonInteractive -Command "\$env:UserName" | tr -d '\r')
+    WSL=1
+    # Meno win pouzivatela
+    WIN_USER=$(powershell.exe -NoProfile -NonInteractive -Command "\$env:UserName" | tr -d '\r')
 else
-  WSL=2
+    WSL=2
 fi
 
 # Verzia systemu - distribucia
@@ -20,14 +20,15 @@ CWD=$(pwd)
 TEMP_DIR=$(cd ${HOME}/Temp && pwd)
 
 # Nastavenie oznameni
-  color=$'\e[1;35m'
-  endcolor=$'\e[0m'
-  star="--------------------------------"
+color=$'\e[1;35m'
+endcolor=$'\e[0m'
+star="--------------------------------"
+
 info(){
-  printf "${color}${star}${endcolor}\n"
-  printf "${color} $1 ${endcolor}\n"
-  printf "${color}${star}${endcolor}\n"
-  # printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
+    printf "${color}${star}${endcolor}\n"
+    printf "${color} $1 ${endcolor}\n"
+    printf "${color}${star}${endcolor}\n"
+    # printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
 }
 
 # Alias pre zypper
@@ -180,7 +181,7 @@ packman_packages(){
 
     # if [ WSL -eq 2 ]
     # then
-      PAC_PKGS=(
+    PAC_PKGS=(
         'ffmpeg'
         'gstreamer-plugins-good'
         'gstreamer-plugins-bad'
@@ -188,15 +189,15 @@ packman_packages(){
         'gstreamer-plugins-ugly'
         'libavcodec-full'
         # 'handbrake-gtk'
-      )
+    )
 
-      for PAC_PKG in "${PAC_PKGS[@]}"; do
-          echo "Installing ${PAC_PKG}"
-          sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PAC_PKG}
-      done
+    for PAC_PKG in "${PAC_PKGS[@]}"; do
+        echo "Installing ${PAC_PKG}"
+        sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PAC_PKG}
+    done
     # fi
 
-# Codecs
+    # Codecs
     # sudo -S <<< ${mypassword} zypper ${INSTALL} -y opi
     # opi codecs
 }
@@ -245,17 +246,17 @@ qtile_settings(){
     sudo -S <<< ${mypassword} sh -c 'cat > /etc/lightdm/lightdm.conf' <<EOF
     [Seat:*]
     autologin-user=vimi
-EOF
+    EOF
 
     # Nastavenie TouchPadu pre natural scrolling
     sudo -S <<< ${mypassword} sh -c 'cat > /etc/X11/xorg.conf.d/30-touchpad.conf' <<EOF
     Section "InputClass"
-            Identifier "touchpad"
-            MatchIsTouchpad "on"
-            Option "NaturalScrolling" "true"
-            Option "Tapping" "on"
+    Identifier "touchpad"
+    MatchIsTouchpad "on"
+    Option "NaturalScrolling" "true"
+    Option "Tapping" "on"
     EndSection
-EOF
+    EOF
 
     # Dunst notification
     sudo -S <<< ${mypassword} sh -c 'cat > /usr/lib/systemd/user/dunst.service' <<EOF
@@ -269,7 +270,7 @@ EOF
     BusName=org.freedesktop.Notifications
     ExecStart=/usr/bin/dunst
     Environment=DISPLAY=:0
-EOF
+    EOF
 
     # Nastavenie sklopenia notebooku
     sudo -S <<< ${mypassword} sh -c "echo 'HandleLidSwitch=ignore' >> /etc/systemd/logind.conf"
@@ -284,19 +285,19 @@ wsl_utilities(){
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y wslu
 
     # Nastavenie wslview - vytvori subor wslview.desktop a potom nastavi ako default
-#     set -eu -o pipefail
+    #     set -eu -o pipefail
 
-#     sudo -S <<< ${mypassword} sh -c 'cat >/usr/share/applications/wslview.desktop' <<EOF
-#     [Desktop Entry]
-#     Version=1.0
-#     Name=WSLview
-#     Exec=wslview %u
-#     Terminal=false
-#     X-MultipleArgs=false
-#     Type=Application
-#     Categories=GNOME;GTK;Network;WebBrowser;
-#     MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
-# EOF
+    #     sudo -S <<< ${mypassword} sh -c 'cat >/usr/share/applications/wslview.desktop' <<EOF
+    #     [Desktop Entry]
+    #     Version=1.0
+    #     Name=WSLview
+    #     Exec=wslview %u
+    #     Terminal=false
+    #     X-MultipleArgs=false
+    #     Type=Application
+    #     Categories=GNOME;GTK;Network;WebBrowser;
+    #     MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+    # EOF
 
     # Nastavi wslview ako default pre otvaranie suborov web, image ..
     # xdg-settings set default-web-browser wslview.desktop
@@ -305,14 +306,14 @@ wsl_utilities(){
 wsl_gnome(){
     info "WSL GNOME SETTINGS"
     PKG_gnome=(
-      'patterns-gnome-gnome_x11' # X11 server
-      'patterns-gnome-gnome' # Wayland
-    # 'dconf-editor' # na zmenu vlastnosti gnome
-    # 'qalculate' # super kalkulacka
-    # 'qalculate-gtk'
-    # 'qalculate-data'
-    # 'gtk3-metatheme-adwaita' # tmava tema
-    # 'dmz-icon-theme-cursors' # biely kurzor podobny win kurzoru
+        'patterns-gnome-gnome_x11' # X11 server
+        'patterns-gnome-gnome' # Wayland
+        # 'dconf-editor' # na zmenu vlastnosti gnome
+        # 'qalculate' # super kalkulacka
+        # 'qalculate-gtk'
+        # 'qalculate-data'
+        # 'gtk3-metatheme-adwaita' # tmava tema
+        # 'dmz-icon-theme-cursors' # biely kurzor podobny win kurzoru
     )
 
     for PKG in "${PKG_gnome[@]}"; do
@@ -360,7 +361,7 @@ win_disk_share(){
     sudo -S <<< ${mypassword} sh -c 'cat > /etc/win-credentials' <<EOF
     username=vimi
     password=8992
-EOF
+    EOF
 
     sudo -S <<< ${mypassword} chown root: /etc/win-credentials
     sudo -S <<< ${mypassword} chmod 600 /etc/win-credentials
@@ -377,7 +378,7 @@ brave(){
     sudo -S <<< ${mypassword} zypper addrepo -f ${repourl} brave-browser
     sudo -S <<< ${mypassword} zypper ${REFRESH}
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y brave-browser
-  }
+}
 
 jdownloader(){
     info "JDOWNLOADER 2"
@@ -385,7 +386,7 @@ jdownloader(){
     sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
     sudo -S <<< ${mypassword} zypper ${REFRESH}
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y JDownloader2
-  }
+}
 
 birdtray_stacer(){
     info "BIRDTRAY, STACER"
@@ -393,7 +394,7 @@ birdtray_stacer(){
     sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
     sudo -S <<< ${mypassword} zypper ${REFRESH}
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y birdtray stacer
-  }
+}
 
 newsflash(){
     info "NEWSFLASH"
@@ -401,7 +402,7 @@ newsflash(){
     sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
     sudo -S <<< ${mypassword} zypper ${REFRESH}
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y newsflash
-  }
+}
 
 hypnotix(){
     info "HYPNOTIX"
@@ -409,7 +410,7 @@ hypnotix(){
     sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
     sudo -S <<< ${mypassword} zypper ${REFRESH}
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y hypnotix
-  }
+}
 
 plasma_eventcalendar(){
     info "PLASMA EVENT CALENDAR"
@@ -417,7 +418,7 @@ plasma_eventcalendar(){
     sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
     sudo -S <<< ${mypassword} zypper ${REFRESH}
     sudo -S <<< ${mypassword} zypper ${INSTALL} plasma5-applet-eventcalendar
-  }
+}
 
 psensor(){
     info "PSENSOR"
@@ -425,7 +426,7 @@ psensor(){
     sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
     sudo -S <<< ${mypassword} zypper ${REFRESH}
     sudo -S <<< ${mypassword} zypper ${INSTALL} psensor
-  }
+}
 
 ##########################################################################
 # Programy z netu
@@ -435,11 +436,11 @@ appimage_launcher(){
     info "INSTALL APPIMAGE-LAUNCHER"
     # Install depencies
     PKG_appimage=(
-    'libqt5-qdbus'
-    'libQt5Widgets5'
-    'fuse'
-    'libfuse2'
-    # 'rpm-build'
+        'libqt5-qdbus'
+        'libQt5Widgets5'
+        'fuse'
+        'libfuse2'
+        # 'rpm-build'
     )
 
     for PKG in "${PKG_appimage[@]}"; do
@@ -478,38 +479,38 @@ ulozto_downloader(){
 
 only_office(){
     info "ONLY OFFICE"
-  git_url="https://github.com/ONLYOFFICE/DesktopEditors/releases/latest"
-  latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
-  latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
+    git_url="https://github.com/ONLYOFFICE/DesktopEditors/releases/latest"
+    latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
+    latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
 
-  case "$distro" in
-    # q - Qtile
-          q )
+    case "$distro" in
+            # q - Qtile
+        q )
             down_url="https://github.com/ONLYOFFICE/DesktopEditors/releases/download/${latest_version}/DesktopEditors-x86_64.AppImage"
-              if wget --spider $down_url 2>/dev/null
-              then
+            if wget --spider $down_url 2>/dev/null
+            then
                 wget ${down_url} -P ${TEMP_DIR}
                 # integruje OnlyOffice appimage do systemu (musi byt nainstalovany AppImageLauncher)
                 ail-cli integrate ${TEMP_DIR}/DesktopEditors-x86_64.AppImage
                 rm -rf ${TEMP_DIR}/*.AppImage
-              else
+            else
                 old_version="v7.3.0"
                 down_url="https://github.com/ONLYOFFICE/DesktopEditors/releases/download/${old_version}/onlyoffice-desktopeditors.x86_64.rpm"
                 wget ${down_url} -P ${TEMP_DIR}
                 sudo -S <<< ${mypassword} zypper ${INSTALL} ${TEMP_DIR}/*.rpm
                 rm -rf ${TEMP_DIR}/*.rpm
-              fi
+            fi
             ;;
-    # k - KDE plasma
-          k )
+            # k - KDE plasma
+        k )
             down_url="https://github.com/ONLYOFFICE/DesktopEditors/releases/download/${latest_version}/onlyoffice-desktopeditors.x86_64.rpm"
             wget ${down_url} -P ${TEMP_DIR}
             sudo -S <<< ${mypassword} zypper ${INSTALL} ${TEMP_DIR}/*.rpm
             rm -rf ${TEMP_DIR}/*.rpm
             ;;
-          * )
+        * )
             ;;
-        esac
+    esac
 }
 
 freetube(){
@@ -542,28 +543,28 @@ freecad(){
     info "FreeCAD"
     if [ WSL -eq 1 ]
     then
-      # git_url="https://github.com/FreeCAD/FreeCAD/releases/latest"
-      # latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
-      # latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
-      down_url="https://github.com/FreeCAD/FreeCAD/releases/download/0.20.2/FreeCAD_0.20.2-2022-12-27-conda-Linux-x86_64-py310.AppImage"
+        # git_url="https://github.com/FreeCAD/FreeCAD/releases/latest"
+        # latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
+        # latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
+        down_url="https://github.com/FreeCAD/FreeCAD/releases/download/0.20.2/FreeCAD_0.20.2-2022-12-27-conda-Linux-x86_64-py310.AppImage"
 
-      wget ${down_url} -P ${TEMP_DIR}
+        wget ${down_url} -P ${TEMP_DIR}
 
-      # integruje FreeCAD appimage do systemu (musi byt nainstalovany AppImageLauncher)
-      ail-cli integrate ${TEMP_DIR}/FreeCAD_0.20-1-2022-08-20-conda-Linux-x86_64-py310.AppImage
+        # integruje FreeCAD appimage do systemu (musi byt nainstalovany AppImageLauncher)
+        ail-cli integrate ${TEMP_DIR}/FreeCAD_0.20-1-2022-08-20-conda-Linux-x86_64-py310.AppImage
 
-      rm -rf ${TEMP_DIR}/*.AppImage
+        rm -rf ${TEMP_DIR}/*.AppImage
 
     else
-      sudo -S <<< ${mypassword} zypper ${INSTALL} -y FreeCAD
+        sudo -S <<< ${mypassword} zypper ${INSTALL} -y FreeCAD
     fi
 }
 
 salome_meca(){
     info "SALOME-MECA"
     PKG_salome=(
-    'go'
-    'singularity-ce'
+        'go'
+        'singularity-ce'
     )
 
     for PKG in "${PKG_salome[@]}"; do
@@ -631,10 +632,10 @@ zsh_config(){
 postgresql(){
     info "PostgreSQL"
     PKG_pg=(
-    'postgresql'
-    'postgresql-server'
-    'postgresql-contrib'
-    'postgresql-plpython'
+        'postgresql'
+        'postgresql-server'
+        'postgresql-contrib'
+        'postgresql-plpython'
     )
 
     for PKG in "${PKG_pg[@]}"; do
@@ -645,53 +646,53 @@ postgresql(){
 
     if [ WSL -eq 1 ]
     then
-      # tu to zastane aby som zadal heslo
-      echo
-      echo "ENTER Postgres password: "
-      sudo passwd postgres
+        # tu to zastane aby som zadal heslo
+        echo
+        echo "ENTER Postgres password: "
+        sudo passwd postgres
 
-      # Create postgreSQL data directory
-      sudo -S <<< ${mypassword} mkdir /usr/lib/postgresql15/data
-      sudo -S <<< ${mypassword} chown postgres:postgres /usr/lib/postgresql15/data
+        # Create postgreSQL data directory
+        sudo -S <<< ${mypassword} mkdir /usr/lib/postgresql15/data
+        sudo -S <<< ${mypassword} chown postgres:postgres /usr/lib/postgresql15/data
 
-      # inicializuje postgresql databazu
-      # sudo -i -u postgres -c '/usr/lib/postgresql15/bin/initdb -D /usr/lib/postgresql15/data/'
+        # inicializuje postgresql databazu
+        # sudo -i -u postgres -c '/usr/lib/postgresql15/bin/initdb -D /usr/lib/postgresql15/data/'
 
-      # tymto spustim postgresql server
-      # sudo -i -u postgres -c '/usr/lib/postgresql15/bin/pg_ctl -D /usr/lib/postgresql15/data/ -l logfile start'
+        # tymto spustim postgresql server
+        # sudo -i -u postgres -c '/usr/lib/postgresql15/bin/pg_ctl -D /usr/lib/postgresql15/data/ -l logfile start'
 
-      # Postup manualny zo zdrojoveho kodu:
-      # https://www.thegeekstuff.com/2009/04/linux-postgresql-install-and-configure-from-source/
+        # Postup manualny zo zdrojoveho kodu:
+        # https://www.thegeekstuff.com/2009/04/linux-postgresql-install-and-configure-from-source/
 
-      # # Prida Enviroment variable
-      # sudo -S <<< ${mypassword} sh -c 'cat >/etc/profile' <<EOF
-      # # PostgreSQL
-      # PATH=/usr/local/pgsql/bin:$PATH
-      # export PATH
-      # EOF
+        # # Prida Enviroment variable
+        # sudo -S <<< ${mypassword} sh -c 'cat >/etc/profile' <<EOF
+        # # PostgreSQL
+        # PATH=/usr/local/pgsql/bin:$PATH
+        # export PATH
+        # EOF
     else
-      # inicializuje postgresql databazu
-      sudo -S <<< ${mypassword} systemctl enable postgresql
-      sudo -S <<< ${mypassword} systemctl start postgresql
+        # inicializuje postgresql databazu
+        sudo -S <<< ${mypassword} systemctl enable postgresql
+        sudo -S <<< ${mypassword} systemctl start postgresql
 
-      # tu to zastane aby som zadal heslo
-      echo
-      echo "ENTER Postgres password: "
-      sudo passwd postgres
+        # tu to zastane aby som zadal heslo
+        echo
+        echo "ENTER Postgres password: "
+        sudo passwd postgres
 
-      # Manualne - vytvorenie uzivatela vimi
-      # sudo su postgres
-      # psql -c "CREATE ROLE vimi LOGIN CREATEDB PASSWORD '8992';"
+        # Manualne - vytvorenie uzivatela vimi
+        # sudo su postgres
+        # psql -c "CREATE ROLE vimi LOGIN CREATEDB PASSWORD '8992';"
     fi
 }
 
 python(){
     info "PYTHON SETUP"
     # Pre neovim LSP - celosystemove
-    pip3 install pyright
-    pip3 install pynvim
-    pip3 install flake8
-    pip3 install black
+    # pip3 install pyright
+    # pip3 install pynvim
+    # pip3 install flake8
+    # pip3 install black
 
     # env pre web-epipingdesign
     [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
@@ -776,14 +777,14 @@ jupyter_latex(){
 run_software(){
     info "RUN SOFTWARE"
     case "$distro" in
-              k )
-                nohup firefox &> /dev/null &
-                nohup thunderbird &> /dev/null &
-                nohup latte-dock &> /dev/null &
-                nohup freetube &> /dev/null &
-                ;;
-              * )
-                ;;
+        k )
+            nohup firefox &> /dev/null &
+            nohup thunderbird &> /dev/null &
+            nohup latte-dock &> /dev/null &
+            nohup freetube &> /dev/null &
+            ;;
+        * )
+            ;;
     esac
 }
 
@@ -794,7 +795,7 @@ qtile_install_theme(){
     # Vytvori environment variable pre qt5ct
     sudo -S <<< ${mypassword} sh -c 'cat > /etc/environment' <<EOF
     QT_QPA_PLATFORMTHEME=qt5ct
-EOF
+    EOF
 
     # TELA icons
     ICONS_DIR="$HOME/.local/share/icons"
@@ -823,14 +824,14 @@ EOF
     git clone ${git_url} ${TEMP_DIR}/Nordzy-cursors
     cd ${TEMP_DIR}/Nordzy-cursors/ && ./install.sh
 
-#     # nefunguje to - treba pouzit lxappearance - nastavi nordzy cursor ako default
-#     mkdir -p ${CURSOR_DIR}/default
-#     cat > ${CURSOR_DIR}/default/index.theme <<EOF
-#     [Icon Theme]
-#     Name=Default
-#     Comment=Default Cursor Theme
-#     Inherits=Nordzy-cursors-white
-# EOF
+    #     # nefunguje to - treba pouzit lxappearance - nastavi nordzy cursor ako default
+    #     mkdir -p ${CURSOR_DIR}/default
+    #     cat > ${CURSOR_DIR}/default/index.theme <<EOF
+    #     [Icon Theme]
+    #     Name=Default
+    #     Comment=Default Cursor Theme
+    #     Inherits=Nordzy-cursors-white
+    # EOF
 }
 
 kde_install_theme(){
@@ -937,8 +938,8 @@ kde_install_widgets(){
 wsl_dotfiles(){
     info "CREATE SYMLINKS"
     DIRECTORIES=(
-    'zsh'
-    'nvim'
+        'zsh'
+        'nvim'
     )
 
     # zisti ci priecinky existuju, ak nie tak ich vytvori
@@ -969,9 +970,9 @@ wsl_dotfiles(){
 qtile_dotfiles(){
     info "CREATE SYMLINKS"
     DIRECTORIES=(
-    'mpv'
-    'nvim'
-    'zsh'
+        'mpv'
+        'nvim'
+        'zsh'
     )
 
     # zisti ci priecinky existuju, ak nie tak ich vytvori
@@ -1046,197 +1047,197 @@ qtile_dotfiles(){
 kde_dotfiles(){
     info "CREATE SYMLINKS"
 
-# ------------------------------------------------------------------------
-# Config subory
-# ------------------------------------------------------------------------
-echo
-echo "${color} ${star} Config copy ... ${star} ${endcolor}"
-sleep 1
-echo
+    # ------------------------------------------------------------------------
+    # Config subory
+    # ------------------------------------------------------------------------
+    echo
+    echo "${color} ${star} Config copy ... ${star} ${endcolor}"
+    sleep 1
+    echo
 
-rm -rfv $HOME/.config/autostart
-cp -rfv ${CWD}/config/* $HOME/.config/
+    rm -rfv $HOME/.config/autostart
+    cp -rfv ${CWD}/config/* $HOME/.config/
 
-# ------------------------------------------------------------------------
-# Dolphin_konsole subory
-# ------------------------------------------------------------------------
-echo
-echo "${color} ${star} Dolphin, Konsole copy ... ${star} ${endcolor}"
-sleep 1
-echo
+    # ------------------------------------------------------------------------
+    # Dolphin_konsole subory
+    # ------------------------------------------------------------------------
+    echo
+    echo "${color} ${star} Dolphin, Konsole copy ... ${star} ${endcolor}"
+    sleep 1
+    echo
 
-cp -rfv ${CWD}/dolphin_konsole/{dolphin,konsole} $HOME/.local/share/kxmlgui5/
+    cp -rfv ${CWD}/dolphin_konsole/{dolphin,konsole} $HOME/.local/share/kxmlgui5/
 
-# ------------------------------------------------------------------------
-# Latte
-# ------------------------------------------------------------------------
-echo
-echo "${color} ${star} Latte copy ... ${star} ${endcolor}"
-sleep 1
-echo
+    # ------------------------------------------------------------------------
+    # Latte
+    # ------------------------------------------------------------------------
+    echo
+    echo "${color} ${star} Latte copy ... ${star} ${endcolor}"
+    sleep 1
+    echo
 
-cp -rfv ${CWD}/latte/* $HOME/.config/latte/
+    cp -rfv ${CWD}/latte/* $HOME/.config/latte/
 }
 
 soft_config(){
-echo
-echo "${color} ${hash} SOFTWARE CONFIG ${hash} ${endcolor}"
-echo
+    echo
+    echo "${color} ${hash} SOFTWARE CONFIG ${hash} ${endcolor}"
+    echo
 
-# ------------------------------------------------------------------------
-# MPV
-# ------------------------------------------------------------------------
-echo
-echo "${color} ${star} MPV config ... ${star} ${endcolor}"
-sleep 1
-echo
+    # ------------------------------------------------------------------------
+    # MPV
+    # ------------------------------------------------------------------------
+    echo
+    echo "${color} ${star} MPV config ... ${star} ${endcolor}"
+    sleep 1
+    echo
 
-chmod +x ${CWD}/mpv/mpv-single-instance/{mpv-single,mpv-single.desktop}
-sudo -S <<< $mypassword cp -rfv ${CWD}/mpv/mpv-single-instance/mpv-single /usr/bin/
-sudo -S <<< $mypassword cp -rfv ${CWD}/mpv/mpv-single-instance/mpv-single.desktop /usr/share/applications/
+    chmod +x ${CWD}/mpv/mpv-single-instance/{mpv-single,mpv-single.desktop}
+    sudo -S <<< $mypassword cp -rfv ${CWD}/mpv/mpv-single-instance/mpv-single /usr/bin/
+    sudo -S <<< $mypassword cp -rfv ${CWD}/mpv/mpv-single-instance/mpv-single.desktop /usr/share/applications/
 
-[[ ! -d $HOME/.config/mpv ]] && mkdir -p $HOME/.config/mpv
-cp -rfv ${CWD}/mpv/{script-opts,scripts,input.conf,mpv.conf} $HOME/.config/mpv/
+    [[ ! -d $HOME/.config/mpv ]] && mkdir -p $HOME/.config/mpv
+    cp -rfv ${CWD}/mpv/{script-opts,scripts,input.conf,mpv.conf} $HOME/.config/mpv/
 
-# ------------------------------------------------------------------------
-# Firefox subory
-# ------------------------------------------------------------------------
-echo
-echo "${color} ${star} Firefox config ... ${star} ${endcolor}"
-sleep 1
-echo
+    # ------------------------------------------------------------------------
+    # Firefox subory
+    # ------------------------------------------------------------------------
+    echo
+    echo "${color} ${star} Firefox config ... ${star} ${endcolor}"
+    sleep 1
+    echo
 
-cp -rfv ${CWD}/firefox/{chrome,extensions,prefs.js} $HOME/.mozilla/firefox/*.default-release/
+    cp -rfv ${CWD}/firefox/{chrome,extensions,prefs.js} $HOME/.mozilla/firefox/*.default-release/
 
-# ------------------------------------------------------------------------
-# Thunderbird subory
-# ------------------------------------------------------------------------
-echo
-echo "${color} ${star} Thunderbird config ... ${star} ${endcolor}"
-sleep 1
-echo
+    # ------------------------------------------------------------------------
+    # Thunderbird subory
+    # ------------------------------------------------------------------------
+    echo
+    echo "${color} ${star} Thunderbird config ... ${star} ${endcolor}"
+    sleep 1
+    echo
 
-cp -rfv ${CWD}/thunderbird/{extensions,prefs.js} $HOME/.thunderbird/*.default-release/
+    cp -rfv ${CWD}/thunderbird/{extensions,prefs.js} $HOME/.thunderbird/*.default-release/
 
-# ------------------------------------------------------------------------
-# Onedrive subory
-# ------------------------------------------------------------------------
-echo
-echo "${color} ${star} Onedrive config ... ${star} ${endcolor}"
-sleep 1
-echo
+    # ------------------------------------------------------------------------
+    # Onedrive subory
+    # ------------------------------------------------------------------------
+    echo
+    echo "${color} ${star} Onedrive config ... ${star} ${endcolor}"
+    sleep 1
+    echo
 
-cp -rfv ${CWD}/onedrive/onedrive_startup.sh.desktop $HOME/.config/autostart/
+    cp -rfv ${CWD}/onedrive/onedrive_startup.sh.desktop $HOME/.config/autostart/
 
-[[ ! -d $HOME/.config/old-autostart-scripts ]] && mkdir -p $HOME/.config/old-autostart-scripts
-chmod +x ${CWD}/onedrive/onedrive_startup.sh
-cp -rfv ${CWD}/onedrive/onedrive_startup.sh $HOME/.config/old-autostart-scripts/
+    [[ ! -d $HOME/.config/old-autostart-scripts ]] && mkdir -p $HOME/.config/old-autostart-scripts
+    chmod +x ${CWD}/onedrive/onedrive_startup.sh
+    cp -rfv ${CWD}/onedrive/onedrive_startup.sh $HOME/.config/old-autostart-scripts/
 
-# ------------------------------------------------------------------------
-# Freetube subory
-# ------------------------------------------------------------------------
-echo
-echo "${color} ${star} Freetube config ... ${star} ${endcolor}"
-sleep 1
-echo
+    # ------------------------------------------------------------------------
+    # Freetube subory
+    # ------------------------------------------------------------------------
+    echo
+    echo "${color} ${star} Freetube config ... ${star} ${endcolor}"
+    sleep 1
+    echo
 
-cp -rfv ${CWD}/freetube/{profiles.db,settings.db} $HOME/.config/FreeTube/
+    cp -rfv ${CWD}/freetube/{profiles.db,settings.db} $HOME/.config/FreeTube/
 
-# ------------------------------------------------------------------------
-# Vim_bash_zsh subory
-# ------------------------------------------------------------------------
-echo
-echo "${color} ${star} VIMRC, BASHRC, ZSHRC config ... ${star} ${endcolor}"
-sleep 1
-echo
+    # ------------------------------------------------------------------------
+    # Vim_bash_zsh subory
+    # ------------------------------------------------------------------------
+    echo
+    echo "${color} ${star} VIMRC, BASHRC, ZSHRC config ... ${star} ${endcolor}"
+    sleep 1
+    echo
 
-cp -rfv ${CWD}/vim_bash_zsh/vimrc $HOME/.vimrc
-cp -rfv ${CWD}/vim_bash_zsh/bashrc $HOME/.bashrc
-cp -rfv ${CWD}/vim_bash_zsh/zshrc $HOME/.zshrc
+    cp -rfv ${CWD}/vim_bash_zsh/vimrc $HOME/.vimrc
+    cp -rfv ${CWD}/vim_bash_zsh/bashrc $HOME/.bashrc
+    cp -rfv ${CWD}/vim_bash_zsh/zshrc $HOME/.zshrc
 
-# cd ${CWD}/vim_bash_zsh
-# for file in *; do
-#     cp -rfv $file $HOME/.${file}
-# done
-# cd ${CWD}
+    # cd ${CWD}/vim_bash_zsh
+    # for file in *; do
+    #     cp -rfv $file $HOME/.${file}
+    # done
+    # cd ${CWD}
 
-# v priecinku vyhlada len subory (files), ktore nemaju bodku (! -name "*.*") pomocou funkcie find
-# path="${CWD}/vim_bash_zsh/"
-# file=$(find ${path} -type f ! -name "*.*")
-#
-# premenuje vsetky subory na skryte a skopiruje do $HOME/
-# for meno in ${file}; do
-#     rename=${meno#${path}}
-#     mv -n "${rename}" ".${rename}"
-#     cp -rf ".${rename}" $HOME/
-# done
+    # v priecinku vyhlada len subory (files), ktore nemaju bodku (! -name "*.*") pomocou funkcie find
+    # path="${CWD}/vim_bash_zsh/"
+    # file=$(find ${path} -type f ! -name "*.*")
+    #
+    # premenuje vsetky subory na skryte a skopiruje do $HOME/
+    # for meno in ${file}; do
+    #     rename=${meno#${path}}
+    #     mv -n "${rename}" ".${rename}"
+    #     cp -rf ".${rename}" $HOME/
+    # done
 
-# ------------------------------------------------------------------------
-# Ikony
-# ------------------------------------------------------------------------
-echo
-echo "${color} ${star} ICONS Megasync, Yapstock, Taskbar copy ... ${star} ${endcolor}"
-sleep 1
-echo
+    # ------------------------------------------------------------------------
+    # Ikony
+    # ------------------------------------------------------------------------
+    echo
+    echo "${color} ${star} ICONS Megasync, Yapstock, Taskbar copy ... ${star} ${endcolor}"
+    sleep 1
+    echo
 
-# megasync - $HOME/.local/share/icons/hicolor
-himega_dir="$HOME/.local/share/icons/hicolor"
-[[ ! -d ${himega_dir} ]] && mkdir -p ${himega_dir}
-7z x -y ${CWD}/icons/megasync_hicolor_icons.7z -o${himega_dir}/
+    # megasync - $HOME/.local/share/icons/hicolor
+    himega_dir="$HOME/.local/share/icons/hicolor"
+    [[ ! -d ${himega_dir} ]] && mkdir -p ${himega_dir}
+    7z x -y ${CWD}/icons/megasync_hicolor_icons.7z -o${himega_dir}/
 
-## refresne ikony
-sudo -S <<< ${mypassword} gtk-update-icon-cache -f /usr/share/icons/hicolor/
+    ## refresne ikony
+    sudo -S <<< ${mypassword} gtk-update-icon-cache -f /usr/share/icons/hicolor/
 
-# taskbar - $HOME/.local/share/plasma/desktoptheme/Nordic/icons
-task_dir="$HOME/.local/share/plasma/desktoptheme/Nordic"
-7z x -y ${CWD}/icons/taskbar_icons.7z -o${task_dir}
-task_dir2="$HOME/.local/share/plasma/desktoptheme/Nordic-Solid"
-7z x -y ${CWD}/icons/taskbar_icons.7z -o${task_dir2}
+    # taskbar - $HOME/.local/share/plasma/desktoptheme/Nordic/icons
+    task_dir="$HOME/.local/share/plasma/desktoptheme/Nordic"
+    7z x -y ${CWD}/icons/taskbar_icons.7z -o${task_dir}
+    task_dir2="$HOME/.local/share/plasma/desktoptheme/Nordic-Solid"
+    7z x -y ${CWD}/icons/taskbar_icons.7z -o${task_dir2}
 
-# Yapstock - $HOME/.local/share/plasma/plasmoids/com.librehat.yapstocks/contents/ui/
-yap_dir="$HOME/.local/share/plasma/plasmoids/com.librehat.yapstocks/contents/ui"
-7z x -y ${CWD}/icons/yapstock_icons.7z -o${yap_dir}
+    # Yapstock - $HOME/.local/share/plasma/plasmoids/com.librehat.yapstocks/contents/ui/
+    yap_dir="$HOME/.local/share/plasma/plasmoids/com.librehat.yapstocks/contents/ui"
+    7z x -y ${CWD}/icons/yapstock_icons.7z -o${yap_dir}
 
-# ------------------------------------------------------------------------
-# Win10 fonty
-# ------------------------------------------------------------------------
-echo
-echo "${color} ${star} WIN10 Fonts copy ... ${star} ${endcolor}"
-sleep 1
-echo
+    # ------------------------------------------------------------------------
+    # Win10 fonty
+    # ------------------------------------------------------------------------
+    echo
+    echo "${color} ${star} WIN10 Fonts copy ... ${star} ${endcolor}"
+    sleep 1
+    echo
 
-# win10 fonts - $HOME/.local/share/fonts
-win10_dir="$HOME/.local/share"
-7z x -y ${CWD}/win10_fonts/win_fonts.7z -o${win10_dir}/
+    # win10 fonts - $HOME/.local/share/fonts
+    win10_dir="$HOME/.local/share"
+    7z x -y ${CWD}/win10_fonts/win_fonts.7z -o${win10_dir}/
 
-# ------------------------------------------------------------------------
-# Starship
-# ------------------------------------------------------------------------
-echo
-echo "${color} ${star} Starship config ... ${star} ${endcolor}"
-sleep 1
-echo
+    # ------------------------------------------------------------------------
+    # Starship
+    # ------------------------------------------------------------------------
+    echo
+    echo "${color} ${star} Starship config ... ${star} ${endcolor}"
+    sleep 1
+    echo
 
-starship_toml="$HOME/.config/starship.toml"
-[[ ! -f ${starship_toml} ]] && touch ${starship_toml}
+    starship_toml="$HOME/.config/starship.toml"
+    [[ ! -f ${starship_toml} ]] && touch ${starship_toml}
 
-cat << "EOF" > ${starship_toml}
+    cat << "EOF" > ${starship_toml}
 [line_break]
 disabled = true
 EOF
 
-sleep 1
+    sleep 1
 }
 
 npm_servers(){
     info "LIVE, BASH, CSS SERVERS, "
     npm i -g live-server
-    npm i -g bash-language-server
-    npm i -g vscode-css-languageserver-bin
+    # npm i -g bash-language-server
+    # npm i -g vscode-css-languageserver-bin
 }
 
 final_touch(){
-  [[ ! -d $HOME/Downloads ]] && mkdir -p $HOME/Downloads
+    [[ ! -d $HOME/Downloads ]] && mkdir -p $HOME/Downloads
 }
 
 
@@ -1249,125 +1250,125 @@ which_distro(){
     echo
 
     case "$distro" in
-              w )
-                root
-                update_system
-                basic_packages
-                # qtile_packages
-                # kde_packages
-                # desktop_packages
-                packman_packages
-                # basic_desktop_settings
-                # qtile_settings
-                wsl_utilities
-                # wsl_gnome
-                github_cli
-                lazygit
-                # win_disk_share
-                # brave
-                # jdownloader
-                # birdtray_stacer
-                # newsflash
-                # hypnotix
-                # plasma_eventcalendar
-                # psensor
-                appimage_launcher
-                ticker
-                ulozto_downloader
-                # only_office
-                # freetube
-                # ledger_live
-                # freecad
-                # salome_meca
-                # chia_blockchain
-                zsh_config
-                # postgresql
-                python
-                # jupyter_latex
-                # run_software
-                # qtile_install_theme
-                # kde_install_theme
-                # kde_install_widgets
-                wsl_dotfiles
-                # qtile_dotfiles
-                # kde_dotfiles
-                npm_servers
-                final_touch
-                ;;
-              q )
-                root
-                update_system
-                basic_packages
-                qtile_packages
-                desktop_packages
-                packman_packages
-                qtile_settings
-                basic_desktop_settings
-                github_cli
-                lazygit
-                win_disk_share
-                brave
-                jdownloader
-                appimage_launcher
-                ticker
-                ulozto_downloader
-                only_office
-                # ledger_live
-                # freecad
-                # salome_meca
-                # chia_blockchain
-                zsh_config
-                # postgresql
-                python
-                # jupyter_latex
-                qtile_install_theme
-                qtile_dotfiles
-                npm_servers
-                final_touch
-                ;;
-              k )
-                root
-                update_system
-                basic_packages
-                kde_packages
-                desktop_packages
-                packman_packages
-                basic_desktop_settings
-                github_cli
-                lazygit
-                # win_disk_share
-                brave
-                jdownloader
-                birdtray_stacer
-                newsflash
-                hypnotix
-                plasma_eventcalendar
-                psensor
-                appimage_launcher
-                ticker
-                ulozto_downloader
-                only_office
-                freetube
-                ledger_live
-                # freecad
-                # salome_meca
-                # chia_blockchain
-                zsh_config
-                # postgresql
-                python
-                # jupyter_latex
-                run_software
-                kde_install_theme
-                kde_install_widgets
-                kde_dotfiles
-                npm_servers
-                final_touch
-                ;;
-              Q )
-                exit
-                ;;
-              * )
-                ;;
+        w )
+            root
+            update_system
+            basic_packages
+            # qtile_packages
+            # kde_packages
+            # desktop_packages
+            packman_packages
+            # basic_desktop_settings
+            # qtile_settings
+            wsl_utilities
+            # wsl_gnome
+            github_cli
+            lazygit
+            # win_disk_share
+            # brave
+            # jdownloader
+            # birdtray_stacer
+            # newsflash
+            # hypnotix
+            # plasma_eventcalendar
+            # psensor
+            appimage_launcher
+            ticker
+            ulozto_downloader
+            # only_office
+            # freetube
+            # ledger_live
+            # freecad
+            # salome_meca
+            # chia_blockchain
+            zsh_config
+            # postgresql
+            python
+            # jupyter_latex
+            # run_software
+            # qtile_install_theme
+            # kde_install_theme
+            # kde_install_widgets
+            wsl_dotfiles
+            # qtile_dotfiles
+            # kde_dotfiles
+            npm_servers
+            final_touch
+            ;;
+        q )
+            root
+            update_system
+            basic_packages
+            qtile_packages
+            desktop_packages
+            packman_packages
+            qtile_settings
+            basic_desktop_settings
+            github_cli
+            lazygit
+            win_disk_share
+            brave
+            jdownloader
+            appimage_launcher
+            ticker
+            ulozto_downloader
+            only_office
+            # ledger_live
+            # freecad
+            # salome_meca
+            # chia_blockchain
+            zsh_config
+            # postgresql
+            python
+            # jupyter_latex
+            qtile_install_theme
+            qtile_dotfiles
+            npm_servers
+            final_touch
+            ;;
+        k )
+            root
+            update_system
+            basic_packages
+            kde_packages
+            desktop_packages
+            packman_packages
+            basic_desktop_settings
+            github_cli
+            lazygit
+            # win_disk_share
+            brave
+            jdownloader
+            birdtray_stacer
+            newsflash
+            hypnotix
+            plasma_eventcalendar
+            psensor
+            appimage_launcher
+            ticker
+            ulozto_downloader
+            only_office
+            freetube
+            ledger_live
+            # freecad
+            # salome_meca
+            # chia_blockchain
+            zsh_config
+            # postgresql
+            python
+            # jupyter_latex
+            run_software
+            kde_install_theme
+            kde_install_widgets
+            kde_dotfiles
+            npm_servers
+            final_touch
+            ;;
+        Q )
+            exit
+            ;;
+        * )
+            ;;
     esac
 }
 
