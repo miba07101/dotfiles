@@ -16,32 +16,32 @@ compinit
 
 # zistim ci som na WSL
 if [[ "$(</proc/version)" == *WSL* ]]; then
-  isWSL=1
+    isWSL=1
 else
-  isWSL=2
+    isWSL=2
 fi
 
 case $isWSL in
-  1)
-    # umozni duplikovat panel vo windows terminal a otvori novy panel v tom istom priecinku
-    # v podstate povie win terminalu, ze toto je pracovny priecinok
-    precmd() {
-      printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
-    }
+    1)
+        # umozni duplikovat panel vo windows terminal a otvori novy panel v tom istom priecinku
+        # v podstate povie win terminalu, ze toto je pracovny priecinok
+        precmd() {
+            printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
+        }
 
-    # Enviroment variables
-    export WIN_USERNAME=$(powershell.exe -NoProfile -NonInteractive -Command "\$env:UserName" | tr -d '\r')
-    export PGDATA='/usr/local/pgsql/data'
+        # Enviroment variables
+        export WIN_USERNAME=$(powershell.exe -NoProfile -NonInteractive -Command "\$env:UserName" | tr -d '\r')
+        export PGDATA='/usr/local/pgsql/data'
 
-    # Variables
-    OneDrive_DIR=/mnt/c/Users/$WIN_USERNAME/OneDrive/
-    SCRIPTS_DIR=/mnt/c/Users/$WIN_USERNAME/OneDrive/Linux/Skripty/
-    ;;
-  2)
-    # Variables
-    OneDrive_DIR=$HOME/OneDrive/
-    SCRIPTS_DIR=$HOME/OneDrive/Linux/Skripty/
-    ;;
+        # Variables
+        OneDrive_DIR=/mnt/c/Users/$WIN_USERNAME/OneDrive/
+        SCRIPTS_DIR=/mnt/c/Users/$WIN_USERNAME/OneDrive/Linux/Skripty/
+        ;;
+    2)
+        # Variables
+        OneDrive_DIR=$HOME/OneDrive/
+        SCRIPTS_DIR=$HOME/OneDrive/Linux/Skripty/
+        ;;
 esac
 
 #############
@@ -57,9 +57,9 @@ function zsh_add_file() {
 function zsh_add_plugin() {
     PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
     if [ -d "$ZDOTDIR/$PLUGIN_NAME" ]; then
-#           For plugins
+        #           For plugins
         zsh_add_file "$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
-        zsh_add_file "$PLUGIN_NAME/$PLUGIN_NAME.zsh"
+            zsh_add_file "$PLUGIN_NAME/$PLUGIN_NAME.zsh"
     else
         git clone "https://github.com/$1.git" "$ZDOTDIR/$PLUGIN_NAME"
     fi
@@ -75,7 +75,7 @@ zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
 
 # Colormap
 function colormap() {
-  for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
+    for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
 }
 
 # Ranger - otvori shell tam kde vypnem rangera
@@ -127,19 +127,19 @@ alias yafin='source $HOME/python-venv/yafin-venv/bin/activate && python3 $SCRIPT
 alias dea='deactivate'
 
 case $isWSL in
-  1)
-    alias mpv='/mnt/c/Users/$WIN_USERNAME/AppData/Local/Microsoft/WindowsApps/519Ezhik.mpvUnofficial_xfkyq1j2kc7zp/mpv.exe'
-    alias stv='mpv "C:\Users\\$WIN_USERNAME\\OneDrive\Linux\IPTV\sk-cz.m3u"'
-    alias ptv='mpv "C:\Users\\$WIN_USERNAME\\OneDrive\Linux\IPTV\ptv.m3u"'
-    alias ulozto='ulozto-downloader --parts 50 --parts-progress --auto-captcha --output "/mnt/c/Users/$WIN_USERNAME/Downloads/"'
-    alias backup='$HOME/OneDrive/Linux/Qtile/./qtile-backup.sh'
-    ;;
-  2)
-    alias stv='mpv "$HOME/OneDrive/Linux/IPTV/sk-cz.m3u"'
-    alias ptv='mpv "$HOME/OneDrive/Linux/IPTV/ptv.m3u"'
-    alias ulozto='ulozto-downloader --parts 50 --parts-progress --auto-captcha --output "${HOME}/Downloads/"'
-    alias backup='$HOME/OneDrive/Linux/Qtile/./qtile-backup.sh'
-    ;;
+    1)
+        alias mpv='/mnt/c/Users/$WIN_USERNAME/AppData/Local/Microsoft/WindowsApps/519Ezhik.mpvUnofficial_xfkyq1j2kc7zp/mpv.exe'
+        alias stv='mpv "C:\Users\\$WIN_USERNAME\\OneDrive\Linux\IPTV\sk-cz.m3u"'
+        alias ptv='mpv "C:\Users\\$WIN_USERNAME\\OneDrive\Linux\IPTV\ptv.m3u"'
+        alias ulozto='ulozto-downloader --parts 50 --parts-progress --auto-captcha --output "/mnt/c/Users/$WIN_USERNAME/Downloads/"'
+        alias backup='$HOME/OneDrive/Linux/Qtile/./qtile-backup.sh'
+        ;;
+    2)
+        alias stv='mpv "$HOME/OneDrive/Linux/IPTV/sk-cz.m3u"'
+        alias ptv='mpv "$HOME/OneDrive/Linux/IPTV/ptv.m3u"'
+        alias ulozto='ulozto-downloader --parts 50 --parts-progress --auto-captcha --output "${HOME}/Downloads/"'
+        alias backup='$HOME/OneDrive/Linux/Qtile/./qtile-backup.sh'
+        ;;
 esac
 alias rec='$SCRIPTS_DIR./stream_record_linux.sh'
 
@@ -168,39 +168,39 @@ bindkey -s '^[v' 'cava^M'
 #############
 
 case $isWSL in
-  1)
-    # zistim nazov distribucie
-    _distro=$(awk '/^ID=/' /etc/*-release | awk -F'=' '{ print tolower($2) }')
+    1)
+        # zistim nazov distribucie
+        _distro=$(awk '/^ID=/' /etc/*-release | awk -F'=' '{ print tolower($2) }')
 
-    # oznaci ikonu na zaklade distribucie
-    case $_distro in
-        *kali*)                  ICON="ﴣ";;
-        *arch*)                  ICON="";;
-        *debian*)                ICON="";;
-        *raspbian*)              ICON="";;
-        *ubuntu*)                ICON="";;
-        *elementary*)            ICON="";;
-        *fedora*)                ICON="";;
-        *coreos*)                ICON="";;
-        *gentoo*)                ICON="";;
-        *mageia*)                ICON="";;
-        *centos*)                ICON="";;
-     #   *opensuse*)              ICON="";;
-        *opensuse*|*tumbleweed*) ICON="﮼";;
-        *sabayon*)               ICON="";;
-        *slackware*)             ICON="";;
-        *linuxmint*)             ICON="";;
-        *alpine*)                ICON="";;
-        *aosc*)                  ICON="";;
-        *nixos*)                 ICON="";;
-        *devuan*)                ICON="";;
-        *manjaro*)               ICON="";;
-        *rhel*)                  ICON="";;
-        *)                       ICON="";;
-    esac
+        # oznaci ikonu na zaklade distribucie
+        case $_distro in
+            *kali*)                  ICON="ﴣ" ;;
+            *arch*)                  ICON="" ;;
+            *debian*)                ICON="" ;;
+            *raspbian*)              ICON="" ;;
+            *ubuntu*)                ICON="" ;;
+            *elementary*)            ICON="" ;;
+            *fedora*)                ICON="" ;;
+            *coreos*)                ICON="" ;;
+            *gentoo*)                ICON="" ;;
+            *mageia*)                ICON="" ;;
+            *centos*)                ICON="" ;;
+                #   *opensuse*)              ICON="" ;;
+            *opensuse*|*tumbleweed*) ICON="﮼" ;;
+            *sabayon*)               ICON="" ;;
+            *slackware*)             ICON="" ;;
+            *linuxmint*)             ICON="" ;;
+            *alpine*)                ICON="" ;;
+            *aosc*)                  ICON="" ;;
+            *nixos*)                 ICON="" ;;
+            *devuan*)                ICON="" ;;
+            *manjaro*)               ICON="" ;;
+            *rhel*)                  ICON="" ;;
+            *)                       ICON="" ;;
+        esac
 
-    export STARSHIP_DISTRO="$ICON  "
-    ;;
+        export STARSHIP_DISTRO="$ICON  "
+        ;;
 esac
 
 # potrebne pre spustenie Starshipu
