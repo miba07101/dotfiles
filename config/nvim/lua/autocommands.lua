@@ -76,12 +76,18 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 })
 
 -- show cursor line only in active window
--- vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
---   pattern = "*",
---   command = "set nocursorline",
---   group = mygroup,
---   desc = "Hide cursorline in inactive window",
--- })
+vim.api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
+  pattern = "*",
+  command = "set cursorline",
+  group = mygroup,
+  desc = "Show cursorline in active window",
+})
+vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
+  pattern = "*",
+  command = "set nocursorline",
+  group = mygroup,
+  desc = "Hide cursorline in inactive window",
+})
 
 -- Check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd("FocusGained", {
