@@ -195,13 +195,13 @@ require("lazy").setup({
         ranger:toggle()
       end
 
-      function _BPYTHON_TOGGLE()
-        local bpython = Terminal:new({
+      function _PYTHON_TOGGLE()
+        local python = Terminal:new({
           direction = "horizontal",
-          cmd = "bpython",
+          cmd = "python3",
           hidden = true,
         })
-        bpython:toggle()
+        python:toggle()
       end
 
       function _WEB_TOGGLE()

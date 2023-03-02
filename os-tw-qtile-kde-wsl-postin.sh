@@ -74,7 +74,7 @@ basic_packages(){
         'xsel' # umoznuje copirovat adresu suboru z Rangera do systemoveho clipboardu
         'jq' # potrebne pre script ticker - cli JSON processor
         'python310-pip' # treba len zmenit cislo verzie python podla aktualnej
-        'python310-bpython'
+        # 'python310-bpython'
         'ripgrep' # vyhladavaci doplnok pre neovim a funkcnost Telescope doplnku
         'npm-default'
         'gcc' # C compiler
@@ -1236,6 +1236,12 @@ npm_servers(){
     # npm i -g vscode-css-languageserver-bin
 }
 
+git_repos(){
+    [[ ! -d $HOME/git-repos ]] && mkdir -p $HOME/git-repos
+    git clone https://github.com/miba07101/python.git $HOME/git-repos/python
+    git clone https://github.com/miba07101/epd.git $HOME/git-repos/epd
+}
+
 final_touch(){
     [[ ! -d $HOME/Downloads ]] && mkdir -p $HOME/Downloads
 }
@@ -1293,6 +1299,7 @@ which_distro(){
             # qtile_dotfiles
             # kde_dotfiles
             npm_servers
+            git_repos
             final_touch
             ;;
         q )
@@ -1324,6 +1331,7 @@ which_distro(){
             qtile_install_theme
             qtile_dotfiles
             npm_servers
+            git_repos
             final_touch
             ;;
         k )
@@ -1362,6 +1370,7 @@ which_distro(){
             kde_install_widgets
             kde_dotfiles
             npm_servers
+            git_repos
             final_touch
             ;;
         Q )
