@@ -198,7 +198,7 @@ require("lazy").setup({
       function _PYTHON_TOGGLE()
         local python = Terminal:new({
           direction = "horizontal",
-          cmd = "python3",
+          cmd = "ipython",
           hidden = true,
         })
         python:toggle()

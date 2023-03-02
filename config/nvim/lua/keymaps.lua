@@ -168,4 +168,4 @@ map("n", "<leader>cw", "<cmd>lua _WEB_TOGGLE()<cr>", { desc = "web preview"} )
 -- Python
 map("n", "<leader>pe", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "pick venvs" })
 map("n", "<leader>pr", "<cmd>TermExec cmd='python3 %'<cr>", { desc = "run code"} )
-map("n", "<leader>pt", "<cmd>lua _PYTHON_TOGGLE()<cr>", { desc = "terminal" })
+map("n", "<leader>pt", "<cmd>lua _PYTHON_TOGGLE()<cr>", { desc = "ipython term" })
