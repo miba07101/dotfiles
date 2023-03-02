@@ -1,5 +1,4 @@
 local opt = vim.opt
--- local g = vim.g
 local is_wsl = vim.fn.has("wsl")
 
 opt.backup = false                           -- Whether to create a backup file
@@ -7,7 +6,7 @@ opt.clipboard = "unnamedplus"                -- Use the system clipboard
 opt.cmdheight = 0                            -- Set command line height
 opt.completeopt = { "menuone" , "noselect" } -- Set completion options
 opt.conceallevel = 0                         -- Conceal level disable
-opt.concealcursor = ""                       -- Conceal cursor disable
+opt.concealcursor = "v"                      -- Conceal cursor disable
 opt.cursorline = true                        -- Highlight the current line
 opt.expandtab = true                         -- Convert tabs to spaces
 opt.fillchars:append({
@@ -19,18 +18,12 @@ opt.fillchars:append({
 })
 opt.fileencoding = "utf-8"                   -- Set the character encoding of the file where the current buffer is located
 opt.filetype = "plugin"                      -- Allow plugin loading of file types
-opt.foldenable = true
-opt.foldlevel = 1
-opt.foldmethod = "expr"
-opt.foldexpr = "nvim_treesitter#foldexpr()"
--- opt.foldcolumn = "1"
-opt.foldtext=[[getline(v:foldstart)]]
-
--- function MyFoldText()
--- return vim.fn.getline(vim.v.foldstart)
--- end
--- opt.foldtext = "v:lua.MyFoldText()"
-
+opt.foldenable = true                        -- Folding allowed
+opt.foldlevel = 1                            -- Folding from lvl 1
+opt.foldmethod = "expr"                      -- Folding method
+opt.foldexpr = "nvim_treesitter#foldexpr()"  -- Folding method use treesitter
+-- opt.foldcolumn = "1"                      -- Folding column show
+opt.foldtext=[[getline(v:foldstart)]]        -- Folding - disable all chunk when folded
 opt.hidden = true                            -- Allow switching from unsaved buffers
 opt.hlsearch = true                          -- Allow search highlighting
 opt.ignorecase = true                        -- Ignore case when searching
@@ -64,6 +57,31 @@ opt.updatetime = 100                         -- Speed up response time
 opt.wrap = false                             -- Disable wrapping of lines longer than the width of window
 opt.wrapscan = true                          -- Allows to search the entire file repeatedly (continuation of the search after the last result will return to the first result)
 opt.writebackup = false                      -- Whether to create backups when writing files
+
+local builtin_plugins = {
+    "2html_plugin",
+    "getscript",
+    "getscriptPlugin",
+    "gzip",
+    "logipat",
+    "matchit",
+    "netrw",
+    "netrwFileHandlers",
+    "netrwPlugin",
+    "netrwSettings",
+    "rrhelper",
+    "spellfile_plugin",
+    "tar",
+    "tarPlugin",
+    "vimball",
+    "vimballPlugin",
+    "zip",
+    "zipPlugin",
+  }
+
+for i = 1, #builtin_plugins do
+  vim.g['loaded_' .. builtin_plugins[i]] = true
+end
 
 -- nastavenia pre WSL a klasicky linuxW
 if is_wsl == 1

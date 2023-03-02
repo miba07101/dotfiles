@@ -45,9 +45,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 
 -- autoformat code on save
 vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = {
-    "*.py", "*.json", "*.css", "*.scss", "*.html" },
-  -- pattern = "*",
+  pattern = { "*.py", "*.json", "*.css", "*.scss", "*.html" },
   callback = function()
     -- noop if no lsp
     vim.lsp.buf.format()
@@ -78,7 +76,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 })
 
 -- show cursor line only in active window
-
 vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
   pattern = "*",
   command = "set nocursorline",
@@ -155,14 +152,13 @@ vim.api.nvim_create_autocmd("VimResized", {
 })
 
 -- PYTHON
--- api.nvim_create_autocmd( "FileType", { pattern = "python", command = [[map <buffer> <M-p> :w<CR>:exec '!clear; python3' shellescape(@%, 1)<CR>]] })
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "python",
   command = [[nnoremap <buffer> <M-p> :w<CR>:terminal python3 "%"<CR>]],
   group = mygroup,
   desc = "Open file in python terminal",
 })
--- api.nvim_create_autocmd( "FileType", { pattern = "python", command = [[imap <buffer> <M-p> <esc>:w<CR>:exec '!clear; python3' shellescape(@%, 1)<CR>]] })
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "python",
   command = [[setlocal colorcolumn=80]],
