@@ -6,7 +6,7 @@ opt.clipboard = "unnamedplus"                -- Use the system clipboard
 opt.cmdheight = 0                            -- Set command line height
 opt.completeopt = { "menuone" , "noselect" } -- Set completion options
 opt.conceallevel = 0                         -- Conceal level disable
-opt.concealcursor = "v"                      -- Conceal cursor disable
+-- opt.concealcursor = "v"                      -- Conceal cursor disable
 opt.cursorline = true                        -- Highlight the current line
 opt.expandtab = true                         -- Convert tabs to spaces
 opt.fillchars:append({
