@@ -60,7 +60,8 @@ end
 
 -- Lsp server name
 local lsp_server = function()
-  local msg = "-"
+  local msg = ""
+  local icon = ""
   local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
   local clients = vim.lsp.get_active_clients()
   if next(clients) == nil then
@@ -69,7 +70,8 @@ local lsp_server = function()
   for _, client in ipairs(clients) do
     local filetypes = client.config.filetypes
     if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-      return client.name
+      -- return client.name
+      return icon
     end
   end
   return msg
@@ -132,7 +134,8 @@ lualine.setup({
       { python_venvs, icon = "" }
     },
     lualine_z = {
-      { lsp_server, icon = "" },
+      -- { lsp_server, icon = "" },
+      { lsp_server },
       { "location" },
       { "progress" },
     },

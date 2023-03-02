@@ -1,83 +1,85 @@
 require("mason").setup()
 
 local servers = {
-	bashls = {
-		filetypes = { "zsh", "bash", "sh" },
-	},
-	cssls = {},
-	html = {},
-	jsonls = {},
-	lua_ls = {
-		settings = {
-			Lua = {
-				diagnostics = {
-					globals = { "vim" },
-				},
-				workspace = {
-					library = {
-						[vim.fn.expand("$VIMRUNTIME/lua")] = true,
-						[vim.fn.stdpath("config") .. "/lua"] = true,
-					},
-				},
-				telemetry = {
-					enable = false,
-				},
-			},
-		},
-	},
-	pyright = {
-		settings = {
-			python = {
-				analysis = {
-					typeCheckingMode = "off",
-				},
-			},
-		},
-	},
+  bashls = {
+    filetypes = { "zsh", "bash", "sh" },
+  },
+  cssls = {},
+  html = {},
+  jsonls = {},
+  lua_ls = {
+    settings = {
+      Lua = {
+        diagnostics = {
+          globals = { "vim" },
+        },
+        workspace = {
+          library = {
+            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+            [vim.fn.stdpath("config") .. "/lua"] = true,
+          },
+        },
+        telemetry = {
+          enable = false,
+        },
+      },
+    },
+  },
+  pyright = {
+    settings = {
+      python = {
+        analysis = {
+          typeCheckingMode = "off",
+        },
+      },
+    },
+  },
 }
-
--- local capabilities = require("cmp_nvim_lsp").default_capabilities(
---   vim.lsp.protocol.make_client_capabilities())
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 -- Auto install servers
 require("mason-lspconfig").setup({
-	ensure_installed = vim.tbl_keys(servers),
-	automatic_installation = true,
+  ensure_installed = vim.tbl_keys(servers),
+  automatic_installation = true,
 })
 
 -- Setup LSP servers
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+local on_attach = function(client, bufnr)
+  -- sem zadat on_attach funkcie doplnkov
+end
+
 require("mason-lspconfig").setup_handlers({
-	function(server)
-		local server_opts = servers[server] or {}
-		server_opts.capabilities = capabilities
-		require("lspconfig")[server].setup(server_opts)
-	end,
+  function(server)
+    local server_opts = servers[server] or {}
+    server_opts.capabilities = capabilities
+    server_opts.on_attach = on_attach
+    require("lspconfig")[server].setup(server_opts)
+  end,
 })
 
 -- Diagnostic customization
 -- See :help vim.diagnostic.config()
 vim.diagnostic.config({
-	virtual_text = false,
-	underline = true,
-	severity_sort = true,
-	float = {
-		focusable = true,
-		style = "minimal",
-		border = "rounded",
-		source = "always",
-		header = "",
-		prefix = "",
-	},
+  virtual_text = false,
+  underline = true,
+  severity_sort = true,
+  float = {
+    focusable = true,
+    style = "minimal",
+    border = "rounded",
+    source = "always",
+    header = "",
+    prefix = "",
+  },
 })
 
 -- See :help sign_define()
 local sign = function(opts)
-	vim.fn.sign_define(opts.name, {
-		texthl = opts.name,
-		text = opts.text,
-		numhl = "",
-	})
+  vim.fn.sign_define(opts.name, {
+    texthl = opts.name,
+    text = opts.text,
+    numhl = "",
+  })
 end
 
 sign({ name = "DiagnosticSignError", text = "" })
@@ -94,15 +96,15 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
 -- Linters / Formaters
 -- Auto install
 require("mason-null-ls").setup({
-	ensure_installed = {
-		"beautysh",
-		"shellcheck",
-		"stylua",
-		"prettier",
-		"black",
-		"flake8",
-	},
-	automatic_installation = true,
+  ensure_installed = {
+    "beautysh",
+    "shellcheck",
+    "stylua",
+    "prettier",
+    "black",
+    "flake8",
+  },
+  automatic_installation = true,
 })
 
 local null_ls = require("null-ls")
@@ -110,20 +112,20 @@ local formatting = null_ls.builtins.formatting
 local diagnostics = null_ls.builtins.diagnostics
 
 null_ls.setup({
-	debug = false,
-	sources = {
-		-- Bash
-		formatting.beautysh,
-		diagnostics.shellcheck,
-		-- Lua
-		-- formatting.stylua,
-		-- JavaScript, HTML, CSS
-		formatting.prettier.with({
-			extra_filetypes = { "toml" },
-			extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote" },
-		}),
-		-- Python
-		formatting.black.with({ extra_args = { "--fast" } }),
-		diagnostics.flake8,
-	},
+  debug = false,
+  sources = {
+    -- Bash
+    formatting.beautysh,
+    diagnostics.shellcheck,
+    -- Lua
+    -- formatting.stylua,
+    -- JavaScript, HTML, CSS
+    formatting.prettier.with({
+      extra_filetypes = { "toml" },
+      extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote" },
+    }),
+    -- Python
+    formatting.black.with({ extra_args = { "--fast" } }),
+    diagnostics.flake8,
+  },
 })

@@ -141,7 +141,7 @@ require("lazy").setup({
     end,
   },
 
-  { "kylechui/nvim-surround",
+  { "€krkylechui/nvim-surround",
     config = function()
       require("nvim-surround").setup({})
     end,
@@ -250,7 +250,6 @@ require("lazy").setup({
       "JoosepAlviste/nvim-ts-context-commentstring",
       "windwp/nvim-ts-autotag",
       "HiPhish/nvim-ts-rainbow2",
-      "nvim-treesitter/playground",
     },
     config = function()
       require("nvim-treesitter.configs").setup({
@@ -266,7 +265,6 @@ require("lazy").setup({
           strategy = require 'ts-rainbow.strategy.global',
           max_file_lines = 3000
         },
-        playground = { enable = true },
         incremental_selection = { enable = true },
         indent = { enable = true },
       })
@@ -391,11 +389,10 @@ require("lazy").setup({
     end,
   },
 
-  -- Keybidings WhichKey
-  { "j-hui/fidget.nvim",
-    config = function()
-      require("fidget").setup()
-    end,
-  }
-
+  -- -- Fidget - show LSP server progress
+  -- { "j-hui/fidget.nvim",
+  --   config = function()
+  --     require("fidget").setup()
+  --   end,
+  -- }
 })

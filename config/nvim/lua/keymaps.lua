@@ -97,6 +97,7 @@ map("n", "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "rename" })
 map("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format()<cr>", { desc = "formatting" })
 map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "code action" })
 map("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "signature help" })
+map("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "server info" })
 
 -- Diagnostic
 -- enable / disable diagnostic
