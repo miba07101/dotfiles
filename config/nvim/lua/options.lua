@@ -87,7 +87,7 @@ end
 if is_wsl == 1
   then
     opt.guicursor = {"n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150"}  -- Cursor help: guicursor
-    opt.shell = "/bin/zsh"
+    opt.shell = "/bin/bash"
   else
     opt.shell = "/bin/zsh"
 end
