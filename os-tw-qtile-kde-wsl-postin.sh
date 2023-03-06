@@ -714,9 +714,10 @@ python(){
     source $HOME/python-venv/yafin-venv/bin/activate
 
     pip3 install --upgrade pip
-    pip3 install yfinance
-    pip3 install pandas
-    pip3 install pandas-datareader
+    # pip3 install yfinance
+    # pip3 install pandas
+    # pip3 install pandas-datareader
+    pip3 install yahoofinancials
 
     deactivate
 }
