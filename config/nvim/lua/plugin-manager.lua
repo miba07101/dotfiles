@@ -267,7 +267,7 @@ require("lazy").setup({
           max_file_lines = 3000
         },
         incremental_selection = { enable = true },
-        indent = { enable = true },
+        -- indent = { enable = true },
       })
     end,
   },
