@@ -379,6 +379,7 @@ require("lazy").setup({
         d = { name = "diagnostic" },
         f = { name = "telescope" },
         g = { name = "git" },
+        h = { name = "help" },
         i = { name = "icons" },
         l = { name = "lsp" },
         p = { name = "python" },

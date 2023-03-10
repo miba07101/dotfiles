@@ -18,6 +18,12 @@ map("n", "W", ":wq<cr>", { desc = "Save-Quit" })
 map("n", "Q", ":q!<cr>", { desc = "Quit" })
 map("n", "<A-x>", ":w<cr>:luafile %<cr>", { desc = "Reload Lua" })
 
+-- Visual block mode - oznacovanie stlpcov
+map("n", "<A-v>", "<C-v>", { desc = "Visual block mode" })
+
+-- Help
+map("n", "<leader>hs", "<cmd>h nvim-surround.usage<cr>", { desc = "Surround help" })
+
 -- Windows
 map("n", "<leader>wv", "<C-w>v", { desc = "Vertical" })
 map("n", "<leader>wh", "<C-w>s", { desc = "Horizontal" })
@@ -30,6 +36,9 @@ map("n", "<S-Up>", ":resize +2<CR>", { desc = "Resize UP" })
 map("n", "<S-Down>", ":resize -2<CR>", { desc = "Resize DOWN" })
 map("n", "<S-Left>", ":vertical resize -2<CR>", { desc = "Resize LEFT" })
 map("n", "<S-Right>", ":vertical resize +2<CR>", { desc = "Resize RIGHT" })
+map("n", "<S-Right>", ":vertical resize +2<CR>", { desc = "Resize RIGHT" })
+map("n", "<A-h>", "<cmd>windo wincmd K<cr>", { desc = "Horizontal layout" })
+map("n", "<A-v>", "<cmd>windo wincmd H<cr>", { desc = "Vertical layout" })
 
 -- Buffers
 map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })

@@ -119,11 +119,11 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 -- open HELP on right side
-vim.api.nvim_create_autocmd("BufEnter", {
-  command = [[if &buftype == 'help' | wincmd L | endif]],
-  group = mygroup,
-  desc = "Help on right side",
-})
+-- vim.api.nvim_create_autocmd("BufEnter", {
+--   command = [[if &buftype == 'help' | wincmd L | endif]],
+--   group = mygroup,
+--   desc = "Help on right side",
+-- })
 
 -- open terminal at same location as opened file
 vim.api.nvim_create_autocmd("BufEnter", {
