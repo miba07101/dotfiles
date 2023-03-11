@@ -16,13 +16,17 @@ require("lazy").setup({
   { "rebelot/kanagawa.nvim",
     priority = 1000,
     config = function()
-      require("kanagawa").setup()
+      require("kanagawa").setup({})
       vim.cmd("colorscheme kanagawa")
     end,
   },
 
-  { "AlexvZyl/nordic.nvim"
-
+  { "AlexvZyl/nordic.nvim",
+    -- priority = 1000,
+    -- config = function()
+    --   require("nordic").setup()
+    --   vim.cmd("colorscheme nordic")
+    -- end,
   },
 
   { "aktersnurra/no-clown-fiesta.nvim"
