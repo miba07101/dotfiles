@@ -247,7 +247,7 @@ qtile_settings(){
     sudo -S <<< ${mypassword} sh -c 'cat > /etc/lightdm/lightdm.conf' <<EOF
     [Seat:*]
     autologin-user=vimi
-    EOF
+EOF
 
     # Nastavenie TouchPadu pre natural scrolling
     sudo -S <<< ${mypassword} sh -c 'cat > /etc/X11/xorg.conf.d/30-touchpad.conf' <<EOF
@@ -257,7 +257,7 @@ qtile_settings(){
     Option "NaturalScrolling" "true"
     Option "Tapping" "on"
     EndSection
-    EOF
+EOF
 
     # Dunst notification
     sudo -S <<< ${mypassword} sh -c 'cat > /usr/lib/systemd/user/dunst.service' <<EOF
@@ -271,7 +271,7 @@ qtile_settings(){
     BusName=org.freedesktop.Notifications
     ExecStart=/usr/bin/dunst
     Environment=DISPLAY=:0
-    EOF
+EOF
 
     # Nastavenie sklopenia notebooku
     sudo -S <<< ${mypassword} sh -c "echo 'HandleLidSwitch=ignore' >> /etc/systemd/logind.conf"
@@ -362,7 +362,7 @@ win_disk_share(){
     sudo -S <<< ${mypassword} sh -c 'cat > /etc/win-credentials' <<EOF
     username=vimi
     password=8992
-    EOF
+EOF
 
     sudo -S <<< ${mypassword} chown root: /etc/win-credentials
     sudo -S <<< ${mypassword} chmod 600 /etc/win-credentials
@@ -797,7 +797,7 @@ qtile_install_theme(){
     # Vytvori environment variable pre qt5ct
     sudo -S <<< ${mypassword} sh -c 'cat > /etc/environment' <<EOF
     QT_QPA_PLATFORMTHEME=qt5ct
-    EOF
+EOF
 
     # TELA icons
     ICONS_DIR="$HOME/.local/share/icons"
