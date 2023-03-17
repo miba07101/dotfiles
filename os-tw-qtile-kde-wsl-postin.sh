@@ -85,6 +85,8 @@ basic_packages(){
         '7zip'
         'at-spi2-core'
         'xdg-utils' # pre nastavenie defaultnych aplikacii
+        'zathura' # pdf reader
+        'zathura-plugin-pdf-mupdf' # pdf reader
     )
 
     for PKG in "${BASIC_PKGS[@]}"; do
@@ -901,6 +903,7 @@ wsl_dotfiles(){
     ln -sf ${CWD}/config/nvim/lua                   ${HOME}/.config/nvim/lua
     ln -sf ${CWD}/config/nvim/after                 ${HOME}/.config/nvim/after
     ln -sf ${CWD}/config/ranger                     ${HOME}/.config/ranger
+    ln -sf ${CWD}/config/zathura                    ${HOME}/.config/zathura
     ln -sf ${CWD}/xWSL/starship.toml                ${HOME}/.config/starship.toml
     ln -sf ${CWD}/home/.bashrc                      ${HOME}/.bashrc
     ln -sf ${CWD}/home/.ticker.yaml                 ${HOME}/.ticker.yaml
