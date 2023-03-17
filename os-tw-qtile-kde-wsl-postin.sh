@@ -86,7 +86,7 @@ basic_packages(){
         'at-spi2-core'
         'xdg-utils' # pre nastavenie defaultnych aplikacii
         'zathura' # pdf reader
-        'zathura-plugin-pdf-mupdf' # pdf reader
+        'zathura-plugin-pdf-poppler' # pdf reader
     )
 
     for PKG in "${BASIC_PKGS[@]}"; do
