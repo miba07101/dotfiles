@@ -42,4 +42,3 @@ PS1="${YELLOW}\$(python_venv)${COLOR_NONE} ${GREEN}\w${COLOR_NONE}${PURPLE}\$(gi
               export BROWSER=$BROWSER:wsl-open
             fi
           fi
-          
