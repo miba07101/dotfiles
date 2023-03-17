@@ -1223,15 +1223,15 @@ wsl_utilities(){
 
     [[ ! -d $HOME/.local/share/applications ]] && mkdir -p $HOME/.local/share/applications
     cat << "EOF" > ${HOME}/.local/applications/wslopen.desktop
-        [Desktop Entry]
-        Version=1.0
-        Name=WSLopen
-        Exec=wsl-open %u
-        Terminal=false
-        X-MultipleArgs=false
-        Type=Application
-        Categories=GNOME;GTK;Network;WebBrowser;
-        MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+[Desktop Entry]
+Version=1.0
+Name=WSLopen
+Exec=wsl-open %u
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Categories=GNOME;GTK;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
 EOF
     # pre spustanie gui aplikacii, napr. gedit ...
     # https://en.opensuse.org/openSUSE:WSL?ref=its-foss
