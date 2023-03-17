@@ -277,72 +277,6 @@ EOF
     sudo -S <<< ${mypassword} sh -c "echo 'HandleLidSwitch=ignore' >> /etc/systemd/logind.conf"
 }
 
-wsl_utilities(){
-    info "WSL UTILLITIES"
-    # umoznuje napr. spustia defaultny web browser na windowse
-    # nefunguje, pretoze vyvojari davaju stale staru verziu
-    # nova verzia funguje ale treba ju compilovat zo zdrojoveho kodu
-    # repourl="https://download.opensuse.org/repositories/home:/wslutilities/openSUSE_Tumbleweed/home:wslutilities.repo"
-    # sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
-    # sudo -S <<< ${mypassword} zypper ${REFRESH}
-    # sudo -S <<< ${mypassword} zypper ${INSTALL} -y wslu
-
-    # Nastavenie wslview - vytvori subor wslview.desktop a potom nastavi ako default
-    # nie je to nutne, nechavam len ako priklad
-    #     set -eu -o pipefail
-
-    #     sudo -S <<< ${mypassword} sh -c 'cat >/usr/share/applications/wslview.desktop' <<EOF
-    #     [Desktop Entry]
-    #     Version=1.0
-    #     Name=WSLview
-    #     Exec=wslview %u
-    #     Terminal=false
-    #     X-MultipleArgs=false
-    #     Type=Application
-    #     Categories=GNOME;GTK;Network;WebBrowser;
-    #     MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
-    # EOF
-
-    # Nastavi wslview ako default pre otvaranie suborov web, image ..
-    # je potrebne nainastalovat xdg-utils
-    # xdg-settings set default-web-browser wslview.desktop
-    
-    # namiesto wslu budem pouzivat wsl-open
-    npm i -g wsl-open
-    wsl-open -w # nastavi wsl-open ako default Shell Browser
-    
-    # pre spustanie gui aplikacii, napr. gedit ...
-    # https://en.opensuse.org/openSUSE:WSL?ref=its-foss
-    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_gui    
-}
-
-wsl_gnome(){
-    info "WSL GNOME SETTINGS"
-    PKG_gnome=(
-        'patterns-gnome-gnome_x11' # X11 server
-        'patterns-gnome-gnome' # Wayland
-        # 'dconf-editor' # na zmenu vlastnosti gnome
-        # 'qalculate' # super kalkulacka
-        # 'qalculate-gtk'
-        # 'qalculate-data'
-        # 'gtk3-metatheme-adwaita' # tmava tema
-        # 'dmz-icon-theme-cursors' # biely kurzor podobny win kurzoru
-    )
-
-    for PKG in "${PKG_gnome[@]}"; do
-        echo "Installing ${PKG}"
-        sleep 1
-        sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
-    done
-
-    # # nastavenie tmavej temy...ak chcem svetlu tak iba Adwaita
-    # gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
-    # # nastavenie bieleho kurzora
-    # gsettings set org.gnome.desktop.interface cursor-theme 'DMZ-White'
-    # nastavenie velkosti kurzora
-    gsettings set org.gnome.desktop.interface cursor-size 15
-}
-
 github_cli(){
     info "GITHUB CLI"
     repourl="https://cli.github.com/packages/rpm/gh-cli.repo"
@@ -1249,6 +1183,72 @@ npm_servers(){
     # npm i -g vscode-css-languageserver-bin
 }
 
+wsl_utilities(){
+    info "WSL UTILLITIES"
+    # umoznuje napr. spustia defaultny web browser na windowse
+    # nefunguje, pretoze vyvojari davaju stale staru verziu
+    # nova verzia funguje ale treba ju compilovat zo zdrojoveho kodu
+    # repourl="https://download.opensuse.org/repositories/home:/wslutilities/openSUSE_Tumbleweed/home:wslutilities.repo"
+    # sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
+    # sudo -S <<< ${mypassword} zypper ${REFRESH}
+    # sudo -S <<< ${mypassword} zypper ${INSTALL} -y wslu
+
+    # Nastavenie wslview - vytvori subor wslview.desktop a potom nastavi ako default
+    # nie je to nutne, nechavam len ako priklad
+    #     set -eu -o pipefail
+
+    #     sudo -S <<< ${mypassword} sh -c 'cat >/usr/share/applications/wslview.desktop' <<EOF
+    #     [Desktop Entry]
+    #     Version=1.0
+    #     Name=WSLview
+    #     Exec=wslview %u
+    #     Terminal=false
+    #     X-MultipleArgs=false
+    #     Type=Application
+    #     Categories=GNOME;GTK;Network;WebBrowser;
+    #     MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+    # EOF
+
+    # Nastavi wslview ako default pre otvaranie suborov web, image ..
+    # je potrebne nainastalovat xdg-utils
+    # xdg-settings set default-web-browser wslview.desktop
+
+    # namiesto wslu budem pouzivat wsl-open
+    npm i -g wsl-open
+    wsl-open -w # nastavi wsl-open ako default Shell Browser
+
+    # pre spustanie gui aplikacii, napr. gedit ...
+    # https://en.opensuse.org/openSUSE:WSL?ref=its-foss
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_gui
+}
+
+wsl_gnome(){
+    info "WSL GNOME SETTINGS"
+    PKG_gnome=(
+        'patterns-gnome-gnome_x11' # X11 server
+        'patterns-gnome-gnome' # Wayland
+        # 'dconf-editor' # na zmenu vlastnosti gnome
+        # 'qalculate' # super kalkulacka
+        # 'qalculate-gtk'
+        # 'qalculate-data'
+        # 'gtk3-metatheme-adwaita' # tmava tema
+        # 'dmz-icon-theme-cursors' # biely kurzor podobny win kurzoru
+    )
+
+    for PKG in "${PKG_gnome[@]}"; do
+        echo "Installing ${PKG}"
+        sleep 1
+        sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
+    done
+
+    # # nastavenie tmavej temy...ak chcem svetlu tak iba Adwaita
+    # gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+    # # nastavenie bieleho kurzora
+    # gsettings set org.gnome.desktop.interface cursor-theme 'DMZ-White'
+    # nastavenie velkosti kurzora
+    gsettings set org.gnome.desktop.interface cursor-size 15
+}
+
 git_repos(){
     [[ ! -d $HOME/git-repos ]] && mkdir -p $HOME/git-repos
     git clone https://github.com/miba07101/python.git $HOME/git-repos/python
@@ -1280,8 +1280,6 @@ which_distro(){
             packman_packages
             # basic_desktop_settings
             # qtile_settings
-            wsl_utilities
-            # wsl_gnome
             github_cli
             lazygit
             # win_disk_share
@@ -1313,6 +1311,8 @@ which_distro(){
             # qtile_dotfiles
             # kde_dotfiles
             npm_servers
+            wsl_utilities
+            # wsl_gnome
             git_repos
             final_touch
             ;;

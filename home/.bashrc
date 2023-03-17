@@ -33,3 +33,13 @@ function python_venv {
 }
 
 PS1="${YELLOW}\$(python_venv)${COLOR_NONE} ${GREEN}\w${COLOR_NONE}${PURPLE}\$(git_branch)${COLOR_NONE}\n "
+
+          # Adding wsl-open as a browser for Bash for Windows
+          if [[ $(uname -r) =~ (m|M)icrosoft ]]; then
+            if [[ -z $BROWSER ]]; then
+              export BROWSER=wsl-open
+            else
+              export BROWSER=$BROWSER:wsl-open
+            fi
+          fi
+          
