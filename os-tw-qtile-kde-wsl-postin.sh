@@ -309,7 +309,7 @@ wsl_utilities(){
     
     # namiesto wslu budem pouzivat wsl-open
     npm i -g wsl-open
-    # wsl-open -w # nastavi wsl-open ako default Shell Browser
+    wsl-open -w # nastavi wsl-open ako default Shell Browser
     
     # pre spustanie gui aplikacii, napr. gedit ...
     # https://en.opensuse.org/openSUSE:WSL?ref=its-foss
