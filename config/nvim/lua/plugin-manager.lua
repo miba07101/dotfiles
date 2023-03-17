@@ -401,4 +401,4 @@ require("lazy").setup({
   --     require("fidget").setup()
   --   end,
   -- }
-})
+ })

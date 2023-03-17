@@ -84,6 +84,7 @@ basic_packages(){
         'make'
         '7zip'
         'at-spi2-core'
+        'xdg-utils' # pre nastavenie defaultnych aplikacii
     )
 
     for PKG in "${BASIC_PKGS[@]}"; do
@@ -1215,8 +1216,20 @@ wsl_utilities(){
 
     # namiesto wslu budem pouzivat wsl-open
     npm i -g wsl-open
-    wsl-open -w # nastavi wsl-open ako default Shell Browser
+    # wsl-open -w # nastavi wsl-open ako default Shell Browser
 
+    [[ ! -d $HOME/.local/applications ]] && mkdir -p $HOME/.local/applications
+    cat << "EOF" > ${HOME}/.local/applications/wslopen.desktop
+        [Desktop Entry]
+        Version=1.0
+        Name=WSLopen
+        Exec=wsl-open %u
+        Terminal=false
+        X-MultipleArgs=false
+        Type=Application
+        Categories=GNOME;GTK;Network;WebBrowser;
+        MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+EOF
     # pre spustanie gui aplikacii, napr. gedit ...
     # https://en.opensuse.org/openSUSE:WSL?ref=its-foss
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_gui
