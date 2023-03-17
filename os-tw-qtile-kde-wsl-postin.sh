@@ -1221,7 +1221,7 @@ wsl_utilities(){
     npm i -g wsl-open
     # wsl-open -w # nastavi wsl-open ako default Shell Browser
 
-    [[ ! -d $HOME/.local/applications ]] && mkdir -p $HOME/.local/applications
+    [[ ! -d $HOME/.local/share/applications ]] && mkdir -p $HOME/.local/share/applications
     cat << "EOF" > ${HOME}/.local/applications/wslopen.desktop
         [Desktop Entry]
         Version=1.0
