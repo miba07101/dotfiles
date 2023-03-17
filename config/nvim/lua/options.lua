@@ -1,5 +1,6 @@
 local opt = vim.opt
 local is_wsl = vim.fn.has("wsl")
+local hostname = vim.fn.hostname()
 
 opt.backup = false                           -- Whether to create a backup file
 opt.clipboard = "unnamedplus"                -- Use the system clipboard
@@ -85,10 +86,12 @@ for i = 1, #builtin_plugins do
 end
 
 -- nastavenia pre WSL a klasicky linuxW
-if is_wsl == 1
-  then
-    opt.guicursor = {"n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150"}  -- Cursor help: guicursor
-    opt.shell = "/bin/bash"
-  else
-    opt.shell = "/bin/zsh"
+if (is_wsl == 1 and hostname == "vimi-jonsbo") then
+  opt.guicursor = {"n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150"}  -- Cursor help: guicursor
+  opt.shell = "/bin/bash"
+elseif
+  is_wsl == 1 then
+  opt.shell = "/bin/bash"
+else
+  opt.shell = "/bin/zsh"
 end
