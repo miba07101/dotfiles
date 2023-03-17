@@ -280,12 +280,15 @@ EOF
 wsl_utilities(){
     info "WSL UTILLITIES"
     # umoznuje napr. spustia defaultny web browser na windowse
-    repourl="https://download.opensuse.org/repositories/home:/wslutilities/openSUSE_Tumbleweed/home:wslutilities.repo"
-    sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
-    sudo -S <<< ${mypassword} zypper ${REFRESH}
-    sudo -S <<< ${mypassword} zypper ${INSTALL} -y wslu
+    # nefunguje, pretoze vyvojari davaju stale staru verziu
+    # nova verzia funguje ale treba ju compilovat zo zdrojoveho kodu
+    # repourl="https://download.opensuse.org/repositories/home:/wslutilities/openSUSE_Tumbleweed/home:wslutilities.repo"
+    # sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
+    # sudo -S <<< ${mypassword} zypper ${REFRESH}
+    # sudo -S <<< ${mypassword} zypper ${INSTALL} -y wslu
 
     # Nastavenie wslview - vytvori subor wslview.desktop a potom nastavi ako default
+    # nie je to nutne, nechavam len ako priklad
     #     set -eu -o pipefail
 
     #     sudo -S <<< ${mypassword} sh -c 'cat >/usr/share/applications/wslview.desktop' <<EOF
@@ -301,7 +304,16 @@ wsl_utilities(){
     # EOF
 
     # Nastavi wslview ako default pre otvaranie suborov web, image ..
+    # je potrebne nainastalovat xdg-utils
     # xdg-settings set default-web-browser wslview.desktop
+    
+    # namiesto wslu budem pouzivat wsl-open
+    npm i -g wsl-open
+    # wsl-open -w # nastavi wsl-open ako default Shell Browser
+    
+    # pre spustanie gui aplikacii, napr. gedit ...
+    # https://en.opensuse.org/openSUSE:WSL?ref=its-foss
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_gui    
 }
 
 wsl_gnome(){
@@ -322,7 +334,6 @@ wsl_gnome(){
         sleep 1
         sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
     done
-
 
     # # nastavenie tmavej temy...ak chcem svetlu tak iba Adwaita
     # gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
@@ -1241,7 +1252,8 @@ npm_servers(){
 git_repos(){
     [[ ! -d $HOME/git-repos ]] && mkdir -p $HOME/git-repos
     git clone https://github.com/miba07101/python.git $HOME/git-repos/python
-    git clone https://github.com/miba07101/epd.git $HOME/git-repos/epd
+    # musim manualne cez: gh auth login
+    # git clone https://github.com/miba07101/epd.git $HOME/git-repos/epd
 }
 
 final_touch(){
