@@ -1,1 +1,82 @@
+# enable clipboard
 set selection-clipboard clipboard
+
+# See man `man zathurarc'
+map r reload
+map p print
+map i recolor
+map J zoom out
+map K zoom in
+map R rotate
+unmap f
+map f toggle_fullscreen
+map [fullscreen] f toggle_fullscreen
+
+# Open document in fit-width mode by default
+set window-height 1000
+# set window-width 1000
+set adjust-open "best-fit"
+
+# scrollbars
+set show-scrollbars "true"
+set window-title-basename "true"
+set window-title-page "true"
+
+set scroll-wrap "true"
+set continuous-hist-save "true"
+# set zoom-center "true"
+# set vertical-center "true"
+
+# One page per row by default
+set pages-per-row 1
+
+#stop at page boundries
+set scroll-page-aware "true"
+set scroll-full-overlap 0.01
+set scroll-step 100
+
+#zoom settings
+set zoom-min 10
+set guioptions ""
+
+# zathurarc-dark
+####### COLOR SCHEME #######
+set notification-error-bg       "#0b0e14" # bg
+set notification-error-fg       "#ff3333" # bright:red
+set notification-warning-bg     "#0b0e14" # bg
+set notification-warning-fg     "#e6c446" # bright:yellow
+set notification-bg             "#0b0e14" # bg
+set notification-fg             "#b8cc52" # bright:green
+
+set completion-bg               "#323232" # bg2
+set completion-fg               "#e5e1cf" # fg
+set completion-group-bg         "#3c3836" # bg1
+set completion-group-fg         "#928374" # gray
+set completion-highlight-bg     "#36a3d9" # bright:blue
+set completion-highlight-fg     "#323232" # bg2
+
+# Define the color in index mode
+set index-bg                    "#323232" # bg2
+set index-fg                    "#e5e1cf" # fg
+set index-active-bg             "#36a3d9" # bright:blue
+set index-active-fg             "#323232" # bg2
+
+set inputbar-bg                 "#282828" # bg
+set inputbar-fg                 "#e5e1cf" # fg
+
+set statusbar-bg                "#323232" # bg2
+set statusbar-fg                "#e5e1cf" # fg
+
+set highlight-color             "#e6c446" # bright:yellow
+set highlight-active-color      "#fe8019" # bright:orange
+
+set default-bg                  "#0b0e14" # bg
+set default-fg                  "#e5e1cf" # fg
+set render-loading              true
+set render-loading-bg           "#0b0e14" # bg
+set render-loading-fg           "#e5e1cf" # fg
+
+# Recolor book content's color
+set recolor-lightcolor          "#0b0e14" # bg
+set recolor-darkcolor           "#e5e1cf" # fg
+set recolor                     "true"
