@@ -29,7 +29,7 @@ opt.hidden = true                            -- Allow switching from unsaved buf
 opt.hlsearch = true                          -- Allow search highlighting
 opt.ignorecase = true                        -- Ignore case when searching
 opt.incsearch = true                         -- Highlight while searching
-opt.iskeyword = "@,48-57,_,192-255,-"          -- Set allowed word separators (chains with _ are allowed in words)
+opt.iskeyword = "_, -"                       -- Oddeli slova pri mazani, nebude brat ako jedno slovo
 opt.laststatus = 3                           -- Enable global status bar
 opt.list = true                              -- Allow padding with special characters
 opt.listchars = { eol = "¬", tab = "› " }

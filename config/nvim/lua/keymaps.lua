@@ -19,7 +19,8 @@ map("n", "Q", ":q!<cr>", { desc = "Quit" })
 map("n", "<A-x>", ":w<cr>:luafile %<cr>", { desc = "Reload Lua" })
 
 -- Visual block mode - oznacovanie stlpcov
-map("n", "<A-v>", "<C-v>", { desc = "Visual block mode" })
+-- map("n", "<A-v>", "<C-q>", { desc = "Visual block mode" })
+-- map("n", "<C-q>", "<C-v>", { desc = "Visual block mode" })
 
 -- Help
 map("n", "<leader>hs", "<cmd>h nvim-surround.usage<cr>", { desc = "Surround help" })
