@@ -10,6 +10,9 @@ local servers = {
   lua_ls = {
     settings = {
       Lua = {
+        completion = {
+          callSnippet = 'Replace',
+        },
         diagnostics = {
           globals = { "vim" },
         },
@@ -26,10 +29,18 @@ local servers = {
     },
   },
   pyright = {
+    root_dir =
+      function()
+        return vim.fn.getcwd()
+      end,
     settings = {
       python = {
         analysis = {
+          autoImportCompletions = true,
           typeCheckingMode = "off",
+          autoSearchPaths = true,
+          diagnosticMode = "workspace",
+          useLibraryCodeForTypes = true,
         },
       },
     },

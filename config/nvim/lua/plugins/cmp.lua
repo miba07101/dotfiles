@@ -44,7 +44,6 @@ local kind_icons = {
   TypeParameter = "",
 }
 -- find more here: https://www.nerdfonts.com/cheat-sheet
-
 cmp.setup {
   snippet = {
     expand = function(args)
@@ -121,8 +120,10 @@ cmp.setup {
 		completion = cmp.config.window.bordered(),
 		documentation = cmp.config.window.bordered(),
   },
+  view = {
+    entries = "custom"
+  },
   experimental = {
-    ghost_text = false,
-    native_menu = false,
+    ghost_text = true,
   },
 }
