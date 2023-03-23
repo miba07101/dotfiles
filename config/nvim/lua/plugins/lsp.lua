@@ -55,9 +55,9 @@ require("mason-lspconfig").setup({
 
 -- Setup LSP servers
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
-local on_attach = function(client, bufnr)
-  -- sem zadat on_attach funkcie doplnkov
-end
+-- local on_attach = function(client, bufnr)
+--   -- sem zadat on_attach funkcie doplnkov
+-- end
 
 require("mason-lspconfig").setup_handlers({
   function(server)
