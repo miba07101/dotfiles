@@ -16,7 +16,24 @@ require("lazy").setup({
   { "rebelot/kanagawa.nvim",
     priority = 1000,
     config = function()
-      require("kanagawa").setup({})
+      require("kanagawa").setup({
+        overrides = function(colors)
+          local theme = colors.theme
+          return {
+            -- change cmd popup menu colors
+            Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+            PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2, italic = true },
+            PmenuSbar = { bg = theme.ui.bg_m1 },
+            PmenuThumb = { bg = theme.ui.bg_p2 },
+            FloatBorder = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+            -- change cmp items colors
+            CmpItemKindVariable = { fg = colors.palette.crystalBlue, bg = "NONE" },
+            CmpItemKindInterface = { fg = colors.palette.crystalBlue, bg = "NONE" },
+            CmpItemKindFunction = { fg = colors.palette.oniViolet, bg = "NONE" },
+            CmpItemKindMethod = { fg = colors.palette.oniViolet, bg = "NONE" },
+          }
+      end,
+      })
       vim.cmd("colorscheme kanagawa")
     end,
   },
@@ -30,12 +47,10 @@ require("lazy").setup({
   },
 
   { "aktersnurra/no-clown-fiesta.nvim"
-
   },
 
   -- UI
   { "nvim-lua/plenary.nvim"
-
   },
 
   { "stevearc/dressing.nvim",
@@ -359,134 +374,89 @@ require("lazy").setup({
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lua",
       "hrsh7th/cmp-nvim-lsp-signature-help",
+      -- sorting
       "lukas-reineke/cmp-under-comparator",
+      -- snippets
       "L3MON4D3/LuaSnip",
       "saadparwaiz1/cmp_luasnip",
       "rafamadriz/friendly-snippets",
+      -- icons
+      "onsails/lspkind.nvim",
     },
     config = function()
       -- require("plugins.cmp")
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+      local lspkind = require('lspkind')
+
       local has_words_before = function()
         unpack = unpack or table.unpack
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
         return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
       end
 
-      -- " gray
-      vim.cmd [[ highlight! CmpItemAbbrDeprecated guibg=NONE gui=strikethrough guifg=#808080 ]]
-      -- " blue
-      vim.cmd [[ highlight! CmpItemAbbrMatch guibg=NONE guifg=#569CD6 ]]
-      vim.cmd [[ highlight! link CmpItemAbbrMatchFuzzy CmpItemAbbrMatch ]]
-      -- " light blue
-      vim.cmd [[ highlight! CmpItemKindVariable guibg=NONE guifg=#9CDCFE ]]
-      vim.cmd [[ highlight! link CmpItemKindInterface CmpItemKindVariable ]]
-      vim.cmd [[ highlight! link CmpItemKindText CmpItemKindVariable ]]
-      -- " pink
-      vim.cmd [[ highlight! CmpItemKindFunction guibg=NONE guifg=#C586C0 ]]
-      vim.cmd [[ highlight! link CmpItemKindMethod CmpItemKindFunction ]]
-      -- " front
-      vim.cmd [[ highlight! CmpItemKindKeyword guibg=NONE guifg=#D4D4D4 ]]
-      vim.cmd [[ highlight! link CmpItemKindProperty CmpItemKindKeyword ]]
-      vim.cmd [[ highlight! link CmpItemKindUnit CmpItemKindKeyword ]]
+      -- luasnip nacita 'snippets' z friendly-snippets
+      require("luasnip.loaders.from_vscode").lazy_load()
 
-
-      vim.api.nvim_set_hl(0, "MyPmenu", { bg = "#16161D", fg = "#16161D" })
-      vim.api.nvim_set_hl(0, "MyPmenuSel", { bg = "#67217A", fg = "White", bold = true, italic = true })
-      vim.cmd [[ highlight PmenuThumb ctermbg=red guibg=#363646 ]]
-      vim.cmd [[ highlight PmenuSbar ctermbg=red guibg=#16161D ]]
-
-
-      local kind_icons = {
-        Text = "",
-        Method = "",
-        Function = "",
-        Constructor = "",
-        Field = "",
-        Variable = "",
-        Class = "ﴯ",
-        Interface = "",
-        Module = "",
-        Property = "ﰠ",
-        Unit = "",
-        Value = "",
-        Enum = "",
-        Keyword = "",
-        Snippet = "",
-        Color = "",
-        File = "",
-        Reference = "",
-        Folder = "",
-        EnumMember = "",
-        Constant = "",
-        Struct = "",
-        Event = "",
-        Operator = "",
-        TypeParameter = ""
-      }
-      local luasnip = require("luasnip")
-      local cmp = require("cmp")
       cmp.setup({
         enabled = function()
-            -- disable completion in comments
-            local context = require 'cmp.config.context'
-            -- keep command mode completion enabled when cursor is in a comment
-            if vim.api.nvim_get_mode().mode == 'c' then
-              return true
-            else
-              return not context.in_treesitter_capture("comment")
-                and not context.in_syntax_group("Comment")
-            end
-          end,
+          -- disable completion in comments
+          if require"cmp.config.context".in_treesitter_capture("comment")==true or require"cmp.config.context".in_syntax_group("Comment") then
+            return false
+          else
+            return true
+          end
+        end,
         snippet = {
           expand = function(args)
-            require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+             -- for luasnip
+            require("luasnip").lsp_expand(args.body)
           end,
         },
         mapping = cmp.mapping.preset.insert({
-              ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-              ['<C-f>'] = cmp.mapping.scroll_docs(4),
-              ['<C-Space>'] = cmp.mapping.complete(),
-              ['<C-e>'] = cmp.mapping.abort(),
-              ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-
-              ["<Tab>"] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                  cmp.select_next_item()
-                -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-                -- they way you will only jump inside the snippet region
-                elseif luasnip.expand_or_jumpable() then
-                  luasnip.expand_or_jump()
-                elseif has_words_before() then
-                  cmp.complete()
-                else
-                  fallback()
-                end
-              end, { "i", "s" }),
-
-              ["<S-Tab>"] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                  cmp.select_prev_item()
-                elseif luasnip.jumpable(-1) then
-                  luasnip.jump(-1)
-                else
-                  fallback()
-                end
-              end, { "i", "s" }),
-            }),
+          ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
+          ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
+          ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+          ["<ESC>"] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+          -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+          ["<C-y>"] = cmp.config.disable,
+          -- Accept currently selected item. Set `select` to `false`
+          -- to only confirm explicitly selected items.
+          ['<CR>'] = cmp.mapping.confirm({ select = false }),
+          ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+            -- they way you will only jump inside the snippet region
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            elseif has_words_before() then
+              cmp.complete()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+        }),
         formatting = {
-          format = function(entry, vim_item)
-            -- Kind icons
-            vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
-            -- Source
-            vim_item.menu = ({
-              buffer = "[Buffer]",
-              nvim_lsp = "[LSP]",
-              luasnip = "[LuaSnip]",
-              nvim_lua = "[Lua]",
-              latex_symbols = "[LaTeX]",
-            })[entry.source.name]
-            return vim_item
-          end
+          format = lspkind.cmp_format({
+            mode = "symbol_text",
+            menu = ({
+              buffer = "[buffer]",
+              nvim_lsp = "[lsp]",
+              luasnip = "[snippets]",
+              nvim_lua = "[lua]",
+              latex_symbols = "[latex]",
+            })
+          }),
         },
         sources = {
           { name = "nvim_lsp" },
@@ -513,12 +483,14 @@ require("lazy").setup({
         --   select = false,
         -- },
         window = {
-          completion = ({
-            winhighlight = "Normal:MyPmenu,FloatBorder:MyPmenu,CursorLine:MyPmenuSel,Search:None",
+          completion = cmp.config.window.bordered({
+            -- farby pre winhighlight su definovane v kanagawa teme
+            winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
             scrollbar = true,
           }),
-          documentation = ({
-            winhighlight = "FloatBorder:MyPmenu",
+          documentation = cmp.config.window.bordered({
+            -- farby pre winhighlight su definovane v kanagawa teme
+            winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
           }),
         },
         view = {
