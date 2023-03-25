@@ -172,8 +172,16 @@ map("n",  "<leader>vk" , function()
 	end
 end, { desc = "conceal cursor toggle" })
 
+-- Neorg
+map("n", "<leader>ni", "<cmd>Neorg index<cr>", { desc = "neorg go to index" })
+map("n", "<leader>nr", "<cmd>Neorg return<cr>", { desc = "neorg return" })
+
 -- Code Run
 map("n", "<leader>cw", "<cmd>lua _WEB_TOGGLE()<cr>", { desc = "web preview"} )
+
+-- CMP completion
+map("i", "<M-e>", "<cmd>lua require('cmp').setup({enabled = true})<cr>", { desc = "cmp enable" })
+map("i", "<M-d>", "<cmd>lua require('cmp').setup({enabled = false})<cr>", { desc = "cmp disable" })
 
 -- Python
 map("n", "<leader>pe", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "pick venvs" })

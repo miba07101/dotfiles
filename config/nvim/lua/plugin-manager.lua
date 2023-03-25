@@ -22,7 +22,8 @@ require("lazy").setup({
           return {
             -- change cmd popup menu colors
             Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
-            PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2, italic = true },
+            -- PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2, italic = true },
+            PmenuSel = { fg = colors.palette.surimiOrange, bg = theme.ui.bg_p2 },
             PmenuSbar = { bg = theme.ui.bg_m1 },
             PmenuThumb = { bg = theme.ui.bg_p2 },
             FloatBorder = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
@@ -47,6 +48,9 @@ require("lazy").setup({
   },
 
   { "aktersnurra/no-clown-fiesta.nvim"
+  },
+
+  { "olivercederborg/poimandres.nvim"
   },
 
   -- UI
@@ -282,7 +286,7 @@ require("lazy").setup({
       require("nvim-treesitter.configs").setup({
         ensure_installed = { "python", "bash", "lua", "html", "css" },
         highlight = { enable = true },
-        additional_vim_regex_highlighting = false,
+        additional_vim_regex_highlighting = true,
         context_commentstring = { enable = true },
         autopairs = { enable = true },
         autotag = { enable = true },
@@ -374,6 +378,8 @@ require("lazy").setup({
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lua",
       "hrsh7th/cmp-nvim-lsp-signature-help",
+      -- codeium
+      "jcdickinson/codeium.nvim",
       -- sorting
       "lukas-reineke/cmp-under-comparator",
       -- snippets
@@ -398,15 +404,21 @@ require("lazy").setup({
       -- luasnip nacita 'snippets' z friendly-snippets
       require("luasnip.loaders.from_vscode").lazy_load()
 
+      -- codeium
+      -- after install run ":Codeium Auth" and insert tokken from web
+      require("codeium").setup({})
+
       cmp.setup({
-        enabled = function()
-          -- disable completion in comments
-          if require"cmp.config.context".in_treesitter_capture("comment")==true or require"cmp.config.context".in_syntax_group("Comment") then
-            return false
-          else
-            return true
-          end
-        end,
+        -- enabled = function()
+        --   -- disable completion in comments
+        --   if require"cmp.config.context".in_treesitter_capture("comment")==true
+              -- or require"cmp.config.context".in_syntax_group("Comment") then
+        --     return false
+        --   else
+        --     return true
+        --   end
+        -- end,
+        enabled = true,
         snippet = {
           expand = function(args)
              -- for luasnip
@@ -417,7 +429,7 @@ require("lazy").setup({
           ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
           ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
           ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-          ["<ESC>"] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+          ["<C-q>"] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
           -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
           ["<C-y>"] = cmp.config.disable,
           -- Accept currently selected item. Set `select` to `false`
@@ -449,22 +461,25 @@ require("lazy").setup({
         formatting = {
           format = lspkind.cmp_format({
             mode = "symbol_text",
+            ellipsis_char = '...',
+            symbol_map = { Codeium = "", },
             menu = ({
-              buffer = "[buffer]",
+              buffer = "[buf]",
+              codeium = "[cod]",
+              luasnip = "[snip]",
               nvim_lsp = "[lsp]",
-              luasnip = "[snippets]",
               nvim_lua = "[lua]",
-              latex_symbols = "[latex]",
             })
           }),
         },
         sources = {
-          { name = "nvim_lsp" },
-          { name = 'nvim_lsp_signature_help' },
-          { name = "nvim_lua" },
-          { name = "luasnip" },
           { name = "buffer" },
+          { name = "codeium" },
+          { name = "luasnip" },
+          { name = "nvim_lsp" },
+          { name = "nvim_lua" },
           { name = "path" },
+          { name = 'nvim_lsp_signature_help' },
         },
         sorting = {
               comparators = {
@@ -478,10 +493,10 @@ require("lazy").setup({
                   cmp.config.compare.order,
               },
           },
-        -- confirm_opts = {
-        --   behavior = cmp.ConfirmBehavior.Replace,
-        --   select = false,
-        -- },
+        confirm_opts = {
+          behavior = cmp.ConfirmBehavior.Replace,
+          select = false,
+        },
         window = {
           completion = cmp.config.window.bordered({
             -- farby pre winhighlight su definovane v kanagawa teme
@@ -498,6 +513,7 @@ require("lazy").setup({
         },
         experimental = {
           ghost_text = true,
+          -- ghost_text = {hlgroup = "Comment"}
         },
       })
     end,
@@ -527,6 +543,7 @@ require("lazy").setup({
         h = { name = "help" },
         i = { name = "icons" },
         l = { name = "lsp" },
+        n = { name = "neorg" },
         p = { name = "python" },
         t = { name = "terminal" },
         v = { name = "neovim" },
@@ -534,6 +551,27 @@ require("lazy").setup({
       }
       require("which-key").register(mappings, opts)
     end,
+  },
+
+  -- Neorg
+  { "nvim-neorg/neorg",
+    -- lazy-load on filetype
+    -- ft = "norg",
+    build = ":Neorg sync-parsers",
+    opts = {
+      load = {
+        ["core.defaults"] = {}, -- Loads default behaviour
+        ["core.norg.concealer"] = {}, -- Adds pretty icons to your documents
+        ["core.norg.dirman"] = { -- Manages Neorg workspaces
+          config = {
+              workspaces = {
+                  python_notes = "~/git-repos/python/00-notes",
+              },
+              default_workspace = "python_notes",
+            },
+        },
+      },
+    },
   },
 
   -- -- Fidget - show LSP server progress

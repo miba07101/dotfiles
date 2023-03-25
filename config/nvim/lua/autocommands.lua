@@ -64,6 +64,18 @@ vim.api.nvim_create_autocmd("FileType", {
   desc = "Set shiftwidth to 4 in these filetypes",
 })
 
+-- neorg setup
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "norg" },
+  callback = function()
+    vim.opt.wrap = true
+    vim.opt.conceallevel = 1
+    -- vim.opt.foldlevel = 99
+  end,
+  group = mygroup,
+  desc = "Neorg setup",
+})
+
 -- restore cursor position
 vim.api.nvim_create_autocmd("BufReadPost", {
   callback = function()
