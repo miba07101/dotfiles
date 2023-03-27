@@ -27,33 +27,33 @@ local vscode_theme = function()
 return {
   normal = {
     a = {bg = colors.purple, fg = colors.white},
-    b = {bg = colors.purple, fg = colors.white},
-    c = {bg = colors.purple, fg = colors.white},
+    -- b = {bg = colors.purple, fg = colors.white},
+    -- c = {bg = colors.purple, fg = colors.white},
   },
   insert = {
     a = {bg = colors.blue, fg = colors.white},
-    b = {bg = colors.blue, fg = colors.white},
-    c = {bg = colors.blue, fg = colors.white},
+    -- b = {bg = colors.blue, fg = colors.white},
+    -- c = {bg = colors.blue, fg = colors.white},
   },
   visual = {
     a = {bg = colors.green, fg = colors.white},
-    b = {bg = colors.green, fg = colors.white},
-    c = {bg = colors.green, fg = colors.white},
+    -- b = {bg = colors.green, fg = colors.white},
+    -- c = {bg = colors.green, fg = colors.white},
   },
   replace = {
     a = {bg = colors.orange, fg = colors.white},
-    b = {bg = colors.orange, fg = colors.white},
-    c = {bg = colors.orange, fg = colors.white},
+    -- b = {bg = colors.orange, fg = colors.white},
+    -- c = {bg = colors.orange, fg = colors.white},
   },
   command = {
     a = {bg = colors.red, fg = colors.white},
-    b = {bg = colors.red, fg = colors.white},
-    c = {bg = colors.red, fg = colors.white},
+    -- b = {bg = colors.red, fg = colors.white},
+    -- c = {bg = colors.red, fg = colors.white},
   },
   inactive = {
     a = {bg = colors.black, fg = colors.grey},
-    b = {bg = colors.black, fg = colors.grey},
-    c = {bg = colors.black, fg = colors.grey},
+    -- b = {bg = colors.black, fg = colors.grey},
+    -- c = {bg = colors.black, fg = colors.grey},
   },
 }
 end
@@ -108,14 +108,17 @@ lualine.setup({
   options = {
     section_separators = '',
     component_separators = '',
-    disabled_filetypes = { "alpha", "Telescope" },
+    disabled_filetypes = {
+      statusline = { "alpha", "TelescopePrompt" },
+      winbar = {},
+    },
     theme = vscode_theme(),
   },
   sections = {
     lualine_a = {
       -- { "buffers" },
       { "filetype", colored = false, icon_only = true },
-      { "filename" },
+      { "filename", path = 3 },
     },
     lualine_b = {
       { "diagnostics", colored = false },
@@ -140,4 +143,20 @@ lualine.setup({
       { "progress" },
     },
   },
+  tabline = {
+    lualine_b = {
+      {"buffers",
+        buffers_color = {
+          active = {bg = "#1F1F28", fg = "#DCD7BA"},
+          inactive = {bg = "#1F1F28", fg = "#727169"},
+        },
+        filetype_names = {
+          alpha = '',
+          TelescopePrompt = '',
+          lazy = '',
+          fzf = '',
+        },
+      }
+    },
+  }
 })

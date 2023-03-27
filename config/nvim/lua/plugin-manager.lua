@@ -258,6 +258,7 @@ require("lazy").setup({
   { "lukas-reineke/indent-blankline.nvim",
     config = function()
       require("indent_blankline").setup({
+        enabled = true,
         show_trailing_blankline_indent = false,
         use_treesitter = true,
         char = "▏",
@@ -426,10 +427,13 @@ require("lazy").setup({
           end,
         },
         mapping = cmp.mapping.preset.insert({
+          -- ak to odkomentujem, tak mi nebude robit selkciu v ponuke
+          -- ["<Up>"] = cmp.config.disable,
+          -- ["<Down>"] = cmp.config.disable,
           ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
           ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
           ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-          ["<C-q>"] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+          ["<C-e>"] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
           -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
           ["<C-y>"] = cmp.config.disable,
           -- Accept currently selected item. Set `select` to `false`
@@ -482,17 +486,17 @@ require("lazy").setup({
           { name = 'nvim_lsp_signature_help' },
         },
         sorting = {
-              comparators = {
-                  cmp.config.compare.offset,
-                  cmp.config.compare.exact,
-                  cmp.config.compare.score,
-                  require "cmp-under-comparator".under,
-                  cmp.config.compare.kind,
-                  cmp.config.compare.sort_text,
-                  cmp.config.compare.length,
-                  cmp.config.compare.order,
-              },
+          comparators = {
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            require "cmp-under-comparator".under,
+            cmp.config.compare.kind,
+            cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
           },
+        },
         confirm_opts = {
           behavior = cmp.ConfirmBehavior.Replace,
           select = false,
