@@ -121,13 +121,16 @@ alias fd='fd -Hi'
 alias ls='exa -la --icons'
 
 # alias gh='cd $HOME/'
-alias gp='cd $HOME/Python/'
-alias web='cd $OneDrive_DIR/00-website/00-design/02-web-epd/ && nvim index.html'
-alias math='source $HOME/python-venv/jupyter-venv/bin/activate && jupyter-lab'
 alias epd='source $HOME/python-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd/flask-epd'
 alias yafin='source $HOME/python-venv/yafin-venv/bin/activate && python3 $SCRIPTS_DIR/yafin.py'
+alias math='source $HOME/python-venv/jupyter-venv/bin/activate && jupyter-lab'
 alias dea='deactivate'
+alias pg='sudo -i -u postgres'
+alias gl='lazygit'
+alias salome='$HOME/salome-meca/./salome_meca-lgpl-2021.0.0-2-20211014-scibian-9'
+alias freecad='$HOME/Applications/FreeCAD_0.20-1-2022-08-20-conda-Linux-x86_64-py310_b6b0ddf25121b8cf8cc18f02e81151b7.AppImage'
 
+alias rec='$SCRIPTS_DIR./stream_record_linux.sh'
 case $isWSL in
     1)
         alias mpv='/mnt/c/Users/$WIN_USERNAME/AppData/Local/Microsoft/WindowsApps/519Ezhik.mpvUnofficial_xfkyq1j2kc7zp/mpv.exe'
@@ -143,13 +146,6 @@ case $isWSL in
         alias backup='$HOME/OneDrive/Linux/Qtile/./qtile-backup.sh'
         ;;
 esac
-alias rec='$SCRIPTS_DIR./stream_record_linux.sh'
-
-alias salome='$HOME/salome-meca/./salome_meca-lgpl-2021.0.0-2-20211014-scibian-9'
-alias freecad='$HOME/Applications/FreeCAD_0.20-1-2022-08-20-conda-Linux-x86_64-py310_b6b0ddf25121b8cf8cc18f02e81151b7.AppImage'
-alias pg='sudo -i -u postgres'
-
-alias gl='lazygit'
 
 #############
 # KLAVESOVE SKRATKY
