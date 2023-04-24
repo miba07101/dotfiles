@@ -176,6 +176,10 @@ end, { desc = "conceal cursor toggle" })
 map("n", "<leader>ni", "<cmd>Neorg index<cr>", { desc = "neorg go to index" })
 map("n", "<leader>nr", "<cmd>Neorg return<cr>", { desc = "neorg return" })
 
+-- OpenAI
+map("n", "<leader>aa", "<cmd>NeoAIToggle<cr>", { desc = "neoai toggle" })
+map("v", "<leader>ac", "<cmd>NeoAIContext<cr>", { desc = "neoai context mode" })
+
 -- Code Run
 map("n", "<leader>cw", "<cmd>lua _WEB_TOGGLE()<cr>", { desc = "web preview"} )
 

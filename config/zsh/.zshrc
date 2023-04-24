@@ -94,7 +94,9 @@ ranger-cd() {
 export EDITOR="nvim"
 export VISUAL="nvim"
 export RANGER_LOAD_DEFAULT_RC=false
-export PATH=$PATH:$HOME/.npm/bin export NODE_PATH=$NODE_PATH:$HOME/.npm/lib/node_modules
+export PATH=$PATH:$HOME/.npm/bin
+export NODE_PATH=$NODE_PATH:$HOME/.npm/lib/node_modules
+export OPENAI_API_KEY="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"
 
 #############
 # ALIASES
