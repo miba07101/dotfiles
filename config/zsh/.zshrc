@@ -99,7 +99,7 @@ export NODE_PATH=$NODE_PATH:$HOME/.npm/lib/node_modules
 if [[ $HOSTNAME == "vimi-jonsbo" ]]; then
   export OPENAI_API_KEY="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"
 else
-  export OPENAI_API_KEY="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"
+  export OPENAI_API_KEY="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"
 fi
 
 #############
