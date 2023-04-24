@@ -91,16 +91,12 @@ ranger-cd() {
 #############
 # Environment variables
 #############
+source "$ZDOTDIR/.zshenv"
 export EDITOR="nvim"
 export VISUAL="nvim"
 export RANGER_LOAD_DEFAULT_RC=false
 export PATH=$PATH:$HOME/.npm/bin
 export NODE_PATH=$NODE_PATH:$HOME/.npm/lib/node_modules
-if [[ $HOSTNAME == "vimi-jonsbo" ]]; then
-  export OPENAI_API_KEY="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"
-else
-  export OPENAI_API_KEY="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"
-fi
 
 #############
 # ALIASES
