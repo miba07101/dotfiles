@@ -96,7 +96,11 @@ export VISUAL="nvim"
 export RANGER_LOAD_DEFAULT_RC=false
 export PATH=$PATH:$HOME/.npm/bin
 export NODE_PATH=$NODE_PATH:$HOME/.npm/lib/node_modules
-export OPENAI_API_KEY="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"
+if [[ $HOSTNAME == "vimi-jonsbo" ]]; then
+  export OPENAI_API_KEY="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"
+else
+  export OPENAI_API_KEY="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"
+fi
 
 #############
 # ALIASES
