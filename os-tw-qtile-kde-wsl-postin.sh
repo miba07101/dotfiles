@@ -85,6 +85,7 @@ basic_packages(){
         '7zip'
         'at-spi2-core'
         'xdg-utils' # pre nastavenie defaultnych aplikacii
+        'sqlitebrowser' # pre sqlite databazu pre moju flask aplikaciu
     )
 
     for PKG in "${BASIC_PKGS[@]}"; do

@@ -45,7 +45,8 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 
 -- autoformat code on save
 vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = { "*.py", "*.json", "*.css", "*.scss", "*.html" },
+  -- pattern = { "*.py", "*.json", "*.css", "*.scss", "*.html" },
+  pattern = { "*.py", "*.json", "*.css", "*.scss" },
   callback = function()
     -- noop if no lsp
     vim.lsp.buf.format()
