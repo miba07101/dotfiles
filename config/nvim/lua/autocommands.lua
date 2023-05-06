@@ -56,7 +56,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 -- sass compilation on save
-vim.api.nvim_create_autocmd("BufWritePost", {
+vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = { "*.sass", "*.scss" },
   command = [[:silent exec "!sass --no-source-map %:p %:r.css"]],
   group = mygroup,
