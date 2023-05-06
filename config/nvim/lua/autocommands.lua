@@ -55,6 +55,14 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   desc = "Autoformat code on save",
 })
 
+-- sass compilation on save
+vim.api.nvim_create_autocmd("BufWritePost", {
+  pattern = { "*.sass", "*.scss" },
+  command = [[:silent exec "!sass --no-source-map %:p %:r.css"]],
+  group = mygroup,
+  desc = "SASS compilation on save",
+})
+
 -- shiftwidth setup
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "c", "cpp", "py", "java", "cs" },
