@@ -1179,8 +1179,9 @@ EOF
 }
 
 npm_servers(){
-    info "LIVE, BASH, CSS SERVERS, "
+    info "LIVE, SASS SERVERS, "
     npm i -g live-server
+    npm i -g sass
     # npm i -g bash-language-server
     # npm i -g vscode-css-languageserver-bin
 }
