@@ -264,6 +264,7 @@ require("lazy").setup({
         char = "▏",
         context_char = "▏",
         show_current_context = true,
+        show_current_context_start = true,
       })
     end,
   },
@@ -285,7 +286,7 @@ require("lazy").setup({
     },
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = { "python", "bash", "lua", "html", "css" },
+        ensure_installed = { "python", "bash", "lua", "html", "htmldjango", "css", "scss" },
         highlight = { enable = true },
         additional_vim_regex_highlighting = true,
         context_commentstring = { enable = true },
