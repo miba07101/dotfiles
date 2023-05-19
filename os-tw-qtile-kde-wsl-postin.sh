@@ -1267,6 +1267,7 @@ wsl_gnome(){
 git_repos(){
     [[ ! -d $HOME/git-repos ]] && mkdir -p $HOME/git-repos
     git clone https://github.com/miba07101/python.git $HOME/git-repos/python
+    git clone https://github.com/miba07101/test.git $HOME/git-repos/test
     # musim manualne cez: gh auth login
     # git clone https://github.com/miba07101/epd.git $HOME/git-repos/epd
 }
