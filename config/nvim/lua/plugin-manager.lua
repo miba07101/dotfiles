@@ -257,6 +257,7 @@ require("lazy").setup({
   -- Indent blank line
   { "lukas-reineke/indent-blankline.nvim",
     config = function()
+      vim.cmd [[ highlight IndentBlanklineContextChar guifg=#FF5D62 gui=nocombine ]]
       require("indent_blankline").setup({
         enabled = true,
         show_trailing_blankline_indent = false,
