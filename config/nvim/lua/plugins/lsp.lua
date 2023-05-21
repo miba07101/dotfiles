@@ -125,6 +125,7 @@ require("mason-null-ls").setup({
     "prettier",
     "black",
     "flake8",
+    "djlint",
   },
   automatic_installation = true,
 })
@@ -149,5 +150,7 @@ null_ls.setup({
     -- Python
     formatting.black.with({ extra_args = { "--fast" } }),
     diagnostics.flake8,
+    -- Django/Flask HTML
+    formatting.djlint,
   },
 })
