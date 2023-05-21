@@ -121,7 +121,11 @@ lualine.setup({
       { "filename", path = 3 },
     },
     lualine_b = {
-      { "diagnostics", colored = false, symbols = {error = ' ', warn = ' ', info = ' ', hint = ' '}, },
+      { "diagnostics",
+        colored = false,
+        symbols = { error = " ", warn = " ", info = " ", hint = " " },
+        -- symbols = {error = ' ', warn = ' ', info = ' ', hint = ' '},
+      },
     },
     lualine_c = {
       { "branch", icon = "" },
