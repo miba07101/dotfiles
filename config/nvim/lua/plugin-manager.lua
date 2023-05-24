@@ -395,8 +395,9 @@ require("lazy").setup({
     config = function()
       -- require("plugins.cmp")
       local cmp = require("cmp")
+      -- local luasnip = require("luasnip").filetype_extend("djangohtml", {"django"})
       local luasnip = require("luasnip")
-      local lspkind = require('lspkind')
+      local lspkind = require("lspkind")
 
       local has_words_before = function()
         unpack = unpack or table.unpack
