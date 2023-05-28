@@ -654,6 +654,17 @@ python(){
 
     deactivate
 
+    # env pre web-isitobo
+    [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
+
+    python3 -m venv $HOME/python-venv/isitobo-venv
+    source $HOME/python-venv/isitobo-venv/bin/activate
+
+    pip3 install --upgrade pip
+    pip3 install flask
+
+    deactivate
+
     # Pre yafin
     [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
 
