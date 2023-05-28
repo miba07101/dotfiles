@@ -30,8 +30,8 @@ case $isWSL in
         }
 
         # Enviroment variables
-        export WIN_USERNAME=$(powershell.exe -NoProfile -NonInteractive -Command "\$env:UserName" | tr -d '\r')
-        export PGDATA='/usr/local/pgsql/data'
+        # export WIN_USERNAME=$(powershell.exe -NoProfile -NonInteractive -Command "\$env:UserName" | tr -d '\r')
+        # export PGDATA='/usr/local/pgsql/data'
 
         # Variables
         OneDrive_DIR=/mnt/c/Users/$WIN_USERNAME/OneDrive/
