@@ -1232,9 +1232,19 @@ Type=Application
 Categories=GNOME;GTK;Network;WebBrowser;
 MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
 EOF
+
+    # pre povolenie systemd - v /etc/wsl.conf ma byt [boot] systemd=true
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_base
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_systemd
     # pre spustanie gui aplikacii, napr. gedit ...
     # https://en.opensuse.org/openSUSE:WSL?ref=its-foss
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_gui
+
+
+    # umozni pouzivat win prikazy, napr. powershell.exe aj pri spustenom systemd
+    sudo -S <<< ${mypassword} sh -c 'cat > /usr/lib/binfmt.d/WSLInterop.conf' <<EOF
+    :WSLInterop:M::MZ::/init:PF
+EOF
 }
 
 wsl_gnome(){
