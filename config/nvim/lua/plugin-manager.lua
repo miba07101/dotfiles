@@ -143,6 +143,38 @@ require("lazy").setup({
     end,
   },
 
+  -- File manager / Neo-tree
+  { "nvim-neo-tree/neo-tree.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+    },
+    config = function()
+      require("neo-tree").setup({
+        window = {
+          position = "left",
+          width = 30,
+          mapping_options = {
+            noremap = true,
+            nowait = true,
+          },
+          mappings = {
+            ["<RIGHT>"] = "open",
+            ["<LEFT>"] = "navigate_up",
+          },
+        },
+        filesystem = {
+          filtered_items = {
+            hide_dotfiles = false,
+          },
+          follow_current_file = true,
+          hijack_netrw_behavior = "open_current",
+        },
+      })
+    end,
+  },
+
   -- Comment
   { "numToStr/Comment.nvim",
     config = function()

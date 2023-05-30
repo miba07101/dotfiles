@@ -81,6 +81,9 @@ map('x', '<leader>/', '<ESC><CMD>lua require("Comment.api").toggle.linewise(vim.
 -- Lazy
 map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "lazy" })
 
+-- NeoTree
+map("n", "<leader>e", "<cmd>Neotree toggle<cr>", { desc = "neo-tree toggle" })
+
 -- Icon Picker
 map("n", "<leader>in", "<cmd>IconPickerNormal<cr>", { desc = "icon normal mode" })
 map("n", "<leader>iy", "<cmd>IconPickerYank<cr>", { desc = " yank icon into register" })
