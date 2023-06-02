@@ -86,6 +86,7 @@ basic_packages(){
         'at-spi2-core'
         'xdg-utils' # pre nastavenie defaultnych aplikacii
         'sqlitebrowser' # pre sqlite databazu pre moju flask aplikaciu
+        'redis' # server pre flask kniznicu celery. pouzivam pre moju aplikaciu epd alebo isitobo.
     )
 
     for PKG in "${BASIC_PKGS[@]}"; do
@@ -650,7 +651,6 @@ python(){
 
     pip3 install --upgrade pip
     pip3 install flask
-    pip3 install pandas
 
     deactivate
 
