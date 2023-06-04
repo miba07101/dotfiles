@@ -40,10 +40,20 @@ local servers = {
     },
   },
   pyright = {
-    root_dir =
-      function()
-        return vim.fn.getcwd()
-      end,
+    -- root_dir =
+    --   function()
+    --     return vim.fn.getcwd()
+    --   end,
+    -- root_dir = {
+    --   root_files = {
+    --       'pyproject.toml',
+    --       'setup.py',
+    --       'setup.cfg',
+    --       'requirements.txt',
+    --       'pipfile',
+    --       'pyrightconfig.json',
+    --   }
+    -- },
     settings = {
       python = {
         analysis = {
