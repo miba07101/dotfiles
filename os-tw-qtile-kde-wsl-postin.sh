@@ -75,6 +75,7 @@ basic_packages(){
         'jq' # potrebne pre script ticker - cli JSON processor
         'python310-pip' # treba len zmenit cislo verzie python podla aktualnej
         'python310-ipython'
+        'python3-devel' # pre funkciu kniznice psycopg2 - prepojenie s postgresql databazou
         # 'python310-bpython'
         'ripgrep' # vyhladavaci doplnok pre neovim a funkcnost Telescope doplnku
         'npm-default'
@@ -584,6 +585,8 @@ postgresql(){
         'postgresql'
         'postgresql-server'
         'postgresql-contrib'
+        'postgresql-devel'
+        'postgresql-server-devel'
         'postgresql-plpython'
     )
 
