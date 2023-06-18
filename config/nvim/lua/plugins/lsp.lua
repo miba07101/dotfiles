@@ -5,7 +5,10 @@ local servers = {
     filetypes = { "zsh", "bash", "sh" },
   },
   cssls = {},
-  html = {},
+  -- tailwindcss = {},
+  -- html = {
+  --   filetypes = { "html", "htmldjango" },
+  -- },
   jsonls = {},
   emmet_ls = {
                filetypes = { 'html', 'htmldjango', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less', 'javascript', 'typescript', 'markdown' },

@@ -47,7 +47,13 @@ require("lazy").setup({
     -- end,
   },
 
-  { "aktersnurra/no-clown-fiesta.nvim"
+  { "aktersnurra/no-clown-fiesta.nvim",
+    -- priority = 1000,
+    -- config = function()
+    --   require("no-clown-fiesta").setup({
+    --   })
+    --   vim.cmd("colorscheme no-clown-fiesta")
+    -- end,
   },
 
   { "olivercederborg/poimandres.nvim"
@@ -322,16 +328,16 @@ require("lazy").setup({
       require("nvim-treesitter.configs").setup({
         ensure_installed = { "python", "bash", "lua", "html", "htmldjango", "css", "scss" },
         highlight = { enable = true },
-        additional_vim_regex_highlighting = true,
+        -- additional_vim_regex_highlighting = true,
         context_commentstring = { enable = true },
         autopairs = { enable = true },
         autotag = { enable = true },
-        rainbow = { enable = true,
-          disable = {},
-          query = 'rainbow-parens',
-          strategy = require 'ts-rainbow.strategy.global',
-          max_file_lines = 3000
-        },
+        -- rainbow = { enable = true,
+        --   disable = {},
+        --   query = 'rainbow-parens',
+        --   strategy = require 'ts-rainbow.strategy.global',
+        --   max_file_lines = 3000
+        -- },
         incremental_selection = { enable = true },
         -- indent = { enable = true },
       })
