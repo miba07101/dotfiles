@@ -326,7 +326,7 @@ require("lazy").setup({
     },
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = { "python", "bash", "lua", "html", "htmldjango", "css", "scss" },
+        ensure_installed = { "python", "bash", "lua", "html", "css", "scss", "htmldjango" },
         highlight = { enable = true },
         -- additional_vim_regex_highlighting = true,
         context_commentstring = { enable = true },
