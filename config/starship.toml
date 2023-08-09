@@ -18,3 +18,6 @@ format = "[$read_only]($read_only_style)[$path]($style) "
 [python]
 symbol = " "
 
+[conda]
+symbol = " "
+format = "via [$symbol$environment]($style) "

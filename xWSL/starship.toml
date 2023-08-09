@@ -30,3 +30,7 @@ format = "[$path]($style)[$read_only]($read_only_style) "
 [python]
 symbol = " "
 python_binary = "python3"
+
+[conda]
+symbol = " "
+format = "via [$symbol$environment]($style) "
