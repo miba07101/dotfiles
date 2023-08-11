@@ -59,6 +59,11 @@ require("lazy").setup({
   { "olivercederborg/poimandres.nvim"
   },
 
+  { "Shatur/neovim-ayu"
+  },
+
+  { "rmehri01/onenord.nvim" },
+
   -- UI
   { "nvim-lua/plenary.nvim"
   },
@@ -724,6 +729,9 @@ require("lazy").setup({
       })
     end,
   },
+
+  -- Jinja template syntax
+  { "lepture/vim-jinja" },
 
   -- -- Fidget - show LSP server progress
   -- { "j-hui/fidget.nvim",
