@@ -4,10 +4,13 @@ HISTSIZE=1000
 SAVEHIST=1000
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
-zstyle :compinstall filename '$ZDOTDIR/.zshrc'
+zstyle :compinstall filename "$ZDOTDIR/.zshrc"
 
+# pre moznost vyberu doplnenia menu, pr. cd TAB da mi menu a opat TAB a mozem vyberat pomocou sipiek
 autoload -Uz compinit
+setopt PROMPT_SUBST
 compinit
+zstyle ":completion:*" menu select
 # End of lines added by compinstall
 
 #############
@@ -123,6 +126,7 @@ alias ls='exa -la --icons'
 # alias gh='cd $HOME/'
 alias epd='source $HOME/python-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd/flask-epd'
 alias io='source $HOME/python-venv/isitobo-venv/bin/activate && cd $HOME/git-repos/isitobo'
+alias ioo='source $HOME/python-venv/isitobo-test-venv/bin/activate && cd $HOME/git-repos/isitobo-test'
 alias yafin='source $HOME/python-venv/yafin-venv/bin/activate && python3 $SCRIPTS_DIR/yafin.py'
 alias math='source $HOME/python-venv/jupyter-venv/bin/activate && jupyter-lab'
 alias test-env='source $HOME/python-venv/test-venv/bin/activate'

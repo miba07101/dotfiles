@@ -39,30 +39,17 @@ require("lazy").setup({
     end,
   },
 
-  { "AlexvZyl/nordic.nvim",
-    -- priority = 1000,
-    -- config = function()
-    --   require("nordic").setup()
-    --   vim.cmd("colorscheme nordic")
-    -- end,
-  },
+  { "AlexvZyl/nordic.nvim" },
 
-  { "aktersnurra/no-clown-fiesta.nvim",
-    -- priority = 1000,
-    -- config = function()
-    --   require("no-clown-fiesta").setup({
-    --   })
-    --   vim.cmd("colorscheme no-clown-fiesta")
-    -- end,
-  },
+  { "aktersnurra/no-clown-fiesta.nvim" },
 
-  { "olivercederborg/poimandres.nvim"
-  },
+  { "olivercederborg/poimandres.nvim" },
 
-  { "Shatur/neovim-ayu"
-  },
+  { "Shatur/neovim-ayu" },
 
   { "rmehri01/onenord.nvim" },
+
+  { "rose-pine/neovim" },
 
   -- UI
   { "nvim-lua/plenary.nvim"
@@ -349,6 +336,9 @@ require("lazy").setup({
     end,
   },
 
+  -- Jinja template syntax
+  { "lepture/vim-jinja" },
+
   -- Telescope
   { "nvim-telescope/telescope.nvim",
     dependencies = {
@@ -605,138 +595,4 @@ require("lazy").setup({
     end,
   },
 
-  -- Neorg
-  { "nvim-neorg/neorg",
-    -- lazy-load on filetype
-    -- ft = "norg",
-    build = ":Neorg sync-parsers",
-    opts = {
-      load = {
-        ["core.defaults"] = {}, -- Loads default behaviour
-        ["core.concealer"] = {}, -- Adds pretty icons to your documents
-        ["core.dirman"] = { -- Manages Neorg workspaces
-          config = {
-              workspaces = {
-                  python_notes = "~/git-repos/python/00-notes",
-              },
-              default_workspace = "python_notes",
-            },
-        },
-      },
-    },
-  },
-
-  -- OpenAI
-  { "Bryley/neoai.nvim",
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-    },
-    cmd = {
-      "NeoAI",
-      "NeoAIOpen",
-      "NeoAIClose",
-      "NeoAIToggle",
-      "NeoAIContext",
-      "NeoAIContextOpen",
-      "NeoAIContextClose",
-      "NeoAIInject",
-      "NeoAIInjectCode",
-      "NeoAIInjectContext",
-      "NeoAIInjectContextCode",
-    },
-    config = function()
-      require("neoai").setup({
-        ui = {
-          output_popup_text = "NeoAI",
-          input_popup_text = "Prompt",
-          width = 30,      -- As percentage eg. 30%
-          output_popup_height = 80, -- As percentage eg. 80%
-        },
-        models = {
-          {
-            name = "openai",
-            model = "gpt-3.5-turbo",
-            params = nil,
-          },
-        },
-        register_output = {
-          ["g"] = function(output)
-              return output
-          end,
-          ["c"] = require("neoai.utils").extract_code_snippets,
-        },
-        inject = {
-          cutoff_width = 75,
-        },
-        prompts = {
-          context_prompt = function(context)
-            return "Hey, I'd like to provide some context for future "
-                .. "messages. Here is the code/text that I want to refer "
-                .. "to in our upcoming conversations:\n\n"
-                .. context
-          end,
-        },
-        mappings = {
-          ["select_up"] = "<C-k>",
-          ["select_down"] = "<C-j>",
-        },
-        open_ai = {
-          api_key = {
-            env = "OPENAI_API_KEY",
-            value = nil,
-            -- `get` is is a function that retrieves an API key, can be used to override the default method.
-            -- get = function() ... end
-
-            -- Here is some code for a function that retrieves an API key. You can use it with
-            -- the Linux 'pass' application.
-            -- get = function()
-              --     local key = vim.fn.system("pass show openai/mytestkey")
-              --     key = string.gsub(key, "\n", "")
-              --     return key
-              -- end,
-            },
-          },
-        shortcuts = {
-          {
-            name = "textify",
-            key = "<leader>as",
-            desc = "fix text with AI",
-            use_context = true,
-            prompt = [[
-                Please rewrite the text to make it more readable, clear,
-                concise, and fix any grammatical, punctuation, or spelling
-                errors
-            ]],
-            modes = { "v" },
-            strip_function = nil,
-          },
-          {
-            name = "gitcommit",
-            key = "<leader>ag",
-            desc = "generate git commit message",
-            use_context = false,
-            prompt = function ()
-              return [[
-                  Using the following git diff generate a consise and
-                  clear git commit message, with a short title summary
-                  that is 75 characters or less:
-              ]] .. vim.fn.system("git diff --cached")
-            end,
-            modes = { "n" },
-            strip_function = nil,
-          },
-        },
-      })
-    end,
-  },
-
-  -- Jinja template syntax
-  { "lepture/vim-jinja" },
-
-  -- -- Fidget - show LSP server progress
-  -- { "j-hui/fidget.nvim",
-  --   config = function()
-  --     require("fidget").setup()
-  --   end,
-  -- }
  })
