@@ -653,7 +653,6 @@ python(){
     source $HOME/python-venv/epd-venv/bin/activate
 
     pip3 install --upgrade pip
-    pip3 install flask
 
     deactivate
 
@@ -664,7 +663,16 @@ python(){
     source $HOME/python-venv/isitobo-venv/bin/activate
 
     pip3 install --upgrade pip
-    pip3 install flask
+
+    deactivate
+
+    # env pre web-isitobo-test
+    [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
+
+    python3 -m venv $HOME/python-venv/isitobo-test-venv
+    source $HOME/python-venv/isitobo-test-venv/bin/activate
+
+    pip3 install --upgrade pip
 
     deactivate
 
