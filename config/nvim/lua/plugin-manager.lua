@@ -407,6 +407,9 @@ require("lazy").setup({
     end,
   },
 
+  -- Bootstrap Completitions
+  { "Jezda1337/cmp_bootstrap" },
+
   -- CMP Completitions
   { "hrsh7th/nvim-cmp",
     dependencies = {
@@ -521,6 +524,7 @@ require("lazy").setup({
           { name = "nvim_lua" },
           { name = "path" },
           { name = 'nvim_lsp_signature_help' },
+          { name = 'bootstrap' },
         },
         sorting = {
           comparators = {

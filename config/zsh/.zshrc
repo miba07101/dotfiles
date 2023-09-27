@@ -124,7 +124,7 @@ alias fd='fd -Hi'
 alias ls='exa -la --icons'
 
 # alias gh='cd $HOME/'
-alias epd='source $HOME/python-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd/flask-epd'
+alias epd='source $HOME/python-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd'
 alias io='source $HOME/python-venv/isitobo-venv/bin/activate && cd $HOME/git-repos/isitobo'
 alias ioo='source $HOME/python-venv/isitobo-test-venv/bin/activate && cd $HOME/git-repos/isitobo-test'
 alias yafin='source $HOME/python-venv/yafin-venv/bin/activate && python3 $SCRIPTS_DIR/yafin.py'
