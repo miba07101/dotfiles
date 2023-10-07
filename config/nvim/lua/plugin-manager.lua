@@ -286,17 +286,19 @@ require("lazy").setup({
   },
 
   -- Indent blank line
-  { "lukas-reineke/indent-blankline.nvim",
+  -- { "lukas-reineke/indent-blankline.nvim",
+  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {},
     config = function()
       vim.cmd [[ highlight IndentBlanklineContextChar guifg=#FF5D62 gui=nocombine ]]
-      require("indent_blankline").setup({
+      require("ibl").setup({
         enabled = true,
-        show_trailing_blankline_indent = false,
-        use_treesitter = true,
-        char = "▏",
-        context_char = "▏",
-        show_current_context = true,
-        -- show_current_context_start = true,
+        indent = { char = "▏" },
+        whitespace = { highlight = { "Whitespace", "NonText" } },
+        -- show_trailing_blankline_indent = false,
+        -- use_treesitter = true,
+        -- char = "▏",
+        -- context_char = "▏",
+        -- show_current_context = true,
       })
     end,
   },
