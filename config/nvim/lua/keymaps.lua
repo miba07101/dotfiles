@@ -68,6 +68,7 @@ map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsea
 
 -- Paste over currently selected text without yanking it
 map("v", "p", '"_dP', { desc = "Paste no yank" })
+map("n", "x", '"_x', { desc = "Delete character no yank" })
 
 -- MIX
 map("i", "ii", "<ESC>", { desc = "INSERT mode toggle" })
