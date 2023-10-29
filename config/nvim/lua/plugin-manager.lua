@@ -51,6 +51,13 @@ require("lazy").setup({
 
   { "rose-pine/neovim" },
 
+  {
+  "ronisbr/nano-theme.nvim",
+  init = function ()
+    vim.o.background = "dark" -- or "dark".
+  end
+},
+
   -- UI
   { "nvim-lua/plenary.nvim"
   },
