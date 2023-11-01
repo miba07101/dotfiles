@@ -39,25 +39,6 @@ require("lazy").setup({
     end,
   },
 
-  { "AlexvZyl/nordic.nvim" },
-
-  { "aktersnurra/no-clown-fiesta.nvim" },
-
-  { "olivercederborg/poimandres.nvim" },
-
-  { "Shatur/neovim-ayu" },
-
-  { "rmehri01/onenord.nvim" },
-
-  { "rose-pine/neovim" },
-
-  {
-  "ronisbr/nano-theme.nvim",
-  init = function ()
-    vim.o.background = "dark" -- or "dark".
-  end
-},
-
   -- UI
   { "nvim-lua/plenary.nvim"
   },
@@ -87,7 +68,6 @@ require("lazy").setup({
         dashboard.button("r", " " .. " Recent files", "<cmd>Telescope oldfiles<cr>"),
         dashboard.button("e", " " .. " New file", "<cmd>ene <bar> startinsert <cr>"),
         dashboard.button("f", " " .. " Find file", "<cmd>Telescope find_files<cr>"),
-        -- dashboard.button("p", " " .. " Python", "<cmd>Telescope file_browser path=~/git-repos/python/<cr>"),
         dashboard.button(
           "p",
           " " .. " Projects",
@@ -133,14 +113,6 @@ require("lazy").setup({
     end,
   },
 
-  { "ziontee113/icon-picker.nvim",
-    config = function()
-      require("icon-picker").setup({
-        disable_legacy_commands = true,
-      })
-    end,
-  },
-
   -- Statusline, bufferline
   { "nvim-lualine/lualine.nvim",
     config = function()
@@ -148,49 +120,10 @@ require("lazy").setup({
     end,
   },
 
-  -- File manager / Neo-tree
-  { "nvim-neo-tree/neo-tree.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons",
-      "MunifTanjim/nui.nvim",
-    },
-    config = function()
-      require("neo-tree").setup({
-        close_if_last_window = true,
-        window = {
-          position = "left",
-          width = 30,
-          mapping_options = {
-            noremap = true,
-            nowait = true,
-          },
-          mappings = {
-            ["<RIGHT>"] = "open",
-            ["<LEFT>"] = "navigate_up",
-          },
-        },
-        filesystem = {
-          filtered_items = {
-            hide_dotfiles = false,
-          },
-          follow_current_file = true,
-          hijack_netrw_behavior = "open_current",
-        },
-      })
-    end,
-  },
-
   -- Comment
   { "numToStr/Comment.nvim",
     config = function()
       require("Comment").setup({
-        -- toggler = {
-        --   line = '<leader>/',
-        -- },
-        -- opleader = {
-        --   line = '<leader>/',
-        -- },
       })
     end,
   },
@@ -293,7 +226,6 @@ require("lazy").setup({
   },
 
   -- Indent blank line
-  -- { "lukas-reineke/indent-blankline.nvim",
   { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {},
     config = function()
       vim.cmd [[ highlight IndentBlanklineContextChar guifg=#FF5D62 gui=nocombine ]]
@@ -301,11 +233,6 @@ require("lazy").setup({
         enabled = true,
         indent = { char = "▏" },
         whitespace = { highlight = { "Whitespace", "NonText" } },
-        -- show_trailing_blankline_indent = false,
-        -- use_treesitter = true,
-        -- char = "▏",
-        -- context_char = "▏",
-        -- show_current_context = true,
       })
     end,
   },
@@ -323,7 +250,6 @@ require("lazy").setup({
     dependencies = {
       "JoosepAlviste/nvim-ts-context-commentstring",
       "windwp/nvim-ts-autotag",
-      "HiPhish/nvim-ts-rainbow2",
     },
     config = function()
       require("nvim-treesitter.configs").setup({
@@ -333,12 +259,6 @@ require("lazy").setup({
         context_commentstring = { enable = true },
         autopairs = { enable = true },
         autotag = { enable = true },
-        -- rainbow = { enable = true,
-        --   disable = {},
-        --   query = 'rainbow-parens',
-        --   strategy = require 'ts-rainbow.strategy.global',
-        --   max_file_lines = 3000
-        -- },
         incremental_selection = { enable = true },
         -- indent = { enable = true },
       })
@@ -403,13 +323,19 @@ require("lazy").setup({
 
   -- LSP
   { "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       -- LSP
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
       -- Linters / Formaters
-      "jose-elias-alvarez/null-ls.nvim",
-      "jay-babu/mason-null-ls.nvim",
+      -- "jose-elias-alvarez/null-ls.nvim",
+      -- "jay-babu/mason-null-ls.nvim",
+      -- Formatting
+      "stevearc/conform.nvim",
+      -- Linting
+      "mfussenegger/nvim-lint",
     },
     config = function()
       require("plugins.lsp")
@@ -589,16 +515,13 @@ require("lazy").setup({
         nowait = true, -- use `nowait` when creating keymaps
       }
       local mappings = {
-        a = { name = "openai" },
         b = { name = "buffers" },
         c = { name = "code" },
         d = { name = "diagnostic" },
         f = { name = "telescope" },
         g = { name = "git" },
         h = { name = "help" },
-        i = { name = "icons" },
         l = { name = "lsp" },
-        n = { name = "neorg" },
         p = { name = "python" },
         t = { name = "terminal" },
         v = { name = "neovim" },

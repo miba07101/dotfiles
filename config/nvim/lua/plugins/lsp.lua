@@ -43,20 +43,6 @@ local servers = {
     },
   },
   pyright = {
-    -- root_dir =
-    --   function()
-    --     return vim.fn.getcwd()
-    --   end,
-    -- root_dir = {
-    --   root_files = {
-    --       'pyproject.toml',
-    --       'setup.py',
-    --       'setup.cfg',
-    --       'requirements.txt',
-    --       'pipfile',
-    --       'pyrightconfig.json',
-    --   }
-    -- },
     settings = {
       python = {
         analysis = {
@@ -130,40 +116,47 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
 
 -- Linters / Formaters
 -- Auto install
-require("mason-null-ls").setup({
-  ensure_installed = {
-    "beautysh",
-    "shellcheck",
-    "stylua",
-    "prettier",
-    "black",
-    "flake8",
-    "djlint",
+require("mason-tool-installer").setup({
+      ensure_installed = {
+        "beautysh", -- bash formater
+        "prettier", -- prettier formatter
+        "stylua", -- lua formatter
+        "isort", -- python formatter
+        "black", -- python formatter
+        "shellcheck", -- bash linter
+        "pylint", -- python linter
+        "flake8", -- python linter
+        "eslint_d", -- js linter
+        "djlint", -- django linter
+      },
+    })
+
+-- Formatting
+local conform = require("conform")
+
+conform.setup({
+  formatters_by_ft = {
+    bash = { "beautysh" },
+    javascript = { "prettier" },
+    css = { "prettier" },
+    html = { "prettier" },
+    json = { "prettier" },
+    yaml = { "prettier" },
+    lua = { "stylua" },
+    python = { "isort", "black" },
   },
-  automatic_installation = true,
+  -- format_on_save = {
+  --   lsp_fallback = true,
+  --   async = false,
+  --   timeout_ms = 1000,
+  -- },
 })
 
-local null_ls = require("null-ls")
-local formatting = null_ls.builtins.formatting
-local diagnostics = null_ls.builtins.diagnostics
+-- Linting
+local lint = require("lint")
 
-null_ls.setup({
-  debug = false,
-  sources = {
-    -- Bash
-    formatting.beautysh,
-    diagnostics.shellcheck,
-    -- Lua
-    -- formatting.stylua,
-    -- JavaScript, HTML, CSS
-    formatting.prettier.with({
-      extra_filetypes = { "toml" },
-      extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote" },
-    }),
-    -- Python
-    formatting.black.with({ extra_args = { "--fast" } }),
-    diagnostics.flake8,
-    -- Django/Flask HTML
-    formatting.djlint,
-  },
-})
+lint.linters_by_ft = {
+  bash = { "shellcheck" },
+  javascript = { "eslint_d" },
+  python = { "flake8" },
+}

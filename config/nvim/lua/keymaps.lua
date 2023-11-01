@@ -73,7 +73,6 @@ map("n", "x", '"_x', { desc = "Delete character no yank" })
 -- MIX
 map("i", "ii", "<ESC>", { desc = "INSERT mode toggle" })
 map("n", "<A-a>", "<ESC>ggVG<CR>", { desc = "Select all text" })
-map("n", "<BS>", "X", { desc = "TAB as X in NORMAL mode" })
 
 -- Comment - mozem pouzit aj nastavenie v plugin-manager.lua
 map('n', '<leader>/', '<CMD>lua require("Comment.api").toggle.linewise.current()<CR>', { desc = "comment"})
@@ -81,14 +80,6 @@ map('x', '<leader>/', '<ESC><CMD>lua require("Comment.api").toggle.linewise(vim.
 
 -- Lazy
 map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "lazy" })
-
--- NeoTree
-map("n", "<leader>e", "<cmd>Neotree toggle<cr>", { desc = "neo-tree toggle" })
-
--- Icon Picker
-map("n", "<leader>in", "<cmd>IconPickerNormal<cr>", { desc = "icon normal mode" })
-map("n", "<leader>iy", "<cmd>IconPickerYank<cr>", { desc = " yank icon into register" })
-map("i", "<A-i>", "<cmd>IconPickerInsert<cr>", { desc = "icon insert mode" })
 
 -- Telescope
 map("n", "<leader>fx", "<cmd>Telescope<cr>", { desc = "telescope" })
@@ -175,14 +166,6 @@ map("n",  "<leader>vk" , function()
 		vim.o.concealcursor = "n"
 	end
 end, { desc = "conceal cursor toggle" })
-
--- Neorg
-map("n", "<leader>ni", "<cmd>Neorg index<cr>", { desc = "neorg go to index" })
-map("n", "<leader>nr", "<cmd>Neorg return<cr>", { desc = "neorg return" })
-
--- OpenAI
-map("n", "<leader>aa", "<cmd>NeoAIToggle<cr>", { desc = "neoai toggle" })
-map("v", "<leader>ac", "<cmd>NeoAIContext<cr>", { desc = "neoai context mode" })
 
 -- Code Run
 map("n", "<leader>cw", "<cmd>lua _WEB_TOGGLE()<cr>", { desc = "web preview"} )
