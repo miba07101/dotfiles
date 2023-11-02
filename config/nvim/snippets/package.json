@@ -1,0 +1,19 @@
+{
+  "name": "jinja-snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": [
+          "all"
+        ],
+        "path": "./snippets/all.json"
+      },
+      {
+        "language": [
+          "jinja"
+        ],
+        "path": "./jinja.json"
+      }
+    ]
+  }
+}

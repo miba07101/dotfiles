@@ -44,12 +44,14 @@ require("lazy").setup({
   },
 
   { "stevearc/dressing.nvim",
+    event = "VeryLazy",
     config = function()
       require("dressing").setup()
     end,
   },
 
   { "goolord/alpha-nvim",
+    event = "VimEnter",
     config = function()
       local dashboard = require("alpha.themes.dashboard")
 
@@ -122,7 +124,11 @@ require("lazy").setup({
 
   -- Comment
   { "numToStr/Comment.nvim",
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
+      local ft = require('Comment.ft')
+      -- JINJA template set both line and block commentstring
+      ft.set('jinja', {'{#%s#}', '{#*%s*#}'})
       require("Comment").setup({
       })
     end,
@@ -130,6 +136,7 @@ require("lazy").setup({
 
   -- AutoPairs
   { "windwp/nvim-autopairs",
+    event = "InsertEnter",
     config = function()
       -- If you want insert `(` after select function or method item
       local cmp_autopairs = require('nvim-autopairs.completion.cmp')
@@ -138,12 +145,14 @@ require("lazy").setup({
         'confirm_done',
         cmp_autopairs.on_confirm_done()
       )
-      require("nvim-autopairs").setup({})
+      require("nvim-autopairs").setup({
+      })
     end,
   },
 
   -- Surround
   { "kylechui/nvim-surround",
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("nvim-surround").setup({})
     end,
@@ -163,6 +172,9 @@ require("lazy").setup({
       })
     end,
   },
+
+  -- MAximize window
+  { "szw/vim-maximizer" },
 
   -- Terminal
   { "akinsho/toggleterm.nvim",
@@ -239,6 +251,7 @@ require("lazy").setup({
 
   -- Colorizer
   { "norcalli/nvim-colorizer.lua",
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("colorizer").setup()
     end,
@@ -246,6 +259,7 @@ require("lazy").setup({
 
   -- Treesitter
   { "nvim-treesitter/nvim-treesitter",
+    event = { "BufReadPre", "BufNewFile" },
     build = ":TSUpdate",
     dependencies = {
       "JoosepAlviste/nvim-ts-context-commentstring",
@@ -255,7 +269,6 @@ require("lazy").setup({
       require("nvim-treesitter.configs").setup({
         ensure_installed = { "python", "bash", "lua", "html", "css", "scss", "htmldjango" },
         highlight = { enable = true },
-        -- additional_vim_regex_highlighting = true,
         context_commentstring = { enable = true },
         autopairs = { enable = true },
         autotag = { enable = true },
@@ -266,7 +279,9 @@ require("lazy").setup({
   },
 
   -- Jinja template syntax
-  { "lepture/vim-jinja" },
+  { "lepture/vim-jinja",
+    event = { "BufReadPre", "BufNewFile" },
+  },
 
   -- Telescope
   { "nvim-telescope/telescope.nvim",
@@ -329,9 +344,6 @@ require("lazy").setup({
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "WhoIsSethDaniel/mason-tool-installer.nvim",
-      -- Linters / Formaters
-      -- "jose-elias-alvarez/null-ls.nvim",
-      -- "jay-babu/mason-null-ls.nvim",
       -- Formatting
       "stevearc/conform.nvim",
       -- Linting
@@ -343,7 +355,14 @@ require("lazy").setup({
   },
 
   -- Bootstrap Completitions
-  { "Jezda1337/cmp_bootstrap" },
+  { "Jezda1337/cmp_bootstrap",
+    config = function()
+      require("bootstrap-cmp.config"):setup({
+        file_types = { "jinja.html", "html" },
+        url = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
+      })
+    end,
+  },
 
   -- CMP Completitions
   { "hrsh7th/nvim-cmp",
@@ -364,10 +383,9 @@ require("lazy").setup({
       -- icons
       "onsails/lspkind.nvim",
     },
+
     config = function()
-      -- require("plugins.cmp")
       local cmp = require("cmp")
-      -- local luasnip = require("luasnip").filetype_extend("djangohtml", {"django"})
       local luasnip = require("luasnip")
       local lspkind = require("lspkind")
 
@@ -379,10 +397,12 @@ require("lazy").setup({
 
       -- luasnip nacita 'snippets' z friendly-snippets
       require("luasnip.loaders.from_vscode").lazy_load()
+      require("luasnip.loaders.from_vscode").lazy_load({ paths = { "./snippets" } })
 
       -- codeium
       -- after install run ":Codeium Auth" and insert tokken from web
       require("codeium").setup({})
+
 
       cmp.setup({
         -- enabled = function()
@@ -448,6 +468,7 @@ require("lazy").setup({
               luasnip = "[snip]",
               nvim_lsp = "[lsp]",
               nvim_lua = "[lua]",
+              bootstrap = "[boot]"
             })
           }),
         },
@@ -501,7 +522,7 @@ require("lazy").setup({
 
   -- Keybidings WhichKey
   { "folke/which-key.nvim",
-    lazy = false,
+    event = "VeryLazy",
     config = function()
       require("which-key").setup({
         triggers_blacklist = {

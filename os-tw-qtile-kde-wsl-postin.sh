@@ -971,6 +971,7 @@ qtile_dotfiles(){
     ln -sf ${CWD}/config/nvim/init.lua          ${HOME}/.config/nvim/init.lua
     ln -sf ${CWD}/config/nvim/lua               ${HOME}/.config/nvim/lua
     ln -sf ${CWD}/config/nvim/after             ${HOME}/.config/nvim/after
+    ln -sf ${CWD}/config/nvim/snippets          ${HOME}/.config/nvim/snippets
     ln -sf ${CWD}/config/qt5ct                  ${HOME}/.config/qt5ct
     ln -sf ${CWD}/config/qtile                  ${HOME}/.config/qtile
     ln -sf ${CWD}/config/qutebrowser            ${HOME}/.config/qutebrowser
