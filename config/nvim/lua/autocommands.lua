@@ -1,5 +1,16 @@
 local mygroup = vim.api.nvim_create_augroup("vimrc", { clear = true })
 
+-- Telescope on start
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    if vim.fn.argv(0) == "" then
+      require("telescope.builtin").oldfiles()
+    end
+  end,
+	group = mygroup,
+	desc = "Start Telescope on start",
+})
+
 -- highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()

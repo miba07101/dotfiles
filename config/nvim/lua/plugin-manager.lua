@@ -17,21 +17,38 @@ require("lazy").setup({
     priority = 1000,
     config = function()
       require("kanagawa").setup({
+        colors = {
+          theme = {
+            all = {
+              ui = {
+                bg_gutter = "none",
+              },
+            },
+          },
+        },
         overrides = function(colors)
           local theme = colors.theme
           return {
             -- change cmd popup menu colors
-            Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+            Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_m1 },
             -- PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2, italic = true },
             PmenuSel = { fg = colors.palette.surimiOrange, bg = theme.ui.bg_p2 },
             PmenuSbar = { bg = theme.ui.bg_m1 },
             PmenuThumb = { bg = theme.ui.bg_p2 },
-            FloatBorder = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+            FloatBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
             -- change cmp items colors
             CmpItemKindVariable = { fg = colors.palette.crystalBlue, bg = "NONE" },
             CmpItemKindInterface = { fg = colors.palette.crystalBlue, bg = "NONE" },
             CmpItemKindFunction = { fg = colors.palette.oniViolet, bg = "NONE" },
             CmpItemKindMethod = { fg = colors.palette.oniViolet, bg = "NONE" },
+            -- borderless telescope
+            TelescopeTitle = { fg = theme.ui.special, bold = true },
+            TelescopePromptNormal = { bg = theme.ui.bg_p1 },
+            TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+            TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
+            TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+            TelescopePreviewNormal = { bg = theme.ui.bg_dim },
+            TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
           }
       end,
       })
@@ -47,51 +64,6 @@ require("lazy").setup({
     event = "VeryLazy",
     config = function()
       require("dressing").setup()
-    end,
-  },
-
-  { "goolord/alpha-nvim",
-    event = "VimEnter",
-    config = function()
-      local dashboard = require("alpha.themes.dashboard")
-
-      -- header
-      dashboard.section.header.val = {
-        [[      .__        .__ ]],
-        [[___  _|__| _____ |__|]],
-        [[\  \/ /  |/     \|  |]],
-        [[ \   /|  |  Y Y  \  |]],
-        [[  \_/ |__|__|_|  /__|]],
-        [[               \/    ]],
-      }
-
-      -- buttons
-      dashboard.section.buttons.val = {
-        dashboard.button("r", " " .. " Recent files", "<cmd>Telescope oldfiles<cr>"),
-        dashboard.button("e", " " .. " New file", "<cmd>ene <bar> startinsert <cr>"),
-        dashboard.button("f", " " .. " Find file", "<cmd>Telescope find_files<cr>"),
-        dashboard.button(
-          "p",
-          " " .. " Projects",
-          "<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<cr>"
-        ),
-        dashboard.button("c", " " .. " Config", "<cmd>e ~/.config/nvim/lua/plugin-manager.lua<cr>"),
-        dashboard.button("q", " " .. " Quit", ":qa<CR>"),
-      }
-
-      -- footer
-      local function footer()
-        return "Učiť sa, učiť sa, učiť sa! --V.I.Lenin"
-      end
-
-      dashboard.section.footer.val = footer()
-
-      dashboard.section.header.opts.hl = "Include"
-      dashboard.section.buttons.opts.hl = "Keyword"
-      dashboard.section.footer.opts.hl = "Type"
-
-      dashboard.opts.opts.noautocmd = true
-      require("alpha").setup(dashboard.opts)
     end,
   },
 
@@ -237,18 +209,6 @@ require("lazy").setup({
     end,
   },
 
-  -- Indent blank line
-  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {},
-    config = function()
-      vim.cmd [[ highlight IndentBlanklineContextChar guifg=#FF5D62 gui=nocombine ]]
-      require("ibl").setup({
-        enabled = true,
-        indent = { char = "▏" },
-        whitespace = { highlight = { "Whitespace", "NonText" } },
-      })
-    end,
-  },
-
   -- Colorizer
   { "norcalli/nvim-colorizer.lua",
     event = { "BufReadPre", "BufNewFile" },
@@ -288,7 +248,6 @@ require("lazy").setup({
     dependencies = {
       "nvim-telescope/telescope-file-browser.nvim",
       "nvim-tree/nvim-web-devicons",
-      "nvim-telescope/telescope-project.nvim",
     },
     lazy = false,
     config = function()
@@ -321,17 +280,9 @@ require("lazy").setup({
               },
             },
           },
-          project = {
-            base_dirs = {
-              { path = "~/git-repos/epd/" },
-              { path = "~/git-repos/python/" },
-            },
-            -- hidden_files = true,
-          },
         },
       })
       require("telescope").load_extension("file_browser")
-      require("telescope").load_extension("project")
       require("telescope").load_extension("notify")
     end,
   },

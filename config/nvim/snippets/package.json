@@ -4,13 +4,15 @@
     "snippets": [
       {
         "language": [
-          "all"
+          "jinja",
+          "jinja.html"
         ],
         "path": "./snippets/all.json"
       },
       {
         "language": [
-          "jinja"
+          "jinja",
+          "jinja.html"
         ],
         "path": "./jinja.json"
       }

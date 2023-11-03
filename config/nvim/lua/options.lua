@@ -31,8 +31,8 @@ opt.ignorecase = true                        -- Ignore case when searching
 opt.incsearch = true                         -- Highlight while searching
 opt.iskeyword:remove("_")                       -- Oddeli slova pri mazani, nebude brat ako jedno slovo
 opt.laststatus = 3                           -- Enable global status bar
-opt.list = true                              -- Allow padding with special characters
-opt.listchars = { eol = "¬", tab = "› " }
+opt.list = false                              -- Allow padding with special characters
+-- opt.listchars = { eol = "¬", tab = "› " }
 opt.matchtime = 2                            -- Default is 5, set the duration of showmatch
 opt.mouse = "a"                              -- Allow the use of the mouse
 opt.number = true                            -- Allow absolute line numbers

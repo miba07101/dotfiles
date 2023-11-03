@@ -150,21 +150,10 @@ map("t", "<esc>", "<C-\\><C-n>", { desc = "terminal normal mode" })
 
 -- GIT
 map("n", "<leader>gl", "<cmd>lua _LAZYGIT_TOGGLE()<cr>", { desc = "lazygit" })
-map("n", "<leader>gj", "<cmd>lua require 'gitsigns'.next_hunk()<cr>", { desc = "next hunk" })
-map("n", "<leader>gk", "<cmd>lua require 'gitsigns'.prev_hunk()<cr>", { desc = "prev hunk" })
-map("n", "<leader>gb", "<cmd>lua require 'gitsigns'.blame_line()<cr>", { desc = "blame line" })
-map("n", "<leader>gp", "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", { desc = "preview hunk" })
-map("n", "<leader>gr", "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", { desc = "reset hunk" })
-map("n", "<leader>gR", "<cmd>lua require 'gitsigns'.reset_buffer()<cr>", { desc = "reset buffer" })
-map("n", "<leader>gs", "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", { desc = "stage hunk" })
-map("n", "<leader>gu", "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>", { desc = "undo stage hunk" })
-map("n", "<leader>go", "<cmd>Telescope git_status<cr>", { desc = "open changed file" })
-map("n", "<leader>gb", "<cmd>Telescope git_branches<cr>", { desc = "checkout branch" })
-map("n", "<leader>gc", "<cmd>Telescope git_commits<cr>", { desc = "checkout commit" })
 
 -- NeoVim
 map("n", "<leader>vn", "<cmd>set relativenumber!<cr>", { desc = "numbers toggle" })
-map("n", "<leader>vl", "<cmd>IndentBlanklineToggle<cr>", { desc = "blankline toggle" })
+-- map("n", "<leader>vl", "<cmd>IBLToggle<cr>", { desc = "blankline toggle" })
 map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", { desc = "background toggle" })
 map("n", "<leader>vc", function()
 	if vim.o.conceallevel > 0 then
