@@ -217,23 +217,28 @@ require("lazy").setup({
     end,
   },
 
+  -- Context comment string
+  { "JoosepAlviste/nvim-ts-context-commentstring",
+    config = function()
+      require("ts_context_commentstring").setup({})
+      vim.g.skip_ts_context_commentstring_module = true
+    end,
+  },
+
   -- Treesitter
   { "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPre", "BufNewFile" },
     build = ":TSUpdate",
     dependencies = {
-      "JoosepAlviste/nvim-ts-context-commentstring",
       "windwp/nvim-ts-autotag",
     },
     config = function()
       require("nvim-treesitter.configs").setup({
         ensure_installed = { "python", "bash", "lua", "html", "css", "scss", "htmldjango" },
         highlight = { enable = true },
-        context_commentstring = { enable = true },
         autopairs = { enable = true },
         autotag = { enable = true },
         incremental_selection = { enable = true },
-        -- indent = { enable = true },
       })
     end,
   },
@@ -266,7 +271,7 @@ require("lazy").setup({
             },
             width = 0.87,
             height = 0.80,
-            preview_cutoff = 120,
+            preview_cutoff = 130,
           },
         },
         extensions = {
@@ -319,9 +324,7 @@ require("lazy").setup({
   { "hrsh7th/nvim-cmp",
     dependencies = {
       "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
       "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lua",
       "hrsh7th/cmp-nvim-lsp-signature-help",
       -- codeium
       "jcdickinson/codeium.nvim",
@@ -334,7 +337,6 @@ require("lazy").setup({
       -- icons
       "onsails/lspkind.nvim",
     },
-
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
@@ -418,7 +420,6 @@ require("lazy").setup({
               codeium = "[cod]",
               luasnip = "[snip]",
               nvim_lsp = "[lsp]",
-              nvim_lua = "[lua]",
               bootstrap = "[boot]"
             })
           }),
@@ -428,8 +429,6 @@ require("lazy").setup({
           { name = "codeium" },
           { name = "luasnip" },
           { name = "nvim_lsp" },
-          { name = "nvim_lua" },
-          { name = "path" },
           { name = 'nvim_lsp_signature_help' },
           { name = 'bootstrap' },
         },

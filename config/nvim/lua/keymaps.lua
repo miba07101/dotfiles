@@ -48,6 +48,7 @@ map("n", "<A-Right>", ":bnext<CR>", { desc = "Next buffer" })
 map("n", "<A-Left>", ":bprevious<CR>", { desc = "Previous buffer" })
 map("n", "<A-UP>", ":bp<BAR>bd#<CR>", { desc = "Quit buffer" })
 map("n", "<A-Down>", ":bp<BAR>bd#<CR>", { desc = "Quit buffer" })
+map("n", "<leader>bc", ":bp<BAR>bd#<CR>", { desc = "Quit buffer" })
 
 -- Indenting
 map("v", "<", "<gv", { desc = "Unindent line" })
@@ -96,12 +97,7 @@ map("n", "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "words" })
 map("n", "<leader>fo", "<cmd>Telescope oldfiles<cr>", { desc = "recent files" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "buffers" })
 map("n", "<leader>fc", "<cmd>Telescope colorscheme<cr>", { desc = "colorscheme" })
-map(
-	"n",
-	"<leader>fp",
-	"<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<cr>",
-	{ desc = "projects" }
-)
+map("n", "<leader>fd", "<cmd>Telescope diagnostics<cr>", { desc = "diagnostics" })
 
 -- LSP
 map("n", "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "definition" })
