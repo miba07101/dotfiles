@@ -327,7 +327,7 @@ require("lazy").setup({
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lsp-signature-help",
       -- codeium
-      "jcdickinson/codeium.nvim",
+      -- "jcdickinson/codeium.nvim",
       -- sorting
       "lukas-reineke/cmp-under-comparator",
       -- snippets
@@ -354,7 +354,7 @@ require("lazy").setup({
 
       -- codeium
       -- after install run ":Codeium Auth" and insert tokken from web
-      require("codeium").setup({})
+      -- require("codeium").setup({})
 
 
       cmp.setup({
@@ -426,7 +426,7 @@ require("lazy").setup({
         },
         sources = {
           { name = "buffer" },
-          { name = "codeium" },
+          -- { name = "codeium" },
           { name = "luasnip" },
           { name = "nvim_lsp" },
           { name = 'nvim_lsp_signature_help' },
