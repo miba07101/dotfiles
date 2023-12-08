@@ -322,7 +322,7 @@ require("lazy").setup({
 
   -- Codeium
   { "jcdickinson/codeium.nvim",
-    commit = "62d1e2e5691865586187bd6aa890e43b85c00518",
+    -- commit = "62d1e2e5691865586187bd6aa890e43b85c00518",
   },
 
   -- CMP Completitions
