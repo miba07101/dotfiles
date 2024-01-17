@@ -43,8 +43,8 @@ lots:
     quantity: 60
     unit_cost: 158.21
   - symbol: "BAS.DE"
-    quantity: 1200.0
-    unit_cost: 47.01
+    quantity: 1300.0
+    unit_cost: 46.74
   - symbol: "XIACF"
     quantity: 1050
     unit_cost: 1.27
