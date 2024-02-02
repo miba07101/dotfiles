@@ -170,22 +170,22 @@ lualine.setup({
       { "progress" },
     },
   },
-  -- tabline = {
-  --   lualine_b = {
-  --     {"buffers",
-  --       buffers_color = {
-  --         active = {bg = "#1F1F28", fg = "#DCD7BA"},
-  --         inactive = {bg = "#1F1F28", fg = "#727169"},
-  --       },
-  --       filetype_names = {
-  --         alpha = '',
-  --         TelescopePrompt = '',
-  --         lazy = '',
-  --         fzf = '',
-  --       },
-  --     }
-  --   },
-  -- }
+  tabline = {
+    lualine_b = {
+      {"buffers",
+        buffers_color = {
+          active = {bg = "#1F1F28", fg = "#DCD7BA"},
+          inactive = {bg = "#1F1F28", fg = "#727169"},
+        },
+        filetype_names = {
+          alpha = '',
+          TelescopePrompt = '',
+          lazy = '',
+          fzf = '',
+        },
+      }
+    },
+  }
 
 })
 
