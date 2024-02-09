@@ -121,7 +121,7 @@ alias vs='nvim $HOME/.config/starship.toml'
 alias f='ranger-cd'
 alias ex='exit'
 alias fd='fd -Hi'
-alias ls='exa -la --icons'
+alias ls='eza -la --icons'
 
 # alias gh='cd $HOME/'
 alias epd='source $HOME/python-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd'
