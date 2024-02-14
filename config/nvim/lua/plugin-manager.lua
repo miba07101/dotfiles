@@ -225,6 +225,14 @@ require("lazy").setup({
     end,
   },
 
+  -- Matchup
+  { "andymass/vim-matchup",
+    config = function()
+      -- may set any options here
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+    end
+  },
+
   -- Treesitter
   { "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPre", "BufNewFile" },
@@ -239,6 +247,7 @@ require("lazy").setup({
         autopairs = { enable = true },
         autotag = { enable = true },
         incremental_selection = { enable = true },
+        matchup = { enable = true },
       })
     end,
   },
