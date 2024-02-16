@@ -132,7 +132,7 @@ map("n", "<leader>dp", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", { de
 map("n", "<leader>dl", "<cmd>lua vim.diagnostic.setloclist()<cr>", { desc = "loc list" })
 map("n", "<leader>df", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "open float" })
 map("n", "<leader>dt","<cmd>windo diffthis<CR>", { desc = "differ this" })
-map("n", "<leader>do","<cmd>diffoff<CR>", { desc = "differ off" })
+map("n", "<leader>do","<cmd>diffoff!<CR>", { desc = "differ off" })
 map("n", "<leader>du","<cmd>diffupdate<CR>", { desc = "differ update" })
 
 -- Terminal
