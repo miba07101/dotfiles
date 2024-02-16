@@ -30,6 +30,7 @@ map("n", "<leader>wv", "<C-w>v", { desc = "Vertical" })
 map("n", "<leader>wh", "<C-w>s", { desc = "Horizontal" })
 map("n", "<leader>w=", "<C-W>=", { desc = "Equal" })
 map("n", "<leader>wm","<cmd>MaximizerToggle<CR>", { desc = "Maximize" })
+
 map("n", "<C-Up>", "<C-w>k", { desc = "Go UP" })
 map("n", "<C-Down>", "<C-w>j", { desc = "Go DOWN" })
 map("n", "<C-Left>", "<C-w>h", { desc = "Go LEFT" })
@@ -130,6 +131,9 @@ map("n", "<leader>dn", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", { de
 map("n", "<leader>dp", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", { desc = "prev" })
 map("n", "<leader>dl", "<cmd>lua vim.diagnostic.setloclist()<cr>", { desc = "loc list" })
 map("n", "<leader>df", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "open float" })
+map("n", "<leader>dt","<cmd>windo diffthis<CR>", { desc = "differ this" })
+map("n", "<leader>do","<cmd>diffoff<CR>", { desc = "differ off" })
+map("n", "<leader>du","<cmd>diffupdate<CR>", { desc = "differ update" })
 
 -- Terminal
 map("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "toggle" })
