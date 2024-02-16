@@ -16,7 +16,7 @@ watchlist:
   - bayn.de
   # - xiacf
   # - spce
-  # - pltr
+  - pltr
   # - sofi
   - b4b.de
   - ibm
@@ -34,7 +34,7 @@ watchlist:
   - tte.pa
   - lin.de
   # - bas.de
-  # - hen3.de
+  - hen3.de
 lots:
   - symbol: "LHA.DE"
     quantity: 3300
@@ -51,15 +51,15 @@ lots:
   - symbol: "SPCE"
     quantity: 1400
     unit_cost: 12.33
-  - symbol: "PLTR"
-    quantity: 800
-    unit_cost: 25.38
   - symbol: "SOFI"
     quantity: 1000
     unit_cost: 10.50
   - symbol: "INTC"
     quantity: 300
     unit_cost: 30.09
+  - symbol: "MO"
+    quantity: 500
+    unit_cost: 40.1
 # colors:
 #   text: "#005fff"
 #   text-light: "#0087ff"
