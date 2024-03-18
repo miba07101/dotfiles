@@ -65,17 +65,17 @@ basic_packages(){
         'git'
         'zsh'
         'starship'
-        'exa'
+        'eza'
         'fd'
         'tealdeer' # tldr pre man pages
         'curl'
         'yt-dlp' # stahovanie youtube videi
         'ranger' # python terminal filemanager
         'xsel' # umoznuje copirovat adresu suboru z Rangera do systemoveho clipboardu
-        'jq' # potrebne pre script ticker - cli JSON processor
-        'python311-pip' # treba len zmenit cislo verzie python podla aktualnej
-        'python311-ipython'
-        'python311-devel' # pre funkciu kniznice psycopg2 - prepojenie s postgresql databazou
+        # 'jq' # potrebne pre script ticker - cli JSON processor
+        # 'python311-pip' # treba len zmenit cislo verzie python podla aktualnej
+        # 'python311-ipython'
+        # 'python311-devel' # pre funkciu kniznice psycopg2 - prepojenie s postgresql databazou
         # 'python310-bpython'
         'ripgrep' # vyhladavaci doplnok pre neovim a funkcnost Telescope doplnku
         'npm-default'
@@ -86,8 +86,8 @@ basic_packages(){
         '7zip'
         'at-spi2-core'
         'xdg-utils' # pre nastavenie defaultnych aplikacii
-        'sqlitebrowser' # pre sqlite databazu pre moju flask aplikaciu
-        'redis' # server pre flask kniznicu celery. pouzivam pre moju aplikaciu epd alebo isitobo.
+        # 'sqlitebrowser' # pre sqlite databazu pre moju flask aplikaciu
+        # 'redis' # server pre flask kniznicu celery. pouzivam pre moju aplikaciu epd alebo isitobo.
     )
 
     for PKG in "${BASIC_PKGS[@]}"; do
@@ -1326,7 +1326,7 @@ which_distro(){
             # qtile_packages
             # kde_packages
             # desktop_packages
-            packman_packages
+            # packman_packages
             # basic_desktop_settings
             # qtile_settings
             github_cli
@@ -1339,9 +1339,9 @@ which_distro(){
             # hypnotix
             # plasma_eventcalendar
             # psensor
-            appimage_launcher
+            # appimage_launcher
             ticker
-            ulozto_downloader
+            # ulozto_downloader
             # only_office
             # freetube
             # ledger_live
@@ -1350,7 +1350,7 @@ which_distro(){
             # chia_blockchain
             zsh_config
             # postgresql
-            python
+            # python
             # jupyter_latex
             # run_software
             # qtile_install_theme
@@ -1362,8 +1362,8 @@ which_distro(){
             npm_servers
             wsl_utilities
             # wsl_gnome
-            git_repos
-            final_touch
+            # git_repos
+            # final_touch
             ;;
         q )
             root
