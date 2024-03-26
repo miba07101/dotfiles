@@ -38,7 +38,7 @@ case $isWSL in
 
         # Variables
         OneDrive_DIR=/mnt/c/Users/$WIN_USERNAME/OneDrive/
-        SCRIPTS_DIR=/mnt/c/Users/$WIN_USERNAME/OneDrive/Linux/Skripty/
+        SCRIPTS_DIR=/mnt/c/Users/$WIN_USERNAME/OneDrive/Projekty/Linux/Skripty/
         ;;
     2)
         # Variables
