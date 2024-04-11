@@ -233,6 +233,15 @@ require("lazy").setup({
     end
   },
 
+  -- Quarto
+  { "quarto-dev/quarto-nvim",
+    opts = {},
+    dependencies = {
+      "jmbuhr/otter.nvim",
+      opts = {},
+    },
+  },
+
   -- Treesitter
   { "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPre", "BufNewFile" },
@@ -242,7 +251,7 @@ require("lazy").setup({
     },
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = { "python", "bash", "lua", "html", "css", "scss", "htmldjango" },
+        ensure_installed = { "python", "bash", "lua", "html", "css", "scss", "htmldjango", "markdown" },
         highlight = { enable = true },
         autopairs = { enable = true },
         autotag = { enable = true },
@@ -445,6 +454,7 @@ require("lazy").setup({
           { name = "nvim_lsp" },
           { name = 'nvim_lsp_signature_help' },
           { name = 'bootstrap' },
+          { name = 'otter' },
         },
         sorting = {
           comparators = {
@@ -515,5 +525,6 @@ require("lazy").setup({
       require("which-key").register(mappings, opts)
     end,
   },
+
 
  })

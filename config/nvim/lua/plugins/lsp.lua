@@ -22,7 +22,6 @@ local servers = {
 			"less",
 			"javascript",
 			"typescript",
-			"markdown",
 		},
 		init_options = {
 			html = {
@@ -78,6 +77,12 @@ local servers = {
 	-- 		},
 	-- 	},
 	-- },
+	marksman = {
+    filetypes = {
+      "markdown",
+      "quarto",
+    },
+  },
 }
 
 -- Auto install servers
