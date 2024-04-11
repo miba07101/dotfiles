@@ -54,7 +54,7 @@ local servers = {
 			},
 		},
 	},
-	pyright = {
+  pyright = {
 		settings = {
 			python = {
 				analysis = {
@@ -67,6 +67,17 @@ local servers = {
 			},
 		},
 	},
+	-- basedpyright = {
+	-- 	settings = {
+	-- 		python = {
+	-- 			analysis = {
+	-- 				autoSearchPaths = true,
+	-- 				diagnosticMode = "openFilesOnly",
+	-- 				useLibraryCodeForTypes = true,
+	-- 			},
+	-- 		},
+	-- 	},
+	-- },
 }
 
 -- Auto install servers
