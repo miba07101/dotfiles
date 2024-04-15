@@ -5,7 +5,9 @@
       {
         "language": [
           "jinja",
-          "jinja.html"
+          "jinja.html",
+          "markdown",
+          "quarto"
         ],
         "path": "./snippets/all.json"
       },
@@ -15,6 +17,18 @@
           "jinja.html"
         ],
         "path": "./jinja.json"
+      },
+      {
+        "language": [
+          "markdown"
+        ],
+        "path": "./markdown.json"
+      },
+      {
+        "language": [
+          "quarto"
+        ],
+        "path": "./quarto.json"
       }
     ]
   }

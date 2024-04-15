@@ -689,6 +689,18 @@ python(){
     pip3 install yahoofinancials
 
     deactivate
+
+    # Pre quarto
+    [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
+
+    python3 -m venv $HOME/python-venv/quarto-venv
+    source $HOME/python-venv/quarto-venv/bin/activate
+
+    pip3 install --upgrade pip
+    pip3 install jupyter
+    pip3 insatll handcalcs
+
+    deactivate
 }
 
 jupyter_latex(){
@@ -923,6 +935,7 @@ wsl_dotfiles(){
     ln -sf ${CWD}/config/nvim/init.lua              ${HOME}/.config/nvim/init.lua
     ln -sf ${CWD}/config/nvim/lua                   ${HOME}/.config/nvim/lua
     ln -sf ${CWD}/config/nvim/after                 ${HOME}/.config/nvim/after
+    ln -sf ${CWD}/config/nvim/snippets              ${HOME}/.config/nvim/snippets
     ln -sf ${CWD}/config/ranger                     ${HOME}/.config/ranger
     ln -sf ${CWD}/xWSL/starship.toml                ${HOME}/.config/starship.toml
     ln -sf ${CWD}/home/.bashrc                      ${HOME}/.bashrc
@@ -1305,6 +1318,32 @@ git_repos(){
     # git clone https://github.com/miba07101/epd.git $HOME/git-repos/epd
 }
 
+quarto(){
+    info "QUARTO"
+
+    # download tarball
+    git_url="https://github.com/quarto-dev/quarto-cli/releases/latest"
+    latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
+    latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
+    down_url="https://github.com/quarto-dev/quarto-cli/releases/download/${latest_version}/quarto-${latest_version#v}-linux-amd64.tar.gz"
+    wget ${down_url} -P ${TEMP_DIR}
+
+    # exctract files
+    [[ ! -d $HOME/quarto ]] && mkdir -p $HOME/quarto
+    tar -C $HOME/quarto -xvzf quarto*.tar.gz
+
+    # create symlink
+    [[ ! -d $HOME/bin ]] && mkdir -p $HOME/bin
+    ln -s $HOME/quarto/quarto*/bin/quarto $HOME/bin/quarto
+
+    # Ensure that the folder where you created a symlink is in the path. For example:
+    # ( echo ""; echo 'export PATH=$PATH:~/bin\n' ; echo "" ) >> ~/.profile
+    # source ~/.profile
+
+    # Check The Installation
+    # quarto check
+}
+
 final_touch(){
     [[ ! -d $HOME/Downloads ]] && mkdir -p $HOME/Downloads
 }
@@ -1363,6 +1402,7 @@ which_distro(){
             wsl_utilities
             # wsl_gnome
             # git_repos
+            quarto
             # final_touch
             ;;
         q )
@@ -1395,6 +1435,7 @@ which_distro(){
             qtile_dotfiles
             npm_servers
             git_repos
+            quarto
             final_touch
             ;;
         k )
@@ -1434,6 +1475,7 @@ which_distro(){
             kde_dotfiles
             npm_servers
             git_repos
+            quarto
             final_touch
             ;;
         Q )

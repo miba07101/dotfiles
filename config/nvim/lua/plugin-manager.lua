@@ -145,7 +145,7 @@ require("lazy").setup({
     end,
   },
 
-  -- MAximize window
+  -- Maximize window
   { "szw/vim-maximizer" },
 
   -- Terminal
@@ -235,10 +235,32 @@ require("lazy").setup({
 
   -- Quarto
   { "quarto-dev/quarto-nvim",
-    opts = {},
-    dependencies = {
-      "jmbuhr/otter.nvim",
-      opts = {},
+    ft = { 'quarto' },
+    dev = false,
+    opts = {
+      lspFeatures = {
+        languages = { 'python', 'bash', 'lua', 'html', 'javascript'  },
+      },
+      -- codeRunner = {
+      --   enabled = true,
+      --   default_method = 'slime',
+     -- },
+    },
+    dependencies =
+    {
+      {
+      -- for language features in code cells
+      -- added as a nvim-cmp source
+        "jmbuhr/otter.nvim",
+          dev = false,
+          opts = {},
+      },
+      {
+      -- Slime
+      -- send code from python/r/qmd documets to a terminal or REPL
+      -- like ipython, R, bash
+        -- "jpalardy/vim-slime"
+      },
     },
   },
 
@@ -251,7 +273,7 @@ require("lazy").setup({
     },
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = { "python", "bash", "lua", "html", "css", "scss", "htmldjango", "markdown" },
+        ensure_installed = { "python", "bash", "lua", "html", "css", "scss", "htmldjango", "markdown", "yaml" },
         highlight = { enable = true },
         autopairs = { enable = true },
         autotag = { enable = true },
@@ -443,7 +465,8 @@ require("lazy").setup({
               codeium = "[cod]",
               luasnip = "[snip]",
               nvim_lsp = "[lsp]",
-              bootstrap = "[boot]"
+              bootstrap = "[boot]",
+              otter = "[otter]"
             })
           }),
         },
@@ -499,30 +522,55 @@ require("lazy").setup({
     event = "VeryLazy",
     config = function()
       require("which-key").setup({
+         icons = {
+           breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
+           separator = "➜", -- symbol used between a key and it's label
+           group = "+", -- symbol prepended to a group
+         },
         triggers_blacklist = {
           i = { "i", "j", "k" },
           v = { "j", "k" },
         },
       })
-      local opts = {
+
+      -- normal mode
+      local normal_opts = {
+        mode = "n",
         prefix = "<leader>",
         silent = true,
         nowait = true, -- use `nowait` when creating keymaps
       }
-      local mappings = {
+      local normal_mappings = {
+
         b = { name = "buffers" },
         c = { name = "code" },
         d = { name = "diagnostic" },
-        f = { name = "telescope" },
+        f = { name = "files" },
         g = { name = "git" },
         h = { name = "help" },
         l = { name = "lsp" },
+        q = { name = "quarto",
+          o = { name = "otter"}
+        },
         p = { name = "python" },
         t = { name = "terminal" },
         v = { name = "neovim" },
         w = { name = "windows" },
       }
-      require("which-key").register(mappings, opts)
+      require("which-key").register(normal_mappings, normal_opts)
+
+      -- visual mode
+      local visual_opts = {
+        mode = "v",
+        prefix = "<leader>",
+        silent = true,
+        nowait = true, -- use `nowait` when creating keymaps
+      }
+      local visual_mappings = {
+
+        t = { name = "terminal" },
+      }
+      require("which-key").register(visual_mappings, visual_opts)
     end,
   },
 

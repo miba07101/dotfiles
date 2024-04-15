@@ -36,6 +36,7 @@ opt.list = false                              -- Allow padding with special char
 opt.matchtime = 2                            -- Default is 5, set the duration of showmatch
 opt.mouse = "a"                              -- Allow the use of the mouse
 opt.number = true                            -- Allow absolute line numbers
+opt.relativenumber = true                    -- Allow relative line numbers
 opt.numberwidth = 1                          -- Set the width of the number column, default is 4
 opt.pumheight = 10                           -- Set the height of the completion menu
 opt.scrolloff = 5                            -- Set how many lines are always displayed on the upper and lower sides of the cursor

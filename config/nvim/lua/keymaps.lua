@@ -181,3 +181,17 @@ map("i", "<M-d>", "<cmd>lua require('cmp').setup({enabled = false})<cr>", { desc
 map("n", "<leader>pe", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "pick venvs" })
 map("n", "<leader>pr", "<cmd>w<cr><cmd>TermExec cmd='python3 %' go_back=0<cr>", { desc = "run code" })
 map("n", "<leader>pt", "<cmd>lua _PYTHON_TOGGLE()<cr>", { desc = "ipython term" })
+
+-- Quarto
+map("n", "<leader>qa", "<cmd>QuartoActivate<cr>", { desc = "activate" })
+map("n", "<leader>qp", "<cmd>lua require'quarto'.quartoPreview()<cr>", { desc = "preview" })
+map("n", "<leader>qq", "<cmd>lua require'quarto'.quartoClosePreview()<cr>", { desc = "quit" })
+map("n", "<leader>qh", "<cmd>QuartoHelp<cr>", { desc = "help" })
+
+-- Otter (for quarto completion)
+map("n", "<leader>qod", "<cmd>lua require('otter').ask_definition()<cr>", { desc = "definition" })
+map("n", "<leader>qoh", "<cmd>lua require('otter').ask_hover()<cr>", { desc = "hover" })
+map("n", "<leader>qor", "<cmd>lua require('otter').ask_references()<cr>", { desc = "references" })
+map("n", "<leader>qon", "<cmd>lua require('otter').ask_rename()<cr>", { desc = "rename" })
+map("n", "<leader>qof", "<cmd>lua require('otter').ask_format()<cr>", { desc = "format" })
+
