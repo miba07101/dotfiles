@@ -699,6 +699,10 @@ python(){
     pip3 install --upgrade pip
     pip3 install jupyter
     pip3 insatll handcalcs
+    pip3 insatll sympy
+    pip3 insatll pandas
+    pip3 insatll tabulate
+    pip3 insatll latexify-py
 
     deactivate
 }
