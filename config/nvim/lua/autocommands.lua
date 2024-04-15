@@ -25,7 +25,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- unfold at open
 vim.api.nvim_create_autocmd("BufWinEnter", {
-	pattern = { "*.py", "*.css", "*.scss", "*.html" },
+	pattern = { "*.py", "*.css", "*.scss", "*.html", "*.qmd" },
 	command = [[:normal zR]], -- zR-open, zM-close folds
 	group = mygroup,
 	desc = "Unfold",
