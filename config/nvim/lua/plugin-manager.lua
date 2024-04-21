@@ -303,16 +303,17 @@ require("lazy").setup({
           path_display = { "truncate" },
           initial_mode = "normal", -- insert
           sorting_strategy = "ascending",
+          layout_strategy = "vertical",
           layout_config = {
-            horizontal = {
-              prompt_position = "top",
-              preview_width = 0.55,
-              results_width = 0.8,
-            },
-            width = 0.87,
-            height = 0.80,
-            preview_cutoff = 130,
-          },
+            preview_height = 0.55,
+          --   horizontal = {
+          --     prompt_position = "top",
+          --     preview_width = 0.55,
+          --     results_width = 0.8,
+          --   },
+            width = 0.85,
+            height = 0.85,
+            -- preview_cutoff = 130,
         },
         extensions = {
           file_browser = {
@@ -326,6 +327,7 @@ require("lazy").setup({
             },
           },
         },
+      },
       })
       require("telescope").load_extension("file_browser")
       require("telescope").load_extension("notify")
@@ -517,6 +519,55 @@ require("lazy").setup({
     end,
   },
 
+  -- Obsidian
+  { "epwalsh/obsidian.nvim",
+  version = "*",  -- recommended, use latest release instead of latest commit
+  lazy = true,
+  ft = "markdown",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+  },
+  opts = {
+    workspaces = {
+      {
+        name = "Obsidian",
+        path = "/home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/",
+      },
+    },
+    notes_subdir = "inbox",
+    new_notes_location = "notes_subdir",
+    disable_frontmatter = true,
+    templates = {
+        subdir = "Templates",
+        date_format = "%Y%m%d",
+        time_format = "%H:%M:%S",
+    },
+
+    -- https://github.com/agalea91/dotfiles/blob/main/nvim/lua/plugins/obsidian.lua
+    -- name new notes starting the ISO datetime and ending with note name
+    -- put them in the inbox subdir
+    -- note_id_func = function(title)
+    --   local suffix = ""
+    --   -- get current ISO datetime with -5 hour offset from UTC for EST
+    --   local current_datetime = os.date("!%Y-%m-%d-%H%M%S", os.time() - 5*3600)
+    --   if title ~= nil then
+    --     suffix = title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+    --   else
+    --     for _ = 1, 4 do
+    --       suffix = suffix .. string.char(math.random(65, 90))
+    --     end
+    --   end
+    --   return current_datetime .. "_" .. suffix
+    -- end,
+
+    completion = {
+      nvim_cmp = true,
+      min_chars = 2,
+    },
+
+  },
+},
+
   -- Keybidings WhichKey
   { "folke/which-key.nvim",
     event = "VeryLazy",
@@ -549,10 +600,13 @@ require("lazy").setup({
         g = { name = "git" },
         h = { name = "help" },
         l = { name = "lsp" },
+        o = { name = "obsidian",
+          r = { name = "review"}
+        },
+        p = { name = "python" },
         q = { name = "quarto",
           o = { name = "otter"}
         },
-        p = { name = "python" },
         t = { name = "terminal" },
         v = { name = "neovim" },
         w = { name = "windows" },

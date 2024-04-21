@@ -195,3 +195,14 @@ map("n", "<leader>qor", "<cmd>lua require('otter').ask_references()<cr>", { desc
 map("n", "<leader>qon", "<cmd>lua require('otter').ask_rename()<cr>", { desc = "rename" })
 map("n", "<leader>qof", "<cmd>lua require('otter').ask_format()<cr>", { desc = "format" })
 
+-- Obsidian
+map("n", "<leader>ol", "<cmd>lua require('obsidian').util.gf_passthrough()<cr>", { desc = "wiki links" })
+map("n", "<leader>ob", "<cmd>lua require('obsidian').util.toggle_checkbox()<cr>", { desc = "toggle checkbox" })
+map("n", "<leader>oo", ":cd /home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/<cr>", { desc = "open vault" })
+map("n", "<leader>on", ":ObsidianTemplate note<cr> :lua vim.cmd([[1,/^\\S/s/^\\n\\{1,}//]])<cr>", { desc = "convert note" })
+map("n", "<leader>of", ":s/\\(# \\)[^_]*_/\\1/ | s/-/ /g<cr>", { desc = "strip date - must have cursor on title" })
+map("n", "<leader>os", ":Telescope find_files search_dirs={\"/home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/\"}<cr>", { desc = "search in vault" })
+map("n", "<leader>oz", ":Telescope live_grep search_dirs={\"/home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/\"}<cr>", { desc = "search in notes" })
+-- for review workflow
+map("n", "<leader>orm", ":!mv '%:p' /home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/zzz<cr>:bd<cr>", { desc = "move note" })
+map("n", "<leader>ord", ":!rm '%:p'<cr>:bd<cr>", { desc = "delete note" })

@@ -25,10 +25,18 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- unfold at open
 vim.api.nvim_create_autocmd("BufWinEnter", {
-	pattern = { "*.py", "*.css", "*.scss", "*.html", "*.qmd" },
+	pattern = { "*.py", "*.css", "*.scss", "*.html", "*.qmd", "*.md" },
 	command = [[:normal zR]], -- zR-open, zM-close folds
 	group = mygroup,
 	desc = "Unfold",
+})
+
+-- conceal level = 1
+vim.api.nvim_create_autocmd("BufRead", {
+	pattern = "*.md",
+	command = [[:setlocal conceallevel=1]],
+	group = mygroup,
+	desc = "Conceal level",
 })
 
 -- autoformat code on save

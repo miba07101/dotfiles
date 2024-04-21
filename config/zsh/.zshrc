@@ -113,29 +113,43 @@ alias zypre='sudo zypper refresh'
 alias pipup='pip3 list -o | cut -f1 -d" " | tr " " "\n" | awk "{if(NR>=3)print}" | cut -d" " -f1 | xargs -n1 pip3 install -U'
 alias zsh-update-plugins="find "$ZDOTDIR" -type d -exec test -e '{}/.git' ';' -print0 | xargs -I {} -0 git -C {} pull -q"
 
+# Config files
 alias vb='nvim $HOME/.bashrc'
 alias vz='nvim $ZDOTDIR/.zshrc'
 alias vq='nvim $HOME/.config/qtile/config.py'
 alias vs='nvim $HOME/.config/starship.toml'
 
+# App
 alias f='ranger-cd'
 alias ex='exit'
 alias fd='fd -Hi'
 alias ls='eza -la --icons'
-
-# alias gh='cd $HOME/'
-alias epd='source $HOME/python-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd'
-alias io='source $HOME/python-venv/isitobo-venv/bin/activate && cd $HOME/git-repos/isitobo'
-alias pdf-env='source $HOME/python-venv/pdf-venv/bin/activate'
-alias yafin='source $HOME/python-venv/yafin-venv/bin/activate && python3 $SCRIPTS_DIR/yafin.py'
-alias mcad='source $HOME/python-venv/mcad-venv/bin/activate && cd $HOME/mcad'
-alias test-env='source $HOME/python-venv/test-venv/bin/activate && cd $HOME/git-repos/test'
-alias dea='deactivate'
 alias pg='sudo -i -u postgres'
 alias gl='lazygit'
 alias salome='$HOME/salome-meca/./salome_meca-lgpl-2021.0.0-2-20211014-scibian-9'
 alias freecad='$HOME/Applications/FreeCAD_0.20-1-2022-08-20-conda-Linux-x86_64-py310_b6b0ddf25121b8cf8cc18f02e81151b7.AppImage'
 
+# Python
+alias epd='source $HOME/python-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd'
+alias io='source $HOME/python-venv/isitobo-venv/bin/activate && cd $HOME/git-repos/isitobo'
+alias test-env='source $HOME/python-venv/test-venv/bin/activate && cd $HOME/git-repos/test'
+alias yafin='source $HOME/python-venv/yafin-venv/bin/activate && python3 $SCRIPTS_DIR/yafin.py'
+alias mcad='source $HOME/python-venv/mcad-venv/bin/activate && cd $HOME/mcad'
+alias dea='deactivate && cd $HOME'
+
+# Jupyter
+export JUPYTER_NOTEBOOK_STYLE='from IPython.display import HTML;HTML("<style>div.text_cell_render{font-size:130%;padding-top:50px;padding-bottom:50px}</style>")'
+alias jn='jupyter notebook --no-browser'
+alias jl='jupyter lab'
+alias jenv='source $HOME/python-venv/jupyterlab-venv/bin/activate && cd $HOME/jupyter-notebooks'
+
+# Obsidian
+alias oo='cd $OneDrive_DIR/Dokumenty/zPoznamky/Obsidian'
+alias on='obsidian-create-note.sh'
+alias ok='obsidian-kategorize-notes.sh'
+alias or='nvim $OneDrive_DIR/Dokumenty/zPoznamky/Obsidian/inbox/*.md'
+
+# Recording
 alias rec='$SCRIPTS_DIR./stream_record_linux.sh'
 case $isWSL in
     1)
