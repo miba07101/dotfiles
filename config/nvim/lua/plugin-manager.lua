@@ -538,37 +538,18 @@ require("lazy").setup({
     new_notes_location = "notes_subdir",
     disable_frontmatter = true,
     templates = {
-        subdir = "Templates",
-        date_format = "%Y%m%d",
-        time_format = "%H:%M:%S",
+      subdir = "templates",
+      date_format = "%Y-%m-%d",
+      time_format = "%H:%M:%S",
     },
-
-    -- https://github.com/agalea91/dotfiles/blob/main/nvim/lua/plugins/obsidian.lua
-    -- name new notes starting the ISO datetime and ending with note name
-    -- put them in the inbox subdir
-    -- note_id_func = function(title)
-    --   local suffix = ""
-    --   -- get current ISO datetime with -5 hour offset from UTC for EST
-    --   local current_datetime = os.date("!%Y-%m-%d-%H%M%S", os.time() - 5*3600)
-    --   if title ~= nil then
-    --     suffix = title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
-    --   else
-    --     for _ = 1, 4 do
-    --       suffix = suffix .. string.char(math.random(65, 90))
-    --     end
-    --   end
-    --   return current_datetime .. "_" .. suffix
-    -- end,
-
     completion = {
       nvim_cmp = true,
       min_chars = 2,
     },
-
   },
 },
 
-  -- Keybidings WhichKey
+  -- keybidings whichkey
   { "folke/which-key.nvim",
     event = "VeryLazy",
     config = function()
@@ -600,9 +581,7 @@ require("lazy").setup({
         g = { name = "git" },
         h = { name = "help" },
         l = { name = "lsp" },
-        o = { name = "obsidian",
-          r = { name = "review"}
-        },
+        o = { name = "obsidian" },
         p = { name = "python" },
         q = { name = "quarto",
           o = { name = "otter"}

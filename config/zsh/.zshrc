@@ -100,6 +100,8 @@ export VISUAL="nvim"
 export RANGER_LOAD_DEFAULT_RC=false
 export PATH=$PATH:$HOME/.npm/bin
 export NODE_PATH=$NODE_PATH:$HOME/.npm/lib/node_modules
+export OneDrive_DIR="/mnt/c/Users/$WIN_USERNAME/OneDrive/"
+export SCRIPTS_DIR="/mnt/c/Users/$WIN_USERNAME/OneDrive/Projekty/Linux/Skripty/"
 
 #############
 # ALIASES
