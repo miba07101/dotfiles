@@ -201,7 +201,9 @@ map("n", "<leader>ob", "<cmd>lua require('obsidian').util.toggle_checkbox()<cr>"
 map("n", "<leader>oo", ":cd ${OneDrive_DIR}/Dokumenty/zPoznamky/Obsidian/<cr>", { desc = "open vault" })
 map("n", "<leader>ot", ":ObsidianTemplate t-nvim-note<cr> :lua vim.cmd([[1,/^\\S/s/^\\n\\{1,}//]])<cr>", { desc = "note teplate" })
 -- map("n", "<leader>of", ":s/\\(# \\)[^-]*_/\\1/ | s/-/ /g<cr>", { desc = "strip date - must have cursor on title" })
-map("n", "<leader>os", ":Telescope find_files search_dirs={\"${OneDrive_DIR}/Dokumenty/zPoznamky/Obsidian/\"}<cr>", { desc = "search in vault" })
-map("n", "<leader>oz", ":Telescope live_grep search_dirs={\"${OneDrive_DIR}/Dokumenty/zPoznamky/Obsidian/\"}<cr>", { desc = "search in notes" })
+map("n", "<leader>os", "<cmd>lua require('telescope.builtin').find_files({ search_dirs = { vim.fn.expand('$OneDrive_DIR') .. '/Dokumenty/zPoznamky/Obsidian/' } })<cr>", { desc = "search in vault" })
+map("n", "<leader>ow", "<cmd>lua require('telescope.builtin').live_grep({ search_dirs = { vim.fn.expand('$OneDrive_DIR') .. '/Dokumenty/zPoznamky/Obsidian/' } })<cr>", { desc = "search in vault" })
+-- map("n", "<leader>os", ":Telescope find_files search_dirs={\"/home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/\"}<cr>", { desc = "search in vault" })
+-- map("n", "<leader>ow", ":Telescope live_grep search_dirs={\"/home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/\"}<cr>", { desc = "search in notes" })
 -- for review workflow
 map("n", "<leader>od", ":!rm '%:p'<cr>:bd<cr>", { desc = "delete note" })

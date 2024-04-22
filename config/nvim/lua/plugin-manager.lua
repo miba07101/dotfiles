@@ -531,7 +531,7 @@ require("lazy").setup({
     workspaces = {
       {
         name = "Obsidian",
-        path = "/home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/",
+        path = vim.fn.expand('$OneDrive_DIR') .. "Dokumenty/zPoznamky/Obsidian/",
       },
     },
     notes_subdir = "inbox",
@@ -548,6 +548,7 @@ require("lazy").setup({
     },
   },
 },
+
 
   -- keybidings whichkey
   { "folke/which-key.nvim",
