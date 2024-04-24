@@ -300,21 +300,21 @@ require("lazy").setup({
       local fb_actions = require("telescope").extensions.file_browser.actions
       require("telescope").setup({
         defaults = {
-          path_display = { "truncate" },
-          initial_mode = "normal", -- insert
-          sorting_strategy = "ascending",
+        --   path_display = { "truncate" },
+        --   initial_mode = "normal", -- insert
+        --   sorting_strategy = "ascending",
           layout_strategy = "vertical",
-          layout_config = {
-            preview_height = 0.55,
-          --   horizontal = {
-          --     prompt_position = "top",
-          --     preview_width = 0.55,
-          --     results_width = 0.8,
-          --   },
-            width = 0.85,
-            height = 0.85,
-            -- preview_cutoff = 130,
-        },
+        --   layout_config = {
+        --     preview_height = 0.55,
+        --   --   horizontal = {
+        --   --     prompt_position = "top",
+        --   --     preview_width = 0.55,
+        --   --     results_width = 0.8,
+        --   --   },
+        --     width = 0.85,
+        --     height = 0.85,
+        --     -- preview_cutoff = 130,
+        -- },
         extensions = {
           file_browser = {
             hidden = true,
@@ -549,22 +549,6 @@ require("lazy").setup({
   },
 },
 
--- {
---     "vhyrro/luarocks.nvim",
---     priority = 1001, -- this plugin needs to run before anything else
---     opts = {
---         rocks = { "magick" },
---     },
--- },
--- {
---     "3rd/image.nvim",
---     dependencies = { "luarocks.nvim" },
---     config = function()
---       require("image").setup({
---         backend = "ueberzug",
---       })
---     end
--- },
 
   -- keybidings whichkey
   { "folke/which-key.nvim",
@@ -623,6 +607,5 @@ require("lazy").setup({
       require("which-key").register(visual_mappings, visual_opts)
     end,
   },
-
 
  })

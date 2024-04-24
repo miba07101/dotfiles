@@ -136,14 +136,13 @@ alias epd='source $HOME/python-venv/epd-venv/bin/activate && cd $HOME/git-repos/
 alias io='source $HOME/python-venv/isitobo-venv/bin/activate && cd $HOME/git-repos/isitobo'
 alias test-env='source $HOME/python-venv/test-venv/bin/activate && cd $HOME/git-repos/test'
 alias yafin='source $HOME/python-venv/yafin-venv/bin/activate && python3 $SCRIPTS_DIR/yafin.py'
-alias mcad='source $HOME/python-venv/mcad-venv/bin/activate && cd $HOME/mcad'
+alias mcad='source $HOME/python-venv/mcad-venv/bin/activate && cd $HOME/git-repos/mcad'
 alias dea='deactivate && cd $HOME'
 
 # Jupyter
 export JUPYTER_NOTEBOOK_STYLE='from IPython.display import HTML;HTML("<style>div.text_cell_render{font-size:130%;padding-top:50px;padding-bottom:50px}</style>")'
-alias jn='jupyter notebook --no-browser'
+alias jn='jupyter notebook'
 alias jl='jupyter lab'
-alias jenv='source $HOME/python-venv/jupyterlab-venv/bin/activate && cd $HOME/jupyter-notebooks'
 
 # Obsidian
 alias oo='cd $OneDrive_DIR/Dokumenty/zPoznamky/Obsidian'
