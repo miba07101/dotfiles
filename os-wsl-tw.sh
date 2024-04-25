@@ -199,12 +199,12 @@ python_env(){
     source $HOME/python-venv/mcad-venv/bin/activate
 
     pip3 install --upgrade pip
-    pip3 insatll sympy
-    pip3 insatll pandas
-    pip3 insatll tabulate
+    pip3 install sympy
+    pip3 install pandas
+    pip3 install tabulate
     pip3 install jupyter
-    pip3 insatll handcalcs
-    pip3 insatll latexify-py
+    pip3 install handcalcs
+    pip3 install latexify-py
 
     deactivate
 }
