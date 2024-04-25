@@ -273,7 +273,7 @@ require("lazy").setup({
   -- Treesitter
   {
     "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPre", "BufNewFile" },
+    -- event = { "BufReadPre", "BufNewFile" },
     build = ":TSUpdate",
     dependencies = {
       "windwp/nvim-ts-autotag",
@@ -343,7 +343,7 @@ require("lazy").setup({
   -- LSP
   {
     "neovim/nvim-lspconfig",
-    --    event = { "BufReadPre", "BufNewFile" },
+    -- event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       -- LSP
       "williamboman/mason.nvim",
@@ -557,6 +557,37 @@ require("lazy").setup({
         min_chars = 2,
       },
     },
+  },
+
+{ -- highlight markdown headings and code blocks etc.
+    'lukas-reineke/headlines.nvim',
+    enabled = true,
+    lazy = true,
+    ft = { "markdown", "quarto" },
+    dependencies = 'nvim-treesitter/nvim-treesitter',
+    config = function()
+      require('headlines').setup {
+        quarto = {
+          query = vim.treesitter.query.parse(
+            'markdown',
+            [[
+                (fenced_code_block) @codeblock
+                ]]
+          ),
+          codeblock_highlight = 'CodeBlock',
+          treesitter_language = 'markdown',
+        },
+        markdown = {
+          query = vim.treesitter.query.parse(
+            'markdown',
+            [[
+                (fenced_code_block) @codeblock
+                ]]
+          ),
+          codeblock_highlight = 'CodeBlock',
+        },
+      }
+    end,
   },
 
   -- keybidings whichkey

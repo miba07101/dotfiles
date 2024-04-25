@@ -1,17 +1,5 @@
 #!/bin/bash
 
-# zistim ci som na WSL
-if [[ "$(</proc/version)" == *WSL* ]]; then
-    WSL=1
-    # Meno win pouzivatela
-    WIN_USER=$(powershell.exe -NoProfile -NonInteractive -Command "\$env:UserName" | tr -d '\r')
-else
-    WSL=2
-fi
-
-# Verzia systemu - distribucia
-DISTRO=$(awk -F= '$1 == "ID" {print $2}' /etc/os-release)
-
 # Pracovny priecinok
 CWD=$(pwd)
 
@@ -93,36 +81,24 @@ basic_packages(){
     tldr --update
 }
 
-packman_packages(){
-    info "INSTALL PACKMAN PACKAGES"
-    repourl="https://ftp.gwdg.de/pub/linux/misc/packman/suse/openSUSE_Tumbleweed/"
-    sudo -S <<< ${mypassword} zypper addrepo -cfp 90 ${repourl} packman
-    sudo -S <<< ${mypassword} zypper ${REFRESH}
+wsl_utilities(){
+    info "WSL UTILLITIES"
+    # pre povolenie systemd - v /etc/wsl.conf ma byt [boot] systemd=true
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_base
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_systemd
+    # pre spustanie gui aplikacii, napr. gedit ...
+    # https://en.opensuse.org/openSUSE:WSL?ref=its-foss
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_gui
 
-    # if [ WSL -eq 2 ]
-    # then
-    PAC_PKGS=(
-        'ffmpeg'
-        'gstreamer-plugins-good'
-        'gstreamer-plugins-bad'
-        'gstreamer-plugins-libav'
-        'gstreamer-plugins-ugly'
-        'libavcodec-full'
-        # 'handbrake-gtk'
-    )
-
-    for PAC_PKG in "${PAC_PKGS[@]}"; do
-        echo "Installing ${PAC_PKG}"
-        sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PAC_PKG}
-    done
-    # fi
-
-    # Codecs
-    # sudo -S <<< ${mypassword} zypper ${INSTALL} -y opi
-    # opi codecs
+    # umozni pouzivat win prikazy, napr. powershell.exe aj pri spustenom systemd
+    sudo -S <<< ${mypassword} sh -c 'cat > /usr/lib/binfmt.d/WSLInterop.conf' <<EOF
+    :WSLInterop:M::MZ::/init:PF
+EOF
 }
-#
 
+##########################################################################
+# Programy z netu
+##########################################################################
 lazygit(){
     info "LAZYGIT"
     repourl="https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo"
@@ -130,11 +106,6 @@ lazygit(){
     sudo -S <<< ${mypassword} zypper ${REFRESH}
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y lazygit
 }
-
-
-##########################################################################
-# Programy z netu
-##########################################################################
 
 ticker(){
     info "TICKER"
@@ -160,8 +131,8 @@ quarto(){
     tar -C $HOME/quarto -xvzf ${TEMP_DIR}/quarto*.tar.gz
 
     # create symlink
-    [[ ! -d $HOME/bin ]] && mkdir -p $HOME/bin
-    ln -s $HOME/quarto/quarto*/bin/quarto $HOME/bin/quarto
+    [[ ! -d $HOME/.local/bin ]] && mkdir -p $HOME/.local/bin
+    ln -s $HOME/quarto/quarto*/bin/quarto $HOME/.local/bin/quarto
 
     # Ensure that the folder where you created a symlink is in the path. For example:
     # ( echo ""; echo 'export PATH=$PATH:~/bin\n' ; echo "" ) >> ~/.profile
@@ -172,10 +143,21 @@ quarto(){
 }
 
 ##########################################################################
+# NPM servers
+##########################################################################
+npm_servers(){
+    info "LIVE, SASS SERVERS, "
+    npm i -g live-server
+    npm i -g sass
+    # npm i -g bash-language-server
+    # npm i -g vscode-css-languageserver-bin
+}
+
+##########################################################################
 # Python enviroments
 ##########################################################################
-python(){
-    info "PYTHON SETUP"
+python_env(){
+    info "PYTHON ENVIROMENTS SETUP"
 
     # env pre web-epipingdesign
     [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
@@ -208,11 +190,11 @@ python(){
 
     deactivate
 
-    # Pre quarto
+    # Pre quarto/mcad
     [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
 
-    python3 -m venv $HOME/python-venv/quarto-venv
-    source $HOME/python-venv/quarto-venv/bin/activate
+    python3 -m venv $HOME/python-venv/mcad-venv
+    source $HOME/python-venv/mcad-venv/bin/activate
 
     pip3 install --upgrade pip
     pip3 install jupyter
@@ -225,99 +207,10 @@ python(){
     deactivate
 }
 
-
 ##########################################################################
-# WSL
+# SYMLINKS
 ##########################################################################
-wsl_utilities(){
-    info "WSL UTILLITIES"
-    # umoznuje napr. spustia defaultny web browser na windowse
-    # nefunguje, pretoze vyvojari davaju stale staru verziu
-    # nova verzia funguje ale treba ju compilovat zo zdrojoveho kodu
-    # repourl="https://download.opensuse.org/repositories/home:/wslutilities/openSUSE_Tumbleweed/home:wslutilities.repo"
-    # sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
-    # sudo -S <<< ${mypassword} zypper ${REFRESH}
-    # sudo -S <<< ${mypassword} zypper ${INSTALL} -y wslu
-
-    # Nastavenie wslview - vytvori subor wslview.desktop a potom nastavi ako default
-    # nie je to nutne, nechavam len ako priklad
-    #     set -eu -o pipefail
-
-    #     sudo -S <<< ${mypassword} sh -c 'cat >/usr/share/applications/wslview.desktop' <<EOF
-    #     [Desktop Entry]
-    #     Version=1.0
-    #     Name=WSLview
-    #     Exec=wslview %u
-    #     Terminal=false
-    #     X-MultipleArgs=false
-    #     Type=Application
-    #     Categories=GNOME;GTK;Network;WebBrowser;
-    #     MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
-    # EOF
-
-    # Nastavi wslview ako default pre otvaranie suborov web, image ..
-    # je potrebne nainastalovat xdg-utils
-    # xdg-settings set default-web-browser wslview.desktop
-
-    # namiesto wslu budem pouzivat wsl-open
-    npm i -g wsl-open
-    # wsl-open -w # nastavi wsl-open ako default Shell Browser
-
-    [[ ! -d $HOME/.local/share/applications ]] && mkdir -p $HOME/.local/share/applications
-    cat << "EOF" > ${HOME}/.local/applications/wslopen.desktop
-[Desktop Entry]
-Version=1.0
-Name=WSLopen
-Exec=wsl-open %u
-Terminal=false
-X-MultipleArgs=false
-Type=Application
-Categories=GNOME;GTK;Network;WebBrowser;
-MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
-EOF
-
-    # pre povolenie systemd - v /etc/wsl.conf ma byt [boot] systemd=true
-    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_base
-    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_systemd
-    # pre spustanie gui aplikacii, napr. gedit ...
-    # https://en.opensuse.org/openSUSE:WSL?ref=its-foss
-    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_gui
-
-
-    # umozni pouzivat win prikazy, napr. powershell.exe aj pri spustenom systemd
-    sudo -S <<< ${mypassword} sh -c 'cat > /usr/lib/binfmt.d/WSLInterop.conf' <<EOF
-    :WSLInterop:M::MZ::/init:PF
-EOF
-}
-
-wsl_gnome(){
-    info "WSL GNOME SETTINGS"
-    PKG_gnome=(
-        'patterns-gnome-gnome_x11' # X11 server
-        'patterns-gnome-gnome' # Wayland
-        # 'dconf-editor' # na zmenu vlastnosti gnome
-        # 'qalculate' # super kalkulacka
-        # 'qalculate-gtk'
-        # 'qalculate-data'
-        # 'gtk3-metatheme-adwaita' # tmava tema
-        # 'dmz-icon-theme-cursors' # biely kurzor podobny win kurzoru
-    )
-
-    for PKG in "${PKG_gnome[@]}"; do
-        echo "Installing ${PKG}"
-        sleep 1
-        sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
-    done
-
-    # # nastavenie tmavej temy...ak chcem svetlu tak iba Adwaita
-    # gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
-    # # nastavenie bieleho kurzora
-    # gsettings set org.gnome.desktop.interface cursor-theme 'DMZ-White'
-    # nastavenie velkosti kurzora
-    gsettings set org.gnome.desktop.interface cursor-size 15
-}
-
-wsl_dotfiles(){
+symlinks(){
     info "CREATE SYMLINKS"
     DIRECTORIES=(
         'zsh'
@@ -349,8 +242,15 @@ wsl_dotfiles(){
     ln -sf /mnt/c/Users/vimi/Downloads              ${HOME}/Downloads
     # ln -sf /mnt/c/Users/vimi/Mega                   ${HOME}/Mega
     # ln -sf /mnt/d/Videos                            ${HOME}/Videos
+
+    # Obsidian scripts
+    ln -sf /mnt/c/Users/vimi/OneDrive/Projekty/Linux/Skripty/obsidian-create-note.sh               ${HOME}/.local/bin/obsidian-create-note.sh
+    ln -sf /mnt/c/Users/vimi/OneDrive/Projekty/Linux/Skripty/obsidian-kategorize-notes.sh          ${HOME}/.local/bin/obsidian-kategorize-notes.sh
 }
 
+##########################################################################
+# GIT repos
+##########################################################################
 git_repos(){
     [[ ! -d $HOME/git-repos ]] && mkdir -p $HOME/git-repos
     git clone https://github.com/miba07101/python.git $HOME/git-repos/python
@@ -358,17 +258,6 @@ git_repos(){
     git clone https://github.com/miba07101/mcad.git $HOME/git-repos/mcad
     # musim manualne cez: gh auth login
     # git clone https://github.com/miba07101/epd.git $HOME/git-repos/epd
-}
-
-##########################################################################
-# NPM servers
-##########################################################################
-npm_servers(){
-    info "LIVE, SASS SERVERS, "
-    npm i -g live-server
-    npm i -g sass
-    # npm i -g bash-language-server
-    # npm i -g vscode-css-languageserver-bin
 }
 
 ##########################################################################
@@ -387,16 +276,14 @@ which_distro(){
   root
   update_system
   basic_packages
-  packman_packages
+  wsl_utilities
   lazygit
   ticker
   quarto
-  python
-  wsl_utilities
-  # wsl_gnome
-  wsl_dotfiles
-  git_repos
   npm_servers
+  python_env
+  symlinks
+  git_repos
   zsh_config
 }
 
