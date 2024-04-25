@@ -13,7 +13,8 @@ vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require("lazy").setup({
   -- Colorscheme
-  { "rebelot/kanagawa.nvim",
+  {
+    "rebelot/kanagawa.nvim",
     priority = 1000,
     config = function()
       require("kanagawa").setup({
@@ -50,24 +51,25 @@ require("lazy").setup({
             TelescopePreviewNormal = { bg = theme.ui.bg_dim },
             TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
           }
-      end,
+        end,
       })
       vim.cmd("colorscheme kanagawa")
     end,
   },
 
   -- UI
-  { "nvim-lua/plenary.nvim"
-  },
+  { "nvim-lua/plenary.nvim" },
 
-  { "stevearc/dressing.nvim",
+  {
+    "stevearc/dressing.nvim",
     event = "VeryLazy",
     config = function()
       require("dressing").setup()
     end,
   },
 
-  { "rcarriga/nvim-notify",
+  {
+    "rcarriga/nvim-notify",
     config = function()
       require("notify").setup({
         opts = {
@@ -88,42 +90,41 @@ require("lazy").setup({
   },
 
   -- Statusline, bufferline
-  { "nvim-lualine/lualine.nvim",
+  {
+    "nvim-lualine/lualine.nvim",
     config = function()
       require("plugins.lualine")
     end,
   },
 
   -- Comment
-  { "numToStr/Comment.nvim",
+  {
+    "numToStr/Comment.nvim",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
-      local ft = require('Comment.ft')
+      local ft = require("Comment.ft")
       -- JINJA template set both line and block commentstring
-      ft.set('jinja', {'{#%s#}', '{#*%s*#}'})
-      require("Comment").setup({
-      })
+      ft.set("jinja", { "{#%s#}", "{#*%s*#}" })
+      require("Comment").setup({})
     end,
   },
 
   -- AutoPairs
-  { "windwp/nvim-autopairs",
+  {
+    "windwp/nvim-autopairs",
     event = "InsertEnter",
     config = function()
       -- If you want insert `(` after select function or method item
-      local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-      local cmp = require('cmp')
-      cmp.event:on(
-        'confirm_done',
-        cmp_autopairs.on_confirm_done()
-      )
-      require("nvim-autopairs").setup({
-      })
+      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+      local cmp = require("cmp")
+      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+      require("nvim-autopairs").setup({})
     end,
   },
 
   -- Surround
-  { "kylechui/nvim-surround",
+  {
+    "kylechui/nvim-surround",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("nvim-surround").setup({})
@@ -131,7 +132,8 @@ require("lazy").setup({
   },
 
   -- Swenv - change python environments
-  { "AckslD/swenv.nvim",
+  {
+    "AckslD/swenv.nvim",
     config = function()
       require("swenv").setup({
         get_venvs = function(venvs_path)
@@ -149,7 +151,8 @@ require("lazy").setup({
   { "szw/vim-maximizer" },
 
   -- Terminal
-  { "akinsho/toggleterm.nvim",
+  {
+    "akinsho/toggleterm.nvim",
     config = function()
       require("toggleterm").setup({
         size = function(term)
@@ -210,7 +213,8 @@ require("lazy").setup({
   },
 
   -- Colorizer
-  { "norcalli/nvim-colorizer.lua",
+  {
+    "norcalli/nvim-colorizer.lua",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("colorizer").setup()
@@ -218,7 +222,8 @@ require("lazy").setup({
   },
 
   -- Context comment string
-  { "JoosepAlviste/nvim-ts-context-commentstring",
+  {
+    "JoosepAlviste/nvim-ts-context-commentstring",
     config = function()
       require("ts_context_commentstring").setup({})
       vim.g.skip_ts_context_commentstring_module = true
@@ -226,46 +231,48 @@ require("lazy").setup({
   },
 
   -- Matchup
-  { "andymass/vim-matchup",
+  {
+    "andymass/vim-matchup",
     config = function()
       -- may set any options here
       vim.g.matchup_matchparen_offscreen = { method = "popup" }
-    end
+    end,
   },
 
   -- Quarto
-  { "quarto-dev/quarto-nvim",
-    ft = { 'quarto' },
+  {
+    "quarto-dev/quarto-nvim",
+    ft = { "quarto" },
     dev = false,
     opts = {
       lspFeatures = {
-        languages = { 'python', 'bash', 'lua', 'html', 'javascript'  },
+        languages = { "python", "bash", "lua", "html", "javascript" },
       },
       -- codeRunner = {
       --   enabled = true,
       --   default_method = 'slime',
-     -- },
+      -- },
     },
-    dependencies =
-    {
+    dependencies = {
       {
-      -- for language features in code cells
-      -- added as a nvim-cmp source
+        -- for language features in code cells
+        -- added as a nvim-cmp source
         "jmbuhr/otter.nvim",
-          dev = false,
-          opts = {},
+        dev = false,
+        opts = {},
       },
       {
-      -- Slime
-      -- send code from python/r/qmd documets to a terminal or REPL
-      -- like ipython, R, bash
+        -- Slime
+        -- send code from python/r/qmd documets to a terminal or REPL
+        -- like ipython, R, bash
         -- "jpalardy/vim-slime"
       },
     },
   },
 
   -- Treesitter
-  { "nvim-treesitter/nvim-treesitter",
+  {
+    "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPre", "BufNewFile" },
     build = ":TSUpdate",
     dependencies = {
@@ -284,12 +291,11 @@ require("lazy").setup({
   },
 
   -- Jinja template syntax
-  { "lepture/vim-jinja",
-    event = { "BufReadPre", "BufNewFile" },
-  },
+  { "lepture/vim-jinja", event = { "BufReadPre", "BufNewFile" } },
 
   -- Telescope
-  { "nvim-telescope/telescope.nvim",
+  {
+    "nvim-telescope/telescope.nvim",
     dependencies = {
       "nvim-telescope/telescope-file-browser.nvim",
       "nvim-tree/nvim-web-devicons",
@@ -300,34 +306,34 @@ require("lazy").setup({
       local fb_actions = require("telescope").extensions.file_browser.actions
       require("telescope").setup({
         defaults = {
-        --   path_display = { "truncate" },
-        --   initial_mode = "normal", -- insert
-        --   sorting_strategy = "ascending",
+          --   path_display = { "truncate" },
+          --   initial_mode = "normal", -- insert
+          --   sorting_strategy = "ascending",
           layout_strategy = "vertical",
-        --   layout_config = {
-        --     preview_height = 0.55,
-        --   --   horizontal = {
-        --   --     prompt_position = "top",
-        --   --     preview_width = 0.55,
-        --   --     results_width = 0.8,
-        --   --   },
-        --     width = 0.85,
-        --     height = 0.85,
-        --     -- preview_cutoff = 130,
-        -- },
-        extensions = {
-          file_browser = {
-            hidden = true,
-            grouped = true, -- show directories first
-            mappings = {
-              ["n"] = {
-                ["<RIGHT>"] = actions.select_default,
-                ["<LEFT>"] = fb_actions.goto_parent_dir,
+          --   layout_config = {
+          --     preview_height = 0.55,
+          --   --   horizontal = {
+          --   --     prompt_position = "top",
+          --   --     preview_width = 0.55,
+          --   --     results_width = 0.8,
+          --   --   },
+          --     width = 0.85,
+          --     height = 0.85,
+          --     -- preview_cutoff = 130,
+          -- },
+          extensions = {
+            file_browser = {
+              hidden = true,
+              grouped = true, -- show directories first
+              mappings = {
+                ["n"] = {
+                  ["<RIGHT>"] = actions.select_default,
+                  ["<LEFT>"] = fb_actions.goto_parent_dir,
+                },
               },
             },
           },
         },
-      },
       })
       require("telescope").load_extension("file_browser")
       require("telescope").load_extension("notify")
@@ -335,8 +341,9 @@ require("lazy").setup({
   },
 
   -- LSP
-  { "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
+  {
+    "neovim/nvim-lspconfig",
+    --    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       -- LSP
       "williamboman/mason.nvim",
@@ -353,7 +360,8 @@ require("lazy").setup({
   },
 
   -- Bootstrap Completitions
-  { "Jezda1337/cmp_bootstrap",
+  {
+    "Jezda1337/cmp_bootstrap",
     config = function()
       require("bootstrap-cmp.config"):setup({
         file_types = { "jinja.html", "html" },
@@ -363,12 +371,14 @@ require("lazy").setup({
   },
 
   -- Codeium
-  { "jcdickinson/codeium.nvim",
+  {
+    "jcdickinson/codeium.nvim",
     -- commit = "62d1e2e5691865586187bd6aa890e43b85c00518",
   },
 
   -- CMP Completitions
-  { "hrsh7th/nvim-cmp",
+  {
+    "hrsh7th/nvim-cmp",
     dependencies = {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-nvim-lsp",
@@ -403,12 +413,11 @@ require("lazy").setup({
       -- after install run ":Codeium Auth" and insert tokken from web
       require("codeium").setup({})
 
-
       cmp.setup({
         -- enabled = function()
         --   -- disable completion in comments
         --   if require"cmp.config.context".in_treesitter_capture("comment")==true
-              -- or require"cmp.config.context".in_syntax_group("Comment") then
+        -- or require"cmp.config.context".in_syntax_group("Comment") then
         --     return false
         --   else
         --     return true
@@ -417,7 +426,7 @@ require("lazy").setup({
         enabled = true,
         snippet = {
           expand = function(args)
-             -- for luasnip
+            -- for luasnip
             require("luasnip").lsp_expand(args.body)
           end,
         },
@@ -428,12 +437,12 @@ require("lazy").setup({
           ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
           ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
           ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-          ["<C-e>"] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+          ["<C-e>"] = cmp.mapping({ i = cmp.mapping.abort(), c = cmp.mapping.close() }),
           -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
           ["<C-y>"] = cmp.config.disable,
           -- Accept currently selected item. Set `select` to `false`
           -- to only confirm explicitly selected items.
-          ['<CR>'] = cmp.mapping.confirm({ select = false }),
+          ["<CR>"] = cmp.mapping.confirm({ select = false }),
           ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
@@ -460,16 +469,16 @@ require("lazy").setup({
         formatting = {
           format = lspkind.cmp_format({
             mode = "symbol_text",
-            ellipsis_char = '...',
-            symbol_map = { Codeium = "", },
-            menu = ({
+            ellipsis_char = "...",
+            symbol_map = { Codeium = "" },
+            menu = {
               buffer = "[buf]",
               codeium = "[cod]",
               luasnip = "[snip]",
               nvim_lsp = "[lsp]",
               bootstrap = "[boot]",
-              otter = "[otter]"
-            })
+              otter = "[otter]",
+            },
           }),
         },
         sources = {
@@ -477,16 +486,16 @@ require("lazy").setup({
           { name = "codeium" },
           { name = "luasnip" },
           { name = "nvim_lsp" },
-          { name = 'nvim_lsp_signature_help' },
-          { name = 'bootstrap' },
-          { name = 'otter' },
+          { name = "nvim_lsp_signature_help" },
+          { name = "bootstrap" },
+          { name = "otter" },
         },
         sorting = {
           comparators = {
             cmp.config.compare.offset,
             cmp.config.compare.exact,
             cmp.config.compare.score,
-            require "cmp-under-comparator".under,
+            require("cmp-under-comparator").under,
             cmp.config.compare.kind,
             cmp.config.compare.sort_text,
             cmp.config.compare.length,
@@ -509,7 +518,7 @@ require("lazy").setup({
           }),
         },
         view = {
-          entries = "custom"
+          entries = "custom",
         },
         experimental = {
           ghost_text = true,
@@ -520,46 +529,47 @@ require("lazy").setup({
   },
 
   -- Obsidian
-  { "epwalsh/obsidian.nvim",
-  version = "*",  -- recommended, use latest release instead of latest commit
-  lazy = true,
-  ft = "markdown",
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-  },
-  opts = {
-    workspaces = {
-      {
-        name = "Obsidian",
-        path = vim.fn.expand('$OneDrive_DIR') .. "Dokumenty/zPoznamky/Obsidian/",
+  {
+    "epwalsh/obsidian.nvim",
+    version = "*", -- recommended, use latest release instead of latest commit
+    lazy = true,
+    ft = "markdown",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    opts = {
+      workspaces = {
+        {
+          name = "Obsidian",
+          path = vim.fn.expand("$OneDrive_DIR") .. "Dokumenty/zPoznamky/Obsidian/",
+        },
+      },
+      notes_subdir = "inbox",
+      new_notes_location = "notes_subdir",
+      disable_frontmatter = true,
+      templates = {
+        subdir = "templates",
+        date_format = "%Y-%m-%d",
+        time_format = "%H:%M:%S",
+      },
+      completion = {
+        nvim_cmp = true,
+        min_chars = 2,
       },
     },
-    notes_subdir = "inbox",
-    new_notes_location = "notes_subdir",
-    disable_frontmatter = true,
-    templates = {
-      subdir = "templates",
-      date_format = "%Y-%m-%d",
-      time_format = "%H:%M:%S",
-    },
-    completion = {
-      nvim_cmp = true,
-      min_chars = 2,
-    },
   },
-},
-
 
   -- keybidings whichkey
-  { "folke/which-key.nvim",
+  {
+    "folke/which-key.nvim",
     event = "VeryLazy",
     config = function()
       require("which-key").setup({
-         icons = {
-           breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
-           separator = "➜", -- symbol used between a key and it's label
-           group = "+", -- symbol prepended to a group
-         },
+        icons = {
+          breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
+          separator = "➜", -- symbol used between a key and it's label
+          group = "+", -- symbol prepended to a group
+        },
         triggers_blacklist = {
           i = { "i", "j", "k" },
           v = { "j", "k" },
@@ -584,9 +594,7 @@ require("lazy").setup({
         l = { name = "lsp" },
         o = { name = "obsidian" },
         p = { name = "python" },
-        q = { name = "quarto",
-          o = { name = "otter"}
-        },
+        q = { name = "quarto", o = { name = "otter" } },
         t = { name = "terminal" },
         v = { name = "neovim" },
         w = { name = "windows" },
@@ -607,5 +615,4 @@ require("lazy").setup({
       require("which-key").register(visual_mappings, visual_opts)
     end,
   },
-
- })
+})
