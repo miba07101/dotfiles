@@ -1372,7 +1372,7 @@ which_distro(){
             # packman_packages
             # basic_desktop_settings
             # qtile_settings
-            github_cli
+            # github_cli
             lazygit
             # win_disk_share
             # brave
