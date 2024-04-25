@@ -70,6 +70,8 @@ basic_packages(){
         'xdg-utils' # pre nastavenie defaultnych aplikacii
         'sqlitebrowser' # pre sqlite databazu pre moju flask aplikaciu
         'gh' # git-cli
+        'libcairo2' # epd - pre weasyprint
+        'libpango-1_0-0' # epd - pre weasyprint
     )
 
     for PKG in "${BASIC_PKGS[@]}"; do
