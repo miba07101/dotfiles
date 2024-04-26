@@ -166,8 +166,9 @@ lualine.setup({
         colored = false,
         symbols = { error = " ", warn = " ", info = " ", hint = " " },
       },
-      { "location" },
-      { "progress" },
+      -- { "location" },
+      { "%l:%c %p%%/%L" },
+      -- { "progress" },
     },
   },
   tabline = {
