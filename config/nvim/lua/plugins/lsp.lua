@@ -156,6 +156,7 @@ require("mason-tool-installer").setup({
 		"flake8", -- python linter
 		"eslint_d", -- js linter
 		"djlint", -- django linter
+	  "tree-sitter-cli", -- treesitter latex integration
 	},
 })
 

@@ -280,7 +280,7 @@ require("lazy").setup({
     },
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = { "python", "bash", "lua", "html", "css", "scss", "htmldjango", "markdown", "yaml" },
+        ensure_installed = { "python", "bash", "lua", "html", "css", "scss", "htmldjango", "markdown", "markdown_inline", "latex", "yaml" },
         highlight = { enable = true },
         autopairs = { enable = true },
         autotag = { enable = true },
@@ -558,8 +558,8 @@ require("lazy").setup({
       },
     },
   },
-
-{ -- highlight markdown headings and code blocks etc.
+  -- Headlines - highlight markdown headings and code blocks etc.
+  {
     'lukas-reineke/headlines.nvim',
     enabled = true,
     lazy = true,
@@ -569,25 +569,31 @@ require("lazy").setup({
       require('headlines').setup {
         quarto = {
           query = vim.treesitter.query.parse(
-            'markdown',
-            [[
-                (fenced_code_block) @codeblock
-                ]]
+          'markdown',
+          [[
+          (fenced_code_block) @codeblock
+          ]]
           ),
           codeblock_highlight = 'CodeBlock',
           treesitter_language = 'markdown',
         },
         markdown = {
           query = vim.treesitter.query.parse(
-            'markdown',
-            [[
-                (fenced_code_block) @codeblock
-                ]]
+          'markdown',
+          [[
+          (fenced_code_block) @codeblock
+          ]]
           ),
           codeblock_highlight = 'CodeBlock',
         },
       }
     end,
+  },
+
+  -- Vim-table-mode
+  {
+    'dhruvasagar/vim-table-mode',
+    ft = { "markdown", "quarto" },
   },
 
   -- keybidings whichkey
@@ -641,6 +647,7 @@ require("lazy").setup({
       }
       local visual_mappings = {
 
+        q = { name = "quarto" },
         t = { name = "terminal" },
       }
       require("which-key").register(visual_mappings, visual_opts)

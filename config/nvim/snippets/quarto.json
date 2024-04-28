@@ -192,6 +192,10 @@
     "prefix": ["pause"],
     "body": [". . ."]
   },
+  "page-break": {
+    "prefix": ["pagebreak"],
+    "body": ["{{< pagebreak >}}"]
+  },
   "2col": {
     "prefix": ["2col"],
     "body": [

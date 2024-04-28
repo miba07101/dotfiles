@@ -187,6 +187,12 @@ map("n", "<leader>qa", "<cmd>QuartoActivate<cr>", { desc = "activate" })
 map("n", "<leader>qp", "<cmd>lua require'quarto'.quartoPreview()<cr>", { desc = "preview" })
 map("n", "<leader>qq", "<cmd>lua require'quarto'.quartoClosePreview()<cr>", { desc = "quit" })
 map("n", "<leader>qh", "<cmd>QuartoHelp<cr>", { desc = "help" })
+-- vim-table-mode
+map("n", "<leader>qt", "<cmd>TableModeToggle<cr><cr>", { desc = "table mode" })
+-- align columns in markdown table
+-- https://heitorpb.github.io/bla/format-tables-in-vim/
+map("v", "<leader>qt", ":!column -t -s '|' -o '|'<CR><CR>", { desc = "align table" })
+
 
 -- Otter (for quarto completion)
 map("n", "<leader>qod", "<cmd>lua require('otter').ask_definition()<cr>", { desc = "definition" })

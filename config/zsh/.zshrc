@@ -150,6 +150,12 @@ alias on='obsidian-create-note.sh'
 alias ok='obsidian-kategorize-notes.sh'
 alias or='nvim $OneDrive_DIR/Dokumenty/zPoznamky/Obsidian/inbox/*.md'
 
+# Quarto
+alias qcp='quarto create project'
+qrp() {
+    quarto render "$1" --to pdf
+}
+
 # Recording
 alias rec='$SCRIPTS_DIR./stream_record_linux.sh'
 case $isWSL in
