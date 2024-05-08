@@ -280,7 +280,7 @@ require("lazy").setup({
     },
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = { "python", "bash", "lua", "html", "css", "scss", "htmldjango", "markdown", "markdown_inline", "latex", "yaml" },
+        ensure_installed = { "python", "bash", "lua", "html", "css", "scss", "htmldjango", "markdown", "markdown_inline", "latex", "yaml", "typst" },
         highlight = { enable = true },
         autopairs = { enable = true },
         autotag = { enable = true },

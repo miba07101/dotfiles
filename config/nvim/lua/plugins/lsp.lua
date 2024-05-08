@@ -83,6 +83,11 @@ local servers = {
       "quarto",
     },
   },
+	typst_lsp = {
+    filetypes = {
+      "typst"
+    },
+  },
 }
 
 -- Auto install servers

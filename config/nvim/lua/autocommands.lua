@@ -182,3 +182,9 @@ vim.api.nvim_create_autocmd("FileType", {
 	group = mygroup,
 	desc = "Set colorcolumn for python files",
 })
+
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufNewFile' }, {
+  pattern = '*.typ',
+  command = 'set filetype=typst',
+	desc = "Set filetype for typst files",
+})
