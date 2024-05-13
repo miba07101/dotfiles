@@ -205,6 +205,7 @@ python_env(){
     pip3 install jupyter
     pip3 install handcalcs
     pip3 install latexify-py
+    pip3 install efficalc
 
     deactivate
 }
