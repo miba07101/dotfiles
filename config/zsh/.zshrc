@@ -151,6 +151,8 @@ alias ok='obsidian-kategorize-notes.sh'
 alias or='nvim $OneDrive_DIR/Dokumenty/zPoznamky/Obsidian/inbox/*.md'
 
 # Quarto
+alias qut='quarto use template'
+alias qce='quarto create extension format'
 alias qcp='quarto create project'
 qrp() {
     quarto render "$1" --to pdf
