@@ -143,6 +143,7 @@ alias dea='deactivate && cd $HOME'
 export JUPYTER_NOTEBOOK_STYLE='from IPython.display import HTML;HTML("<style>div.text_cell_render{font-size:130%;padding-top:50px;padding-bottom:50px}</style>")'
 alias jn='jupyter notebook'
 alias jl='jupyter lab'
+alias gjl='source $HOME/python-venv/mcad-venv/bin/activate && cd $HOME/git-repos/mcad/01-jupyterlab'
 
 # Obsidian
 alias oo='cd $OneDrive_DIR/Dokumenty/zPoznamky/Obsidian'
