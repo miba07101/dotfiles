@@ -639,7 +639,7 @@ require("lazy").setup({
         g = { name = "git" },
         h = { name = "help" },
         l = { name = "lsp" },
-        m = { name = "markdown" },
+        -- m = { name = "markdown" },
         o = { name = "obsidian" },
         p = { name = "python" },
         q = { name = "quarto", o = { name = "otter" } },
