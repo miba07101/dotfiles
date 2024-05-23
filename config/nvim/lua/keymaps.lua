@@ -213,3 +213,6 @@ map("n", "<leader>ow", "<cmd>lua require('telescope.builtin').live_grep({ search
 -- map("n", "<leader>ow", ":Telescope live_grep search_dirs={\"/home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/\"}<cr>", { desc = "search in notes" })
 -- for review workflow
 map("n", "<leader>od", ":!rm '%:p'<cr>:bd<cr>", { desc = "delete note" })
+
+-- Markdown
+-- map("n", "<leader>mp", "<cmd>RenderMarkdownToggle<cr><cr>", { desc = "markdown preview" })

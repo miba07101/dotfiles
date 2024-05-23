@@ -596,6 +596,16 @@ require("lazy").setup({
     ft = { "markdown", "quarto" },
   },
 
+  -- Markdown
+  -- {
+  --   'MeanderingProgrammer/markdown.nvim',
+  --   name = 'render-markdown', -- Only needed if you have another plugin named markdown.nvim
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter' },
+  --   config = function()
+  --       require('render-markdown').setup({})
+  --   end,
+  -- },
+
   -- keybidings whichkey
   {
     "folke/which-key.nvim",
@@ -629,6 +639,7 @@ require("lazy").setup({
         g = { name = "git" },
         h = { name = "help" },
         l = { name = "lsp" },
+        m = { name = "markdown" },
         o = { name = "obsidian" },
         p = { name = "python" },
         q = { name = "quarto", o = { name = "otter" } },
