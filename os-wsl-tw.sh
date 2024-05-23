@@ -206,6 +206,9 @@ python_env(){
     pip3 install handcalcs
     pip3 install latexify-py
     pip3 install efficalc
+    pip3 install pint
+    pip3 install forallpeople
+    pip3 install matplotlib
 
     deactivate
 }
