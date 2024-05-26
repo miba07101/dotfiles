@@ -596,6 +596,19 @@ require("lazy").setup({
     ft = { "markdown", "quarto" },
   },
 
+  -- ollama ai gen.nvim
+  {
+    "David-Kunz/gen.nvim",
+    config = function()
+      require('gen').setup({
+        model = "codellama",
+        display_mode = "split", -- The display mode. Can be "float" or "split".
+        show_prompt = true, -- Shows the prompt submitted to Ollama.
+        -- show_model = true,
+      })
+    end,
+  },
+
   -- Markdown
   -- {
   --   'MeanderingProgrammer/markdown.nvim',
@@ -632,6 +645,7 @@ require("lazy").setup({
       }
       local normal_mappings = {
 
+        a = { name = "ai ollama" },
         b = { name = "buffers" },
         c = { name = "code" },
         d = { name = "diagnostic" },
@@ -658,6 +672,7 @@ require("lazy").setup({
       }
       local visual_mappings = {
 
+        a = { name = "ai ollama" },
         q = { name = "quarto" },
         t = { name = "terminal" },
       }

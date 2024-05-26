@@ -159,6 +159,9 @@ qrp() {
     quarto render "$1" --to pdf
 }
 
+# Ollama Ai
+alias olrc='ollama run codellama'
+
 # Recording
 alias rec='$SCRIPTS_DIR./stream_record_linux.sh'
 case $isWSL in

@@ -216,3 +216,8 @@ map("n", "<leader>od", ":!rm '%:p'<cr>:bd<cr>", { desc = "delete note" })
 
 -- Markdown
 -- map("n", "<leader>mp", "<cmd>RenderMarkdownToggle<cr><cr>", { desc = "markdown preview" })
+
+-- Ollama gen.nvim
+map("n", "<leader>aa", "<cmd>Gen Chat<cr>", { desc = "chat" })
+map({"n", "v"}, "<leader>ao", "<cmd>Gen<cr>", { desc = "options" })
+
