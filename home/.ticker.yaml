@@ -49,8 +49,8 @@ lots:
     quantity: 1050
     unit_cost: 1.27
   - symbol: "SPCE"
-    quantity: 1400
-    unit_cost: 12.33
+    quantity: 70
+    unit_cost: 246.68
   - symbol: "SOFI"
     quantity: 1000
     unit_cost: 10.50
