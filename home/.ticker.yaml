@@ -37,8 +37,8 @@ watchlist:
   - hen3.de
 lots:
   - symbol: "LHA.DE"
-    quantity: 4500
-    unit_cost: 5.90
+    quantity: 5000
+    unit_cost: 5.88
   - symbol: "ALV.DE"
     quantity: 60
     unit_cost: 158.21
