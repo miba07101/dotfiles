@@ -629,6 +629,7 @@ require("lazy").setup({
           breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
           separator = "➜", -- symbol used between a key and it's label
           group = "+", -- symbol prepended to a group
+          rules = false -- disable devicons
         },
         triggers_blacklist = {
           i = { "i", "j", "k" },
@@ -637,46 +638,34 @@ require("lazy").setup({
       })
 
       -- normal mode
-      local normal_opts = {
-        mode = "n",
-        prefix = "<leader>",
-        silent = true,
-        nowait = true, -- use `nowait` when creating keymaps
-      }
-      local normal_mappings = {
-
-        a = { name = "ai ollama" },
-        b = { name = "buffers" },
-        c = { name = "code" },
-        d = { name = "diagnostic" },
-        f = { name = "files" },
-        g = { name = "git" },
-        h = { name = "help" },
-        l = { name = "lsp" },
-        -- m = { name = "markdown" },
-        o = { name = "obsidian" },
-        p = { name = "python" },
-        q = { name = "quarto", o = { name = "otter" } },
-        t = { name = "terminal" },
-        v = { name = "neovim" },
-        w = { name = "windows" },
-      }
-      require("which-key").register(normal_mappings, normal_opts)
+      require("which-key").add({
+          mode = { "n" },
+          { "<leader>a", group = "ai ollama", silent = true, nowait = true },
+          { "<leader>b", group = "buffers", silent = true, nowait = true },
+          { "<leader>c", group = "code", silent = true, nowait = true },
+          { "<leader>d", group = "diagnostic", silent = true, nowait = true },
+          { "<leader>f", group = "files", silent = true, nowait = true },
+          { "<leader>g", group = "git", silent = true, nowait = true },
+          { "<leader>h", group = "help", silent = true, nowait = true },
+          { "<leader>l", group = "lsp", silent = true, nowait = true },
+          -- { "<leader>m", group = "markdown", silent = true, nowait = true },
+          { "<leader>o", group = "obsidian", silent = true, nowait = true },
+          { "<leader>p", group = "python", silent = true, nowait = true },
+          { "<leader>q", group = "quarto", silent = true, nowait = true },
+          { "<leader>qo", group = "otter", silent = true, nowait = true },
+          { "<leader>t", group = "terminal", silent = true, nowait = true },
+          { "<leader>v", group = "neovim", silent = true, nowait = true },
+          { "<leader>w", group = "windows", silent = true, nowait = true },
+      })
 
       -- visual mode
-      local visual_opts = {
-        mode = "v",
-        prefix = "<leader>",
-        silent = true,
-        nowait = true, -- use `nowait` when creating keymaps
-      }
-      local visual_mappings = {
+      require("which-key").add({
+          mode = { "v" },
+          { "<leader>a", group = "ai ollama", silent = true, nowait = true },
+          { "<leader>q", group = "quarto", silent = true, nowait = true },
+          { "<leader>t", group = "terminal", silent = true, nowait = true },
+      })
 
-        a = { name = "ai ollama" },
-        q = { name = "quarto" },
-        t = { name = "terminal" },
-      }
-      require("which-key").register(visual_mappings, visual_opts)
     end,
   },
 })
