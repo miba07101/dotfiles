@@ -631,10 +631,10 @@ require("lazy").setup({
           group = "+", -- symbol prepended to a group
           rules = false -- disable devicons
         },
-        triggers_blacklist = {
-          i = { "i", "j", "k" },
-          v = { "j", "k" },
-        },
+        -- triggers_blacklist = {
+        --   i = { "i", "j", "k" },
+        --   v = { "j", "k" },
+        -- },
       })
 
       -- normal mode
