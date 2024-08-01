@@ -305,6 +305,11 @@ require("lazy").setup({
       local actions = require("telescope.actions")
       local fb_actions = require("telescope").extensions.file_browser.actions
       require("telescope").setup({
+        pickers = {
+          colorscheme = {
+            enable_preview = true,
+          },
+        },
         defaults = {
           --   path_display = { "truncate" },
           --   initial_mode = "normal", -- insert
