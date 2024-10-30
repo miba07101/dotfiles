@@ -57,27 +57,55 @@ require("lazy").setup({
     end,
   },
 
-  {"cocopon/iceberg.vim",
-  priority = 1000,
-  config = function()
-    -- vim.cmd("colorscheme iceberg")
-  end,
+  {
+    "Mofiqul/vscode.nvim",
+    priority = 1000,
+    config = function()
+      local c = require('vscode.colors').get_colors()
+      require('vscode').setup({
+        -- Enable italic comment
+        italic_comments = true,
+        -- Override colors (see ./lua/vscode/colors.lua)
+        color_overrides = {
+          -- vscLineNumber = '#4EFCFE',
+        },
+
+        -- Override highlight groups (see ./lua/vscode/theme.lua)
+        group_overrides = {
+          -- this supports the same val table as vim.api.nvim_set_hl
+          -- use colors from this colorscheme by requiring vscode.colors!
+          Cursor = { fg=c.vscDarkBlue, bg=c.vscLightGreen, bold=true },
+        }
+      })
+      -- vim.cmd("colorscheme vscode")
+    end,
+  },
+
+  {
+    "askfiy/visual_studio_code",
+    priority = 1000,
+    config = function()
+      require("visual_studio_code").setup({
+        -- `dark` or `light`
+        -- mode = "light",
+      })
+       -- vim.cmd("colorscheme visual_studio_code")
+      end,
+    },
+
+    {
+    "gmr458/vscode_modern_theme.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+        require("vscode_modern").setup({
+            cursorline = true,
+            transparent_background = false,
+            nvim_tree_darker = true,
+        })
+        vim.cmd.colorscheme("vscode_modern")
+    end,
 },
-
-{"shaunsingh/nord.nvim",
-  priority = 1000,
-  config = function()
-    -- require("nord").setup({})
-    vim.g.nord_disable_background = true
-    vim.g.nord_uniform_diff_background = true
-    vim.o.background = "light"
-    require("nord").setup({})
-
-    vim.cmd("colorscheme nord")
-  end,
-
-},
-
 
   -- UI
   { "nvim-lua/plenary.nvim" },
