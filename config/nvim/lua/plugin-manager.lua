@@ -53,7 +53,7 @@ require("lazy").setup({
           }
         end,
       })
-      -- vim.cmd("colorscheme kanagawa")
+      vim.cmd("colorscheme kanagawa")
     end,
   },
 
@@ -80,32 +80,6 @@ require("lazy").setup({
       -- vim.cmd("colorscheme vscode")
     end,
   },
-
-  {
-    "askfiy/visual_studio_code",
-    priority = 1000,
-    config = function()
-      require("visual_studio_code").setup({
-        -- `dark` or `light`
-        -- mode = "light",
-      })
-       -- vim.cmd("colorscheme visual_studio_code")
-      end,
-    },
-
-    {
-    "gmr458/vscode_modern_theme.nvim",
-    lazy = false,
-    priority = 1000,
-    config = function()
-        require("vscode_modern").setup({
-            cursorline = true,
-            transparent_background = false,
-            nvim_tree_darker = true,
-        })
-        vim.cmd.colorscheme("vscode_modern")
-    end,
-},
 
   -- UI
   { "nvim-lua/plenary.nvim" },
