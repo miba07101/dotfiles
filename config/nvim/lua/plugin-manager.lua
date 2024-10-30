@@ -53,9 +53,31 @@ require("lazy").setup({
           }
         end,
       })
-      vim.cmd("colorscheme kanagawa")
+      -- vim.cmd("colorscheme kanagawa")
     end,
   },
+
+  {"cocopon/iceberg.vim",
+  priority = 1000,
+  config = function()
+    -- vim.cmd("colorscheme iceberg")
+  end,
+},
+
+{"shaunsingh/nord.nvim",
+  priority = 1000,
+  config = function()
+    -- require("nord").setup({})
+    vim.g.nord_disable_background = true
+    vim.g.nord_uniform_diff_background = true
+    vim.o.background = "light"
+    require("nord").setup({})
+
+    vim.cmd("colorscheme nord")
+  end,
+
+},
+
 
   -- UI
   { "nvim-lua/plenary.nvim" },
