@@ -50,7 +50,7 @@ end
 local lsp_server = function()
   local msg = ""
   -- local icon = ""
-  local icon = "力"
+  local icon = ""
   local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
   local clients = vim.lsp.get_active_clients()
   if next(clients) == nil then
@@ -81,7 +81,7 @@ end
 local function get_buffers()
   -- local icon = "•"
   local icon = "+"
-  local file_icon = ""
+  local file_icon = "󰈔"
   local buffer_count = 0
   local unsaved_buffers = 0
   for _, bufnr in pairs(vim.fn.getbufinfo({bufloaded = true})) do
@@ -104,7 +104,8 @@ local function show_macro_recording()
     if recording_register == "" then
         return ""
     else
-        return "壘" .. recording_register
+        -- return "壘" .. recording_register
+        return "󰻃" .. recording_register
     end
 end
 
@@ -164,7 +165,8 @@ lualine.setup({
       { lsp_server },
       { "diagnostics",
         colored = false,
-        symbols = { error = " ", warn = " ", info = " ", hint = " " },
+        -- symbols = { error = " ", warn = " ", info = " ", hint = " " },
+        symbols = { error = " ", warn = " ", info = " ", hint = "󰌵 " },
       },
       -- { "location" },
       { "%l:%c %p%%/%L" },
@@ -175,8 +177,10 @@ lualine.setup({
     lualine_b = {
       {"buffers",
         buffers_color = {
-          active = {bg = "#1F1F28", fg = "#DCD7BA"},
-          inactive = {bg = "#1F1F28", fg = "#727169"},
+          -- active = {bg = "#1F1F28", fg = "#DCD7BA"},
+          -- inactive = {bg = "#1F1F28", fg = "#727169"},
+          -- active = {fg = "#4C566A"},
+          -- inactive = {fg = "#4C566A"},
         },
         filetype_names = {
           alpha = '',
