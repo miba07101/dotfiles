@@ -1,21 +1,29 @@
--- Pull in the wezterm API
+-- pull in the wezterm API
 local wezterm = require 'wezterm'
 
--- This will hold the configuration.
+-- function to get light/dark theme according os theme
+function scheme_for_appearance(appearance)
+  if appearance:find "Dark" then
+    -- custom kanagawa in folder colors
+    return "kanagawa-dark"
+  else
+    -- custom kanagawa in folder colors
+    return "kanagawa-light"
+  end
+end
+
+-- this will hold the configuration.
 local config = wezterm.config_builder()
 
--- This is where you actually apply your config choices
-
--- Check if on windows
+-- check if on windows
 if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   config.default_prog = { 'pwsh.exe', '-NoLogo' }
 end
 
--- color scheme:
+-- colorscheme
 -- config.color_scheme = 'iceberg-light'
--- config.color_scheme = 'nord'
-config.color_scheme = 'Kanagawa (Gogh)'
-config.force_reverse_video_cursor = true
+-- config.color_scheme = 'Kanagawa (Gogh)'
+config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
 
 -- fonts
 config.font = wezterm.font 'Hack Nerd Font'
@@ -39,6 +47,7 @@ config.window_padding = {
 }
 
 -- cursor
+config.force_reverse_video_cursor = true
 config.default_cursor_style = 'BlinkingBar'
 config.cursor_blink_rate = 500
 config.cursor_blink_ease_in = "Constant"

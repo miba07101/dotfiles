@@ -25,8 +25,8 @@
       "statusBar.background": "#FEFEFA",
       "terminal.border": "#DCD7BA",
       "textBlockQuote.border": "#DCD7BA",
-      // #E5DDB0 --> #DCD7BA
-      "tab.inactiveBackground": "#DCD7BA",
+      // #E5DDB0 -->#EDEBDA 
+      "tab.inactiveBackground": "#EDEBDA",
       // #F2ECBC --> FEFEFA
       "editor.background": "#FEFEFA",
       "editorInlayHint.background": "#FEFEFA",
@@ -52,7 +52,7 @@
       "list.inactiveSelectionBackground": "#EDEBDA",
       "peekViewEditor.background": "#EDEBDA",
       "scrollbarSlider.activeBackground": "#EDEBDA80",
-      "tab.activeBackground": "#EDEBDA",
+      "tab.activeBackground": "#DCD7BA",
       "tab.border": "#EDEBDA",
       // #E4D794" --> #EDEBDA
       "editor.lineHighlightBackground": "#EDEBDA",
