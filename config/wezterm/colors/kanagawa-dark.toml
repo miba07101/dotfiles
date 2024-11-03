@@ -27,7 +27,7 @@ cursor_border = "#fefefa"
 cursor_fg = "#1f1f28"
 
 selection_bg = "#2d4f67"
-selection_fg = "#c8c093"
+selection_fg = "#fefefa"
 scrollbar_thumb = "#16161d"
 split = "#16161d"
 
