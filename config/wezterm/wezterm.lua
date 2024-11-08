@@ -12,6 +12,14 @@ function scheme_for_appearance(appearance)
   end
 end
 
+function is_night()
+  if tonumber(os.date("%H")) >= 19 then
+    return "kanagawa-dark"
+  else
+    return "kanagawa-light"
+  end
+end
+
 -- this will hold the configuration.
 local config = wezterm.config_builder()
 
@@ -23,7 +31,8 @@ end
 -- colorscheme
 -- config.color_scheme = 'iceberg-light'
 -- config.color_scheme = 'Kanagawa (Gogh)'
-config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
+-- config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
+config.color_scheme = is_night()
 
 -- fonts
 config.font = wezterm.font 'Hack Nerd Font'
