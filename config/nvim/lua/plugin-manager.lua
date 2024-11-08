@@ -205,7 +205,8 @@ require("lazy").setup({
 				get_venvs = function(venvs_path)
 					return require("swenv.api").get_venvs(venvs_path)
 				end,
-				venvs_path = vim.fn.expand("~/python-venv"), -- zadat cestu k envs
+				-- venvs_path = vim.fn.expand("~/python-venv"), -- zadat cestu k envs
+				venvs_path = vim.fn.expand("~/.venv/bin/python3"), -- zadat cestu k envs
 				post_set_venv = function()
 					vim.cmd(":LspRestart<cr>")
 				end,
@@ -705,6 +706,18 @@ require("lazy").setup({
 	--   end,
 	-- },
 
+  { -- molten
+        "benlubas/molten-nvim",
+        -- version = "^1.0.0", -- use version <2.0.0 to avoid breaking changes
+        dependencies = { "3rd/image.nvim" },
+        -- build = ":UpdateRemotePlugins",
+        init = function()
+            -- these are examples, not defaults. Please see the readme
+            vim.g.molten_image_provider = "image.nvim"
+            vim.g.molten_output_win_max_height = 20
+        end,
+    },
+
   { -- show images in nvim!
     '3rd/image.nvim',
     enabled = true,
@@ -741,13 +754,11 @@ require("lazy").setup({
         },
         editor_only_render_when_focused = false,
         window_overlap_clear_enabled = true,
-        -- window_overlap_clear_ft_ignore = { 'cmp_menu', 'cmp_docs', 'scrollview' },
-        tmux_show_only_in_active_window = true,
-        window_overlap_clear_ft_ignore = { 'cmp_menu', 'cmp_docs', 'scrollview', 'scrollview_sign' },
-        max_width = nil,
-        max_height = nil,
-        max_width_window_percentage = nil,
-        max_height_window_percentage = 30,
+        window_overlap_clear_ft_ignore = { 'cmp_menu', 'cmp_docs', 'scrollview' },
+        max_width = 100, --nil,
+        max_height = 12, --nil,
+        max_height_window_percentage = math.huge, --30,
+        max_width_window_percentage = math.huge, --nil,
         kitty_method = 'normal',
       }
     end,
