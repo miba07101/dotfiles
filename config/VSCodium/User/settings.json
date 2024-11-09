@@ -25,7 +25,7 @@
       "statusBar.background": "#FEFEFA",
       "terminal.border": "#DCD7BA",
       "textBlockQuote.border": "#DCD7BA",
-      // #E5DDB0 -->#EDEBDA 
+      // #E5DDB0 -->#EDEBDA
       "tab.inactiveBackground": "#EDEBDA",
       // #F2ECBC --> FEFEFA
       "editor.background": "#FEFEFA",
@@ -70,14 +70,39 @@
       "sideBarSectionHeader.background": "#EDEBDA",
       "statusBarItem.hoverBackground": "#EDEBDA",
       "tab.hoverBackground": "#EDEBDA",
-      "titleBar.activeBackground": "#FEFEFA",
+      "titleBar.activeBackground": "#FEFEFA"
+    }
+  },
+  "editor.tokenColorCustomizations": {
+    "[Kanagawa Lotus]": {
+      "textMateRules": [
+        {
+          "name": "Comment",
+          "scope": ["comment", "punctuation.definition.comment"],
+          "settings": {
+            "foreground": "#717C7C",
+            "fontStyle": "italic"
+          }
+        }
+      ]
+    },
+    "[Kanagawa Wave]": {
+      "textMateRules": [
+        {
+          "name": "Comment",
+          "scope": ["comment", "punctuation.definition.comment"],
+          "settings": {
+            "fontStyle": "italic"
+          }
+        }
+      ]
     }
   },
   "editor.fontFamily": "Hack Nerd Font",
   "editor.fontSize": 14,
   // "workbench.preferredLightColorTheme":"Default Light+",
-  "workbench.preferredLightColorTheme":"Kanagawa Lotus",
-  "workbench.preferredDarkColorTheme":"Kanagawa Wave",
+  "workbench.preferredLightColorTheme": "Kanagawa Lotus",
+  "workbench.preferredDarkColorTheme": "Kanagawa Wave",
   "zenMode.centerLayout": false,
   "zenMode.hideLineNumbers": false,
   "zenMode.fullScreen": false,
@@ -91,8 +116,8 @@
   "vscode-neovim.neovimExecutablePaths.linux": "/usr/bin/nvim",
   "vscode-neovim.compositeKeys": {
     "ii": {
-      "command": "vscode-neovim.escape",
-    },
+      "command": "vscode-neovim.escape"
+    }
   },
   // -----------------------------------------------------------------------
   // Jupyter notebook
@@ -108,12 +133,9 @@
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
-    },
+    }
   },
-  "isort.args": [
-    "--profile",
-    "black"
-  ],
+  "isort.args": ["--profile", "black"],
   // -----------------------------------------------------------------------
   // Which key
   // -----------------------------------------------------------------------
@@ -612,7 +634,7 @@
               "type": "command",
               "command": "notebook.formatCell",
               "when": "editorHasDocumentFormattingProvider && editorTextFocus && inCompositeEditor && notebookEditable && !editorReadonly && activeEditor == 'workbench.editor.notebook'"
-            },
+            }
           ]
         },
         {
@@ -1123,14 +1145,13 @@
           "name": "Zen mode toggle",
           "type": "command",
           "command": "workbench.action.toggleZenMode"
-        },
+        }
       ]
-    },
+    }
   ],
   "notebook.cellFocusIndicator": "border",
-  "security.allowedUNCHosts": [
-    "wsl.localhost"
-  ],
+  "security.allowedUNCHosts": ["wsl.localhost"],
   "python.defaultInterpreterPath": "c:\\Users\\vimi\\python-venv\\base-venv\\Scripts\\python.exe",
-  "workbench.colorTheme": "Kanagawa Wave",
+  "workbench.colorTheme": "Kanagawa Wave"
 }
+
