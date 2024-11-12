@@ -205,8 +205,7 @@ require("lazy").setup({
 				get_venvs = function(venvs_path)
 					return require("swenv.api").get_venvs(venvs_path)
 				end,
-				-- venvs_path = vim.fn.expand("~/python-venv"), -- zadat cestu k envs
-				venvs_path = vim.fn.expand("~/.venv/bin/python3"), -- zadat cestu k envs
+				venvs_path = vim.fn.expand("~/python-venv"), -- zadat cestu k envs
 				post_set_venv = function()
 					vim.cmd(":LspRestart<cr>")
 				end,
@@ -715,6 +714,9 @@ require("lazy").setup({
             -- these are examples, not defaults. Please see the readme
             vim.g.molten_image_provider = "image.nvim"
             vim.g.molten_output_win_max_height = 20
+            vim.g.molten_virt_text_output = true
+            vim.g.molten_wrap_output = true
+            vim.g.molten_auto_open_output = false
         end,
     },
 
