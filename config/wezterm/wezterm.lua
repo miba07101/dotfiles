@@ -63,22 +63,12 @@ config.cursor_blink_ease_in = "Constant"
 config.cursor_blink_ease_out = "Constant"
 
 -- keybidings
+config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 }
 config.keys = {
-  {
-    key = 'c',
-    mods = 'CTRL',
-    action = wezterm.action.CopyTo 'ClipboardAndPrimarySelection',
-  },
-  {
-    key = 'v',
-    mods = 'CTRL',
-    action = wezterm.action.PasteFrom 'Clipboard',
-  },
-  {
-    key = 'v',
-    mods = 'CTRL',
-    action = wezterm.action.PasteFrom 'PrimarySelection',
-  },
+  { key = 'q', mods = 'LEADER|CTRL', action = wezterm.action.QuitApplication },
+  { key = 'c', mods = 'CTRL', action = wezterm.action.CopyTo 'ClipboardAndPrimarySelection', },
+  { key = 'v', mods = 'CTRL', action = wezterm.action.PasteFrom 'Clipboard', },
+  { key = 'v', mods = 'CTRL', action = wezterm.action.PasteFrom 'PrimarySelection', },
 }
 -- and finally, return the configuration to wezterm
 return config
