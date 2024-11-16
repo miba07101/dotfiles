@@ -504,27 +504,38 @@ other_apps(){
 quarto(){
     info "QUARTO"
 
-    # download tarball
-    git_url="https://github.com/quarto-dev/quarto-cli/releases/latest"
-    latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
-    latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
-    down_url="https://github.com/quarto-dev/quarto-cli/releases/download/${latest_version}/quarto-${latest_version#v}-linux-amd64.tar.gz"
-    wget ${down_url} -P ${TEMP_DIR}
-
-    # exctract files
-    [[ ! -d $HOME/quarto ]] && mkdir -p $HOME/quarto
-    tar -C $HOME/quarto -xvzf quarto*.tar.gz
-
-    # create symlink
-    [[ ! -d $HOME/bin ]] && mkdir -p $HOME/bin
-    ln -s $HOME/quarto/quarto*/bin/quarto $HOME/bin/quarto
-
-    # Ensure that the folder where you created a symlink is in the path. For example:
-    # ( echo ""; echo 'export PATH=$PATH:~/bin\n' ; echo "" ) >> ~/.profile
-    # source ~/.profile
-
-    # Check The Installation
-    # quarto check
+    read -p "Do you want to install Quarto? (y/n): " choice
+        case $choice in
+            [Yy]* )
+                # download tarball
+                git_url="https://github.com/quarto-dev/quarto-cli/releases/latest"
+                latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
+                latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
+                down_url="https://github.com/quarto-dev/quarto-cli/releases/download/${latest_version}/quarto-${latest_version#v}-linux-amd64.tar.gz"
+                wget ${down_url} -P ${TEMP_DIR}
+            
+                # exctract files
+                [[ ! -d $HOME/quarto ]] && mkdir -p $HOME/quarto
+                tar -C $HOME/quarto -xvzf quarto*.tar.gz
+            
+                # create symlink
+                [[ ! -d $HOME/bin ]] && mkdir -p $HOME/bin
+                ln -s $HOME/quarto/quarto*/bin/quarto $HOME/bin/quarto
+            
+                # Ensure that the folder where you created a symlink is in the path. For example:
+                # ( echo ""; echo 'export PATH=$PATH:~/bin\n' ; echo "" ) >> ~/.profile
+                # source ~/.profile
+            
+                # Check The Installation
+                # quarto check
+                ;;
+            [Nn]* )
+                echo "Quarto will not be installed."
+                ;;
+            * )
+                echo "Invalid input, skipping Quarto."
+                ;;
+        esac
 }
 
 postgresql(){
@@ -922,7 +933,7 @@ which_distro(){
             other_apps
             quarto
             # postgresql
-            npm_servers
+            # npm_servers
             # python
             kde_dotfiles
             # git_repos
