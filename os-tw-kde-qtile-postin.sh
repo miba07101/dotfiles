@@ -138,7 +138,7 @@ EOF
 
 zsh_config(){
     info "ZSH SETUP"
-    sudo -S <<< "${mypassword}" zypper "${INSTALL}" -y zsh
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y zsh
     # Nastavi zsh ako predvoleny shell namiesto bash
     chsh -s $(which zsh)
 }
@@ -194,9 +194,9 @@ basic_packages(){
     for PKG in "${BASIC_PKGS[@]}"; do
         echo "Do you want to install ${PKG}? (y/n)"
         read -r CONFIRMATION
-        if [[ "${CONFIRMATION}" =~ ^[Yy]$ ]]; then
+        if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
             echo "Installing ${PKG}"
-            sudo -S <<< "${mypassword}" zypper "${INSTALL}" -y "${PKG}"
+            sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
         else
             echo "Skipping ${PKG}"
         fi
@@ -242,9 +242,9 @@ qtile_packages(){
     for PKG in "${QTILE_PKGS[@]}"; do
         echo "Do you want to install ${PKG}? (y/n)"
         read -r CONFIRMATION
-        if [[ "${CONFIRMATION}" =~ ^[Yy]$ ]]; then
+        if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
             echo "Installing ${PKG}"
-            sudo -S <<< "${mypassword}" zypper "${INSTALL}" -y "${PKG}"
+            sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
         else
             echo "Skipping ${PKG}"
         fi
@@ -270,9 +270,9 @@ packman_packages(){
     for PKG in "${PAC_PKGS[@]}"; do
         echo "Do you want to install ${PKG}? (y/n)"
         read -r CONFIRMATION
-        if [[ "${CONFIRMATION}" =~ ^[Yy]$ ]]; then
+        if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
             echo "Installing ${PKG}"
-            sudo -S <<< "${mypassword}" zypper "${INSTALL}" -y "${PKG}"
+            sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
         else
             echo "Skipping ${PKG}"
         fi
@@ -320,9 +320,9 @@ appimages(){
     for PKG in "${APPIMAGES_PKGS[@]}"; do
         echo "Do you want to install ${PKG}? (y/n)"
         read -r CONFIRMATION
-        if [[ "${CONFIRMATION}" =~ ^[Yy]$ ]]; then
+        if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
             echo "Installing ${PKG}"
-            appman -ia "${PKG}"
+            appman -ia ${PKG}
         else
             echo "Skipping ${PKG}"
         fi
@@ -485,7 +485,7 @@ other_apps(){
 
         # Ask the user if they want to install the software
         read -p "Do you want to install $name? (y/n): " choice
-        case "$choice" in
+        case $choice in
             [Yy]* )
                 # Call the corresponding nested function
                 $func
@@ -611,9 +611,9 @@ python(){
     for PKG in "${PYTHON_PKGS[@]}"; do
         echo "Do you want to install ${PKG}? (y/n)"
         read -r CONFIRMATION
-        if [[ "${CONFIRMATION}" =~ ^[Yy]$ ]]; then
+        if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
             echo "Installing ${PKG}"
-            sudo -S <<< "${mypassword}" zypper "${INSTALL}" -y "${PKG}"
+            sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
         else
             echo "Skipping ${PKG}"
         fi
@@ -693,6 +693,7 @@ python(){
 kde_dotfiles(){
     info "CREATE SYMLINKS"
     DIRECTORIES=(
+        'wezterm'
         'mpv'
         'nvim'
         'zsh'
