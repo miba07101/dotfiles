@@ -613,6 +613,7 @@ npm_servers(){
 python(){
     info "PYTHON SETUP"
     PYTHON_PKGS=(
+    	'python313'
         'python313-pip' # treba len zmenit cislo verzie python podla aktualnej
         'python313-ipython'
         'python313-devel' # pre funkciu kniznice psycopg2 - prepojenie s postgresql databazou

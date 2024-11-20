@@ -44,13 +44,15 @@ config.line_height = 1.1
 config.audible_bell="Disabled"
 
 -- appearance
+config.enable_wayland = false
+config.window_decorations = "TITLE | RESIZE"
 config.hide_tab_bar_if_only_one_tab = true
 config.window_close_confirmation = 'NeverPrompt'
 config.initial_rows = 32
 config.initial_cols = 96
 config.window_padding = {
-  left = 0,
-  right = 0,
+  -- left = 0,
+  -- right = 0,
   top = 0,
   bottom = 0,
 }
