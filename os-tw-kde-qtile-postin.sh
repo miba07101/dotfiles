@@ -516,7 +516,7 @@ quarto(){
             
                 # exctract files
                 [[ ! -d $HOME/quarto ]] && mkdir -p $HOME/quarto
-                tar -C $HOME/quarto -xvzf quarto*.tar.gz
+                tar -C $HOME/quarto -xvzf ${TEMP_DIR}/quarto*.tar.gz
             
                 # create symlink
                 [[ ! -d $HOME/bin ]] && mkdir -p $HOME/bin
@@ -925,19 +925,19 @@ which_distro(){
             qtile_theme
             ;;
         k )
-            root
-            update_system
-            basic_desktop_settings
-            zsh_config
-            basic_packages
-            packman_packages
-            appimages
-            other_apps
+            #root
+            #update_system
+            #basic_desktop_settings
+            #zsh_config
+            #basic_packages
+            #packman_packages
+            #appimages
+            #other_apps
             quarto
             # postgresql
             # npm_servers
             # python
-            kde_dotfiles
+            #kde_dotfiles
             # git_repos
             ;;
         Q )
