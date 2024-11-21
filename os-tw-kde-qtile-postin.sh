@@ -97,6 +97,20 @@ basic_desktop_settings(){
     # sudo -S <<< ${mypassword} hostnamectl set-hostname ${myhostname}
 }
 
+gnome_settings(){
+    info "GNOME SETTINGS"
+
+    # nastavenie scale na 125% a ine mierky - funguje pre gnome wayland
+    # potom manualne v settings-displays-scale
+    gsettings set org.gnome.mutter experimental-features "['scale-monitor-framebuffer']"
+
+    # Nastavenie sklopenia notebooku
+    sudo -S <<< ${mypassword} sh -c 'cat > /etc/systemd/logind.conf.d/logind.conf' <<EOF
+    [Login]
+    HandleLidSwitch=ignore
+EOF
+}
+
 qtile_settings(){
     info "QTILE SETTINGS"
     # Zmena "text mode" na "graphical mode" pre boot systemu
@@ -188,7 +202,7 @@ basic_packages(){
         'transmission' # torrent client
         'transmission-gtk'
         'flameshot' # screenshot obrazovky
-
+        'ImageMagick-devel' # pre image.nvim a molten.nvim
     )
 
     for PKG in "${BASIC_PKGS[@]}"; do
@@ -332,6 +346,13 @@ appimages(){
 }
 
 other_apps(){
+  megasync(){
+      info "MEGASYNC"
+      down_url="https://mega.nz/linux/repo/openSUSE_Tumbleweed/x86_64/megasync-openSUSE_Tumbleweed.x86_64.rpm"
+      wget ${down_url} -P ${TEMP_DIR}
+
+      sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${TEMP_DIR}/megasync-openSUSE_Tumbleweed.x86_64.rpm
+  }
 
   jdownloader(){
       info "JDOWNLOADER 2"
@@ -469,7 +490,9 @@ other_apps(){
 
 
     # Array to store function names and corresponding software names
-    software_list=("jdownloader:JDownloader 2"
+    software_list=(
+                   "megasync:Megasync"
+                   "jdownloader:JDownloader 2"
                    "birdtray_stacer:Birdtray & Stacer"
                    "newsflash:Newsflash"
                    "ticker:Ticker"
@@ -513,19 +536,22 @@ quarto(){
                 latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
                 down_url="https://github.com/quarto-dev/quarto-cli/releases/download/${latest_version}/quarto-${latest_version#v}-linux-amd64.tar.gz"
                 wget ${down_url} -P ${TEMP_DIR}
-            
+
                 # exctract files
                 [[ ! -d $HOME/quarto ]] && mkdir -p $HOME/quarto
                 tar -C $HOME/quarto -xvzf ${TEMP_DIR}/quarto*.tar.gz
-            
+
                 # create symlink
                 [[ ! -d $HOME/bin ]] && mkdir -p $HOME/bin
                 ln -s $HOME/quarto/quarto*/bin/quarto $HOME/bin/quarto
-            
+
                 # Ensure that the folder where you created a symlink is in the path. For example:
                 # ( echo ""; echo 'export PATH=$PATH:~/bin\n' ; echo "" ) >> ~/.profile
                 # source ~/.profile
-            
+
+                # install tinytex
+                quarto install tinytex
+
                 # Check The Installation
                 # quarto check
                 ;;
@@ -615,10 +641,10 @@ python(){
     info "PYTHON SETUP"
     PYTHON_PKGS=(
     	'python313'
-        'python313-pip' # treba len zmenit cislo verzie python podla aktualnej
-        'python313-ipython'
-        'python313-devel' # pre funkciu kniznice psycopg2 - prepojenie s postgresql databazou
-        'python313-bpython'
+      'python313-pip' # treba len zmenit cislo verzie python podla aktualnej
+      'python313-ipython'
+      'python313-devel' # pre funkciu kniznice psycopg2 - prepojenie s postgresql databazou
+      'python313-bpython'
   )
 
     for PKG in "${PYTHON_PKGS[@]}"; do
@@ -682,19 +708,32 @@ python(){
 
     deactivate
 
-    # Pre quarto
+    # Pre neovim - quarto - jupyterlab - molten - image.nvim
     [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
 
-    python3 -m venv $HOME/python-venv/quarto-venv
-    source $HOME/python-venv/quarto-venv/bin/activate
+    python3 -m venv $HOME/python-venv/nvim-venv
+    source $HOME/python-venv/nvim-venv/bin/activate
 
     pip3 install --upgrade pip
     pip3 install jupyter
-    pip3 insatll handcalcs
-    pip3 insatll sympy
-    pip3 insatll pandas
-    pip3 insatll tabulate
-    pip3 insatll latexify-py
+    pip3 install numpy
+    pip3 install sympy
+    pip3 install pandas
+    pip3 install matplotlib
+    # pip3 install handcalcs
+    # pip3 install tabulate
+    # pip3 install latexify-py
+    # pre molten.nvim a image.nvim
+    pip3 install pynvim
+    pip3 install jupyter_client
+    # pip3 install cairosvg
+    # pip3 install plotly
+    # pip3 install kaleido
+    # pip3 install pnglatex
+    # pip3 install pyperclip
+
+    # aktivacia jupyter kernel pre molten.nvim
+    # jupyter kernel — kernel=python3
 
     deactivate
 }

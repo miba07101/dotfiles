@@ -9,14 +9,14 @@ error_symbol = "[ ➜](red)"
 truncation_length = 10
 # truncation_symbol = "…/"
 style = "cyan"
-home_symbol = "  "
+home_symbol = "  "
 read_only_style = "red"
 read_only = "  "
 format = "[$read_only]($read_only_style)[$path]($style) "
 
 # SYMBOLS
 [python]
-symbol = " "
+symbol = " "
 
 [conda]
 symbol = " "

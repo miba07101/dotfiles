@@ -17,15 +17,15 @@ require("lazy").setup({
 		"rebelot/kanagawa.nvim",
 		priority = 1000,
 		config = function()
-      local colortheme
-      local is_night = tonumber(os.date("%H")) >= 19
-      if is_night then
-        vim.opt.background = "dark"
-        colortheme = "colorscheme kanagawa-wave"
-      else
-        vim.opt.background = "light"
-        colortheme = "colorscheme kanagawa-lotus"
-      end
+      -- local colortheme
+      -- local is_night = tonumber(os.date("%H")) >= 19
+      -- if is_night then
+        -- vim.opt.background = "dark"
+        -- colortheme = "colorscheme kanagawa-wave"
+      -- else
+        -- vim.opt.background = "light"
+        -- colortheme = "colorscheme kanagawa-lotus"
+      -- end
 			require("kanagawa").setup({
         colors = {
           palette = {
@@ -86,7 +86,8 @@ require("lazy").setup({
 					}
 				end,
 			})
-			vim.cmd(colortheme)
+			-- vim.cmd(colortheme)
+			vim.cmd.colorscheme ("kanagawa")
 		end,
 	},
 

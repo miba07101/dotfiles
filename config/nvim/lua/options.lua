@@ -86,6 +86,10 @@ for i = 1, #builtin_plugins do
   vim.g['loaded_' .. builtin_plugins[i]] = true
 end
 
+-- point neovim to python virtualenv as default
+-- zatial nefunguje
+vim.g.python3_host_prog=vim.fn.expand("~/python-venv/nvim-venv/bin/python3")
+
 -- nastavenia pre WSL a klasicky linuxW
 if (is_wsl == 1 and hostname == "vimi-jonsbo") then
   opt.guicursor = {"n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150"}  -- Cursor help: guicursor
