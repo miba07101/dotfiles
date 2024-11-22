@@ -184,6 +184,7 @@ basic_packages(){
         'clang'
         'make'
         '7zip'
+        'libnotify' # notifikacie send-notify
         'at-spi2-core'
         'xdg-utils' # pre nastavenie defaultnych aplikacii
         'sqlitebrowser' # pre sqlite databazu pre moju flask aplikaciu
@@ -322,12 +323,16 @@ appimages(){
     # Install appman
     wget -q https://raw.githubusercontent.com/ivan-hc/AM/main/AM-INSTALLER && chmod a+x ./AM-INSTALLER && ./AM-INSTALLER
 
-    info "INSTALL APPIMAGES"
+    # remove appman installer
+    rm -f AM-INSTALLER
+
+    info "INSTALL APPMAN APPIMAGES"
     APPIMAGES_PKGS=(
         'brave'
         'freetube'
         'onlyoffice'
         'obsidian'
+        'vscodium'
         'zen-browser'
     )
 
@@ -342,7 +347,22 @@ appimages(){
         fi
     done
 
+    # not appimages
+    info "INSTALL APPMAN PKGS"
+    APPMAN_PKGS=(
+        'zotero'
+    )
 
+    for PKG in "${APPMAN_PKGS[@]}"; do
+        echo "Do you want to install ${PKG}? (y/n)"
+        read -r CONFIRMATION
+        if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
+            echo "Installing ${PKG}"
+            appman -i ${PKG}
+        else
+            echo "Skipping ${PKG}"
+        fi
+    done
 }
 
 other_apps(){
@@ -402,27 +422,6 @@ other_apps(){
       wget -q -O - https://raw.githubusercontent.com/LedgerHQ/udev-rules/master/add_udev_rules.sh | sudo -S <<< ${mypassword} bash
 
       rm -rf ${TEMP_DIR}/*.AppImage
-  }
-
-  freecad(){
-      info "FreeCAD"
-      if [ WSL -eq 1 ]
-      then
-          # git_url="https://github.com/FreeCAD/FreeCAD/releases/latest"
-          # latest_release=$(curl-L -s -H 'Accept: application/json' ${git_url})
-          # latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
-          down_url="https://github.com/FreeCAD/FreeCAD/releases/download/0.20.2/FreeCAD_0.20.2-2022-12-27-conda-Linux-x86_64-py310.AppImage"
-
-          wget ${down_url} -P ${TEMP_DIR}
-
-          # integruje FreeCAD appimage do systemu (musi byt nainstalovany AppImageLauncher)
-          ail-cli integrate ${TEMP_DIR}/FreeCAD_0.20-1-2022-08-20-conda-Linux-x86_64-py310.AppImage
-
-          rm -rf ${TEMP_DIR}/*.AppImage
-
-      else
-          sudo -S <<< ${mypassword} zypper ${INSTALL} -y FreeCAD
-      fi
   }
 
   salome_meca(){
@@ -497,7 +496,6 @@ other_apps(){
                    "newsflash:Newsflash"
                    "ticker:Ticker"
                    "ledger_live:Ledger Live"
-                   "freecad:FreeCAD"
                    "salome_meca:Salome Meca"
                    "chia_blockchain:Chia Blockchain"
                  )
@@ -639,12 +637,16 @@ npm_servers(){
 
 python(){
     info "PYTHON SETUP"
+
+    PYTHON_VER='python313'
+
     PYTHON_PKGS=(
-    	'python313'
-      'python313-pip' # treba len zmenit cislo verzie python podla aktualnej
-      'python313-ipython'
-      'python313-devel' # pre funkciu kniznice psycopg2 - prepojenie s postgresql databazou
-      'python313-bpython'
+      # treba len zmenit cislo verzie python podla aktualnej
+    	"${PYTHON_VER}"
+      "${PYTHON_VER}-pip"
+      "${PYTHON_VER}-ipython"
+      "${PYTHON_VER}-devel" # pre funkciu kniznice psycopg2 - prepojenie s postgresql databazou
+      "${PYTHON_VER}-bpython"
   )
 
     for PKG in "${PYTHON_PKGS[@]}"; do
@@ -667,7 +669,7 @@ python(){
     # env pre web-epipingdesign
     [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
 
-    python3 -m venv $HOME/python-venv/epd-venv
+    ${PYTHON_VER} -m venv $HOME/python-venv/epd-venv
     source $HOME/python-venv/epd-venv/bin/activate
 
     pip3 install --upgrade pip
@@ -677,7 +679,7 @@ python(){
     # env pre web-isitobo
     [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
 
-    python3 -m venv $HOME/python-venv/isitobo-venv
+    ${PYTHON_VER} -m venv $HOME/python-venv/isitobo-venv
     source $HOME/python-venv/isitobo-venv/bin/activate
 
     pip3 install --upgrade pip
@@ -687,7 +689,7 @@ python(){
     # env pre web-isitobo-test
     [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
 
-    python3 -m venv $HOME/python-venv/isitobo-test-venv
+    ${PYTHON_VER} -m venv $HOME/python-venv/isitobo-test-venv
     source $HOME/python-venv/isitobo-test-venv/bin/activate
 
     pip3 install --upgrade pip
@@ -697,7 +699,7 @@ python(){
     # Pre yafin
     [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
 
-    python3 -m venv $HOME/python-venv/yafin-venv
+    ${PYTHON_VER} -m venv $HOME/python-venv/yafin-venv
     source $HOME/python-venv/yafin-venv/bin/activate
 
     pip3 install --upgrade pip
@@ -711,7 +713,7 @@ python(){
     # Pre neovim - quarto - jupyterlab - molten - image.nvim
     [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
 
-    python3 -m venv $HOME/python-venv/nvim-venv
+    ${PYTHON_VER} -m venv $HOME/python-venv/nvim-venv
     source $HOME/python-venv/nvim-venv/bin/activate
 
     pip3 install --upgrade pip
