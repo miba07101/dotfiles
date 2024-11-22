@@ -95,6 +95,14 @@ basic_desktop_settings(){
     # read myhostname
     # # nastavi novy HOSTNAME
     # sudo -S <<< ${mypassword} hostnamectl set-hostname ${myhostname}
+
+    # # Zmena rozlisenia obrazovky ak je pripojeny notebook k TV
+    # echo "${color} Resolution TV setup ${endcolor}"
+    # resTV_file="/usr/share/sddm/scripts/Xsetup"
+    # [[ ! -f ${resTV_file} ]] && sudo -S <<< ${mypassword} touch ${resTV_file}
+    # # HDMI-0 je vystup pre TV, LVDS - je vystup obrazovky notebooku
+    # echo xrandr --output HDMI-0 --primary --mode 1920x1080 --output LVDS --off | sudo tee -a ${resTV_file}
+
 }
 
 gnome_settings(){
@@ -204,6 +212,7 @@ basic_packages(){
         'transmission-gtk'
         'flameshot' # screenshot obrazovky
         'ImageMagick-devel' # pre image.nvim a molten.nvim
+        'deluge' # bit torrent client
     )
 
     for PKG in "${BASIC_PKGS[@]}"; do
@@ -741,6 +750,31 @@ python(){
 }
 
 ##########################################################################
+# Fonts, cursors
+##########################################################################
+
+fonts_cursors(){
+    FONTS_DIR="$HOME/.local/share/fonts"
+    [[ ! -d ${FONTS_DIR} ]] && mkdir -p ${FONTS_DIR}
+
+    info "HACK NERD FONTS"
+    git_url="https://github.com/ryanoasis/nerd-fonts/releases/latest"
+    latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
+    latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
+    down_url="https://github.com/ryanoasis/nerd-fonts/releases/download/${latest_version}/Hack.zip"
+
+    wget ${url} -P ${FONTS_DIR}
+    unzip ${FONTS_DIR}/Hack.zip -d ${FONTS_DIR}
+    rm ${FONTS_DIR}/Hack.zip
+
+    info "WINDOWS FONTS"
+    7z x -y ${CWD}/win-fonts/win-fonts.7z.001 -o${FONTS_DIR}
+
+    info "UPDATE FONTS"
+    sudo -S <<< ${mypassword} fc-cache -f -v
+}
+
+##########################################################################
 # Dotfiles symlinks
 ##########################################################################
 
@@ -769,8 +803,9 @@ kde_dotfiles(){
     ln -sf ${CWD}/config/nvim/lua               ${HOME}/.config/nvim/lua
     ln -sf ${CWD}/config/nvim/after             ${HOME}/.config/nvim/after
     ln -sf ${CWD}/config/nvim/snippets          ${HOME}/.config/nvim/snippets
-    ln -sf ${CWD}/config/ranger                 ${HOME}/.config/ranger
+    # ln -sf ${CWD}/config/ranger                 ${HOME}/.config/ranger
     ln -sf ${CWD}/config/zsh/.zshrc             ${HOME}/.config/zsh/.zshrc
+    ln -sf ${CWD}/config/zsh/.zshenv            ${HOME}/.config/zsh/.zshenv
     ln -sf ${CWD}/config/starship.toml          ${HOME}/.config/starship.toml
 
     ln -sf ${CWD}/home/.bashrc                  ${HOME}/.bashrc
@@ -902,19 +937,6 @@ EOF
     git_url="https://github.com/vinceliuice/Tela-icon-theme.git"
     git clone ${git_url} ${TEMP_DIR}/Tela-icon-theme
     ${TEMP_DIR}/Tela-icon-theme/./install.sh
-
-    # Hack-nerd fonts
-    FONTS_DIR="$HOME/.local/share/fonts"
-    url="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip"
-    wget ${url} -P ${FONTS_DIR}
-    unzip ${FONTS_DIR}/Hack.zip -d ${FONTS_DIR}
-    rm ${FONTS_DIR}/Hack.zip
-
-    # Win10 fonts
-    7z x -y ${CWD}/win-fonts/win-fonts.7z.001 -o${FONTS_DIR}
-
-    # update fontov
-    sudo -S <<< ${mypassword} fc-cache -f -v
 
     # Nordzy cursors
     CURSOR_DIR="$HOME/.icons"
