@@ -26,13 +26,14 @@ local config = wezterm.config_builder()
 -- check if on windows
 if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   config.default_prog = { 'pwsh.exe', '-NoLogo' }
+  config.color_scheme = 'nord'
+else
+  -- colorscheme
+  -- config.color_scheme = 'iceberg-light'
+  -- config.color_scheme = 'Kanagawa (Gogh)'
+  config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
+  -- config.color_scheme = is_night()
 end
-
--- colorscheme
--- config.color_scheme = 'iceberg-light'
--- config.color_scheme = 'Kanagawa (Gogh)'
-config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
--- config.color_scheme = is_night()
 
 -- fonts
 config.font = wezterm.font 'Hack Nerd Font'
@@ -53,8 +54,8 @@ config.initial_cols = 96
 config.window_padding = {
   -- left = 0,
   -- right = 0,
-  top = 0,
-  bottom = 0,
+  -- top = 0,
+  -- bottom = 0,
 }
 
 -- cursor
