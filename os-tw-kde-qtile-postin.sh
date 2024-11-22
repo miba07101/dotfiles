@@ -158,6 +158,21 @@ EOF
     sudo -S <<< ${mypassword} sh -c "echo 'HandleLidSwitch=ignore' >> /etc/systemd/logind.conf"
 }
 
+wsl_settings(){
+    info "WSL SETTINGS"
+    # pre povolenie systemd - v /etc/wsl.conf ma byt [boot] systemd=true
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_base
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_systemd
+    # pre spustanie gui aplikacii, napr. gedit ...
+    # https://en.opensuse.org/openSUSE:WSL?ref=its-foss
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_gui
+
+    # umozni pouzivat win prikazy, napr. powershell.exe aj pri spustenom systemd
+    sudo -S <<< ${mypassword} sh -c 'cat > /usr/lib/binfmt.d/WSLInterop.conf' <<EOF
+    :WSLInterop:M::MZ::/init:PF
+EOF
+}
+
 zsh_config(){
     info "ZSH SETUP"
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y zsh
@@ -184,7 +199,7 @@ basic_packages(){
         'yazi'
         'ranger' # python terminal filemanager
         'xsel' # umoznuje copirovat adresu suboru z Rangera do systemoveho clipboardu
-        'jq' # potrebne pre script ticker - cli JSON processor
+        # 'jq' # potrebne pre script ticker - cli JSON processor
         'ripgrep' # vyhladavaci doplnok pre neovim a funkcnost Telescope doplnku
         'npm-default'
         'gcc' # C compiler
@@ -196,23 +211,10 @@ basic_packages(){
         'at-spi2-core'
         'xdg-utils' # pre nastavenie defaultnych aplikacii
         'sqlitebrowser' # pre sqlite databazu pre moju flask aplikaciu
+        'libcairo2' # epd - pre weasyprint
+        'libpango-1_0-0' # epd - pre weasyprint
         'redis' # server pre flask kniznicu celery. pouzivam pre moju aplikaciu epd alebo isitobo.
-        'kvantum-manager' # pre KDE iba
-        'wezterm'
-        'MozillaFirefox'
-        'MozillaThunderbird'
-        'onedrive'
-        'mpv'
-        'inkscape'
-        'sioyek' # pdf reader
-        'bleachbit' # cistenie systemu
-        'xdotool' # napr. zistim nazov okna
-        'megatools' # stahovanie z mega.nz z terminalu
-        'transmission' # torrent client
-        'transmission-gtk'
-        'flameshot' # screenshot obrazovky
         'ImageMagick-devel' # pre image.nvim a molten.nvim
-        'deluge' # bit torrent client
     )
 
     for PKG in "${BASIC_PKGS[@]}"; do
@@ -238,8 +240,6 @@ qtile_packages(){
         'xorg-x11-server'
         'lightdm'
         'qtile'
-        'kitty'
-        'qutebrowser'
         # zvuk
         'alsa'
         'alsa-utils'
@@ -264,6 +264,40 @@ qtile_packages(){
     )
 
     for PKG in "${QTILE_PKGS[@]}"; do
+        echo "Do you want to install ${PKG}? (y/n)"
+        read -r CONFIRMATION
+        if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
+            echo "Installing ${PKG}"
+            sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
+        else
+            echo "Skipping ${PKG}"
+        fi
+    done
+}
+
+desktop_packages(){
+    info "INSTALL DESKTOP PACKAGES"
+    DESKTOP_PKGS=(
+        'MozillaFirefox'
+        'MozillaThunderbird'
+        'onedrive'
+        'mpv'
+        'wezterm' # terminal
+        'kitty' # terminal
+        'qutebrowser' # python based web browser
+        'kvantum-manager' # pre KDE iba
+        'inkscape'
+        'sioyek' # pdf reader
+        'bleachbit' # cistenie systemu
+        'xdotool' # napr. zistim nazov okna
+        'megatools' # stahovanie z mega.nz z terminalu
+        'transmission' # torrent client
+        'transmission-gtk'
+        'flameshot' # screenshot obrazovky
+        'deluge' # bit torrent client
+    )
+
+    for PKG in "${DESKTOP_PKGS[@]}"; do
         echo "Do you want to install ${PKG}? (y/n)"
         read -r CONFIRMATION
         if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
@@ -306,7 +340,6 @@ packman_packages(){
     # sudo -S <<< ${mypassword} zypper ${INSTALL} -y opi
     # opi codecs
 }
-
 
 appimages(){
     info "INSTALL APPMAN"
@@ -530,7 +563,6 @@ other_apps(){
     done
 }
 
-
 quarto(){
     info "QUARTO"
 
@@ -572,62 +604,73 @@ quarto(){
 }
 
 postgresql(){
-    info "PostgreSQL"
-    PKG_pg=(
-        'postgresql'
-        'postgresql-server'
-        'postgresql-contrib'
-        'postgresql-devel'
-        'postgresql-server-devel'
-        'postgresql-plpython'
-    )
+  info "PostgreSQL"
+  read -p "Do you want to install PostgreSQL? (y/n): " choice
+      case $choice in
+          [Yy]* )
+                PKG_pg=(
+                    'postgresql'
+                    'postgresql-server'
+                    'postgresql-contrib'
+                    'postgresql-devel'
+                    'postgresql-server-devel'
+                    'postgresql-plpython'
+                )
 
-    for PKG in "${PKG_pg[@]}"; do
-        echo "Installing ${PKG}"
-        sleep 1
-        sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
-    done
+                for PKG in "${PKG_pg[@]}"; do
+                    echo "Installing ${PKG}"
+                    sleep 1
+                    sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
+                done
 
-    if [ $WSL -eq 1 ]
-    then
-        # tu to zastane aby som zadal heslo
-        echo
-        echo "ENTER Postgres password: "
-        sudo passwd postgres
+                if [ $WSL -eq 1 ]
+                then
+                    # tu to zastane aby som zadal heslo
+                    echo
+                    echo "ENTER Postgres password: "
+                    sudo passwd postgres
 
-        # Create postgreSQL data directory
-        sudo -S <<< ${mypassword} mkdir /usr/lib/postgresql15/data
-        sudo -S <<< ${mypassword} chown postgres:postgres /usr/lib/postgresql15/data
+                    # Create postgreSQL data directory
+                    sudo -S <<< ${mypassword} mkdir /usr/lib/postgresql15/data
+                    sudo -S <<< ${mypassword} chown postgres:postgres /usr/lib/postgresql15/data
 
-        # inicializuje postgresql databazu
-        # sudo -i -u postgres -c '/usr/lib/postgresql15/bin/initdb -D /usr/lib/postgresql15/data/'
+                    # inicializuje postgresql databazu
+                    # sudo -i -u postgres -c '/usr/lib/postgresql15/bin/initdb -D /usr/lib/postgresql15/data/'
 
-        # tymto spustim postgresql server
-        # sudo -i -u postgres -c '/usr/lib/postgresql15/bin/pg_ctl -D /usr/lib/postgresql15/data/ -l logfile start'
+                    # tymto spustim postgresql server
+                    # sudo -i -u postgres -c '/usr/lib/postgresql15/bin/pg_ctl -D /usr/lib/postgresql15/data/ -l logfile start'
 
-        # Postup manualny zo zdrojoveho kodu:
-        # https://www.thegeekstuff.com/2009/04/linux-postgresql-install-and-configure-from-source/
+                    # Postup manualny zo zdrojoveho kodu:
+                    # https://www.thegeekstuff.com/2009/04/linux-postgresql-install-and-configure-from-source/
 
-        # # Prida Enviroment variable
-        # sudo -S <<< ${mypassword} sh -c 'cat >/etc/profile' <<EOF
-        # # PostgreSQL
-        # PATH=/usr/local/pgsql/bin:$PATH
-        # export PATH
-        # EOF
-    else
-        # inicializuje postgresql databazu
-        sudo -S <<< ${mypassword} systemctl enable postgresql
-        sudo -S <<< ${mypassword} systemctl start postgresql
+                    # # Prida Enviroment variable
+                    # sudo -S <<< ${mypassword} sh -c 'cat >/etc/profile' <<EOF
+                    # # PostgreSQL
+                    # PATH=/usr/local/pgsql/bin:$PATH
+                    # export PATH
+                    # EOF
+                else
+                    # inicializuje postgresql databazu
+                    sudo -S <<< ${mypassword} systemctl enable postgresql
+                    sudo -S <<< ${mypassword} systemctl start postgresql
 
-        # tu to zastane aby som zadal heslo
-        echo
-        echo "ENTER Postgres password: "
-        sudo passwd postgres
+                    # tu to zastane aby som zadal heslo
+                    echo
+                    echo "ENTER Postgres password: "
+                    sudo passwd postgres
 
-        # Manualne - vytvorenie uzivatela vimi
-        # sudo su postgres
-        # psql -c "CREATE ROLE vimi LOGIN CREATEDB PASSWORD '8992';"
-    fi
+                    # Manualne - vytvorenie uzivatela vimi
+                    # sudo su postgres
+                    # psql -c "CREATE ROLE vimi LOGIN CREATEDB PASSWORD '8992';"
+                fi
+              ;;
+          [Nn]* )
+              echo "Quarto will not be installed."
+              ;;
+          * )
+              echo "Invalid input, skipping Quarto."
+              ;;
+      esac
 }
 
 npm_servers(){
@@ -638,7 +681,6 @@ npm_servers(){
     # npm i -g bash-language-server
     # npm i -g vscode-css-languageserver-bin
 }
-
 
 ##########################################################################
 # Python
@@ -668,12 +710,6 @@ python(){
             echo "Skipping ${PKG}"
         fi
     done
-
-    # Pre neovim LSP - celosystemove
-    # pip3 install pyright
-    # pip3 install pynvim
-    # pip3 install flake8
-    # pip3 install black
 
     # env pre web-epipingdesign
     [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
@@ -705,43 +741,33 @@ python(){
 
     deactivate
 
-    # Pre yafin
-    [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
+    # Pre neovim - vscodium - yafin - quarto - jupyterlab - molten - image.nvim
+    [[ ! -d $HOME/base-venv ]] && mkdir -p $HOME/base-venv
 
-    ${PYTHON_VER} -m venv $HOME/python-venv/yafin-venv
-    source $HOME/python-venv/yafin-venv/bin/activate
-
-    pip3 install --upgrade pip
-    # pip3 install yfinance
-    # pip3 install pandas
-    # pip3 install pandas-datareader
-    pip3 install yahoofinancials
-
-    deactivate
-
-    # Pre neovim - quarto - jupyterlab - molten - image.nvim
-    [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
-
-    ${PYTHON_VER} -m venv $HOME/python-venv/nvim-venv
+    ${PYTHON_VER} -m venv $HOME/python-venv/base-venv
     source $HOME/python-venv/nvim-venv/bin/activate
 
     pip3 install --upgrade pip
+    pip3 install yahoofinancials # pre moj yafin script
     pip3 install jupyter
     pip3 install numpy
     pip3 install sympy
     pip3 install pandas
     pip3 install matplotlib
-    # pip3 install handcalcs
-    # pip3 install tabulate
-    # pip3 install latexify-py
-    # pre molten.nvim a image.nvim
+    pip3 install handcalcs
+    pip3 install tabulate
+    pip3 install latexify-py
+    pip3 install efficalc
+    pip3 install pint
+    pip3 install forallpeople
+    ## pre molten.nvim a image.nvim
     pip3 install pynvim
     pip3 install jupyter_client
-    # pip3 install cairosvg
-    # pip3 install plotly
-    # pip3 install kaleido
-    # pip3 install pnglatex
-    # pip3 install pyperclip
+    pip3 install cairosvg
+    pip3 install plotly
+    pip3 install kaleido
+    pip3 install pnglatex
+    pip3 install pyperclip
 
     # aktivacia jupyter kernel pre molten.nvim
     # jupyter kernel — kernel=python3
@@ -753,7 +779,7 @@ python(){
 # Fonts, cursors
 ##########################################################################
 
-fonts_cursors(){
+fonts(){
     FONTS_DIR="$HOME/.local/share/fonts"
     [[ ! -d ${FONTS_DIR} ]] && mkdir -p ${FONTS_DIR}
 
@@ -763,7 +789,7 @@ fonts_cursors(){
     latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
     down_url="https://github.com/ryanoasis/nerd-fonts/releases/download/${latest_version}/Hack.zip"
 
-    wget ${url} -P ${FONTS_DIR}
+    wget ${down_url} -P ${FONTS_DIR}
     unzip ${FONTS_DIR}/Hack.zip -d ${FONTS_DIR}
     rm ${FONTS_DIR}/Hack.zip
 
@@ -774,11 +800,36 @@ fonts_cursors(){
     sudo -S <<< ${mypassword} fc-cache -f -v
 }
 
+cursors(){
+    CURSORS_DIR="$HOME/.icons"
+    [[ ! -d ${CURSORS_DIR} ]] && mkdir -p ${CURSORS_DIR}
+
+    info "CURSORS WE10XOS"
+    git_url="https://github.com/yeyushengfan258/We10XOS-cursors.git"
+    git clone ${git_url} ${TEMP_DIR}/We10XOS-cursors
+    cd ${TEMP_DIR}/We10XOS-cursors/ && ./install.sh
+
+    info "CURSORS NORDZY"
+    git_url="https://github.com/alvatip/Nordzy-cursors"
+    git clone ${git_url} ${TEMP_DIR}/Nordzy-cursors
+    cd ${TEMP_DIR}/Nordzy-cursors/ && ./install.sh
+
+    #     # nefunguje to - treba pouzit lxappearance - nastavi nordzy cursor ako default
+    #     mkdir -p ${CURSOR_DIR}/default
+    #     cat > ${CURSOR_DIR}/default/index.theme <<EOF
+    #     [Icon Theme]
+    #     Name=Default
+    #     Comment=Default Cursor Theme
+    #     Inherits=Nordzy-cursors-white
+    # EOF
+
+}
+
 ##########################################################################
 # Dotfiles symlinks
 ##########################################################################
 
-kde_dotfiles(){
+gnome_kde_dotfiles(){
     info "CREATE SYMLINKS"
     DIRECTORIES=(
         'wezterm'
@@ -910,10 +961,49 @@ qtile_dotfiles(){
     # ln -sf ~/.dotfiles/thunderbird/prefs.js $HOME/.thunderbird/ovhwieeq.default-release/prefs.js
 }
 
+wsl_dotfiles(){
+    info "CREATE SYMLINKS"
+    DIRECTORIES=(
+        'zsh'
+        'nvim'
+    )
+
+    # zisti ci priecinky existuju, ak nie tak ich vytvori
+    for DIR in "${DIRECTORIES[@]}"; do
+        [[ ! -d $HOME/.config/$DIR ]] && mkdir -p $HOME/.config/$DIR
+    done
+
+    #vytvorim symlinky
+    ln -sf ${CWD}/config/zsh/.zshrc                 ${HOME}/.config/zsh/.zshrc
+    ln -sf ${CWD}/config/zsh/.zshenv                 ${HOME}/.config/zsh/.zshenv
+    ln -sf ${CWD}/config/nvim/init.lua              ${HOME}/.config/nvim/init.lua
+    ln -sf ${CWD}/config/nvim/lua                   ${HOME}/.config/nvim/lua
+    ln -sf ${CWD}/config/nvim/after                 ${HOME}/.config/nvim/after
+    ln -sf ${CWD}/config/nvim/snippets              ${HOME}/.config/nvim/snippets
+    ln -sf ${CWD}/config/ranger                     ${HOME}/.config/ranger
+    ln -sf ${CWD}/xWSL/starship.toml                ${HOME}/.config/starship.toml
+    ln -sf ${CWD}/home/.bashrc                      ${HOME}/.bashrc
+    ln -sf ${CWD}/home/.ticker.yaml                 ${HOME}/.ticker.yaml
+    ln -sf ${CWD}/home/.zprofile                    ${HOME}/.zprofile
+    ln -sf ${CWD}/home/.npmrc                       ${HOME}/.npmrc
+    ln -sf ${CWD}/.gitconfig                        ${HOME}/.gitconfig
+
+    # OneDrive, Downloads, Megasync, Videos
+    ln -sf /mnt/c/Users/vimi/OneDrive               ${HOME}/OneDrive
+    ln -sf /mnt/c/Users/vimi/Downloads              ${HOME}/Downloads
+    # ln -sf /mnt/c/Users/vimi/Mega                   ${HOME}/Mega
+    # ln -sf /mnt/d/Videos                            ${HOME}/Videos
+
+    # Obsidian scripts
+    ln -sf /mnt/c/Users/vimi/OneDrive/Projekty/Linux/Skripty/obsidian-create-note.sh               ${HOME}/.local/bin/obsidian-create-note.sh
+    ln -sf /mnt/c/Users/vimi/OneDrive/Projekty/Linux/Skripty/obsidian-kategorize-notes.sh          ${HOME}/.local/bin/obsidian-kategorize-notes.sh
+}
+
 git_repos(){
     [[ ! -d $HOME/git-repos ]] && mkdir -p $HOME/git-repos
     git clone https://github.com/miba07101/python.git $HOME/git-repos/python
     git clone https://github.com/miba07101/test.git $HOME/git-repos/test
+    git clone https://github.com/miba07101/mcad.git $HOME/git-repos/mcad
     # musim manualne cez: gh auth login
     # git clone https://github.com/miba07101/epd.git $HOME/git-repos/epd
 }
@@ -938,21 +1028,6 @@ EOF
     git clone ${git_url} ${TEMP_DIR}/Tela-icon-theme
     ${TEMP_DIR}/Tela-icon-theme/./install.sh
 
-    # Nordzy cursors
-    CURSOR_DIR="$HOME/.icons"
-    [[ ! -d ${CURSOR_DIR} ]] && mkdir -p ${CURSOR_DIR}
-    git_url="https://github.com/alvatip/Nordzy-cursors"
-    git clone ${git_url} ${TEMP_DIR}/Nordzy-cursors
-    cd ${TEMP_DIR}/Nordzy-cursors/ && ./install.sh
-
-    #     # nefunguje to - treba pouzit lxappearance - nastavi nordzy cursor ako default
-    #     mkdir -p ${CURSOR_DIR}/default
-    #     cat > ${CURSOR_DIR}/default/index.theme <<EOF
-    #     [Icon Theme]
-    #     Name=Default
-    #     Comment=Default Cursor Theme
-    #     Inherits=Nordzy-cursors-white
-    # EOF
 }
 
 ##########################################################################
@@ -961,12 +1036,51 @@ EOF
 
 which_distro(){
     echo
-    printf "${color}Which distro install?\[q]tile, [k]de, [Q]uit:${endcolor}\n"
+    printf "${color}Which distro install?\[g]nome, [k]de, [q]tile, [w]sl, [Q]uit:${endcolor}\n"
     # info "Which distro install?\n[w]sl, [q]tile, [k]de, [Q]uit: "
     read -n 1 distro
     echo
 
     case "$distro" in
+        g )
+            root
+            update_system
+            basic_desktop_settings
+            gnome_settings
+            zsh_config
+            basic_packages
+            desktop_packages
+            packman_packages
+            appimages
+            other_apps
+            quarto
+            postgresql
+            npm_servers
+            python
+            fonts
+            cursors
+            gnome_kde_dotfiles
+            git_repos
+            ;;
+        k )
+            root
+            update_system
+            basic_desktop_settings
+            zsh_config
+            basic_packages
+            desktop_packages
+            packman_packages
+            appimages
+            other_apps
+            quarto
+            postgresql
+            npm_servers
+            python
+            fonts
+            cursors
+            gnome_kde_dotfiles
+            git_repos
+            ;;
         q )
             root
             update_system
@@ -975,6 +1089,7 @@ which_distro(){
             zsh_config
             basic_packages
             qtile_packages
+            desktop_packages
             packman_packages
             appimages
             other_apps
@@ -982,26 +1097,26 @@ which_distro(){
             postgresql
             npm_servers
             python
-            kde_dotfiles
+            fonts
+            cursors
             qtile_dotfiles
             git_repos
             qtile_theme
             ;;
-        k )
-            #root
-            #update_system
-            #basic_desktop_settings
-            #zsh_config
-            #basic_packages
-            #packman_packages
-            #appimages
-            #other_apps
+        w )
+            root
+            update_system
+            wsl_settings
+            zsh_config
+            basic_packages
+            packman_packages
+            other_apps
             quarto
-            # postgresql
-            # npm_servers
-            # python
-            #kde_dotfiles
-            # git_repos
+            postgresql
+            npm_servers
+            python
+            wsl_dotfiles
+            git_repos
             ;;
         Q )
             exit
