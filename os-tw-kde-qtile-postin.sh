@@ -90,11 +90,11 @@ basic_desktop_settings(){
     # replace="fmask=133,dmask=022,uid=1000"
     # sudo -S <<< ${mypassword} sed -i "s/${find}/${replace}/g" ${file}
 
-    # # Nastavit HOSTNAME (napr. vimi-probook)
-    # echo "${color}  Enter new HOSTNAME: ${endcolor}"
-    # read myhostname
-    # # nastavi novy HOSTNAME
-    # sudo -S <<< ${mypassword} hostnamectl set-hostname ${myhostname}
+    # Nastavit HOSTNAME (napr. vimi-probook)
+    echo "${color}  Enter new HOSTNAME: ${endcolor}"
+    read myhostname
+    # nastavi novy HOSTNAME
+    sudo -S <<< ${mypassword} hostnamectl set-hostname ${myhostname}
 
     # # Zmena rozlisenia obrazovky ak je pripojeny notebook k TV
     # echo "${color} Resolution TV setup ${endcolor}"
@@ -111,6 +111,9 @@ gnome_settings(){
     # nastavenie scale na 125% a ine mierky - funguje pre gnome wayland
     # potom manualne v settings-displays-scale
     gsettings set org.gnome.mutter experimental-features "['scale-monitor-framebuffer']"
+    
+    #nautilus
+    gsettings set org.gnome.nautilus.preferences show-create-link 'true'
 
     # Nastavenie sklopenia notebooku
     sudo -S <<< ${mypassword} sh -c 'cat > /etc/systemd/logind.conf.d/logind.conf' <<EOF
@@ -370,32 +373,17 @@ appimages(){
 
     info "INSTALL APPMAN APPIMAGES"
     APPIMAGES_PKGS=(
+        'firefox'
         'brave'
         'freetube'
         'onlyoffice'
         'obsidian'
         'vscodium'
         'zen-browser'
-    )
-
-    for PKG in "${APPIMAGES_PKGS[@]}"; do
-        echo "Do you want to install ${PKG}? (y/n)"
-        read -r CONFIRMATION
-        if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
-            echo "Installing ${PKG}"
-            appman -ia ${PKG}
-        else
-            echo "Skipping ${PKG}"
-        fi
-    done
-
-    # not appimages
-    info "INSTALL APPMAN PKGS"
-    APPMAN_PKGS=(
         'zotero'
     )
 
-    for PKG in "${APPMAN_PKGS[@]}"; do
+    for PKG in "${APPIMAGES_PKGS[@]}"; do
         echo "Do you want to install ${PKG}? (y/n)"
         read -r CONFIRMATION
         if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
@@ -409,11 +397,11 @@ appimages(){
 
 other_apps(){
   megasync(){
-      info "MEGASYNC"
       down_url="https://mega.nz/linux/repo/openSUSE_Tumbleweed/x86_64/megasync-openSUSE_Tumbleweed.x86_64.rpm"
       wget ${down_url} -P ${TEMP_DIR}
-
-      sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${TEMP_DIR}/megasync-openSUSE_Tumbleweed.x86_64.rpm
+      
+      # davam iba install, pretoze ma problem s gpt klucmi a musim dat -ignore pocas instalacie
+      sudo zypper install ${TEMP_DIR}/megasync-openSUSE_Tumbleweed.x86_64.rpm
   }
 
   jdownloader(){
@@ -547,6 +535,7 @@ other_apps(){
         IFS=":" read -r func name <<< "$entry"
 
         # Ask the user if they want to install the software
+        info ${name}
         read -p "Do you want to install $name? (y/n): " choice
         case $choice in
             [Yy]* )
@@ -690,14 +679,18 @@ python(){
     info "PYTHON SETUP"
 
     PYTHON_VER='python313'
+    PYTHON_VER_ENV='python3.13'
+    PYTHON_ENV_DIR='$HOME/.py-venv'
+    # zisti ci priecinok existuje
+    [[ ! -d $PYTHON_ENV_DIR ]] && mkdir -p $PYTHON_ENV_DIR
 
     PYTHON_PKGS=(
       # treba len zmenit cislo verzie python podla aktualnej
-    	"${PYTHON_VER}"
+      "${PYTHON_VER}"
       "${PYTHON_VER}-pip"
       "${PYTHON_VER}-ipython"
       "${PYTHON_VER}-devel" # pre funkciu kniznice psycopg2 - prepojenie s postgresql databazou
-      "${PYTHON_VER}-bpython"
+      #"${PYTHON_VER}-bpython"
   )
 
     for PKG in "${PYTHON_PKGS[@]}"; do
@@ -712,40 +705,32 @@ python(){
     done
 
     # env pre web-epipingdesign
-    [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
-
-    ${PYTHON_VER} -m venv $HOME/python-venv/epd-venv
-    source $HOME/python-venv/epd-venv/bin/activate
+    ${PYTHON_VER} -m venv $PYTHON_ENV_DIR/epd-venv
+    source $PYTHON_ENV_DIR/epd-venv/bin/activate
 
     pip3 install --upgrade pip
 
     deactivate
 
     # env pre web-isitobo
-    [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
-
-    ${PYTHON_VER} -m venv $HOME/python-venv/isitobo-venv
-    source $HOME/python-venv/isitobo-venv/bin/activate
+    ${PYTHON_VER_ENV} -m venv $PYTHON_ENV_DIR/isitobo-venv
+    source $PYTHON_ENV_DIR/isitobo-venv/bin/activate
 
     pip3 install --upgrade pip
 
     deactivate
 
     # env pre web-isitobo-test
-    [[ ! -d $HOME/python-venv ]] && mkdir -p $HOME/python-venv
-
-    ${PYTHON_VER} -m venv $HOME/python-venv/isitobo-test-venv
-    source $HOME/python-venv/isitobo-test-venv/bin/activate
+    ${PYTHON_VER_ENV} -m venv $PYTHON_ENV_DIR/isitobo-test-venv
+    source $PYTHON_ENV_DIR/isitobo-test-venv/bin/activate
 
     pip3 install --upgrade pip
 
     deactivate
 
     # Pre neovim - vscodium - yafin - quarto - jupyterlab - molten - image.nvim
-    [[ ! -d $HOME/base-venv ]] && mkdir -p $HOME/base-venv
-
-    ${PYTHON_VER} -m venv $HOME/python-venv/base-venv
-    source $HOME/python-venv/nvim-venv/bin/activate
+    ${PYTHON_VER_ENV} -m venv $HOME/python-venv/base-venv
+    source $PYTHON_ENV_DIR/base-venv/bin/activate
 
     pip3 install --upgrade pip
     pip3 install yahoofinancials # pre moj yafin script
@@ -801,18 +786,19 @@ fonts(){
 }
 
 cursors(){
-    CURSORS_DIR="$HOME/.icons"
-    [[ ! -d ${CURSORS_DIR} ]] && mkdir -p ${CURSORS_DIR}
+    #CURSORS_DIR="$HOME/.icons"
+    #[[ ! -d ${CURSORS_DIR} ]] && mkdir -p ${CURSORS_DIR}
+    # instaluje to do ~/.local/share/icons
 
     info "CURSORS WE10XOS"
     git_url="https://github.com/yeyushengfan258/We10XOS-cursors.git"
     git clone ${git_url} ${TEMP_DIR}/We10XOS-cursors
     cd ${TEMP_DIR}/We10XOS-cursors/ && ./install.sh
 
-    info "CURSORS NORDZY"
-    git_url="https://github.com/alvatip/Nordzy-cursors"
-    git clone ${git_url} ${TEMP_DIR}/Nordzy-cursors
-    cd ${TEMP_DIR}/Nordzy-cursors/ && ./install.sh
+    #info "CURSORS NORDZY"
+    #git_url="https://github.com/alvatip/Nordzy-cursors"
+    #git clone ${git_url} ${TEMP_DIR}/Nordzy-cursors
+    #cd ${TEMP_DIR}/Nordzy-cursors/ && ./install.sh
 
     #     # nefunguje to - treba pouzit lxappearance - nastavi nordzy cursor ako default
     #     mkdir -p ${CURSOR_DIR}/default
@@ -881,6 +867,10 @@ gnome_kde_dotfiles(){
     # Thunderfbird / plati to co firefox
     # ln -sf ~/.dotfiles/thunderbird/extensions $HOME/.thunderbird/*.default-release/extensions
     # ln -sf ~/.dotfiles/thunderbird/prefs.js $HOME/.thunderbird/ovhwieeq.default-release/prefs.js
+    
+    #onedrive autostart - gnome
+    #systemctl --user enable onedrive
+    #systemctl --user start onedrive
 }
 
 qtile_dotfiles(){
@@ -1031,6 +1021,19 @@ EOF
 }
 
 ##########################################################################
+# NPM SERVERS
+##########################################################################
+
+npm_servers(){
+    info "LIVE, SASS SERVERS, "
+    npm i -g live-server
+    npm i -g sass
+    npm i -g tree-sitter-cli # pre vim-matchup
+    # npm i -g bash-language-server
+    # npm i -g vscode-css-languageserver-bin
+}
+
+##########################################################################
 # HLAVNA INSTALACNA FUNKCIA
 ##########################################################################
 
@@ -1044,23 +1047,23 @@ which_distro(){
     case "$distro" in
         g )
             root
-            update_system
-            basic_desktop_settings
-            gnome_settings
-            zsh_config
-            basic_packages
-            desktop_packages
-            packman_packages
-            appimages
-            other_apps
-            quarto
-            postgresql
-            npm_servers
+            #update_system
+            #basic_desktop_settings
+            #gnome_settings
+            #zsh_config
+            #basic_packages
+            #desktop_packages
+            #packman_packages
+            #appimages
+            #other_apps
+            #quarto
+            #postgresql
             python
-            fonts
-            cursors
-            gnome_kde_dotfiles
-            git_repos
+            #fonts
+            #cursors
+            #gnome_kde_dotfiles
+            #git_repos
+            #npm_servers
             ;;
         k )
             root
@@ -1074,12 +1077,12 @@ which_distro(){
             other_apps
             quarto
             postgresql
-            npm_servers
             python
             fonts
             cursors
             gnome_kde_dotfiles
             git_repos
+            npm_servers
             ;;
         q )
             root
@@ -1095,13 +1098,13 @@ which_distro(){
             other_apps
             quarto
             postgresql
-            npm_servers
             python
             fonts
             cursors
             qtile_dotfiles
             git_repos
             qtile_theme
+            npm_servers
             ;;
         w )
             root
@@ -1113,10 +1116,10 @@ which_distro(){
             other_apps
             quarto
             postgresql
-            npm_servers
             python
             wsl_dotfiles
             git_repos
+            npm_servers
             ;;
         Q )
             exit
