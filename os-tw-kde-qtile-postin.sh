@@ -111,7 +111,7 @@ gnome_settings(){
     # nastavenie scale na 125% a ine mierky - funguje pre gnome wayland
     # potom manualne v settings-displays-scale
     gsettings set org.gnome.mutter experimental-features "['scale-monitor-framebuffer']"
-    
+
     #nautilus
     gsettings set org.gnome.nautilus.preferences show-create-link 'true'
 
@@ -399,7 +399,7 @@ other_apps(){
   megasync(){
       down_url="https://mega.nz/linux/repo/openSUSE_Tumbleweed/x86_64/megasync-openSUSE_Tumbleweed.x86_64.rpm"
       wget ${down_url} -P ${TEMP_DIR}
-      
+
       # davam iba install, pretoze ma problem s gpt klucmi a musim dat -ignore pocas instalacie
       sudo zypper install ${TEMP_DIR}/megasync-openSUSE_Tumbleweed.x86_64.rpm
   }
@@ -696,32 +696,32 @@ python(){
     done
 
     # env pre web-epipingdesign
-    ${PYTHON_VER} -m venv $HOME/$PYTHON_ENV_DIR/epd-venv
-    source $HOME/$PYTHON_ENV_DIR/epd-venv/bin/activate
+    ${PYTHON_VER_ENV} -m venv ${HOME}/${PYTHON_ENV_DIR}/epd-venv
+    source $HOME/${PYTHON_ENV_DIR}/epd-venv/bin/activate
 
     pip3 install --upgrade pip
 
     deactivate
 
     # env pre web-isitobo
-    ${PYTHON_VER_ENV} -m venv $HOME/$PYTHON_ENV_DIR/isitobo-venv
-    source $HOME/$PYTHON_ENV_DIR/isitobo-venv/bin/activate
+    ${PYTHON_VER_ENV} -m venv ${HOME}/${PYTHON_ENV_DIR}/isitobo-venv
+    source ${HOME}/${PYTHON_ENV_DIR}/isitobo-venv/bin/activate
 
     pip3 install --upgrade pip
 
     deactivate
 
     # env pre web-isitobo-test
-    ${PYTHON_VER_ENV} -m venv $HOME/$PYTHON_ENV_DIR/isitobo-test-venv
-    source $HOME/$PYTHON_ENV_DIR/isitobo-test-venv/bin/activate
+    ${PYTHON_VER_ENV} -m venv ${HOME}/${PYTHON_ENV_DIR}/isitobo-test-venv
+    source ${HOME}/${PYTHON_ENV_DIR}/isitobo-test-venv/bin/activate
 
     pip3 install --upgrade pip
 
     deactivate
 
     # Pre neovim - vscodium - yafin - quarto - jupyterlab - molten - image.nvim
-    ${PYTHON_VER_ENV} -m venv $HOME/$PYTHON_ENV_DIR/base-venv
-    source $HOME/$PYTHON_ENV_DIR/base-venv/bin/activate
+    ${PYTHON_VER_ENV} -m venv ${HOME}/${PYTHON_ENV_DIR}/base-venv
+    source ${HOME}/${PYTHON_ENV_DIR}/base-venv/bin/activate
 
     pip3 install --upgrade pip
     pip3 install yahoofinancials # pre moj yafin script
@@ -858,7 +858,7 @@ gnome_kde_dotfiles(){
     # Thunderfbird / plati to co firefox
     # ln -sf ~/.dotfiles/thunderbird/extensions $HOME/.thunderbird/*.default-release/extensions
     # ln -sf ~/.dotfiles/thunderbird/prefs.js $HOME/.thunderbird/ovhwieeq.default-release/prefs.js
-    
+
     #onedrive autostart - gnome
     #systemctl --user enable onedrive
     #systemctl --user start onedrive

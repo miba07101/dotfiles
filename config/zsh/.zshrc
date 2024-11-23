@@ -186,7 +186,7 @@ esac
 # $ venv myvirtualenv   # activates venv
 # $ deactivate          # deactivates venv
 # $ rmvenv myvirtualenv # removes venv
-export VENV_HOME="$HOME/python-venv"
+export VENV_HOME="$HOME/.py-venv"
 [[ -d $VENV_HOME ]] || mkdir $VENV_HOME
 
 lsvenv() {
