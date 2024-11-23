@@ -412,12 +412,20 @@ other_apps(){
       sudo -S <<< ${mypassword} zypper ${INSTALL} -y JDownloader2
   }
 
-  birdtray_stacer(){
-      info "BIRDTRAY, STACER"
+  birdtray(){
+      info "BIRDTRAY"
       repourl="https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo"
       sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
       sudo -S <<< ${mypassword} zypper ${REFRESH}
-      sudo -S <<< ${mypassword} zypper ${INSTALL} -y birdtray stacer
+      sudo -S <<< ${mypassword} zypper ${INSTALL} -y birdtray
+  }
+
+  ulauncher(){
+      info "ULAUNCHER"
+      repourl="https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo"
+      sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
+      sudo -S <<< ${mypassword} zypper ${REFRESH}
+      sudo -S <<< ${mypassword} zypper ${INSTALL} -y ulauncher
   }
 
   newsflash(){
@@ -522,7 +530,8 @@ other_apps(){
     software_list=(
                    "megasync:Megasync"
                    "jdownloader:JDownloader 2"
-                   "birdtray_stacer:Birdtray & Stacer"
+                   "birdtray:Birdtray"
+                   "ulauncher:Ulauncher"
                    "newsflash:Newsflash"
                    "ticker:Ticker"
                    "ledger_live:Ledger Live"
