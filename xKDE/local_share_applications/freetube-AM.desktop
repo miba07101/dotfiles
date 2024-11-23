@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=FreeTube
+Exec=/home/vimi/.local/bin/freetube --no-sandbox %U
+Terminal=false
+Type=Application
+Icon=/home/vimi/Applications/freetube/icons/freetube
+StartupWMClass=FreeTube
+X-AppImage-Version=0.22.0
+Comment=A private YouTube client
+MimeType=x-scheme-handler/freetube;
+Categories=Network;

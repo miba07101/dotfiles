@@ -404,6 +404,8 @@ appimages(){
         if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
             echo "Installing ${PKG}"
             appman -i ${PKG}
+            # vytvorenie symlinkov .desktop suborov -> ~/.local/share/applications
+            ln -sf ${CWD}/xKDE/local_share_applications/${PKG}-AM.desktop  ${HOME}/.local/share/applications/${PKG}-AM.desktop
         else
             echo "Skipping ${PKG}"
         fi
@@ -873,7 +875,8 @@ gnome_kde_dotfiles(){
     chmod +x ${CWD}/config/mpv/mpv-single-instance/{mpv-single,mpv-single.desktop}
     ln -sf ${CWD}/config/mpv/mpv-single-instance/mpv-single   ${HOME}/.local/bin/mpv-single
     [[ ! -d $HOME/.local/share/applications ]] && mkdir -p ${HOME}/.local/share/applications
-    cp -rfv ${CWD}/config/mpv/mpv-single-instance/mpv-single.desktop  ${HOME}/.local/share/applications/mpv-single.desktop
+    ln -sf ${CWD}/config/mpv/mpv-single-instance/mpv-single.desktop  ${HOME}/.local/share/applications/mpv-single.desktop
+
 
     # Firefox / najprv treba spustit, aby vytvoril .mozilla....
     # * treba nahradit presnym cislom/oznacenim
