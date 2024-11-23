@@ -135,6 +135,9 @@ gnome_settings(){
     [Login]
     HandleLidSwitch=ignore
 EOF
+
+    # symlinku nvim.desktop aby nvim otvaral priamo vo wezterme -> ~/.local/share/applications
+    ln -sf ${CWD}/xKDE/local_share_applications/nvim.desktop  ${HOME}/.local/share/applications/nvim.desktop
 }
 
 qtile_settings(){
