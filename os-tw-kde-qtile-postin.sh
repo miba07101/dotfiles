@@ -662,15 +662,6 @@ postgresql(){
       esac
 }
 
-npm_servers(){
-    info "LIVE, SASS SERVERS, "
-    npm i -g live-server
-    npm i -g sass
-    npm i -g tree-sitter-cli # pre vim-matchup
-    # npm i -g bash-language-server
-    # npm i -g vscode-css-languageserver-bin
-}
-
 ##########################################################################
 # Python
 ##########################################################################
@@ -680,9 +671,9 @@ python(){
 
     PYTHON_VER='python313'
     PYTHON_VER_ENV='python3.13'
-    PYTHON_ENV_DIR='$HOME/.py-venv'
+    PYTHON_ENV_DIR='.py-venv'
     # zisti ci priecinok existuje
-    [[ ! -d $PYTHON_ENV_DIR ]] && mkdir -p $PYTHON_ENV_DIR
+    [[ ! -d $HOME/$PYTHON_ENV_DIR ]] && mkdir -p $HOME/$PYTHON_ENV_DIR
 
     PYTHON_PKGS=(
       # treba len zmenit cislo verzie python podla aktualnej
@@ -705,32 +696,32 @@ python(){
     done
 
     # env pre web-epipingdesign
-    ${PYTHON_VER} -m venv $PYTHON_ENV_DIR/epd-venv
-    source $PYTHON_ENV_DIR/epd-venv/bin/activate
+    ${PYTHON_VER} -m venv $HOME/$PYTHON_ENV_DIR/epd-venv
+    source $HOME/$PYTHON_ENV_DIR/epd-venv/bin/activate
 
     pip3 install --upgrade pip
 
     deactivate
 
     # env pre web-isitobo
-    ${PYTHON_VER_ENV} -m venv $PYTHON_ENV_DIR/isitobo-venv
-    source $PYTHON_ENV_DIR/isitobo-venv/bin/activate
+    ${PYTHON_VER_ENV} -m venv $HOME/$PYTHON_ENV_DIR/isitobo-venv
+    source $HOME/$PYTHON_ENV_DIR/isitobo-venv/bin/activate
 
     pip3 install --upgrade pip
 
     deactivate
 
     # env pre web-isitobo-test
-    ${PYTHON_VER_ENV} -m venv $PYTHON_ENV_DIR/isitobo-test-venv
-    source $PYTHON_ENV_DIR/isitobo-test-venv/bin/activate
+    ${PYTHON_VER_ENV} -m venv $HOME/$PYTHON_ENV_DIR/isitobo-test-venv
+    source $HOME/$PYTHON_ENV_DIR/isitobo-test-venv/bin/activate
 
     pip3 install --upgrade pip
 
     deactivate
 
     # Pre neovim - vscodium - yafin - quarto - jupyterlab - molten - image.nvim
-    ${PYTHON_VER_ENV} -m venv $HOME/python-venv/base-venv
-    source $PYTHON_ENV_DIR/base-venv/bin/activate
+    ${PYTHON_VER_ENV} -m venv $HOME/$PYTHON_ENV_DIR/base-venv
+    source $HOME/$PYTHON_ENV_DIR/base-venv/bin/activate
 
     pip3 install --upgrade pip
     pip3 install yahoofinancials # pre moj yafin script
@@ -765,8 +756,8 @@ python(){
 ##########################################################################
 
 fonts(){
-    FONTS_DIR="$HOME/.local/share/fonts"
-    [[ ! -d ${FONTS_DIR} ]] && mkdir -p ${FONTS_DIR}
+    FONTS_DIR=".local/share/fonts"
+    [[ ! -d $HOME/${FONTS_DIR} ]] && mkdir -p $HOME/${FONTS_DIR}
 
     info "HACK NERD FONTS"
     git_url="https://github.com/ryanoasis/nerd-fonts/releases/latest"
