@@ -115,6 +115,21 @@ gnome_settings(){
     #nautilus
     gsettings set org.gnome.nautilus.preferences show-create-link 'true'
 
+    # keybidings
+    gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "['<Control>space']"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys home "['<Super>e']"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys www "['<Super>b']"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys calculator "['<Super>c']"
+    gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>v']"
+    gsettings set org.gnome.shell.keybindings email "['<Super>m']"
+
+    ## terminal musim nastavit manualne:
+    ## settings -> keyboard -> keyboard shortcuts -> custom shortcuts -> name: wezterm, comannd: wezterm, shortcut: super+enter
+    ## pre ulancher (iba ak wayland):
+    ## https://github.com/Ulauncher/Ulauncher/wiki/Hotkey-In-Wayland
+    ## v ulaucher nastavim hoci co, napr alt+u
+    ## potom: settings ... custom shortcuts -> name: ulauncher, comand: ulauncher-toggle, shortcut: alt+space
+
     # Nastavenie sklopenia notebooku
     sudo -S <<< ${mypassword} sh -c 'cat > /etc/systemd/logind.conf.d/logind.conf' <<EOF
     [Login]
@@ -410,6 +425,9 @@ other_apps(){
       sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
       sudo -S <<< ${mypassword} zypper ${REFRESH}
       sudo -S <<< ${mypassword} zypper ${INSTALL} -y JDownloader2
+
+      ## velkost pisma v jdownloader:
+      ## advanced settings -> search: fonts -> scale 150
   }
 
   birdtray(){
