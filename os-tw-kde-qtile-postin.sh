@@ -932,6 +932,7 @@ qtile_dotfiles(){
     ln -sf ${CWD}/config/rofi                   ${HOME}/.config/rofi
     ln -sf ${CWD}/config/sioyek                 ${HOME}/.config/sioyek
     ln -sf ${CWD}/config/zsh/.zshrc             ${HOME}/.config/zsh/.zshrc
+    ln -sf ${CWD}/config/zsh/.zshenv            ${HOME}/.config/zsh/.zshenv
     ln -sf ${CWD}/config/starship.toml          ${HOME}/.config/starship.toml
     ln -sf ${CWD}/config/mimeapps.list          ${HOME}/.config/mimeapps.list
 
