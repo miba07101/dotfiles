@@ -105,95 +105,6 @@ basic_desktop_settings(){
 
 }
 
-gnome_settings(){
-    info "GNOME SETTINGS"
-
-    # nastavenie scale na 125% a ine mierky - funguje pre gnome wayland
-    # potom manualne v settings-displays-scale
-    gsettings set org.gnome.mutter experimental-features "['scale-monitor-framebuffer']"
-
-    #nautilus
-    gsettings set org.gnome.nautilus.preferences show-create-link 'true'
-
-    # keybidings
-    gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "['<Control>space']"
-    gsettings set org.gnome.settings-daemon.plugins.media-keys home "['<Super>e']"
-    gsettings set org.gnome.settings-daemon.plugins.media-keys www "['<Super>b']"
-    gsettings set org.gnome.settings-daemon.plugins.media-keys calculator "['<Super>c']"
-    gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>v']"
-    gsettings set org.gnome.shell.keybindings email "['<Super>m']"
-
-    ## terminal musim nastavit manualne:
-    ## settings -> keyboard -> keyboard shortcuts -> custom shortcuts -> name: wezterm, comannd: wezterm, shortcut: super+enter
-    ## pre ulancher (iba ak wayland):
-    ## https://github.com/Ulauncher/Ulauncher/wiki/Hotkey-In-Wayland
-    ## v ulaucher nastavim hoci co, napr alt+u
-    ## potom: settings ... custom shortcuts -> name: ulauncher, comand: ulauncher-toggle, shortcut: alt+space
-
-    # Nastavenie sklopenia notebooku
-    sudo -S <<< ${mypassword} sh -c 'cat > /etc/systemd/logind.conf.d/logind.conf' <<EOF
-    [Login]
-    HandleLidSwitch=ignore
-EOF
-
-    # symlinku nvim.desktop aby nvim otvaral priamo vo wezterme -> ~/.local/share/applications
-    ln -sf ${CWD}/xKDE/local_share_applications/nvim.desktop  ${HOME}/.local/share/applications/nvim.desktop
-}
-
-qtile_settings(){
-    info "QTILE SETTINGS"
-    # Zmena "text mode" na "graphical mode" pre boot systemu
-    sudo -S <<< ${mypassword} systemctl set-default graphical.target
-
-    # AutoLogin LightDM
-    sudo -S <<< ${mypassword} sh -c 'cat > /etc/lightdm/lightdm.conf' <<EOF
-    [Seat:*]
-    autologin-user=vimi
-EOF
-
-    # Nastavenie TouchPadu pre natural scrolling
-    sudo -S <<< ${mypassword} sh -c 'cat > /etc/X11/xorg.conf.d/30-touchpad.conf' <<EOF
-    Section "InputClass"
-    Identifier "touchpad"
-    MatchIsTouchpad "on"
-    Option "NaturalScrolling" "true"
-    Option "Tapping" "on"
-    EndSection
-EOF
-
-    # Dunst notification
-    sudo -S <<< ${mypassword} sh -c 'cat > /usr/lib/systemd/user/dunst.service' <<EOF
-    [Unit]
-    Description=Dunst notification daemon
-    Documentation=man:dunst(1)
-    PartOf=graphical-session.target
-
-    [Service]
-    Type=dbus
-    BusName=org.freedesktop.Notifications
-    ExecStart=/usr/bin/dunst
-    Environment=DISPLAY=:0
-EOF
-
-    # Nastavenie sklopenia notebooku
-    sudo -S <<< ${mypassword} sh -c "echo 'HandleLidSwitch=ignore' >> /etc/systemd/logind.conf"
-}
-
-wsl_settings(){
-    info "WSL SETTINGS"
-    # pre povolenie systemd - v /etc/wsl.conf ma byt [boot] systemd=true
-    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_base
-    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_systemd
-    # pre spustanie gui aplikacii, napr. gedit ...
-    # https://en.opensuse.org/openSUSE:WSL?ref=its-foss
-    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_gui
-
-    # umozni pouzivat win prikazy, napr. powershell.exe aj pri spustenom systemd
-    sudo -S <<< ${mypassword} sh -c 'cat > /usr/lib/binfmt.d/WSLInterop.conf' <<EOF
-    :WSLInterop:M::MZ::/init:PF
-EOF
-}
-
 zsh_config(){
     info "ZSH SETUP"
     sudo -S <<< ${mypassword} zypper ${INSTALL} -y zsh
@@ -818,6 +729,7 @@ cursors(){
     git clone ${git_url} ${TEMP_DIR}/We10XOS-cursors
     cd ${TEMP_DIR}/We10XOS-cursors/ && ./install.sh
 
+
     #info "CURSORS NORDZY"
     #git_url="https://github.com/alvatip/Nordzy-cursors"
     #git clone ${git_url} ${TEMP_DIR}/Nordzy-cursors
@@ -1059,6 +971,175 @@ npm_servers(){
 }
 
 ##########################################################################
+# Setups
+##########################################################################
+
+gnome_setup(){
+    info "GNOME SETUP"
+
+    # nastavenie scale na 125% a ine mierky - funguje pre gnome wayland
+    # potom manualne v settings-displays-scale
+    # gsettings set org.gnome.mutter experimental-features "['scale-monitor-framebuffer']"
+
+    # scaling fonts factor (lepsie vyzera ako 125%)
+    gsettings set org.gnome.desktop.interface text-scaling-factor '1.25'
+
+    # nautilus
+    gsettings set org.gnome.nautilus.preferences show-create-link 'true'
+
+    # power setup
+    gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
+    gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-timeout '3600'
+
+    # fonts
+    gsettings set org.gnome.desktop.interface font-name 'Roboto 10'
+    gsettings set org.gnome.desktop.interface document-font-name 'Roboto 10'
+    gsettings set org.gnome.desktop.wm.preferences titlebar-font 'Roboto 10'
+
+    # close, minimize buttons
+    gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
+
+    # cursor
+    gsettings set org.gnome.desktop.interface cursor-theme 'We10XOS-cursors'
+
+    # keybidings
+    gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "['<Control>space']"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys home "['<Super>e']"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys www "['<Super>b']"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys calculator "['<Super>c']"
+    gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>v']"
+    gsettings set org.gnome.shell.keybindings email "['<Super>m']"
+
+    ## terminal musim nastavit manualne:
+    ## settings -> keyboard -> keyboard shortcuts -> custom shortcuts -> name: wezterm, comannd: wezterm, shortcut: super+enter
+    ## pre ulancher (iba ak wayland):
+    ## https://github.com/Ulauncher/Ulauncher/wiki/Hotkey-In-Wayland
+    ## v ulaucher nastavim hoci co, napr alt+u
+    ## potom: settings ... custom shortcuts -> name: ulauncher, comand: ulauncher-toggle, shortcut: alt+space
+
+    # Nastavenie sklopenia notebooku
+    sudo -S <<< ${mypassword} sh -c 'cat > /etc/systemd/logind.conf.d/logind.conf' <<EOF
+    [Login]
+    HandleLidSwitch=ignore
+EOF
+
+    # symlink nvim.desktop aby nvim otvaral priamo vo wezterme -> ~/.local/share/applications
+    ln -sf ${CWD}/xKDE/local_share_applications/nvim.desktop  ${HOME}/.local/share/applications/nvim.desktop
+
+    # adwaita-colors icons
+    # https://github.com/dpejoh/Adwaita-colors
+    info "ADWAITA COLORS ICONS"
+    git_url="https://github.com/dpejoh/Adwaita-colors"
+    git clone ${git_url} ${TEMP_DIR}/
+    cp -r ${TEMP_DIR}/Adwaita-colors/* ${HOME}/.local/share/icons/
+
+    # MoreWaita icons
+    # https://github.com/somepaulo/MoreWaita
+    info "MoreWaita ICONS"
+    git_url="https://github.com/somepaulo/MoreWaita.git"
+    git clone ${git_url} ${TEMP_DIR}/
+    cd ${TEMP_DIR}/MoreWaita && .instal.sh
+
+    # activation icon theme
+    # gsettings set org.gnome.desktop.interface icon-theme 'Adwaita-yellow'
+    gsettings set org.gnome.desktop.interface icon-theme 'MoreWaita'
+
+    # changing folder colors
+    gio set ${HOME}/Videos metadata::custom-icon \
+       file:////home/vimi/.local/share/icons/Adwaita-purple/scalable/places/folder-videos.svg
+    gio set ${HOME}/Downloads metadata::custom-icon \
+       file:////home/vimi/.local/share/icons/Adwaita-green/scalable/places/folder-download.svg
+
+    # install extensions
+    info "INSTALL EXTENSIONS"
+    EXT_DIR=".local/share/gnome-shell/extensions"
+    [[ ! -d ${HOME}/${EXT_DIR} ]] && mkdir -p ${HOME}/${EXT_DIR}
+
+    EXTENSIONS=(
+      'tiling-assistant@leleat-on-github.shell-extension:github.com/Leleat/Tiling-Assistant'
+      'appindicatorsupport@rgcjonas.gmail.com:github.com/ubuntu/gnome-shell-extension-appindicator'
+      'mock-tray@kramo.page.shell-extension:github.com/kra-mo/mock-tray'
+      'auto-adwaita-colors@celiopy:github.com/celiopy/auto-adwaita-colors'
+    )
+
+    for EXT in "${EXTENSIONS[@]}"; do
+        IFS=":" read -r name url <<< "$EXT"
+
+        echo "Do you want to install ${name}? (y/n)"
+        read -r CONFIRMATION
+        if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
+            echo "Installing ${name}"
+
+            git_url="https://${url}/releases/latest"
+            latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
+            latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
+            down_url="https://${url}/releases/download/${latest_version}/${name}.zip"
+            wget ${down_url} -P ${TEMP_DIR}
+
+            gnome-extensions install --force "${TEMP_DIR}/${name}.zip"
+
+        else
+            echo "Skipping ${name}"
+        fi
+    done
+
+}
+
+qtile_setup(){
+    info "QTILE SETUP"
+    # Zmena "text mode" na "graphical mode" pre boot systemu
+    sudo -S <<< ${mypassword} systemctl set-default graphical.target
+
+    # AutoLogin LightDM
+    sudo -S <<< ${mypassword} sh -c 'cat > /etc/lightdm/lightdm.conf' <<EOF
+    [Seat:*]
+    autologin-user=vimi
+EOF
+
+    # Nastavenie TouchPadu pre natural scrolling
+    sudo -S <<< ${mypassword} sh -c 'cat > /etc/X11/xorg.conf.d/30-touchpad.conf' <<EOF
+    Section "InputClass"
+    Identifier "touchpad"
+    MatchIsTouchpad "on"
+    Option "NaturalScrolling" "true"
+    Option "Tapping" "on"
+    EndSection
+EOF
+
+    # Dunst notification
+    sudo -S <<< ${mypassword} sh -c 'cat > /usr/lib/systemd/user/dunst.service' <<EOF
+    [Unit]
+    Description=Dunst notification daemon
+    Documentation=man:dunst(1)
+    PartOf=graphical-session.target
+
+    [Service]
+    Type=dbus
+    BusName=org.freedesktop.Notifications
+    ExecStart=/usr/bin/dunst
+    Environment=DISPLAY=:0
+EOF
+
+    # Nastavenie sklopenia notebooku
+    sudo -S <<< ${mypassword} sh -c "echo 'HandleLidSwitch=ignore' >> /etc/systemd/logind.conf"
+}
+
+wsl_setup(){
+    info "WSL SETUP"
+    # pre povolenie systemd - v /etc/wsl.conf ma byt [boot] systemd=true
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_base
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_systemd
+    # pre spustanie gui aplikacii, napr. gedit ...
+    # https://en.opensuse.org/openSUSE:WSL?ref=its-foss
+    sudo -S <<< ${mypassword} zypper ${INSTALL} -y -t pattern wsl_gui
+
+    # umozni pouzivat win prikazy, napr. powershell.exe aj pri spustenom systemd
+    sudo -S <<< ${mypassword} sh -c 'cat > /usr/lib/binfmt.d/WSLInterop.conf' <<EOF
+    :WSLInterop:M::MZ::/init:PF
+EOF
+}
+
+##########################################################################
 # HLAVNA INSTALACNA FUNKCIA
 ##########################################################################
 
@@ -1074,7 +1155,6 @@ which_distro(){
             root
             #update_system
             #basic_desktop_settings
-            #gnome_settings
             #zsh_config
             #basic_packages
             #desktop_packages
@@ -1083,12 +1163,13 @@ which_distro(){
             #other_apps
             #quarto
             #postgresql
-            python
+            # python
             #fonts
             #cursors
             #gnome_kde_dotfiles
             #git_repos
             #npm_servers
+            gnome_setup
             ;;
         k )
             root
@@ -1113,7 +1194,6 @@ which_distro(){
             root
             update_system
             basic_desktop_settings
-            qtile_settings
             zsh_config
             basic_packages
             qtile_packages
@@ -1130,11 +1210,11 @@ which_distro(){
             git_repos
             qtile_theme
             npm_servers
+            qtile_setup
             ;;
         w )
             root
             update_system
-            wsl_settings
             zsh_config
             basic_packages
             packman_packages
@@ -1145,6 +1225,7 @@ which_distro(){
             wsl_dotfiles
             git_repos
             npm_servers
+            wsl_setup
             ;;
         Q )
             exit
