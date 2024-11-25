@@ -193,6 +193,9 @@ qtile_packages(){
         'hack-fonts'
         'newsboat' # rss reader aj youtube reader
         'intel-hybrid-driver' # nie som isty ucinkom
+        # for theme appearance
+        'lxappearance'
+        'qt5ct'
     )
 
     for PKG in "${QTILE_PKGS[@]}"; do
@@ -695,22 +698,43 @@ python(){
 }
 
 ##########################################################################
-# Fonts, cursors
+# Fonts, cursors, icons
 ##########################################################################
 
 fonts(){
+    info "FONTS INSTALL"
     FONTS_DIR=".local/share/fonts"
     [[ ! -d $HOME/${FONTS_DIR} ]] && mkdir -p $HOME/${FONTS_DIR}
 
-    info "HACK NERD FONTS"
-    git_url="https://github.com/ryanoasis/nerd-fonts/releases/latest"
-    latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
-    latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
-    down_url="https://github.com/ryanoasis/nerd-fonts/releases/download/${latest_version}/Hack.zip"
+    fonts_list=(
+      "Hack:hack nerd fonts"
+      "CascadiaCode:Cascadia code nerd fonts"
+    )
 
-    wget ${down_url} -P ${FONTS_DIR}
-    unzip ${FONTS_DIR}/Hack.zip -d ${FONTS_DIR}
-    rm ${FONTS_DIR}/Hack.zip
+    for font in "${fonts_list[@]}"; do
+        IFS=":" read -r font_name font_desc <<< "$font"
+
+        info ${font_name}
+        read -p "Do you want to install ${font_name}? (y/n): " choice
+        case ${choice} in
+            [Yy]* )
+                git_url="https://github.com/ryanoasis/nerd-fonts/releases/latest"
+                latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
+                latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
+                down_url="https://github.com/ryanoasis/nerd-fonts/releases/download/${latest_version}/${font_name}.zip"
+
+                wget ${down_url} -P ${FONTS_DIR}
+                unzip ${FONTS_DIR}/${font_name}.zip -d ${FONTS_DIR}
+                rm ${FONTS_DIR}/${font_name}.zip
+                ;;
+            [Nn]* )
+                echo "${font_name} will not be installed."
+                ;;
+            * )
+                echo "Invalid input, skipping ${font_name}."
+                ;;
+        esac
+    done
 
     info "WINDOWS FONTS"
     7z x -y ${CWD}/win-fonts/win-fonts.7z.001 -o${FONTS_DIR}
@@ -720,29 +744,42 @@ fonts(){
 }
 
 cursors(){
-    #CURSORS_DIR="$HOME/.icons"
-    #[[ ! -d ${CURSORS_DIR} ]] && mkdir -p ${CURSORS_DIR}
-    # instaluje to do ~/.local/share/icons
+    info "CURSORS INSTALL"
+    read -p "Which icon theme install?\n [1]WE10XOS, [2]Nordzy, [3]Both : " choice
 
-    info "CURSORS WE10XOS"
-    git_url="https://github.com/yeyushengfan258/We10XOS-cursors.git"
-    git clone ${git_url} ${TEMP_DIR}/We10XOS-cursors
-    cd ${TEMP_DIR}/We10XOS-cursors/ && ./install.sh
+    install_cursor() {
+        local name="$1"
+        local url="$2"
+        info "${name} CURSORS"
+        git clone ${url} ${TEMP_DIR}
+        cd ${TEMP_DIR}/${name} && ./install.sh
+    }
 
+    case ${choice} in
+        [1]* )
+            install_cursor "We10XOS-cursors" "https://github.com/yeyushengfan258/We10XOS-cursors.git"
+            ;;
+        [2]* )
+            install_cursor "Nordzy-hypercursors" "https://github.com/guillaumeboehm/Nordzy-hyprcursors"
+            ;;
+        [3]* )
+            install_cursor "We10XOS-cursors" "https://github.com/yeyushengfan258/We10XOS-cursors.git"
+            install_cursor "Nordzy-hypercursors" "https://github.com/guillaumeboehm/Nordzy-hyprcursors"
+            ;;
 
-    #info "CURSORS NORDZY"
-    #git_url="https://github.com/alvatip/Nordzy-cursors"
-    #git clone ${git_url} ${TEMP_DIR}/Nordzy-cursors
-    #cd ${TEMP_DIR}/Nordzy-cursors/ && ./install.sh
+        * )
+            echo "Invalid input, skipping."
+            ;;
+    esac
+}
 
-    #     # nefunguje to - treba pouzit lxappearance - nastavi nordzy cursor ako default
-    #     mkdir -p ${CURSOR_DIR}/default
-    #     cat > ${CURSOR_DIR}/default/index.theme <<EOF
-    #     [Icon Theme]
-    #     Name=Default
-    #     Comment=Default Cursor Theme
-    #     Inherits=Nordzy-cursors-white
-    # EOF
+icons(){
+    # TELA icons
+    ICONS_DIR="$HOME/.local/share/icons"
+    [[ ! -d ${ICONS_DIR} ]] && mkdir -p ${ICONS_DIR}
+    git_url="https://github.com/vinceliuice/Tela-icon-theme.git"
+    git clone ${git_url} ${TEMP_DIR}/Tela-icon-theme
+    ${TEMP_DIR}/Tela-icon-theme/./install.sh
 
 }
 
@@ -936,28 +973,6 @@ git_repos(){
 }
 
 ##########################################################################
-# Theme
-##########################################################################
-
-qtile_theme(){
-    info "THEME INSTALL"
-    sudo -S <<< ${mypassword} zypper ${INSTALL} --no-recommends -y lxappearance qt5ct
-
-    # Vytvori environment variable pre qt5ct
-    sudo -S <<< ${mypassword} sh -c 'cat > /etc/environment' <<EOF
-    QT_QPA_PLATFORMTHEME=qt5ct
-EOF
-
-    # TELA icons
-    ICONS_DIR="$HOME/.local/share/icons"
-    [[ ! -d ${ICONS_DIR} ]] && mkdir -p ${ICONS_DIR}
-    git_url="https://github.com/vinceliuice/Tela-icon-theme.git"
-    git clone ${git_url} ${TEMP_DIR}/Tela-icon-theme
-    ${TEMP_DIR}/Tela-icon-theme/./install.sh
-
-}
-
-##########################################################################
 # NPM SERVERS
 ##########################################################################
 
@@ -1085,6 +1100,8 @@ EOF
 
 }
 
+# kde_setup(){}
+
 qtile_setup(){
     info "QTILE SETUP"
     # Zmena "text mode" na "graphical mode" pre boot systemu
@@ -1122,6 +1139,11 @@ EOF
 
     # Nastavenie sklopenia notebooku
     sudo -S <<< ${mypassword} sh -c "echo 'HandleLidSwitch=ignore' >> /etc/systemd/logind.conf"
+
+    # Vytvori environment variable pre qt5ct
+    sudo -S <<< ${mypassword} sh -c 'cat > /etc/environment' <<EOF
+    QT_QPA_PLATFORMTHEME=qt5ct
+EOF
 }
 
 wsl_setup(){
@@ -1166,6 +1188,7 @@ which_distro(){
             # python
             #fonts
             #cursors
+            #icons
             #gnome_kde_dotfiles
             #git_repos
             #npm_servers
@@ -1186,9 +1209,11 @@ which_distro(){
             python
             fonts
             cursors
+            icons
             gnome_kde_dotfiles
             git_repos
             npm_servers
+            kde_setup
             ;;
         q )
             root
@@ -1206,9 +1231,9 @@ which_distro(){
             python
             fonts
             cursors
+            icons
             qtile_dotfiles
             git_repos
-            qtile_theme
             npm_servers
             qtile_setup
             ;;
