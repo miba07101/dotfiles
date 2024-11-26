@@ -745,7 +745,7 @@ fonts(){
 
 cursors(){
     info "CURSORS INSTALL"
-    read -p "Which icon theme install?\n [1]WE10XOS, [2]Nordzy, [3]Both : " choice
+    read -p "Which cursors install?\n [1]WE10XOS, [2]Nordzy, [3]All : " choice
 
     install_cursor() {
         local name="$1"
@@ -774,13 +774,49 @@ cursors(){
 }
 
 icons(){
-    # TELA icons
+    info "ICONS INSTALL"
+    read -p "Which icon theme install?\n [1]Adwaita-colors, [2]MoreWaita, [3]Tela-icon, [4]All : " choice
+
     ICONS_DIR="$HOME/.local/share/icons"
     [[ ! -d ${ICONS_DIR} ]] && mkdir -p ${ICONS_DIR}
-    git_url="https://github.com/vinceliuice/Tela-icon-theme.git"
-    git clone ${git_url} ${TEMP_DIR}/Tela-icon-theme
-    ${TEMP_DIR}/Tela-icon-theme/./install.sh
 
+    install_icons() {
+        local choice="$1"
+        local name="$2"
+        local url="$3"
+        info "${name} ICONS"
+        git clone ${url} ${TEMP_DIR}
+        case ${choice} in
+          [1]* )
+              cd ${TEMP_DIR}/${name} && ./install.sh
+              ;;
+          [2]* )
+              cp -r ${TEMP_DIR}/${name}/* ${HOME}/.local/share/icons/
+              ;;
+             * )
+              ;;
+        esac
+    }
+
+    case ${choice} in
+        [1]* )
+            install_icons "2" "Adwaita-colors" "https://github.com/dpejoh/Adwaita-colors"
+            ;;
+        [2]* )
+            install_icons "1" "MoreWaita" "https://github.com/dpejoh/Adwaita-colors"
+            ;;
+        [3]* )
+            install_icons "1" "Tela-icon-theme" "https://github.com/somepaulo/MoreWaita.git"
+            ;;
+        [4]* )
+            install_icons "2" "Adwaita-colors" "https://github.com/dpejoh/Adwaita-colors"
+            install_icons "1" "MoreWaita" "https://github.com/dpejoh/Adwaita-colors"
+            install_icons "1" "Tela-icon-theme" "https://github.com/vinceliuice/Tela-icon-theme.git"
+            ;;
+        * )
+            echo "Invalid input, skipping."
+            ;;
+    esac
 }
 
 ##########################################################################
@@ -1032,6 +1068,10 @@ gnome_setup(){
     ## v ulaucher nastavim hoci co, napr alt+u
     ## potom: settings ... custom shortcuts -> name: ulauncher, comand: ulauncher-toggle, shortcut: alt+space
 
+    # change default terminal
+    sudo mv /usr/bin/gnome-terminal /usr/bin/gnome-terminal.bak
+    sudo ln -s /usr/bin/wezterm /usr/bin/gnome-terminal
+
     # Nastavenie sklopenia notebooku
     sudo -S <<< ${mypassword} sh -c 'cat > /etc/systemd/logind.conf.d/logind.conf' <<EOF
     [Login]
@@ -1040,20 +1080,6 @@ EOF
 
     # symlink nvim.desktop aby nvim otvaral priamo vo wezterme -> ~/.local/share/applications
     ln -sf ${CWD}/xKDE/local_share_applications/nvim.desktop  ${HOME}/.local/share/applications/nvim.desktop
-
-    # adwaita-colors icons
-    # https://github.com/dpejoh/Adwaita-colors
-    info "ADWAITA COLORS ICONS"
-    git_url="https://github.com/dpejoh/Adwaita-colors"
-    git clone ${git_url} ${TEMP_DIR}/
-    cp -r ${TEMP_DIR}/Adwaita-colors/* ${HOME}/.local/share/icons/
-
-    # MoreWaita icons
-    # https://github.com/somepaulo/MoreWaita
-    info "MoreWaita ICONS"
-    git_url="https://github.com/somepaulo/MoreWaita.git"
-    git clone ${git_url} ${TEMP_DIR}/
-    cd ${TEMP_DIR}/MoreWaita && .instal.sh
 
     # activation icon theme
     # gsettings set org.gnome.desktop.interface icon-theme 'Adwaita-yellow'
@@ -1098,6 +1124,13 @@ EOF
         fi
     done
 
+    # wezterm in nautilus
+    # zyprm nautilus-extension-terminal
+    # zypin python311-nautilus
+    # zypin nautilus-open-any-terminal
+    # gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal wezterm
+    # sudo glib-compile-schemas /usr/share/glib-2.0/schemas
+    # nauzypin tilus -q
 }
 
 # kde_setup(){}
