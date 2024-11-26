@@ -35,6 +35,7 @@ info(){
 REFRESH='--gpg-auto-import-keys refresh'
 UPDATE='--non-interactive dist-upgrade --auto-agree-with-licenses'
 INSTALL='--ignore-unknown install --auto-agree-with-licenses --allow-unsigned-rpm --allow-vendor-change --allow-downgrade'
+REMOVE='remove --no-confirm --clean-deps'
 
 ##########################################################################
 # Settings
@@ -125,6 +126,7 @@ basic_packages(){
         'starship'
         'eza'
         'fd'
+        'fzf'
         'tealdeer' # tldr pre man pages
         'curl'
         'yt-dlp' # stahovanie youtube videi
@@ -1028,6 +1030,12 @@ npm_servers(){
 gnome_setup(){
     info "GNOME SETUP"
 
+    # Nastavenie sklopenia notebooku
+    sudo -S <<< ${mypassword} sh -c 'cat > /etc/systemd/logind.conf.d/logind.conf' <<EOF
+    [Login]
+    HandleLidSwitch=ignore
+EOF
+
     # nastavenie scale na 125% a ine mierky - funguje pre gnome wayland
     # potom manualne v settings-displays-scale
     # gsettings set org.gnome.mutter experimental-features "['scale-monitor-framebuffer']"
@@ -1050,9 +1058,6 @@ gnome_setup(){
     # close, minimize buttons
     gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
 
-    # cursor
-    gsettings set org.gnome.desktop.interface cursor-theme 'We10XOS-cursors'
-
     # keybidings
     gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "['<Control>space']"
     gsettings set org.gnome.settings-daemon.plugins.media-keys home "['<Super>e']"
@@ -1069,17 +1074,22 @@ gnome_setup(){
     ## potom: settings ... custom shortcuts -> name: ulauncher, comand: ulauncher-toggle, shortcut: alt+space
 
     # change default terminal
-    sudo mv /usr/bin/gnome-terminal /usr/bin/gnome-terminal.bak
-    sudo ln -s /usr/bin/wezterm /usr/bin/gnome-terminal
+    # sudo mv /usr/bin/gnome-terminal /usr/bin/gnome-terminal.bak
+    # sudo ln -s /usr/bin/wezterm /usr/bin/gnome-terminal
 
-    # Nastavenie sklopenia notebooku
-    sudo -S <<< ${mypassword} sh -c 'cat > /etc/systemd/logind.conf.d/logind.conf' <<EOF
-    [Login]
-    HandleLidSwitch=ignore
-EOF
+    # wezterm in nautilus
+    sudo -S <<< ${mypassword} zypper ${REMOVE} nautilus-extension-terminal
+    sudo -S <<< ${mypassword} zypper ${INSTALL} python311-nautilus
+    sudo -S <<< ${mypassword} zypper ${INSTALL} nautilus-open-any-terminal
+    gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal wezterm
+    sudo -S <<< ${mypassword} glib-compile-schemas /usr/share/glib-2.0/schemas
+    nautilus -q
 
     # symlink nvim.desktop aby nvim otvaral priamo vo wezterme -> ~/.local/share/applications
     ln -sf ${CWD}/xKDE/local_share_applications/nvim.desktop  ${HOME}/.local/share/applications/nvim.desktop
+
+    # cursor
+    gsettings set org.gnome.desktop.interface cursor-theme 'We10XOS-cursors'
 
     # activation icon theme
     # gsettings set org.gnome.desktop.interface icon-theme 'Adwaita-yellow'
@@ -1123,14 +1133,6 @@ EOF
             echo "Skipping ${name}"
         fi
     done
-
-    # wezterm in nautilus
-    # zyprm nautilus-extension-terminal
-    # zypin python311-nautilus
-    # zypin nautilus-open-any-terminal
-    # gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal wezterm
-    # sudo glib-compile-schemas /usr/share/glib-2.0/schemas
-    # nauzypin tilus -q
 }
 
 # kde_setup(){}
