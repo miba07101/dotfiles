@@ -1137,10 +1137,13 @@ EOF
     EXT_DIR=".local/share/gnome-shell/extensions"
     [[ ! -d ${HOME}/${EXT_DIR} ]] && mkdir -p ${HOME}/${EXT_DIR}
 
+    # pre Vitals extension
+    sudo -S <<< ${mypassword} zypper ${INSTALL} libgtop-devel
+
     EXTENSIONS=(
       'tiling-assistant@leleat-on-github.shell-extension:github.com/Leleat/Tiling-Assistant'
-      'appindicatorsupport@rgcjonas.gmail.com:github.com/ubuntu/gnome-shell-extension-appindicator'
       'vitals:github.com/corecoding/Vitals'
+      'appindicatorsupport@rgcjonas.gmail.com:github.com/ubuntu/gnome-shell-extension-appindicator'
       'mock-tray@kramo.page.shell-extension:github.com/kra-mo/mock-tray'
       'auto-adwaita-colors@celiopy:github.com/celiopy/auto-adwaita-colors'
     )
