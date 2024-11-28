@@ -97,6 +97,12 @@ basic_desktop_settings(){
     # nastavi novy HOSTNAME
     sudo -S <<< ${mypassword} hostnamectl set-hostname ${myhostname}
 
+    # SLOW FIREFOX at startup
+    sudo -S <<< ${mypassword} sh -c 'cat >> /etc/hosts' <<EOF
+    127.0.1.1   ${myhostname}
+EOF
+
+
     # # Zmena rozlisenia obrazovky ak je pripojeny notebook k TV
     # echo "${color} Resolution TV setup ${endcolor}"
     # resTV_file="/usr/share/sddm/scripts/Xsetup"
@@ -126,9 +132,6 @@ EOF
     System Volume Information
     \$RECYCLE.BIN
 EOF
-
-
-
 }
 
 zsh_config(){
@@ -303,7 +306,7 @@ packman_packages(){
     # opi codecs
 }
 
-appimages(){
+appman_apps(){
     info "INSTALL APPMAN"
     # Install depencies
     APPMAN_DPC=(
@@ -330,8 +333,8 @@ appimages(){
     # remove appman installer
     rm -f AM-INSTALLER
 
-    info "INSTALL APPMAN APPIMAGES"
-    APPIMAGES_PKGS=(
+    info "INSTALL APPMAN APPS"
+    APPMAN_APPS=(
         'firefox'
         'brave'
         'freetube'
@@ -340,18 +343,20 @@ appimages(){
         'vscodium'
         'zen-browser'
         'zotero'
+        'ollama'
+        'emacs'
     )
 
-    for PKG in "${APPIMAGES_PKGS[@]}"; do
-        echo "Do you want to install ${PKG}? (y/n)"
+    for APP in "${APPMAN_APPS[@]}"; do
+        echo "Do you want to install ${APP}? (y/n)"
         read -r CONFIRMATION
         if [[ ${CONFIRMATION} =~ ^[Yy]$ ]]; then
-            echo "Installing ${PKG}"
-            appman -i ${PKG}
+            echo "Installing ${APP}"
+            appman -i ${APP}
             # vytvorenie symlinkov .desktop suborov -> ~/.local/share/applications
-            ln -sf ${CWD}/xKDE/local_share_applications/${PKG}-AM.desktop  ${HOME}/.local/share/applications/${PKG}-AM.desktop
+            ln -sf ${CWD}/xKDE/local_share_applications/${APP}-AM.desktop  ${HOME}/.local/share/applications/${APP}-AM.desktop
         else
-            echo "Skipping ${PKG}"
+            echo "Skipping ${APP}"
         fi
     done
 }
@@ -489,72 +494,106 @@ other_apps(){
       npm run electron &
   }
 
+  quarto(){
+      info "QUARTO"
 
-    # Array to store function names and corresponding software names
-    software_list=(
-                   "megasync:Megasync"
-                   "jdownloader:JDownloader 2"
-                   "birdtray:Birdtray"
-                   "ulauncher:Ulauncher"
-                   "newsflash:Newsflash"
-                   "ticker:Ticker"
-                   "ledger_live:Ledger Live"
-                   "salome_meca:Salome Meca"
-                   "chia_blockchain:Chia Blockchain"
-                 )
+      read -p "Do you want to install Quarto? (y/n): " choice
+          case $choice in
+              [Yy]* )
+                  # download tarball
+                  git_url="https://github.com/quarto-dev/quarto-cli/releases/latest"
+                  latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
+                  latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
+                  down_url="https://github.com/quarto-dev/quarto-cli/releases/download/${latest_version}/quarto-${latest_version#v}-linux-amd64.tar.gz"
+                  wget ${down_url} -P ${TEMP_DIR}
 
-    # Loop through the software list
-    for entry in "${software_list[@]}"; do
-        IFS=":" read -r func name <<< "$entry"
+                  # exctract files
+                  [[ ! -d $HOME/quarto ]] && mkdir -p $HOME/quarto
+                  tar -C $HOME/quarto -xvzf ${TEMP_DIR}/quarto*.tar.gz
 
-        # Ask the user if they want to install the software
-        info ${name}
-        read -p "Do you want to install $name? (y/n): " choice
+                  # create symlink
+                  [[ ! -d $HOME/bin ]] && mkdir -p $HOME/bin
+                  ln -s $HOME/quarto/quarto*/bin/quarto $HOME/bin/quarto
+
+                  # Ensure that the folder where you created a symlink is in the path. For example:
+                  # ( echo ""; echo 'export PATH=$PATH:~/bin\n' ; echo "" ) >> ~/.profile
+                  # source ~/.profile
+
+                  # install tinytex
+                  quarto install tinytex
+
+                  # Check The Installation
+                  # quarto check
+                  ;;
+              [Nn]* )
+                  echo "Quarto will not be installed."
+                  ;;
+              * )
+                  echo "Invalid input, skipping Quarto."
+                  ;;
+          esac
+  }
+
+  postgresql(){
+    info "PostgreSQL"
+    read -p "Do you want to install PostgreSQL? (y/n): " choice
         case $choice in
             [Yy]* )
-                # Call the corresponding nested function
-                $func
-                ;;
-            [Nn]* )
-                echo "$name will not be installed."
-                ;;
-            * )
-                echo "Invalid input, skipping $name."
-                ;;
-        esac
-    done
-}
+                  PKG_pg=(
+                      'postgresql'
+                      'postgresql-server'
+                      'postgresql-contrib'
+                      'postgresql-devel'
+                      'postgresql-server-devel'
+                      'postgresql-plpython'
+                  )
 
-quarto(){
-    info "QUARTO"
+                  for PKG in "${PKG_pg[@]}"; do
+                      echo "Installing ${PKG}"
+                      sleep 1
+                      sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
+                  done
 
-    read -p "Do you want to install Quarto? (y/n): " choice
-        case $choice in
-            [Yy]* )
-                # download tarball
-                git_url="https://github.com/quarto-dev/quarto-cli/releases/latest"
-                latest_release=$(curl -L -s -H 'Accept: application/json' ${git_url})
-                latest_version=$(echo ${latest_release} | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
-                down_url="https://github.com/quarto-dev/quarto-cli/releases/download/${latest_version}/quarto-${latest_version#v}-linux-amd64.tar.gz"
-                wget ${down_url} -P ${TEMP_DIR}
+                  if [ $WSL -eq 1 ]
+                  then
+                      # tu to zastane aby som zadal heslo
+                      echo
+                      echo "ENTER Postgres password: "
+                      sudo passwd postgres
 
-                # exctract files
-                [[ ! -d $HOME/quarto ]] && mkdir -p $HOME/quarto
-                tar -C $HOME/quarto -xvzf ${TEMP_DIR}/quarto*.tar.gz
+                      # Create postgreSQL data directory
+                      sudo -S <<< ${mypassword} mkdir /usr/lib/postgresql15/data
+                      sudo -S <<< ${mypassword} chown postgres:postgres /usr/lib/postgresql15/data
 
-                # create symlink
-                [[ ! -d $HOME/bin ]] && mkdir -p $HOME/bin
-                ln -s $HOME/quarto/quarto*/bin/quarto $HOME/bin/quarto
+                      # inicializuje postgresql databazu
+                      # sudo -i -u postgres -c '/usr/lib/postgresql15/bin/initdb -D /usr/lib/postgresql15/data/'
 
-                # Ensure that the folder where you created a symlink is in the path. For example:
-                # ( echo ""; echo 'export PATH=$PATH:~/bin\n' ; echo "" ) >> ~/.profile
-                # source ~/.profile
+                      # tymto spustim postgresql server
+                      # sudo -i -u postgres -c '/usr/lib/postgresql15/bin/pg_ctl -D /usr/lib/postgresql15/data/ -l logfile start'
 
-                # install tinytex
-                quarto install tinytex
+                      # Postup manualny zo zdrojoveho kodu:
+                      # https://www.thegeekstuff.com/2009/04/linux-postgresql-install-and-configure-from-source/
 
-                # Check The Installation
-                # quarto check
+                      # # Prida Enviroment variable
+                      # sudo -S <<< ${mypassword} sh -c 'cat >/etc/profile' <<EOF
+                      # # PostgreSQL
+                      # PATH=/usr/local/pgsql/bin:$PATH
+                      # export PATH
+                      # EOF
+                  else
+                      # inicializuje postgresql databazu
+                      sudo -S <<< ${mypassword} systemctl enable postgresql
+                      sudo -S <<< ${mypassword} systemctl start postgresql
+
+                      # tu to zastane aby som zadal heslo
+                      echo
+                      echo "ENTER Postgres password: "
+                      sudo passwd postgres
+
+                      # Manualne - vytvorenie uzivatela vimi
+                      # sudo su postgres
+                      # psql -c "CREATE ROLE vimi LOGIN CREATEDB PASSWORD '8992';"
+                  fi
                 ;;
             [Nn]* )
                 echo "Quarto will not be installed."
@@ -563,76 +602,43 @@ quarto(){
                 echo "Invalid input, skipping Quarto."
                 ;;
         esac
-}
+  }
 
-postgresql(){
-  info "PostgreSQL"
-  read -p "Do you want to install PostgreSQL? (y/n): " choice
+  # Array to store function names and corresponding software names
+  software_list=(
+                 "megasync:Megasync"
+                 "jdownloader:JDownloader 2"
+                 "birdtray:Birdtray"
+                 "ulauncher:Ulauncher"
+                 "newsflash:Newsflash"
+                 "ticker:Ticker"
+                 "ledger_live:Ledger Live"
+                 "salome_meca:Salome Meca"
+                 "chia_blockchain:Chia Blockchain"
+                 "quarto:Quarto"
+                 "postgresql:PostgreSQL"
+               )
+
+  # Loop through the software list
+  for entry in "${software_list[@]}"; do
+      IFS=":" read -r func name <<< "$entry"
+
+      # Ask the user if they want to install the software
+      info ${name}
+      read -p "Do you want to install $name? (y/n): " choice
       case $choice in
           [Yy]* )
-                PKG_pg=(
-                    'postgresql'
-                    'postgresql-server'
-                    'postgresql-contrib'
-                    'postgresql-devel'
-                    'postgresql-server-devel'
-                    'postgresql-plpython'
-                )
-
-                for PKG in "${PKG_pg[@]}"; do
-                    echo "Installing ${PKG}"
-                    sleep 1
-                    sudo -S <<< ${mypassword} zypper ${INSTALL} -y ${PKG}
-                done
-
-                if [ $WSL -eq 1 ]
-                then
-                    # tu to zastane aby som zadal heslo
-                    echo
-                    echo "ENTER Postgres password: "
-                    sudo passwd postgres
-
-                    # Create postgreSQL data directory
-                    sudo -S <<< ${mypassword} mkdir /usr/lib/postgresql15/data
-                    sudo -S <<< ${mypassword} chown postgres:postgres /usr/lib/postgresql15/data
-
-                    # inicializuje postgresql databazu
-                    # sudo -i -u postgres -c '/usr/lib/postgresql15/bin/initdb -D /usr/lib/postgresql15/data/'
-
-                    # tymto spustim postgresql server
-                    # sudo -i -u postgres -c '/usr/lib/postgresql15/bin/pg_ctl -D /usr/lib/postgresql15/data/ -l logfile start'
-
-                    # Postup manualny zo zdrojoveho kodu:
-                    # https://www.thegeekstuff.com/2009/04/linux-postgresql-install-and-configure-from-source/
-
-                    # # Prida Enviroment variable
-                    # sudo -S <<< ${mypassword} sh -c 'cat >/etc/profile' <<EOF
-                    # # PostgreSQL
-                    # PATH=/usr/local/pgsql/bin:$PATH
-                    # export PATH
-                    # EOF
-                else
-                    # inicializuje postgresql databazu
-                    sudo -S <<< ${mypassword} systemctl enable postgresql
-                    sudo -S <<< ${mypassword} systemctl start postgresql
-
-                    # tu to zastane aby som zadal heslo
-                    echo
-                    echo "ENTER Postgres password: "
-                    sudo passwd postgres
-
-                    # Manualne - vytvorenie uzivatela vimi
-                    # sudo su postgres
-                    # psql -c "CREATE ROLE vimi LOGIN CREATEDB PASSWORD '8992';"
-                fi
+              # Call the corresponding nested function
+              $func
               ;;
           [Nn]* )
-              echo "Quarto will not be installed."
+              echo "$name will not be installed."
               ;;
           * )
-              echo "Invalid input, skipping Quarto."
+              echo "Invalid input, skipping $name."
               ;;
       esac
+  done
 }
 
 ##########################################################################
@@ -1134,6 +1140,7 @@ EOF
     EXTENSIONS=(
       'tiling-assistant@leleat-on-github.shell-extension:github.com/Leleat/Tiling-Assistant'
       'appindicatorsupport@rgcjonas.gmail.com:github.com/ubuntu/gnome-shell-extension-appindicator'
+      'vitals:github.com/corecoding/Vitals'
       'mock-tray@kramo.page.shell-extension:github.com/kra-mo/mock-tray'
       'auto-adwaita-colors@celiopy:github.com/celiopy/auto-adwaita-colors'
     )
@@ -1227,7 +1234,7 @@ EOF
 
 which_distro(){
     echo
-    printf "${color}Which distro install?\[g]nome, [k]de, [q]tile, [w]sl, [Q]uit:${endcolor}\n"
+    printf "${color}Which distro install?\n[g]nome, [k]de, [q]tile, [w]sl, [Q]uit:${endcolor}\n"
     # info "Which distro install?\n[w]sl, [q]tile, [k]de, [Q]uit: "
     read -n 1 distro
     echo
@@ -1241,10 +1248,8 @@ which_distro(){
             #basic_packages
             #desktop_packages
             #packman_packages
-            #appimages
+            # appman_apps
             #other_apps
-            #quarto
-            #postgresql
             # python
             #fonts
             #cursors
@@ -1262,10 +1267,8 @@ which_distro(){
             basic_packages
             desktop_packages
             packman_packages
-            appimages
+            appman_apps
             other_apps
-            quarto
-            postgresql
             python
             fonts
             cursors
@@ -1284,10 +1287,8 @@ which_distro(){
             qtile_packages
             desktop_packages
             packman_packages
-            appimages
+            appman_apps
             other_apps
-            quarto
-            postgresql
             python
             fonts
             cursors
@@ -1304,8 +1305,6 @@ which_distro(){
             basic_packages
             packman_packages
             other_apps
-            quarto
-            postgresql
             python
             wsl_dotfiles
             git_repos
