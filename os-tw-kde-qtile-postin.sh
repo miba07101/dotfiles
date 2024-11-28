@@ -104,6 +104,31 @@ basic_desktop_settings(){
     # # HDMI-0 je vystup pre TV, LVDS - je vystup obrazovky notebooku
     # echo xrandr --output HDMI-0 --primary --mode 1920x1080 --output LVDS --off | sudo tee -a ${resTV_file}
 
+    # Pripojenie zdielaneho disku na sieti z vimi-jonsbo pc
+    # 1) vytvorim subor s prihlasovanim na vimi-jonsbo pc
+    touch ${HOME}/.wincredentials
+    sh -c 'cat > ${HOME}/.wincredentials' <<EOF
+        username=vimi
+        password=8992
+EOF
+    # 2) vytvorim priecinok pre pripojenie zdielaneho disku D
+    mkdir ${HOME}/Windows
+
+    # 3) permanentne prihlasovanie disku
+    # cat >> - znamena ze prida na koniec, cat > - znamena ze prepise cely subor
+    sudo -S <<< ${mypassword} sh -c 'cat >> /etc/fstab' <<EOF
+    //192.168.0.91/d /home/vimi/Windows cifs credentials=/home/vimi/.wincredentials 0 0
+EOF
+
+    # 4) aby som schoval windows systemove subory
+    sudo -S <<< ${mypassword} touch ${HOME}/Windows/.hidden
+    sudo -S <<< ${mypassword} sh -c 'cat > /home/vimi/Windows/.hidden' <<EOF
+    System Volume Information
+    \$RECYCLE.BIN
+EOF
+
+
+
 }
 
 zsh_config(){
