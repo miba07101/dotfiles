@@ -1,0 +1,177 @@
+{
+// -----------------------------------------------------------------------
+// General UI settings
+// -----------------------------------------------------------------------
+    "workbench.startupEditor": "none",
+    "workbench.activityBar.location": "bottom",
+    "window.menuBarVisibility": "toggle",
+    "workbench.layoutControl.enabled": false,
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "editor.minimap.enabled": false,
+    "workbench.colorCustomizations": {
+        "notebook.focusedCellBorder": "#7E9CD8",
+        "[Kanagawa Lotus]": {
+            "debugToolBar.background": "#DCD7BA",
+            "dropdown.background": "#DCD7BA",
+            "dropdown.border": "#DCD7BA",
+            "editorBracketMatch.background": "#DCD7BA",
+            "editorGroup.border": "#DCD7BA",
+            "editorGroupHeader.tabsBackground": "#FEFEFA",
+            "input.background": "#DCD7BA",
+            "menubar.selectionBackground": "#DCD7BA",
+            "menu.border": "#DCD7BA",
+            "menu.selectionBackground": "#DCD7BA",
+            "panel.border": "#DCD7BA",
+            "sideBar.border": "#DCD7BA",
+            "terminal.border": "#DCD7BA",
+            "textBlockQuote.border": "#DCD7BA",
+            "tab.inactiveBackground": "#EDEBDA",
+            "editor.background": "#FEFEFA",
+            "editorInlayHint.background": "#FEFEFA",
+            "editorCursor.background": "#FEFEFA",
+            "editorHoverWidget.background": "#FEFEFA",
+            "editorWhitespace.foreground": "#FEFEFA",
+            "editorWidget.background": "#FEFEFA",
+            "panelSectionHeader.background": "#FEFEFA",
+            "sideBar.background": "#FEFEFA",
+            "statusBar.noFolderBackground": "#FEFEFA",
+            "tab.unfocusedHoverBackground": "#FEFEFA",
+            "terminal.background": "#FEFEFA",
+            "textBlockQuote.background": "#FEFEFA",
+            "titleBar.inactiveBackground": "#FEFEFA",
+            "walkThrough.embeddedEditorBackground": "#FEFEFA",
+            "activityBar.background": "#EDEBDA",
+            "badge.background": "#EDEBDA",
+            "button.background": "#EDEBDA",
+            "editorHoverWidget.border": "#EDEBDA",
+            "editorIndentGuide.background1": "#EDEBDA",
+            "list.focusBackground": "#EDEBDA",
+            "list.inactiveSelectionBackground": "#EDEBDA",
+            "peekViewEditor.background": "#EDEBDA",
+            "scrollbarSlider.activeBackground": "#EDEBDA80",
+            "tab.activeBackground": "#DCD7BA",
+            "tab.border": "#EDEBDA",
+            "editor.lineHighlightBackground": "#EDEBDA",
+            "editor.wordHighlightBackground": "#EDEBDA40",
+            "editor.wordHighlightStrongBackground": "#EDEBDA40",
+            "editor.selectionHighlightBackground": "#EDEBDA80",
+            "editorIndentGuide.activeBackground1": "#EDEBDA",
+            "editorMarkerNavigation.background": "#EDEBDA",
+            "list.activeSelectionBackground": "#EDEBDA",
+            "list.hoverBackground": "#EDEBDA",
+            "menu.background": "#EDEBDA",
+            "peekViewResult.background": "#EDEBDA",
+            "scrollbar.shadow": "#EDEBDA",
+            "settings.focusedRowBackground": "#EDEBDA",
+            "sideBarSectionHeader.background": "#EDEBDA",
+            "statusBarItem.hoverBackground": "#EDEBDA",
+            "tab.hoverBackground": "#EDEBDA",
+            "titleBar.activeBackground": "#FEFEFA"
+        },
+        "statusBar.background": "#8FBCBB",
+        "statusBar.noFolderBackground": "#8FBCBB",
+        "statusBar.debuggingBackground": "#8FBCBB",
+        "statusBar.foreground": "#434C5E",
+        "statusBar.debuggingForeground": "#434C5E"
+    },
+    "editor.tokenColorCustomizations": {
+        "[Kanagawa Lotus]": {
+        "textMateRules": [
+            {
+            "name": "Comment",
+            "scope": ["comment", "punctuation.definition.comment"],
+            "settings": {
+                "foreground": "#717C7C",
+                "fontStyle": "italic"
+            }
+            }
+        ]
+        },
+        "[Kanagawa Wave]": {
+        "textMateRules": [
+            {
+            "name": "Comment",
+            "scope": ["comment", "punctuation.definition.comment"],
+            "settings": {
+                "fontStyle": "italic"
+            }
+            }
+        ]
+        }
+    },
+    "editor.fontFamily": "Hack Nerd Font",
+    "editor.fontSize": 14,
+    // "workbench.preferredLightColorTheme":"Default Light+",
+    "workbench.preferredLightColorTheme": "Kanagawa Lotus",
+    "workbench.preferredDarkColorTheme": "Kanagawa Wave",
+    "zenMode.centerLayout": false,
+    "zenMode.hideLineNumbers": false,
+    "zenMode.fullScreen": false,
+    "zenMode.hideActivityBar": true,
+//-------------------------------------------------------------------
+// VIM
+//-------------------------------------------------------------------
+    // Settings
+    "vim.autoindent": true,
+    "vim.hlsearch": true,
+    "vim.incsearch": true,
+    "vim.foldfix": true,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    // Keybindings
+    "vim.leader": "<space>",
+    "vim.insertModeKeyBindings": [
+        {
+            "before": ["i","i"],
+            "after": ["<Esc>"]
+        }
+    ],
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": ["<leader>c"],
+            "after": ["gcc"],
+        },
+        {
+            "before": ["<Esc>"],
+            "commands": [":nohl"]
+        },
+        // show the command palette, and don't show the message on the status bar
+        {
+            "before": [":"],
+            "commands": [
+                "workbench.action.showCommands",
+            ],
+            "silent": true
+        }
+    ],
+    "vim.handleKeys": {
+        "<C-b>": false,
+        "<C-f>": false
+    },
+    // Extensions
+    "vim.easymotion": true,
+    "vim.surround": true,
+    "vim.sneak": true,
+    "vim.statusBarColorControl": true,
+    "vim.statusBarColors.normal": ["#8FBCBB", "#434C5E"],
+    "vim.statusBarColors.insert": "#ffffff",
+    "vim.statusBarColors.visual": "#B48EAD",
+    "vim.statusBarColors.visualline": "#A3BE8C",
+    "vim.statusBarColors.visualblock": "#A3BE8C",
+    "vim.statusBarColors.replace": "#D08770",
+    "vim.statusBarColors.commandlineinprogress": "#007ACC",
+    "vim.statusBarColors.searchinprogressmode": "#007ACC",
+    "vim.statusBarColors.easymotionmode": "#007ACC",
+    "vim.statusBarColors.easymotioninputmode": "#007ACC",
+    "vim.statusBarColors.surroundinputmode": "#007ACC",
+    // To improve performance
+    "extensions.experimental.affinity": {
+        "vscodiumvim.vim": 1
+        },
+//-------------------------------------------------------------------
+// OTHERS
+//-------------------------------------------------------------------
+    "notebook.cellFocusIndicator": "border",
+    "workbench.colorTheme": "Kanagawa Lotus",
+}
