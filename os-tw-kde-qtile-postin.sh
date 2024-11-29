@@ -340,7 +340,7 @@ appman_apps(){
         'freetube'
         'onlyoffice'
         'obsidian'
-        'vscodium'
+        # 'vscodium'
         'zen-browser'
         'zotero'
         'ollama'
@@ -361,7 +361,23 @@ appman_apps(){
     done
 }
 
+      codium --install-extension piousdeer.adwaita-theme
 other_apps(){
+  vscodium(){
+      sudo -S <<< ${mypassword} rpmkeys --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
+      printf "[gitlab.com_paulcarroty_vscodium_repo]\nname=gitlab.com_paulcarroty_vscodium_repo\nbaseurl=https://download.vscodium.com/rpms/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg\nmetadata_expire=1h" | sudo -S <<< ${mypassword} tee -a /etc/zypp/repos.d/vscodium.repo
+      sudo -S <<< ${mypassword} zypper ${INSTALL} -y codium
+
+      # install extensions
+      codium --install-extension metaphore.kanagawa-vscode-color-theme
+      codium --install-extension piousdeer.adwaita-theme
+      codium --install-extension vscodevim.vim
+      codium --install-extension ms-python.python
+      codium --install-extension ms-toolsai.jupyter
+      # codium --install-extension Continue.continue # ai for ollama
+      codium --install-extension charliermarsh.ruff # linters, formatters for python
+  }
+
   megasync(){
       down_url="https://mega.nz/linux/repo/openSUSE_Tumbleweed/x86_64/megasync-openSUSE_Tumbleweed.x86_64.rpm"
       wget ${down_url} -P ${TEMP_DIR}
@@ -606,6 +622,7 @@ other_apps(){
 
   # Array to store function names and corresponding software names
   software_list=(
+                 "vscodium:Vscodium"
                  "megasync:Megasync"
                  "jdownloader:JDownloader 2"
                  "birdtray:Birdtray"
@@ -871,26 +888,27 @@ gnome_kde_dotfiles(){
     done
 
     #vytvorim symlinky
-    ln -sf ${CWD}/config/wezterm/colors         ${HOME}/.config/wezterm/colors
-    ln -sf ${CWD}/config/wezterm/wezterm.lua    ${HOME}/.config/wezterm/wezterm.lua
-    ln -sf ${CWD}/config/mpv/scripts            ${HOME}/.config/mpv/scripts
-    ln -sf ${CWD}/config/mpv/input.conf         ${HOME}/.config/mpv/input.conf
-    ln -sf ${CWD}/config/mpv/mpv.conf           ${HOME}/.config/mpv/mpv.conf
+    ln -sf ${CWD}/config/wezterm/colors             ${HOME}/.config/wezterm/colors
+    ln -sf ${CWD}/config/wezterm/wezterm.lua        ${HOME}/.config/wezterm/wezterm.lua
+    ln -sf ${CWD}/config/mpv/scripts                ${HOME}/.config/mpv/scripts
+    ln -sf ${CWD}/config/mpv/input.conf             ${HOME}/.config/mpv/input.conf
+    ln -sf ${CWD}/config/mpv/mpv.conf               ${HOME}/.config/mpv/mpv.conf
 
-    ln -sf ${CWD}/config/nvim/init.lua          ${HOME}/.config/nvim/init.lua
-    ln -sf ${CWD}/config/nvim/lua               ${HOME}/.config/nvim/lua
-    ln -sf ${CWD}/config/nvim/after             ${HOME}/.config/nvim/after
-    ln -sf ${CWD}/config/nvim/snippets          ${HOME}/.config/nvim/snippets
-    # ln -sf ${CWD}/config/ranger                 ${HOME}/.config/ranger
-    ln -sf ${CWD}/config/zsh/.zshrc             ${HOME}/.config/zsh/.zshrc
-    ln -sf ${CWD}/config/zsh/.zshenv            ${HOME}/.config/zsh/.zshenv
-    ln -sf ${CWD}/config/starship.toml          ${HOME}/.config/starship.toml
+    ln -sf ${CWD}/config/VSCodium/settings.json     ${HOME}/.config/VSCodium/User/settings.json
+    ln -sf ${CWD}/config/VSCodium/keybindings.json  ${HOME}/.config/VSCodium/User/keybindings.json
+    ln -sf ${CWD}/config/nvim/lua                   ${HOME}/.config/nvim/lua
+    ln -sf ${CWD}/config/nvim/after                 ${HOME}/.config/nvim/after
+    ln -sf ${CWD}/config/nvim/snippets              ${HOME}/.config/nvim/snippets
+    ln -sf ${CWD}/config/ranger                     ${HOME}/.config/ranger
+    ln -sf ${CWD}/config/zsh/.zshrc                 ${HOME}/.config/zsh/.zshrc
+    ln -sf ${CWD}/config/zsh/.zshenv                ${HOME}/.config/zsh/.zshenv
+    ln -sf ${CWD}/config/starship.toml              ${HOME}/.config/starship.toml
 
-    ln -sf ${CWD}/home/.bashrc                  ${HOME}/.bashrc
-    ln -sf ${CWD}/home/.ticker.yaml             ${HOME}/.ticker.yaml
-    ln -sf ${CWD}/home/.zprofile                ${HOME}/.zprofile
-    ln -sf ${CWD}/home/.npmrc                   ${HOME}/.npmrc
-    ln -sf ${CWD}/.gitconfig                    ${HOME}/.gitconfig
+    ln -sf ${CWD}/home/.bashrc                      ${HOME}/.bashrc
+    ln -sf ${CWD}/home/.ticker.yaml                 ${HOME}/.ticker.yaml
+    ln -sf ${CWD}/home/.zprofile                    ${HOME}/.zprofile
+    ln -sf ${CWD}/home/.npmrc                       ${HOME}/.npmrc
+    ln -sf ${CWD}/.gitconfig                        ${HOME}/.gitconfig
 
     # MPV single instance
     chmod +x ${CWD}/config/mpv/mpv-single-instance/{mpv-single,mpv-single.desktop}
@@ -945,6 +963,8 @@ qtile_dotfiles(){
     ln -sf ${CWD}/config/mpv/input.conf         ${HOME}/.config/mpv/input.conf
     ln -sf ${CWD}/config/mpv/mpv.conf           ${HOME}/.config/mpv/mpv.conf
 
+    ln -sf ${CWD}/config/VSCodium/settings.json     ${HOME}/.config/VSCodium/User/settings.json
+    ln -sf ${CWD}/config/VSCodium/keybindings.json  ${HOME}/.config/VSCodium/User/keybindings.json
     ln -sf ${CWD}/config/nvim/init.lua          ${HOME}/.config/nvim/init.lua
     ln -sf ${CWD}/config/nvim/lua               ${HOME}/.config/nvim/lua
     ln -sf ${CWD}/config/nvim/after             ${HOME}/.config/nvim/after
@@ -1143,7 +1163,6 @@ EOF
     EXTENSIONS=(
       'tiling-assistant@leleat-on-github.shell-extension:github.com/Leleat/Tiling-Assistant'
       'vitals:github.com/corecoding/Vitals'
-      'appindicatorsupport@rgcjonas.gmail.com:github.com/ubuntu/gnome-shell-extension-appindicator'
       'mock-tray@kramo.page.shell-extension:github.com/kra-mo/mock-tray'
       'auto-adwaita-colors@celiopy:github.com/celiopy/auto-adwaita-colors'
     )

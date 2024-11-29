@@ -35,7 +35,6 @@
             "editorWidget.background": "#FEFEFA",
             "panelSectionHeader.background": "#FEFEFA",
             "sideBar.background": "#FEFEFA",
-            "statusBar.noFolderBackground": "#FEFEFA",
             "tab.unfocusedHoverBackground": "#FEFEFA",
             "terminal.background": "#FEFEFA",
             "textBlockQuote.background": "#FEFEFA",
@@ -65,15 +64,14 @@
             "scrollbar.shadow": "#EDEBDA",
             "settings.focusedRowBackground": "#EDEBDA",
             "sideBarSectionHeader.background": "#EDEBDA",
-            "statusBarItem.hoverBackground": "#EDEBDA",
             "tab.hoverBackground": "#EDEBDA",
             "titleBar.activeBackground": "#FEFEFA"
         },
-        "statusBar.background": "#8FBCBB",
-        "statusBar.noFolderBackground": "#8FBCBB",
-        "statusBar.debuggingBackground": "#8FBCBB",
-        "statusBar.foreground": "#434C5E",
-        "statusBar.debuggingForeground": "#434C5E"
+        "statusBar.background": "#67217A",
+        "statusBar.noFolderBackground": "#67217A",
+        "statusBar.debuggingBackground": "#67217A",
+        "statusBar.foreground": "#FFFFFF",
+        "statusBar.debuggingForeground": "#FFFFFF"
     },
     "editor.tokenColorCustomizations": {
         "[Kanagawa Lotus]": {
@@ -118,7 +116,7 @@
     "vim.incsearch": true,
     "vim.foldfix": true,
     "vim.useSystemClipboard": true,
-    "vim.useCtrlKeys": true,
+    "vim.useCtrlKeys": false,
     // Keybindings
     "vim.leader": "<space>",
     "vim.insertModeKeyBindings": [
@@ -154,17 +152,17 @@
     "vim.surround": true,
     "vim.sneak": true,
     "vim.statusBarColorControl": true,
-    "vim.statusBarColors.normal": ["#8FBCBB", "#434C5E"],
-    "vim.statusBarColors.insert": "#ffffff",
-    "vim.statusBarColors.visual": "#B48EAD",
-    "vim.statusBarColors.visualline": "#A3BE8C",
-    "vim.statusBarColors.visualblock": "#A3BE8C",
-    "vim.statusBarColors.replace": "#D08770",
-    "vim.statusBarColors.commandlineinprogress": "#007ACC",
-    "vim.statusBarColors.searchinprogressmode": "#007ACC",
-    "vim.statusBarColors.easymotionmode": "#007ACC",
-    "vim.statusBarColors.easymotioninputmode": "#007ACC",
-    "vim.statusBarColors.surroundinputmode": "#007ACC",
+    "vim.statusBarColors.normal": ["#67217A", "#FFFFFF"],
+    "vim.statusBarColors.insert": "#007ACD",
+    "vim.statusBarColors.visual": "#427B00",
+    "vim.statusBarColors.visualline": "#427B00",
+    "vim.statusBarColors.visualblock": "#427B00",
+    "vim.statusBarColors.replace": "#FF8800",
+    "vim.statusBarColors.commandlineinprogress": "#007ACD",
+    "vim.statusBarColors.searchinprogressmode": "#007ACD",
+    "vim.statusBarColors.easymotionmode": "#007ACD",
+    "vim.statusBarColors.easymotioninputmode": "#007ACD",
+    "vim.statusBarColors.surroundinputmode": "#007ACD",
     // To improve performance
     "extensions.experimental.affinity": {
         "vscodiumvim.vim": 1
@@ -174,4 +172,6 @@
 //-------------------------------------------------------------------
     "notebook.cellFocusIndicator": "border",
     "workbench.colorTheme": "Kanagawa Lotus",
+    "continue.enableTabAutocomplete": false,
+    "python.defaultInterpreterPath": "/bin/python3.13",
 }

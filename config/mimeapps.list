@@ -58,22 +58,3 @@ video/3gp=mpv-single.desktop
 video/3gpp=mpv-single.desktop
 video/3gpp2=mpv-single.desktop
 video/mov=mpv-single.desktop
-x-scheme-handler/http=brave-browser.desktop
-x-scheme-handler/https=brave-browser.desktop
-x-scheme-handler/chrome=firefox.desktop
-text/html=brave-browser.desktop
-application/x-extension-htm=firefox.desktop
-application/x-extension-html=firefox.desktop
-application/x-extension-shtml=firefox.desktop
-application/xhtml+xml=firefox.desktop
-application/x-extension-xhtml=firefox.desktop
-application/x-extension-xht=firefox.desktop
-x-scheme-handler/about=brave-browser.desktop
-x-scheme-handler/unknown=brave-browser.desktop
-x-scheme-handler/mailto=userapp-Thunderbird-IBGHY1.desktop
-message/rfc822=userapp-Thunderbird-IBGHY1.desktop
-x-scheme-handler/mid=userapp-Thunderbird-IBGHY1.desktop
-
-[Added Associations]
-x-scheme-handler/mailto=userapp-Thunderbird-IBGHY1.desktop;
-x-scheme-handler/mid=userapp-Thunderbird-IBGHY1.desktop;

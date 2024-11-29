@@ -160,7 +160,8 @@ qrp() {
 }
 
 # Ollama Ai
-alias ai='ollama run codellama'
+alias olr='ollama run qwen2.5-coder:1.5b'
+alias ols='ollama stop qwen2.5-coder:1.5b'
 
 # Recording
 alias rec='$SCRIPTS_DIR./stream_record_linux.sh'
