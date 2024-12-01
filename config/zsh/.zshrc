@@ -239,8 +239,8 @@ bindkey -s '^[v' 'cava^M'
 # STARSHIP
 #############
 
-case $isWSL in
-    1)
+# case $isWSL in
+#     1)
         # zistim nazov distribucie
         _distro=$(awk '/^ID=/' /etc/*-release | awk -F'=' '{ print tolower($2) }')
 
@@ -257,8 +257,9 @@ case $isWSL in
             *gentoo*)                ICON="" ;;
             *mageia*)                ICON="" ;;
             *centos*)                ICON="" ;;
-                #   *opensuse*)              ICON="" ;;
-            *opensuse*|*tumbleweed*) ICON="﮼" ;;
+            # *opensuse*)              ICON="" ;;
+            # *opensuse*|*tumbleweed*) ICON="﮼" ;;
+            *opensuse*|*tumbleweed*) ICON="" ;;
             *sabayon*)               ICON="" ;;
             *slackware*)             ICON="" ;;
             *linuxmint*)             ICON="" ;;
@@ -272,8 +273,8 @@ case $isWSL in
         esac
 
         export STARSHIP_DISTRO="$ICON  "
-        ;;
-esac
+        # ;;
+# esac
 
 # potrebne pre spustenie Starshipu
 eval "$(starship init zsh)"

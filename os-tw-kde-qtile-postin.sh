@@ -397,6 +397,13 @@ other_apps(){
       ## advanced settings -> search: fonts -> scale 150
   }
 
+  vdhcoapp(){
+    # desktop app pre firefox,brave doplnok video download helper
+    # install location ~/.local/share/vdhcoapp
+    # pouzitie aj na update vhdcoapp
+    curl -sSLf https://github.com/aclap-dev/vdhcoapp/releases/latest/download/install.sh | bash
+  }
+
   birdtray(){
       info "BIRDTRAY"
       repourl="https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo"
@@ -625,6 +632,7 @@ other_apps(){
                  "vscodium:Vscodium"
                  "megasync:Megasync"
                  "jdownloader:JDownloader 2"
+                 "vdhcoapp:VideoDownloadHelper coapp"
                  "birdtray:Birdtray"
                  "ulauncher:Ulauncher"
                  "newsflash:Newsflash"
@@ -903,6 +911,7 @@ gnome_kde_dotfiles(){
     ln -sf ${CWD}/config/zsh/.zshrc                 ${HOME}/.config/zsh/.zshrc
     ln -sf ${CWD}/config/zsh/.zshenv                ${HOME}/.config/zsh/.zshenv
     ln -sf ${CWD}/config/starship.toml              ${HOME}/.config/starship.toml
+    ln -sf ${CWD}/config/mimeapps.list          ${HOME}/.config/mimeapps.list
 
     ln -sf ${CWD}/home/.bashrc                      ${HOME}/.bashrc
     ln -sf ${CWD}/home/.ticker.yaml                 ${HOME}/.ticker.yaml
