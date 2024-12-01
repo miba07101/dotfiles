@@ -13,7 +13,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- Save, Quit, Reload
-map("n", "S", ":w<cr>", { desc = "Save" })
+map("n", "<C-s>", ":w<cr>", { desc = "Save" })
 map("n", "W", ":wq<cr>", { desc = "Save-Quit" })
 map("n", "Q", ":q!<cr>", { desc = "Quit" })
 map("n", "<A-x>", ":w<cr>:luafile %<cr>", { desc = "Reload Lua" })
