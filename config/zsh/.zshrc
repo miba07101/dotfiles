@@ -43,7 +43,7 @@ case $isWSL in
     2)
         # Variables
         OneDrive_DIR=$HOME/OneDrive/
-        SCRIPTS_DIR=$HOME/OneDrive/Linux/Skripty/
+        SCRIPTS_DIR=$HOME/OneDrive/Projekty/Linux/Skripty/
         ;;
 esac
 
@@ -82,13 +82,23 @@ function colormap() {
 }
 
 # Ranger - otvori shell tam kde vypnem rangera
-ranger-cd() {
+function f() {
     temp_file="$(mktemp -t "ranger_cd.XXXXXXXXXX")"
     ranger --choosedir="$temp_file" -- "${@:-$PWD}"
     if chosen_dir="$(cat -- "$temp_file")" && [ -n "$chosen_dir" ] && [ "$chosen_dir" != "$PWD" ]; then
         cd -- "$chosen_dir"
     fi
     rm -f -- "$temp_file"
+}
+
+# Yazi - otvori shell tam kde vypnem yazi
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
 }
 
 #############
@@ -100,8 +110,8 @@ export VISUAL="nvim"
 export RANGER_LOAD_DEFAULT_RC=false
 export PATH=$PATH:$HOME/.npm/bin
 export NODE_PATH=$NODE_PATH:$HOME/.npm/lib/node_modules
-export OneDrive_DIR="/mnt/c/Users/$WIN_USERNAME/OneDrive/"
-export SCRIPTS_DIR="/mnt/c/Users/$WIN_USERNAME/OneDrive/Projekty/Linux/Skripty/"
+export OneDrive_DIR
+export SCRIPTS_DIR
 
 #############
 # ALIASES
@@ -122,17 +132,21 @@ alias vq='nvim $HOME/.config/qtile/config.py'
 alias vs='nvim $HOME/.config/starship.toml'
 
 # App
-alias f='ranger-cd'
+alias ranger='f'
+alias yazi='y'
 alias ex='exit'
 alias fd='fd -Hi'
 alias ls='eza -la --icons'
 alias pg='sudo -i -u postgres'
 alias gl='lazygit'
+alias lazy='lazygit'
 alias salome='$HOME/salome-meca/./salome_meca-lgpl-2021.0.0-2-20211014-scibian-9'
 alias freecad='$HOME/Applications/FreeCAD_0.20-1-2022-08-20-conda-Linux-x86_64-py310_b6b0ddf25121b8cf8cc18f02e81151b7.AppImage'
 
 # Python
+# alias epd='source $HOME/.py-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd'
 alias epd='source $HOME/python-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd'
+# alias io='source $HOME/.py-venv/isitobo-venv/bin/activate && cd $HOME/git-repos/isitobo'
 alias io='source $HOME/python-venv/isitobo-venv/bin/activate && cd $HOME/git-repos/isitobo'
 alias test-env='source $HOME/python-venv/test-venv/bin/activate && cd $HOME/git-repos/test'
 alias yafin='source $HOME/python-venv/yafin-venv/bin/activate && python3 $SCRIPTS_DIR/yafin.py'
