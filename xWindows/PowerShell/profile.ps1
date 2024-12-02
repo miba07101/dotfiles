@@ -55,7 +55,7 @@ function y {
 Function AiOllama {
 	ollama run phi3:medium
 }
-Set-Alias olr AiOllama
+Set-Alias ai AiOllama
 
 Function AiOllamaStop {
 	ollama stop phi3:medium
