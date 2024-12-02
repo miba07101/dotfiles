@@ -361,7 +361,6 @@ appman_apps(){
     done
 }
 
-      codium --install-extension piousdeer.adwaita-theme
 other_apps(){
   vscodium(){
       sudo -S <<< ${mypassword} rpmkeys --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
@@ -376,6 +375,31 @@ other_apps(){
       codium --install-extension ms-toolsai.jupyter
       # codium --install-extension Continue.continue # ai for ollama
       codium --install-extension charliermarsh.ruff # linters, formatters for python
+      
+      # extensions that must be downloaded and installed .vsix
+      extensions_list=(
+                     "vscodeintellicode:VisualStudioExptTeam"
+                   )
+
+      # Loop through the extensions list
+      for extension in "${extensions_list[@]}"; do
+          IFS=":" read -r name publisher <<< "${extension}"
+
+          info ${name}
+          read -p "Do you want to install ${name? (y/n): " choice
+          case $choice in
+              [Yy]* )
+                  curl -o ${TEMP}/${name}.vsix https://${publisher}.gallery.vsassets.io/_apis/public/gallery/publisher/${publisher}/extension/${name}/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage 
+                  codium --install-extension ${TEMP}/${name}.vsix
+                  ;;
+              [Nn]* )
+                  echo "${name} will not be installed."
+                  ;;
+              * )
+                  echo "Invalid input, skipping ${name}."
+                  ;;
+          esac
+      done
   }
 
   megasync(){
