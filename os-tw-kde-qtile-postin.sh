@@ -373,12 +373,14 @@ other_apps(){
       codium --install-extension vscodevim.vim
       codium --install-extension ms-python.python
       codium --install-extension ms-toolsai.jupyter
+      codium --install-extension ms-python.black-formatter
       # codium --install-extension Continue.continue # ai for ollama
-      codium --install-extension charliermarsh.ruff # linters, formatters for python
+      # codium --install-extension charliermarsh.ruff # linters, formatters for python
       
       # extensions that must be downloaded and installed .vsix
       extensions_list=(
                      "vscodeintellicode:VisualStudioExptTeam"
+                     "vscode-pylance:ms-python"
                    )
 
       # Loop through the extensions list

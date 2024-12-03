@@ -173,5 +173,8 @@
     "notebook.cellFocusIndicator": "border",
     "workbench.colorTheme": "Kanagawa Lotus",
     "continue.enableTabAutocomplete": false,
-    "python.defaultInterpreterPath": "/bin/python3.13",
+    "python.analysis.completeFunctionParens": true,
+    "python.languageServer": "Pylance",
+    "notebook.formatOnSave.enabled": true,
+    "jupyter.enableExtendedPythonKernelCompletions": true,
 }
