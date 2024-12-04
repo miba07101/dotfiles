@@ -373,12 +373,13 @@ other_apps(){
       codium --install-extension vscodevim.vim
       codium --install-extension ms-python.python
       codium --install-extension ms-toolsai.jupyter
+      codium --install-extension detachhead.basedpyright
       codium --install-extension charliermarsh.ruff # linters, formatters for python
       # codium --install-extension ms-python.black-formatter
       # codium --install-extension Continue.continue # ai for ollama
 
       # extensions that must be downloaded and installed .vsix
-      # nebudu fungovat vo vscodium :(
+      # nebudu fungovat vo vscodium
       extensions_list=(
                      "vscodeintellicode:VisualStudioExptTeam"
                      "vscode-pylance:ms-python"
@@ -389,7 +390,7 @@ other_apps(){
           IFS=":" read -r name publisher <<< "${extension}"
 
           info ${name}
-          read -p "Do you want to install ${name? (y/n): " choice
+          read -p "Do you want to install ${name}? (y/n): " choice
           case $choice in
               [Yy]* )
                   curl -o ${TEMP}/${name}.vsix https://${publisher}.gallery.vsassets.io/_apis/public/gallery/publisher/${publisher}/extension/${name}/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage
@@ -755,6 +756,7 @@ python(){
     source ${HOME}/${PYTHON_ENV_DIR}/base-venv/bin/activate
 
     pip3 install --upgrade pip
+    pip3 install basedpyright
     pip3 install yahoofinancials # pre moj yafin script
     pip3 install jupyter
     pip3 install numpy
