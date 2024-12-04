@@ -141,7 +141,24 @@
                 "workbench.action.showCommands",
             ],
             "silent": true
-        }
+        },
+        // wrapping
+        {
+        "before": ["j"],
+        "after": ["g", "j"]
+        },
+        {
+        "before": ["Down"],
+        "after": ["g", "j"]
+        },
+        {
+        "before": ["k"],
+        "after": ["g", "k"]
+        },
+        {
+        "before": ["Up"],
+        "after": ["g", "k"]
+        },
     ],
     "vim.handleKeys": {
         "<C-b>": false,
