@@ -369,15 +369,16 @@ other_apps(){
 
       # install extensions
       codium --install-extension metaphore.kanagawa-vscode-color-theme
-      codium --install-extension piousdeer.adwaita-theme
+      # codium --install-extension piousdeer.adwaita-theme
       codium --install-extension vscodevim.vim
       codium --install-extension ms-python.python
       codium --install-extension ms-toolsai.jupyter
-      codium --install-extension ms-python.black-formatter
+      codium --install-extension charliermarsh.ruff # linters, formatters for python
+      # codium --install-extension ms-python.black-formatter
       # codium --install-extension Continue.continue # ai for ollama
-      # codium --install-extension charliermarsh.ruff # linters, formatters for python
-      
+
       # extensions that must be downloaded and installed .vsix
+      # nebudu fungovat vo vscodium :(
       extensions_list=(
                      "vscodeintellicode:VisualStudioExptTeam"
                      "vscode-pylance:ms-python"
@@ -391,7 +392,7 @@ other_apps(){
           read -p "Do you want to install ${name? (y/n): " choice
           case $choice in
               [Yy]* )
-                  curl -o ${TEMP}/${name}.vsix https://${publisher}.gallery.vsassets.io/_apis/public/gallery/publisher/${publisher}/extension/${name}/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage 
+                  curl -o ${TEMP}/${name}.vsix https://${publisher}.gallery.vsassets.io/_apis/public/gallery/publisher/${publisher}/extension/${name}/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage
                   codium --install-extension ${TEMP}/${name}.vsix
                   ;;
               [Nn]* )

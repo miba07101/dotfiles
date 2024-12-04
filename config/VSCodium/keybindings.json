@@ -52,6 +52,16 @@
   },
   // File explorer
   {
+    "key": "space e",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "ctrl+alt+b",
+    "command": "workbench.view.explorer",
+    "when": "viewContainer.workbench.view.explorer.enabled"
+  },
+  {
     "key": "a",
     "command": "explorer.newFile",
     "when": "filesExplorerFocus && !inputFocus"
@@ -91,26 +101,16 @@
     "command": "renameFile",
     "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
   },
-  {
-    "key": "ctrl+alt+b",
-    "command": "workbench.view.explorer",
-    "when": "viewContainer.workbench.view.explorer.enabled"
-  },
-  {
-    "key": "ctrl+w q",
-    "command": "workbench.action.closeActiveEditor",
-    "when": "!editorTextFocus && !filesExplorerFocus && !searchViewletFocus && !terminalFocus && vim.mode != 'cmdline'"
-  },
   // Move lines
   {
     "key": "shift+j",
     "command": "editor.action.moveLinesDownAction",
-    "when": "editorTextFocus && !editorReadonly && neovim.mode != 'insert'"
+    "when": "editorTextFocus && !editorReadonly && vim.mode != 'Insert'"
   },
   {
     "key": "shift+k",
     "command": "editor.action.moveLinesUpAction",
-    "when": "editorTextFocus && !editorReadonly && neovim.mode != 'insert'"
+    "when": "editorTextFocus && !editorReadonly && vim.mode != 'Insert'"
   },
   // Toggle Theme dark/light
   {
