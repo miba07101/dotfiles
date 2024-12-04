@@ -9,7 +9,6 @@
     "git.autofetch": true,
     "git.enableSmartCommit": true,
     "editor.minimap.enabled": false,
-    "workbench.colorTheme": "Kanagawa Lotus",
     "continue.enableTabAutocomplete": false,
     // "python.analysis.completeFunctionParens": true,
     "workbench.colorCustomizations": {
@@ -117,7 +116,10 @@
     "jupyter.enableExtendedPythonKernelCompletions": true,
     "notebook.formatOnSave.enabled": true,
     "notebook.cellFocusIndicator": "border",
-    "python.languageServer": "Default",
+//-------------------------------------------------------------------
+// LSP
+//-------------------------------------------------------------------
+    "basedpyright.analysis.diagnosticMode": "openFilesOnly",
     "notebook.defaultFormatter": "charliermarsh.ruff",
     "editor.defaultFormatter": "charliermarsh.ruff",
 //-------------------------------------------------------------------
@@ -206,6 +208,8 @@
         "vscodiumvim.vim": 1
         },
         "notebook.lineNumbers": "on",
+        "python.languageServer": "Default",
+        "workbench.colorTheme": "Visual Studio Dark",
 //-------------------------------------------------------------------
 // OTHERS
 //-------------------------------------------------------------------
