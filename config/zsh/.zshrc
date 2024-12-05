@@ -272,7 +272,6 @@ bindkey -s '^[v' 'cava^M'
             *mageia*)                ICON="" ;;
             *centos*)                ICON="" ;;
             # *opensuse*)              ICON="" ;;
-            # *opensuse*|*tumbleweed*) ICON="﮼" ;;
             *opensuse*|*tumbleweed*) ICON="" ;;
             *sabayon*)               ICON="" ;;
             *slackware*)             ICON="" ;;

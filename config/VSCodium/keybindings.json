@@ -1,26 +1,26 @@
 // Place your key bindings in this file to override the defaults
 [
-    //Insert mode navigation
-    //
+  //Insert mode navigation
+  //
   {
     "key": "ctrl+h",
     "command": "cursorLeft",
-    "when": "editorTextFocus && vim.mode == 'Insert'"
+    "when": "editorTextFocus && vim.active && vim.mode == 'Insert'"
   },
   {
     "key": "ctrl+l",
     "command": "cursorRight",
-    "when": "editorTextFocus && vim.mode == 'Insert'"
+    "when": "editorTextFocus && vim.active && vim.mode == 'Insert'"
   },
   {
     "key": "ctrl+j",
     "command": "cursorDown",
-    "when": "editorTextFocus && vim.mode == 'Insert'"
+    "when": "editorTextFocus && vim.active && vim.mode == 'Insert'"
   },
   {
     "key": "ctrl+k",
     "command": "cursorUp",
-    "when": "editorTextFocus && vim.mode == 'Insert'"
+    "when": "editorTextFocus && vim.active && vim.mode == 'Insert'"
   },
   // Tab navigation
   {
@@ -38,6 +38,23 @@
   {
     "key": "alt+right",
     "command": "workbench.action.nextEditor"
+  },
+  // Split window navigation
+  {
+    "key": "alt+shift+right",
+    "command": "workbench.action.focusNextGroup"
+  },
+  {
+    "key": "alt+shift+left",
+    "command": "workbench.action.focusPreviousGroup"
+  },
+  {
+    "key": "alt+shift+l",
+    "command": "workbench.action.focusNextGroup"
+  },
+  {
+    "key": "alt+shift+h",
+    "command": "workbench.action.focusPreviousGroup"
   },
   // Suggestion navigation
   {
@@ -72,11 +89,6 @@
     "when": "filesExplorerFocus && !inputFocus"
   },
   {
-    "key": "shift+r",
-    "command": "workbench.files.action.refreshFilesExplorer",
-    "when": "filesExplorerFocus && !inputFocus"
-  },
-  {
     "key": "v",
     "command": "explorer.openToSide",
     "when": "explorerViewletFocus && explorerViewletVisible && !inputFocus"
@@ -87,19 +99,50 @@
     "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !inputFocus"
   },
   {
-    "key": "x",
-    "command": "filesExplorer.cut",
-    "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !inputFocus"
-  },
-  {
     "key": "p",
     "command": "filesExplorer.paste",
     "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceReadonly && !inputFocus"
   },
   {
+    "key": "x",
+    "command": "filesExplorer.cut",
+    "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !inputFocus"
+  },
+  {
     "key": "r",
     "command": "renameFile",
     "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "key": "shift+r",
+    "command": "workbench.files.action.refreshFilesExplorer",
+    "when": "filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "d",
+    "command": "moveFileToTrash",
+    "when": "explorerResourceMoveableToTrash && explorerViewletVisible && filesExplorerFocus && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "key": "shift+d",
+    "command": "deleteFile",
+    "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "key": "u",
+    "command": "copyFilePath",
+    "when": "explorerViewletFocus && explorerViewletVisible && !inputFocus"
+  },
+  {
+    "key": "i",
+    "command": "copyRelativeFilePath",
+    "when": "explorerViewletFocus && explorerViewletVisible && !inputFocus"
+  },
+  // Terminal
+  {
+    "key": "ctrl+m",
+    "command": "workbench.action.toggleMaximizedPanel",
+    "when": "terminalFocus && terminalProcessSupported"
   },
   // Move lines
   {
@@ -112,9 +155,19 @@
     "command": "editor.action.moveLinesUpAction",
     "when": "editorTextFocus && !editorReadonly && vim.mode != 'Insert'"
   },
+  {
+    "key": "shift+down",
+    "command": "editor.action.moveLinesDownAction",
+    "when": "editorTextFocus && !editorReadonly && vim.mode != 'Insert'"
+  },
+  {
+    "key": "shift+up",
+    "command": "editor.action.moveLinesUpAction",
+    "when": "editorTextFocus && !editorReadonly && vim.mode != 'Insert'"
+  },
   // Toggle Theme dark/light
   {
     "key": "ctrl+t ctrl+t",
     "command": "workbench.action.toggleLightDarkThemes"
-  },
+  }
 ]
