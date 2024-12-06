@@ -1,16 +1,16 @@
 # zmena prompt formatu
 format = """\
-[╭╴](240)$env_var\
-$all[╰─](240)$character"""
+[╭╴](gray)$env_var\
+$all[╰─](gray)$character"""
 
 # zmena prompt symbolu
 [character]
-success_symbol = "[❯](bold 240)"
+success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
 
 # zobrazi ikonu OS
 [env_var.STARSHIP_DISTRO]
-format = "[$env_value](bold white)"
+format = "[$env_value](bold gray)"
 variable = "STARSHIP_DISTRO"
 disabled = false
 

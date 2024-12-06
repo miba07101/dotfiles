@@ -81,6 +81,13 @@ function colormap() {
     for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
 }
 
+function fire_backup(){
+# ak je iba 1x '>' tak prepise cely dokument, ak su 2x '>>' tak vlozi novy riadok
+grep 'browser.compactmode.show' ${HOME}/.mozilla/firefox/*.default-release/prefs.js > ${HOME}/.mozilla/firefox/*.default-release/user.js
+grep 'browser.uiCustomization.state' ${HOME}/.mozilla/firefox/*.default-release/prefs.js >> ${HOME}/.mozilla/firefox/*.default-release/user.js
+grep 'browser.newtabpage.pinned' ${HOME}/.mozilla/firefox/*.default-release/prefs.js >> ${HOME}/.mozilla/firefox/*.default-release/user.js
+}
+
 # Ranger - otvori shell tam kde vypnem rangera
 function f() {
     temp_file="$(mktemp -t "ranger_cd.XXXXXXXXXX")"
