@@ -18,7 +18,17 @@
     "when": "editorTextFocus && vim.active && vim.mode == 'Insert'"
   },
   {
+    "key": "Down",
+    "command": "cursorDown",
+    "when": "editorTextFocus && vim.active && vim.mode == 'Insert'"
+  },
+  {
     "key": "ctrl+k",
+    "command": "cursorUp",
+    "when": "editorTextFocus && vim.active && vim.mode == 'Insert'"
+  },
+  {
+    "key": "Up",
     "command": "cursorUp",
     "when": "editorTextFocus && vim.active && vim.mode == 'Insert'"
   },
