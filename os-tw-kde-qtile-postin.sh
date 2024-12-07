@@ -1150,12 +1150,21 @@ EOF
     gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
 
     # keybidings
-    gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "['<Control>space']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-up "[]"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-down "[]"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-left "[]"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-right "[]"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up "[]"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down "[]"
+    gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "[]"
+    gsettings set org.gnome.desktop.wm.keybindings minimize "['<Shift><Super>Down']"
+    gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>v']"
     gsettings set org.gnome.settings-daemon.plugins.media-keys home "['<Super>e']"
     gsettings set org.gnome.settings-daemon.plugins.media-keys www "['<Super>b']"
     gsettings set org.gnome.settings-daemon.plugins.media-keys calculator "['<Super>c']"
-    gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>v']"
-    gsettings set org.gnome.shell.keybindings email "['<Super>m']"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys email "['<Super>m']"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys search "['<Super>f']"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys control-center "['<Super>s']"
 
     ## terminal musim nastavit manualne:
     ## settings -> keyboard -> keyboard shortcuts -> custom shortcuts -> name: wezterm, comannd: wezterm, shortcut: super+enter
