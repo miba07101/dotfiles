@@ -41,6 +41,19 @@ thunderbird(){
     ln -sf ${HOME}/.dotfiles/config/birdtray-config.json  ${HOME}/.config/birdtray-config.json
 }
 
+freetube(){
+    info "SETUP FREETUBE"
+    if [[ -d ${HOME}/.config/FreeTube ]]; then
+      ln -sf ${HOME}/.dotfiles/freetube/playlists.db    ${HOME}/.config/FreeTube/playlists.db
+      ln -sf ${HOME}/.dotfiles/freetube/profiles.db    ${HOME}/.config/FreeTube/profiles.db
+      ln -sf ${HOME}/.dotfiles/freetube/settings.db    ${HOME}/.config/FreeTube/settings.db
+    else
+        echo "Starting FreeTube"
+        wezterm -e "freetube" &
+        echo "Run this script again"
+    fi
+}
+
 scripts(){
     info "SETUP SCRIPTS FOR OBSIDIAN NOTES"
     ln -sf ${HOME}/OneDrive/Projekty/Linux/Skripty/obsidian-create-note.sh  ${HOME}/.local/bin/obsidian-create-note.sh
@@ -52,6 +65,7 @@ scripts(){
 main(){
     firefox
     thunderbird
+    freetube
     scripts
 }
 

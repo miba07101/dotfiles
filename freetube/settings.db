@@ -1,0 +1,11 @@
+{"_id":"autoplayPlaylists","value":false}
+{"_id":"autoplayVideos","value":false}
+{"_id":"baseTheme","value":"nordic"}
+{"_id":"bounds","value":{"x":0,"y":59,"width":1536,"height":805,"maximized":false,"fullScreen":false}}
+{"_id":"checkForBlogPosts","value":false}
+{"_id":"fetchSubscriptionsAutomatically","value":true}
+{"_id":"listType","value":"list"}
+{"_id":"mainColor","value":"Blue"}
+{"_id":"quickBookmarkTargetPlaylistId","value":"favorites"}
+{"_id":"rememberHistory","value":false}
+{"_id":"saveWatchedProgress","value":false}
