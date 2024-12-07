@@ -336,6 +336,7 @@ appman_apps(){
     info "INSTALL APPMAN APPS"
     APPMAN_APPS=(
         'firefox'
+        'thunderbird'
         'brave'
         'freetube'
         'onlyoffice'
@@ -440,6 +441,9 @@ other_apps(){
       sudo -S <<< ${mypassword} zypper addrepo -f ${repourl}
       sudo -S <<< ${mypassword} zypper ${REFRESH}
       sudo -S <<< ${mypassword} zypper ${INSTALL} -y birdtray
+
+      # symlink na .desktop pre spravne fungovanie vo wayland
+      ln -sf ${CWD}/xKDE/local_share_applications/com.ulduzsoft.Birdtray.desktop ${HOME}/.local/share/applications/com.ulduzsoft.Birdtray.desktop
   }
 
   ulauncher(){
@@ -1149,6 +1153,9 @@ EOF
     # close, minimize buttons
     gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
 
+    # history, recent files
+    gsettings set org.gnome.desktop.privacy remember-recent-files 'false'
+
     # keybidings
     gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-up "[]"
     gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-down "[]"
@@ -1156,6 +1163,8 @@ EOF
     gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-right "[]"
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up "[]"
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down "[]"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-left "['<Shift><Super>Left']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-right "['<Shift><Super>Right']"
     gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "[]"
     gsettings set org.gnome.desktop.wm.keybindings minimize "['<Shift><Super>Down']"
     gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>v']"

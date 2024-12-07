@@ -362,7 +362,7 @@
     "common/bordercolor": "#ffffff",
     "common/borderwidth": 0,
     "common/defaultcolor": "#0000ff",
-    "common/exitthunderbirdonquit": false,
+    "common/exitthunderbirdonquit": true,
     "common/forceIgnoreUnreadEmailsOnMinimize": false,
     "common/hideWhenStartedManually": false,
     "common/hidewhenminimized": true,
