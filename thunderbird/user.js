@@ -243,7 +243,6 @@ user_pref(
   "mail.accountmanager.accounts",
   "account4,account3,account5,account7,account8,account6,account1,account2"
 );
-user_pref("mail.accountmanager.defaultaccount", "account1");
 user_pref("mail.accountmanager.localfoldersserver", "server2");
 user_pref("mail.biff.play_sound", false);
 user_pref("mail.compose.big_attachments.notify", false);
