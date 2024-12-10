@@ -22,6 +22,11 @@ function symlink ([String] $real, [String] $link) {
 }
 
 #shorcuts
+function NeovimInit {
+    nvim C:\Users\$env:USERNAME\AppData\Local\nvim\init.lua
+}
+Set-Alias vv NeovimInit
+
 function PythonVuzEnviroment {
     cd C:\Users\$env:USERNAME\github\python
     .\.venv\Scripts\Activate.ps1
