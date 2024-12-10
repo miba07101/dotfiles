@@ -135,6 +135,7 @@ alias zsh-update-plugins="find "$ZDOTDIR" -type d -exec test -e '{}/.git' ';' -p
 # Config files
 alias vb='nvim $HOME/.bashrc'
 alias vz='nvim $ZDOTDIR/.zshrc'
+alias vv='nvim $HOME/.config/nvim/init.lua'
 alias vq='nvim $HOME/.config/qtile/config.py'
 alias vs='nvim $HOME/.config/starship.toml'
 
