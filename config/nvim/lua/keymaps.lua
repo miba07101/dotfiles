@@ -44,7 +44,7 @@ map("n", "<leader>wlh", "<cmd>windo wincmd K<cr>", { desc = "Horizontal layout" 
 map("n", "<leader>wlv", "<cmd>windo wincmd H<cr>", { desc = "Vertical layout" })
 
 -- Buffers
-map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+map("n", "<leader>bb", ":e #<cr>", { desc = "Switch to Other Buffer" })
 map("n", "<A-Right>", ":bnext<CR>", { desc = "Next buffer" })
 map("n", "<A-Left>", ":bprevious<CR>", { desc = "Previous buffer" })
 map("n", "<A-UP>", ":bp<BAR>bd#<CR>", { desc = "Quit buffer" })
