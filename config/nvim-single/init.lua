@@ -71,7 +71,7 @@ opt.foldlevel = 1 -- folding from lvl 1
 opt.foldmethod = "expr" -- folding method
 opt.foldexpr = "nvim_treesitter#foldexpr()" -- folding method use treesitter
 opt.foldcolumn = "1" -- folding column show
-opt.foldtext=[[getline(v:foldstart)]] -- folding - disable all chunk when folded
+--opt.foldtext=[[getline(v:foldstart)]] -- folding - disable all chunk when folded
 opt.fillchars:append({
   eob = " ",
   fold = " ",
@@ -280,6 +280,88 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 
+  -- {{{ Colorscheme
+  -- {{{ Kanagawa
+  {
+    "rebelot/kanagawa.nvim",
+    priority = 1000,
+    config = function()
+      require("kanagawa").setup({
+        colors = {
+          palette = {
+            fujiWhite = "#FEFEFA",
+            -- lotusWhite0 = "#d5cea3",
+            -- lotusWhite1 = "#dcd5ac",
+            -- lotusWhite2 = "#e5ddb0",
+            -- lotusWhite3 = "#f2ecbc",
+            -- lotusWhite4 = "#e7dba0",
+            -- lotusWhite5 = "#e4d794",
+
+            -- lotusWhite0 = "#DCD7BA",
+            -- lotusWhite1 = "#DCD7BA",
+            -- lotusWhite2 = "#DCD7BA",
+            -- lotusWhite3 = "#FEFEFA",
+            -- lotusWhite4 = "#EDEBDA",
+            -- lotusWhite5 = "#EDEBDA",
+
+            -- https://coolors.co/gradient-palette/fefefa-edebda?number=3
+            lotusWhite0 = "#EDEBDA",
+            lotusWhite1 = "#EDEBDA",
+            lotusWhite2 = "#EDEBDA",
+            lotusWhite3 = "#FEFEFA", -- baby powder white shade
+            lotusWhite4 = "#F6F5EA",
+            lotusWhite5 = "#F6F5EA",
+          },
+          theme = {
+            all = {
+              ui = {
+                bg_gutter = "none",
+              },
+            },
+          },
+        },
+        overrides = function(colors)
+          local theme = colors.theme
+          return {
+            -- change cmd popup menu colors
+            Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_m1 },
+            -- PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2, italic = true },
+            PmenuSel = { fg = colors.palette.surimiOrange, bg = theme.ui.bg_p2 },
+            PmenuSbar = { bg = theme.ui.bg_m1 },
+            PmenuThumb = { bg = theme.ui.bg_p2 },
+            FloatBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+            -- change cmp items colors
+            CmpItemKindVariable = { fg = colors.palette.crystalBlue, bg = "NONE" },
+            CmpItemKindInterface = { fg = colors.palette.crystalBlue, bg = "NONE" },
+            CmpItemKindFunction = { fg = colors.palette.oniViolet, bg = "NONE" },
+            CmpItemKindMethod = { fg = colors.palette.oniViolet, bg = "NONE" },
+            -- borderless telescope
+            TelescopeTitle = { fg = theme.ui.special, bold = true },
+            TelescopePromptNormal = { bg = theme.ui.bg_p1 },
+            TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+            TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
+            TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+            TelescopePreviewNormal = { bg = theme.ui.bg_dim },
+            TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+          }
+        end,
+      })
+      vim.cmd.colorscheme ("kanagawa")
+    end,
+  },
+  -- End Kanagawa }}}
+  -- {{{ Adwaita
+  {
+    "Mofiqul/adwaita.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      -- vim.cmd.colorscheme ("adwaita")
+    end
+  },
+  -- End Adwaita }}}
+  -- End Colorscheme }}}
+
   -- {{{ Treesitter
   {
     'nvim-treesitter/nvim-treesitter',
@@ -299,6 +381,218 @@ require("lazy").setup({
     },
   },
   -- }}}
+
+  -- {{{ LSP
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      -- LSP
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+      -- Formatting
+      "stevearc/conform.nvim",
+      -- Linting
+      "mfussenegger/nvim-lint",
+      -- Status updates for LSP (optional)
+      { 'j-hui/fidget.nvim', opts = {} },
+    },
+    config = function()
+
+      -- {{{ LSP Servers
+      require("mason").setup()
+      local servers = {
+        bashls = {
+          filetypes = { "zsh", "bash", "sh" },
+        },
+        cssls = {},
+        jsonls = {},
+        emmet_ls = {
+          filetypes = {
+            "html",
+            "htmldjango",
+            "typescriptreact",
+            "javascriptreact",
+            "css",
+            "sass",
+            "scss",
+            "less",
+            "javascript",
+            "typescript",
+          },
+          init_options = {
+            html = {
+              options = {
+                -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L26
+                ["bem.enabled"] = true,
+              },
+            },
+          },
+        },
+        lua_ls = {
+          settings = {
+            Lua = {
+              completion = {
+                callSnippet = "Replace",
+              },
+              diagnostics = {
+                globals = { "vim" },
+              },
+              workspace = {
+                library = {
+                  [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                  [vim.fn.stdpath("config") .. "/lua"] = true,
+                },
+              },
+              telemetry = {
+                enable = false,
+              },
+            },
+          },
+        },
+        -- pyright = {
+        --   settings = {
+        --     python = {
+        --       analysis = {
+        --         autoImportCompletions = true,
+        --         typeCheckingMode = "off",
+        --         autoSearchPaths = true,
+        --         diagnosticMode = "workspace",
+        --         useLibraryCodeForTypes = true,
+        --       },
+        --     },
+        --   },
+        -- },
+        basedpyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = "openFilesOnly",
+                useLibraryCodeForTypes = true,
+              },
+            },
+          },
+        },
+        marksman = {
+          filetypes = {
+            "markdown",
+            "quarto",
+          },
+        },
+        tinymist = {
+          filetypes = {
+            "typst"
+          },
+        },
+      }
+
+      -- Auto install servers
+      require("mason-lspconfig").setup({
+        ensure_installed = vim.tbl_keys(servers),
+        automatic_installation = true,
+      })
+
+
+      -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      -- local on_attach = function(client, bufnr)
+      --   -- sem zadat on_attach funkcie doplnkov
+      -- end
+
+      require("mason-lspconfig").setup_handlers({
+        function(server)
+          local server_opts = servers[server] or {}
+          --server_opts.capabilities = capabilities
+          --server_opts.on_attach = on_attach
+          require("lspconfig")[server].setup(server_opts)
+        end,
+      })
+      -- End LSP Servers }}}
+
+      -- {{{ LSP Diagnostic
+      -- See :help vim.diagnostic.config()
+      vim.diagnostic.config({
+        virtual_text = false,
+        underline = true,
+        severity_sort = true,
+        float = {
+          focusable = true,
+          style = "minimal",
+          border = "rounded",
+          source = "always",
+          header = "",
+          prefix = "",
+        },
+      })
+
+      -- See :help sign_define()
+      local sign = function(opts)
+        vim.fn.sign_define(opts.name, {
+          texthl = opts.name,
+          text = opts.text,
+          numhl = "",
+        })
+      end
+
+      sign({ name = "DiagnosticSignError", text = "" })
+      sign({ name = "DiagnosticSignWarn", text = "" })
+      sign({ name = "DiagnosticSignHint", text = "" })
+      sign({ name = "DiagnosticSignInfo", text = "" })
+
+      -- Hover float window configuration
+      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+
+      -- Signature help window configuration
+      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+      -- End LSP Diagnostic }}}
+
+      -- {{{ LSP Linters/Formaters
+      -- Auto install
+      require("mason-tool-installer").setup({
+        ensure_installed = {
+          "beautysh", -- bash formater
+          "prettier", -- prettier formatter
+          "stylua", -- lua formatter
+          "isort", -- python formatter
+          "black", -- python formatter
+          "shellcheck", -- bash linter
+          "pylint", -- python linter
+          "flake8", -- python linter
+          "eslint_d", -- js linter
+          "djlint", -- django linter
+          "tree-sitter-cli", -- treesitter latex integration
+        },
+      })
+
+      -- Formatting
+      local conform = require("conform")
+
+      conform.setup({
+        formatters_by_ft = {
+          bash = { "beautysh" },
+          javascript = { "prettier" },
+          css = { "prettier" },
+          html = { "prettier" },
+          json = { "prettier" },
+          yaml = { "prettier" },
+          lua = { "stylua" },
+          python = { "isort", "black" },
+        },
+      })
+
+      -- Linting
+      local lint = require("lint")
+
+      lint.linters_by_ft = {
+        bash = { "shellcheck" },
+        javascript = { "eslint_d" },
+        python = { "flake8" },
+      }
+      -- End LSP Linters/Formaters }}}
+
+    end,
+  },
+  -- END LSP }}}
 
 })
 -- }}}
