@@ -59,6 +59,7 @@ opt.updatetime = 100 -- speed up response time
 opt.whichwrap:append("<,>,[,],h,l") -- keys allowed to move to the previous/next line when the beginning/end of line is reached
 opt.wrap = false -- disable wrapping of lines longer than the width of window
 opt.writebackup = false -- create backups when writing files
+opt.modifiable = true
 -- End File }}}
 
 -- {{{ Completition
@@ -330,7 +331,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- End Highlight on Yank }}}
 
 -- {{{ Set Fold Markers for init.lua
-vim.api.nvim_create_autocmd("BufEnter", {
+vim.api.nvim_create_autocmd("BufReadPost", {
   pattern = "init.lua",
   callback = function()
     vim.opt_local.foldmethod = "marker" -- Use markers for init.lua
@@ -338,7 +339,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
     vim.opt_local.foldlevel = 0 -- Start with all folds closed
   end,
   group = mygroup,
-  desc = "Highlight yanked text",
+  desc = "init.lua folding",
 })
 -- End Set Fold Markers for init.lua }}}
 
@@ -626,7 +627,7 @@ require("lazy").setup({
           }
         end,
       })
-      -- vim.cmd.colorscheme ("kanagawa")
+      vim.cmd.colorscheme ("kanagawa")
     end,
   },
   -- End Kanagawa }}}
@@ -690,7 +691,7 @@ require("lazy").setup({
       -- Linting
       "mfussenegger/nvim-lint",
       -- Status updates for LSP (optional)
-      { "j-hui/fidget.nvim", opts = {} },
+      --{ "j-hui/fidget.nvim", opts = {} },
     },
     config = function()
       -- {{{ LSP Servers
@@ -900,30 +901,80 @@ require("lazy").setup({
   },
   -- End File Manager }}}
 
+  -- {{{ Telescope
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = {
+      "nvim-telescope/telescope-file-browser.nvim",
+      "nvim-tree/nvim-web-devicons",
+    },
+    lazy = false,
+    config = function()
+      local actions = require("telescope.actions")
+      local fb_actions = require("telescope").extensions.file_browser.actions
+      require("telescope").setup({
+        pickers = {
+          colorscheme = {
+            enable_preview = true,
+          },
+        },
+        defaults = {
+          --   path_display = { "truncate" },
+          --   initial_mode = "normal", -- insert
+          --   sorting_strategy = "ascending",
+          layout_strategy = "vertical",
+          --   layout_config = {
+          --     preview_height = 0.55,
+          --   --   horizontal = {
+          --   --     prompt_position = "top",
+          --   --     preview_width = 0.55,
+          --   --     results_width = 0.8,
+          --   --   },
+          --     width = 0.85,
+          --     height = 0.85,
+          --     -- preview_cutoff = 130,
+          -- },
+          extensions = {
+            file_browser = {
+              hidden = true,
+              grouped = true, -- show directories first
+              mappings = {
+                ["n"] = {
+                  ["<RIGHT>"] = actions.select_default,
+                  ["<LEFT>"] = fb_actions.goto_parent_dir,
+                },
+              },
+            },
+          },
+        },
+      })
+      require("telescope").load_extension("file_browser")
+      -- require("telescope").load_extension("notify")
+    end,
+  },
+  -- Telescope }}}
+
   -- {{{ Mini.nvim collection
   {
     "echasnovski/mini.nvim",
     config = function()
 
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      --
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
-      require"mini.surround".setup()
-      require('mini.completion').setup({
-        window = {
-          info = { height = 25, width = 80, border = 'none' },
-          signature = { height = 25, width = 80, border = 'none' },
+      require('mini.comment').setup({
+        mappings = {
+          comment = '',
+          comment_line = '<C-/>',
+          comment_visual = '<C-/>',
+          textobject = '',
         },
       })
-      require('mini.icons').setup()
-      require('mini.icons').tweak_lsp_kind()
-
-      -- ... and there is more!
-      --  Check out: https://github.com/echasnovski/mini.nvim
+      require('mini.notify').setup()
+      require('mini.surround').setup()
+          -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
+          -- - sd'   - [S]urround [D]elete [']quotes
+          -- - sr)'  - [S]urround [R]eplace [)] [']
+      require('mini.pairs').setup()
     end,
   },
-  -- End Mini.nvim collection }}}
+  -- Mini.nvim collection }}}
 })
 -- }}}
