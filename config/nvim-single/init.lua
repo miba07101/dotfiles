@@ -540,7 +540,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
 -- })
 -- End Telescope on start }}}
 
--- End [[ AUTOCOMMANDS ]]}}}
+-- End [[ AUTOCOMMANDS ]] }}}
 
 -- {{{ [[ LAZY MANAGER ]]
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -888,18 +888,110 @@ require("lazy").setup({
   },
   -- END LSP }}}
 
-  -- {{{ File Manager
+  -- {{{ Statusline
   {
-    "rolv-apneseth/tfm.nvim",
+    "nvim-lualine/lualine.nvim",
     config = function()
-      -- Set keymap so you can open the default terminal file manager (yazi)
-      vim.api.nvim_set_keymap("n", "<leader>e", "", {
-        noremap = true,
-        callback = require("tfm").open,
+      -- Define a custom theme
+      local function vscode_theme()
+        local colors = {
+          red = "#e74d23", orange = "#FF8800", yellow = "#ffc233", green = "#427b00",
+          blue = "#007ACD", purple = "#67217A", black = "#16161D", white = "#FFFFFF",
+          grey = "#727169"
+        }
+        return {
+          normal = { a = { bg = colors.purple, fg = colors.white } },
+          insert = { a = { bg = colors.blue, fg = colors.white } },
+          visual = { a = { bg = colors.green, fg = colors.white } },
+          replace = { a = { bg = colors.orange, fg = colors.white } },
+          command = { a = { bg = colors.red, fg = colors.white } },
+          inactive = { a = { bg = colors.black, fg = colors.grey } },
+        }
+      end
+
+      -- LSP server icon
+      local function lsp_server_icon()
+        local buf_ft = vim.bo.filetype
+        for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+          if client.supports_method("textDocument/documentSymbol") then
+            local supported_filetypes = client.config.filetypes or {}
+            if vim.tbl_contains(supported_filetypes, buf_ft) then
+              return ""
+            end
+          end
+        end
+        return ""
+      end
+
+      -- Python environment
+      local function python_env()
+        local venv = require('swenv.api').get_current_venv()
+        return venv and venv.name or ""
+      end
+
+      -- Buffer counts
+      local function buffer_counts()
+        local loaded_buffers = #vim.tbl_filter(function(buf)
+          return vim.fn.buflisted(buf) ~= 0
+        end, vim.api.nvim_list_bufs())
+        local modified_buffers = #vim.tbl_filter(function(buf)
+          return vim.bo[buf].modified
+        end, vim.api.nvim_list_bufs())
+        return string.format("󰈔 [%d:%d+]", loaded_buffers, modified_buffers)
+      end
+
+      -- Macro recording status
+      local function macro_recording()
+        local recording = vim.fn.reg_recording()
+        return recording ~= "" and "󰻃" .. recording or ""
+      end
+
+      -- Lualine setup
+      require('lualine').setup({
+        options = {
+          section_separators = '',
+          component_separators = '',
+          disabled_filetypes = { statusline = { "alpha", "TelescopePrompt" } },
+          theme = vscode_theme(),
+        },
+        sections = {
+          lualine_a = {
+            { "filetype", colored = false, icon_only = true },
+            { "filename", path = 4, symbols = { modified = "[+]", readonly = "[-]" } },
+            { buffer_counts },
+          },
+          lualine_b = { { macro_recording } },
+          lualine_c = { },
+          lualine_x = {},
+          lualine_y = { { python_env, icon = "" } },
+          lualine_z = {
+            { lsp_server_icon },
+            { "diagnostics", colored = false, symbols = { error = " ", warn = " ", info = " ", hint = "󰌵 " } },
+            { "%l:%c %p%%/%L" },
+          },
+        },
+        tabline = {
+          lualine_b = {
+            { "buffers",
+              buffers_color = {
+                  active = { fg = "#FF8800" },
+                },
+              filetype_names = { alpha = '', TelescopePrompt = '', lazy = '', fzf = '' } },
+          },
+        },
       })
+
+      -- Auto-refresh for macro recording status
+      vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
+        callback = function()
+          local delay = vim.fn.reg_recording() == "" and 50 or 0
+          vim.defer_fn(function() require('lualine').refresh({ place = { "statusline" } }) end, delay)
+        end,
+      })
+
     end,
   },
-  -- End File Manager }}}
+  -- Statusline }}}
 
   -- {{{ Telescope
   {
