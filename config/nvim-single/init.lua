@@ -105,7 +105,7 @@ opt.wrapscan = true -- search the entire file repeatedly
 -- End Search }}}
 
 -- {{{ UI
---opt.cmdheight = 0 -- command line height
+opt.cmdheight = 0 -- command line height
 opt.cursorline = true -- highlight the current line
 opt.laststatus = 3 -- global status bar (sposobuje nefunkcnost resource lua.init)
 opt.number = true -- absolute line numbers
@@ -274,6 +274,11 @@ map("n", "<leader>vk", function()
   end
 end, { desc = "Conceal cursor toggle" })
 -- End NeoVim }}}
+
+-- {{{ File Manager
+map("n", "<leader>e", "<cmd>Neotree toggle %:p:h<cr>", { desc = "File manager" })
+map("n", "<leader>eb", "<cmd>Neotree buffers<cr>", { desc = "Buffers manager" })
+-- File Manager}}}
 
 -- {{{ LSP
 map("n", "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Definition" })
@@ -529,15 +534,15 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
 -- End Set TYPST filetype - Quarto specific }}}
 
 -- {{{ Telescope on start
--- vim.api.nvim_create_autocmd("VimEnter", {
---   callback = function()
---     if vim.fn.argv(0) == "" then
---       require("telescope.builtin").oldfiles()
---     end
---   end,
---   group = mygroup,
---   desc = "Start Telescope on start",
--- })
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    if vim.fn.argv(0) == "" then
+      require("telescope.builtin").oldfiles()
+    end
+  end,
+  group = mygroup,
+  desc = "Start Telescope on start",
+})
 -- End Telescope on start }}}
 
 -- End [[ AUTOCOMMANDS ]] }}}
@@ -560,6 +565,12 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+
+  -- {{{ UI
+  { "nvim-lua/plenary.nvim" },
+  { "nvim-tree/nvim-web-devicons" },
+  { "MunifTanjim/nui.nvim" },
+  -- UI }}}
 
   -- {{{ Colorscheme
   -- {{{ Kanagawa
@@ -830,7 +841,7 @@ require("lazy").setup({
 
       sign({ name = "DiagnosticSignError", text = "" })
       sign({ name = "DiagnosticSignWarn", text = "" })
-      sign({ name = "DiagnosticSignHint", text = "" })
+      sign({ name = "DiagnosticSignHint", text = "󰌵" })
       sign({ name = "DiagnosticSignInfo", text = "" })
 
       -- Hover float window configuration
@@ -993,17 +1004,51 @@ require("lazy").setup({
   },
   -- Statusline }}}
 
+  -- {{{ File Manager
+  { "nvim-neo-tree/neo-tree.nvim",
+    dependencies = {
+      -- "nvim-lua/plenary.nvim",
+      -- "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      -- "MunifTanjim/nui.nvim",
+      -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+    },
+    opts = {
+      close_if_last_window = true,
+      default_component_configs = {
+        indent = {
+          with_expanders = true,
+          expander_collapsed = "",
+          expander_expanded = "",
+          expander_highlight = "NeoTreeExpander",
+        },
+      },
+      window = {
+        position = "left",
+        width = 30,
+        mapping_options = {
+          noremap = true,
+          nowait = true,
+        },
+        mappings = {
+          ["<cr>"] = "open",
+          ["<RIGHT>"] = "open",
+          ["C"] = "close_node",
+          ["<LEFT>"] = "close_node",
+          ["<c-h>"] = "toggle_hidden",
+          ["<bs>"] = "navigate_up",
+          ["<c-LEFT>"] = "navigate_up",
+        },
+      },
+    },
+  },
+  -- File Manger }}}
+
   -- {{{ Telescope
   {
     "nvim-telescope/telescope.nvim",
-    dependencies = {
-      "nvim-telescope/telescope-file-browser.nvim",
-      "nvim-tree/nvim-web-devicons",
-    },
     lazy = false,
     config = function()
       local actions = require("telescope.actions")
-      local fb_actions = require("telescope").extensions.file_browser.actions
       require("telescope").setup({
         pickers = {
           colorscheme = {
@@ -1011,37 +1056,11 @@ require("lazy").setup({
           },
         },
         defaults = {
-          --   path_display = { "truncate" },
-          --   initial_mode = "normal", -- insert
-          --   sorting_strategy = "ascending",
-          layout_strategy = "vertical",
-          --   layout_config = {
-          --     preview_height = 0.55,
-          --   --   horizontal = {
-          --   --     prompt_position = "top",
-          --   --     preview_width = 0.55,
-          --   --     results_width = 0.8,
-          --   --   },
-          --     width = 0.85,
-          --     height = 0.85,
-          --     -- preview_cutoff = 130,
-          -- },
           extensions = {
-            file_browser = {
-              hidden = true,
-              grouped = true, -- show directories first
-              mappings = {
-                ["n"] = {
-                  ["<RIGHT>"] = actions.select_default,
-                  ["<LEFT>"] = fb_actions.goto_parent_dir,
-                },
-              },
-            },
           },
         },
       })
-      require("telescope").load_extension("file_browser")
-      -- require("telescope").load_extension("notify")
+      -- require("telescope").load_extension("file_browser")
     end,
   },
   -- Telescope }}}
