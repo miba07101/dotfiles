@@ -54,7 +54,7 @@ opt.splitright = true -- splitting window right
 opt.swapfile = false -- create a swap file
 opt.syntax = "on"
 opt.termguicolors = true -- terminal supports more colors
-opt.timeoutlen = 300 -- time to wait for a mapped sequence to complete, default 1000
+opt.timeoutlen = 400 -- time to wait for a mapped sequence to complete, default 1000
 opt.updatetime = 100 -- speed up response time
 opt.whichwrap:append("<,>,[,],h,l") -- keys allowed to move to the previous/next line when the beginning/end of line is reached
 opt.wrap = false -- disable wrapping of lines longer than the width of window
@@ -186,9 +186,9 @@ vim.g.maplocalleader = " "
 -- End Leader Key }}}
 
 -- {{{ Save, Quit, Reload
-map("n", "<C-s>", "<cmd>w<cr>", { desc = "Save" })
-map("n", "<C-w>", "<cmd>wq<cr>", { desc = "Save-Quit" })
-map("n", "<C-q>", "<cmd>q!<cr>", { desc = "Quit" })
+map({"n","i"}, "<C-s>", "<cmd>w<cr>", { desc = "Save" })
+map({"n","i"}, "<C-w>", "<cmd>wq<cr>", { desc = "Save-Quit" })
+map({"n","i"}, "<C-q>", "<cmd>q!<cr>", { desc = "Quit" })
 map("n", "<leader>x", "<cmd>w<cr><cmd>luafile %<cr><esc>", { desc = "Reload Lua" })
 -- End Save, Quit, Reload }}}
 
@@ -316,6 +316,10 @@ map("n", "<leader>dt", "<cmd>windo diffthis<CR>", { desc = "differ this" })
 map("n", "<leader>do", "<cmd>diffoff!<CR>", { desc = "differ off" })
 map("n", "<leader>du", "<cmd>diffupdate<CR>", { desc = "differ update" })
 -- End Diagnostic }}}
+
+-- {{{ Python
+map("n", "<leader>pe", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "pick venvs" })
+-- Python }}}
 
 -- End [[ KEYMAPS ]] }}}
 
@@ -570,9 +574,15 @@ require("lazy").setup({
   { "nvim-lua/plenary.nvim" },
   { "nvim-tree/nvim-web-devicons" },
   { "MunifTanjim/nui.nvim" },
+  {
+    "stevearc/dressing.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
   -- UI }}}
 
   -- {{{ Colorscheme
+
   -- {{{ Kanagawa
   {
     "rebelot/kanagawa.nvim",
@@ -641,7 +651,8 @@ require("lazy").setup({
       vim.cmd.colorscheme ("kanagawa")
     end,
   },
-  -- End Kanagawa }}}
+  -- Kanagawa }}}
+
   -- {{{ Adwaita
   {
     "Mofiqul/adwaita.nvim",
@@ -651,8 +662,35 @@ require("lazy").setup({
       -- vim.cmd.colorscheme("adwaita")
     end,
   },
-  -- End Adwaita }}}
-  -- End Colorscheme }}}
+  -- Adwaita }}}
+
+  -- {{{ VsCode
+  {
+    "Mofiqul/vscode.nvim",
+    priority = 1000,
+    config = function()
+      local c = require("vscode.colors").get_colors()
+      require("vscode").setup({
+        -- Enable italic comment
+        italic_comments = true,
+        -- Override colors (see ./lua/vscode/colors.lua)
+        color_overrides = {
+          -- vscLineNumber = '#4EFCFE',
+        },
+
+        -- Override highlight groups (see ./lua/vscode/theme.lua)
+        group_overrides = {
+          -- this supports the same val table as vim.api.nvim_set_hl
+          -- use colors from this colorscheme by requiring vscode.colors!
+          -- Cursor = { fg=c.vscDarkBlue, bg=c.vscLightGreen, bold=true },
+        },
+      })
+      -- vim.cmd.colorscheme("vscode")
+    end,
+  },
+  -- VsCode }}}
+
+  -- Colorscheme }}}
 
   -- {{{ Treesitter
   {
@@ -899,6 +937,9 @@ require("lazy").setup({
   },
   -- END LSP }}}
 
+  -- {{{ Autocompletition
+  -- Autocompletition }}}
+
   -- {{{ Statusline
   {
     "nvim-lualine/lualine.nvim",
@@ -937,7 +978,10 @@ require("lazy").setup({
       -- Python environment
       local function python_env()
         local venv = require('swenv.api').get_current_venv()
-        return venv and venv.name or ""
+        if venv and venv.name then
+          return venv.name:match("([^/]+)$") or ""
+        end
+        return ""
       end
 
       -- Buffer counts
@@ -974,7 +1018,8 @@ require("lazy").setup({
           lualine_b = { { macro_recording } },
           lualine_c = { },
           lualine_x = {},
-          lualine_y = { { python_env, icon = "" } },
+          -- lualine_y = { { python_env, icon = "" } },
+          lualine_y = { { python_env, icon = "" } },
           lualine_z = {
             { lsp_server_icon },
             { "diagnostics", colored = false, symbols = { error = " ", warn = " ", info = " ", hint = "󰌵 " } },
@@ -1087,5 +1132,50 @@ require("lazy").setup({
     end,
   },
   -- Mini.nvim collection }}}
+
+  -- {{{ Swenv - change python environments
+  {
+    "AckslD/swenv.nvim",
+    config = function()
+      require("swenv").setup({
+        get_venvs = function(venvs_path)
+          return require("swenv.api").get_venvs(venvs_path)
+        end,
+        venvs_path = vim.fn.expand("~/.py-venv"), -- zadat cestu k envs
+        post_set_venv = function()
+          vim.cmd(":LspRestart<cr>")
+        end,
+      })
+    end,
+    -- config = function()
+    --   local swenv = require("swenv")
+    --   local swenv_api = require("swenv.api")
+    --
+    --   -- Determine the venvs_path based on the OS type
+    --   local venvs_path
+    --
+    --   if os_type == "windows" then
+    --     venvs_path = vim.fn.expand("C:/Users/YourUsername/python-venv") -- Path for Windows
+    --   elseif os_type == "linux" then
+    --     venvs_path = vim.fn.expand("~/.py-venv") -- Path for Linux
+    --   elseif os_type == "wsl" then
+    --     venvs_path = vim.fn.expand("/mnt/c/Users/YourUsername/python-venv") -- Path for WSL
+    --   else
+    --     venvs_path = vim.fn.expand("~/.py-venv") -- Default fallback
+    --   end
+    --
+    --   swenv.setup({
+    --     get_venvs = function(path)
+    --       return swenv_api.get_venvs(path)
+    --     end,
+    --     venvs_path = venvs_path,
+    --     post_set_venv = function()
+    --       vim.cmd("LspRestart")
+    --     end,
+    --   })
+    -- end,
+  },
+  -- Swenv - change python environments }}}
+
 })
 -- }}}
