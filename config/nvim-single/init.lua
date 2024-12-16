@@ -6,6 +6,7 @@
 
 -- {{{ [[ DETECT OS ]]
 local function detect_os_type()
+  local os_username = os.getenv("USERNAME") or os.getenv("USER")
   local os_name = vim.loop.os_uname().sysname
   local os_type
 
@@ -22,12 +23,13 @@ local function detect_os_type()
     os_type = os_name
   end
 
-  return os_type
+  return os_type, os_username
 end
 
-local os_type = detect_os_type()
+local os_type, os_username = detect_os_type()
 
-print("detected os: " .. detect_os_type())
+-- print("detected os: " .. os_type)
+-- print("detected username: " .. os_username)
 -- }}}
 
 -- {{{ [[ OPTIONS ]]
@@ -139,6 +141,28 @@ else
 end
 -- End OS Cursor, Shell }}}
 
+-- {{{ Background
+local function set_background()
+  -- Try to detect terminal background color if possible
+  local term_bg = os.getenv("COLORTERM") -- Example: "truecolor" for modern terminals
+
+  -- Default to 'dark' if no theme detection is available
+  local background
+
+  -- Detect based on terminal or system theme
+  if term_bg then
+    -- If terminal background hints are available (not always reliable)
+    background = term_bg:find("light") and "light" or "dark"
+  end
+
+  -- Apply the background setting
+  vim.opt.background = background
+  print("Background set to: " .. background)
+end
+
+set_background()
+-- Background }}}
+
 -- {{{ Disable Built-in Plugins
 local disable_builtin_plugins = {
   "2html_plugin",
@@ -165,6 +189,7 @@ for i = 1, #disable_builtin_plugins do
   vim.g["loaded_" .. disable_builtin_plugins[i]] = true
 end
 -- End Disable Built-in Plugins }}}
+
 -- End [[ OPTIONS ]] }}}
 
 -- {{{ [[ KEYMAPS ]]
@@ -938,6 +963,168 @@ require("lazy").setup({
   -- END LSP }}}
 
   -- {{{ Autocompletition
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lsp-signature-help",
+      -- codeium
+      -- "jcdickinson/codeium.nvim",
+      -- sorting
+      "lukas-reineke/cmp-under-comparator",
+      -- snippets
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+      "rafamadriz/friendly-snippets",
+      -- icons
+      "onsails/lspkind.nvim",
+      -- bootstrap
+      "Jezda1337/cmp_bootstrap",
+    },
+    config = function()
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+      local lspkind = require("lspkind")
+
+      local has_words_before = function()
+        unpack = unpack or table.unpack
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0
+          and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+      end
+
+      -- luasnip nacita 'snippets' z friendly-snippets
+      require("luasnip.loaders.from_vscode").lazy_load()
+      require("luasnip.loaders.from_vscode").lazy_load({ paths = { "./snippets" } })
+
+      -- bootstrap
+      require("bootstrap-cmp.config"):setup({
+        file_types = { "jinja.html", "html" },
+        url = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
+      })
+
+      -- codeium
+      -- after install run ":Codeium Auth" and insert tokken from web
+      -- require("codeium").setup({})
+
+      cmp.setup({
+        -- enabled = function()
+        --   -- disable completion in comments
+        --   if require"cmp.config.context".in_treesitter_capture("comment")==true
+        -- or require"cmp.config.context".in_syntax_group("Comment") then
+        --     return false
+        --   else
+        --     return true
+        --   end
+        -- end,
+        enabled = true,
+        snippet = {
+          expand = function(args)
+            -- for luasnip
+            require("luasnip").lsp_expand(args.body)
+          end,
+        },
+        mapping = cmp.mapping.preset.insert({
+          -- ak to odkomentujem, tak mi nebude robit selkciu v ponuke
+          -- ["<Up>"] = cmp.config.disable,
+          -- ["<Down>"] = cmp.config.disable,
+          ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
+          ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
+          ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+          ["<C-e>"] = cmp.mapping({ i = cmp.mapping.abort(), c = cmp.mapping.close() }),
+          -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+          ["<C-y>"] = cmp.config.disable,
+          -- Accept currently selected item. Set `select` to `false`
+          -- to only confirm explicitly selected items.
+          ["<CR>"] = cmp.mapping.confirm({ select = false }),
+          ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+              -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+              -- they way you will only jump inside the snippet region
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            elseif has_words_before() then
+              cmp.complete()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+        }),
+        formatting = {
+          format = lspkind.cmp_format({
+            mode = "symbol_text",
+            ellipsis_char = "...",
+            -- symbol_map = { Codeium = "" },
+            menu = {
+              buffer = "[buf]",
+              -- codeium = "[cod]",
+              luasnip = "[snip]",
+              nvim_lsp = "[lsp]",
+              bootstrap = "[boot]",
+              -- otter = "[otter]",
+            },
+          }),
+        },
+        sources = {
+          { name = "buffer" },
+          { name = "path" },
+          -- { name = "codeium" },
+          { name = "luasnip" },
+          { name = "nvim_lsp" },
+          { name = "nvim_lsp_signature_help" },
+          -- { name = "bootstrap" },
+          -- { name = "otter" },
+        },
+        sorting = {
+          comparators = {
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            require("cmp-under-comparator").under,
+            cmp.config.compare.kind,
+            cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
+          },
+        },
+        confirm_opts = {
+          behavior = cmp.ConfirmBehavior.Replace,
+          select = false,
+        },
+        window = {
+          completion = cmp.config.window.bordered({
+            -- farby pre winhighlight su definovane v kanagawa teme
+            winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+            scrollbar = true,
+          }),
+          documentation = cmp.config.window.bordered({
+            -- farby pre winhighlight su definovane v kanagawa teme
+            winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+          }),
+        },
+        view = {
+          entries = "custom",
+        },
+        experimental = {
+          -- doplna text pri pisani, trochu otravne
+          -- ghost_text = true,
+          -- ghost_text = {hlgroup = "Comment"}
+        },
+      })
+    end,
+  },
   -- Autocompletition }}}
 
   -- {{{ Statusline
@@ -1030,8 +1217,8 @@ require("lazy").setup({
           lualine_b = {
             { "buffers",
               buffers_color = {
-                  active = { fg = "#FF8800" },
-                },
+                active = { fg = "#FF8800" },
+              },
               filetype_names = { alpha = '', TelescopePrompt = '', lazy = '', fzf = '' } },
           },
         },
@@ -1052,9 +1239,9 @@ require("lazy").setup({
   -- {{{ File Manager
   { "nvim-neo-tree/neo-tree.nvim",
     dependencies = {
-      -- "nvim-lua/plenary.nvim",
-      -- "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-      -- "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
       -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
     },
     opts = {
@@ -1125,57 +1312,251 @@ require("lazy").setup({
       })
       require('mini.notify').setup()
       require('mini.surround').setup()
-          -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-          -- - sd'   - [S]urround [D]elete [']quotes
-          -- - sr)'  - [S]urround [R]eplace [)] [']
+      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
+      -- - sd'   - [S]urround [D]elete [']quotes
+      -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.pairs').setup()
     end,
   },
   -- Mini.nvim collection }}}
 
+  -- {{{ Python
+
   -- {{{ Swenv - change python environments
   {
     "AckslD/swenv.nvim",
     config = function()
+      local venvs_path
+      if os_type == "windows" then
+        venvs_path = vim.fn.expand("C:/Users/" .. os_username .. "/python-venv") -- Path for Windows
+      elseif os_type == "linux" then
+        venvs_path = vim.fn.expand("~/.py-venv")
+      elseif os_type == "wsl" then
+        venvs_path = vim.fn.expand("/mnt/c/Users/" .. os_username .. "/python-venv") -- Path for WSL
+      else
+        venvs_path = vim.fn.expand("~/.py-venv") -- Default fallback
+      end
       require("swenv").setup({
         get_venvs = function(venvs_path)
           return require("swenv.api").get_venvs(venvs_path)
         end,
-        venvs_path = vim.fn.expand("~/.py-venv"), -- zadat cestu k envs
+        -- venvs_path = vim.fn.expand("~/.py-venv"), -- zadat cestu k envs
+        venvs_path = venvs_path,
         post_set_venv = function()
           vim.cmd(":LspRestart<cr>")
         end,
       })
     end,
-    -- config = function()
-    --   local swenv = require("swenv")
-    --   local swenv_api = require("swenv.api")
-    --
-    --   -- Determine the venvs_path based on the OS type
-    --   local venvs_path
-    --
-    --   if os_type == "windows" then
-    --     venvs_path = vim.fn.expand("C:/Users/YourUsername/python-venv") -- Path for Windows
-    --   elseif os_type == "linux" then
-    --     venvs_path = vim.fn.expand("~/.py-venv") -- Path for Linux
-    --   elseif os_type == "wsl" then
-    --     venvs_path = vim.fn.expand("/mnt/c/Users/YourUsername/python-venv") -- Path for WSL
-    --   else
-    --     venvs_path = vim.fn.expand("~/.py-venv") -- Default fallback
-    --   end
-    --
-    --   swenv.setup({
-    --     get_venvs = function(path)
-    --       return swenv_api.get_venvs(path)
-    --     end,
-    --     venvs_path = venvs_path,
-    --     post_set_venv = function()
-    --       vim.cmd("LspRestart")
-    --     end,
-    --   })
-    -- end,
   },
   -- Swenv - change python environments }}}
+
+  -- {{{ Jinja template syntax
+  { "lepture/vim-jinja", event = { "BufReadPre", "BufNewFile" } },
+  -- Jinja template syntax }}}
+
+  -- Python }}}
+
+  -- {{{ Notes
+  -- {{{ Obsidian
+  {
+    "epwalsh/obsidian.nvim",
+    version = "*", -- recommended, use latest release instead of latest commit
+    lazy = true,
+    ft = "markdown",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    opts = {
+      workspaces = {
+        {
+          name = "Obsidian",
+          path = vim.fn.expand("$OneDrive_DIR") .. "Dokumenty/zPoznamky/Obsidian/",
+        },
+      },
+      notes_subdir = "inbox",
+      new_notes_location = "notes_subdir",
+      disable_frontmatter = true,
+      templates = {
+        subdir = "templates",
+        date_format = "%Y-%m-%d",
+        time_format = "%H:%M:%S",
+      },
+      completion = {
+        nvim_cmp = true,
+        min_chars = 2,
+      },
+    },
+  },
+  -- Obsidian }}}
+
+  -- {{{ Markdown
+  {
+    'MeanderingProgrammer/markdown.nvim',
+    name = 'render-markdown', -- Only needed if you have another plugin named markdown.nvim
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('render-markdown').setup({})
+    end,
+  },
+  -- Markdown }}}
+
+  -- {{{ Markdown highlight headings and code blocks
+  {
+    "lukas-reineke/headlines.nvim",
+    enabled = true,
+    lazy = true,
+    ft = { "markdown", "quarto" },
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    config = function()
+      require("headlines").setup({
+        quarto = {
+          query = vim.treesitter.query.parse(
+            "markdown",
+            [[
+                (fenced_code_block) @codeblock
+                ]]
+          ),
+          codeblock_highlight = "CodeBlock",
+          treesitter_language = "markdown",
+        },
+        markdown = {
+          query = vim.treesitter.query.parse(
+            "markdown",
+            [[
+                (fenced_code_block) @codeblock
+                ]]
+          ),
+          codeblock_highlight = "CodeBlock",
+        },
+      })
+    end,
+  },
+  -- Markdown highlight headings and code blocks }}}
+
+  -- {{{ Vim-table-mode
+  {
+    "dhruvasagar/vim-table-mode",
+    ft = { "markdown", "quarto" },
+  },
+  -- Vim-table-mode }}}
+
+  -- Notes }}}
+
+  -- {{{ Quarto, Jupyterlab
+
+  -- {{{ Quarto
+  {
+    "quarto-dev/quarto-nvim",
+    ft = { "quarto" },
+    dev = false,
+    opts = {
+      lspFeatures = {
+        languages = { "python", "bash", "lua", "html", "javascript" },
+      },
+      -- codeRunner = {
+      --   enabled = true,
+      --   default_method = 'slime',
+      -- },
+    },
+    dependencies = {
+      {
+        -- for language features in code cells
+        -- added as a nvim-cmp source
+        "jmbuhr/otter.nvim",
+        dev = false,
+        opts = {},
+      },
+      {
+        -- Slime
+        -- send code from python/r/qmd documets to a terminal or REPL
+        -- like ipython, R, bash
+        -- "jpalardy/vim-slime"
+      },
+    },
+  },
+  -- Quarto }}}
+
+  -- {{{ Molten
+  {
+    "benlubas/molten-nvim",
+    dependencies = { "3rd/image.nvim" },
+    init = function()
+      vim.g.molten_image_provider = "image.nvim"
+      vim.g.molten_output_win_max_height = 20
+      vim.g.molten_virt_text_output = true
+      vim.g.molten_wrap_output = true
+      vim.g.molten_auto_open_output = false
+    end,
+  },
+  -- Molten }}}
+
+  -- {{{ Image.nvim
+  {
+    '3rd/image.nvim',
+    enabled = true,
+    dev = false,
+    ft = { 'markdown', 'quarto', 'vimwiki' },
+    dependencies = {
+      {
+        'vhyrro/luarocks.nvim',
+        priority = 1001, -- this plugin needs to run before anything else
+        opts = {
+          rocks = { 'magick' },
+        },
+      },
+    },
+    config = function()
+      -- Requirements
+      -- https://github.com/3rd/image.nvim?tab=readme-ov-file#requirements
+      -- check for dependencies with `:checkhealth kickstart`
+      -- needs:
+      -- sudo apt install imagemagick
+      -- sudo apt install libmagickwand-dev
+      -- sudo apt install liblua5.1-0-dev
+      -- sudo apt installl luajit
+
+      local image = require 'image'
+      image.setup {
+        backend = 'kitty',
+        integrations = {
+          markdown = {
+            enabled = true,
+            only_render_image_at_cursor = true,
+            filetypes = { 'markdown', 'vimwiki', 'quarto' },
+          },
+        },
+        editor_only_render_when_focused = false,
+        window_overlap_clear_enabled = true,
+        window_overlap_clear_ft_ignore = { 'cmp_menu', 'cmp_docs', 'scrollview' },
+        max_width = 100, --nil,
+        max_height = 12, --nil,
+        max_height_window_percentage = math.huge, --30,
+        max_width_window_percentage = math.huge, --nil,
+        kitty_method = 'normal',
+      }
+    end,
+  },
+  -- Image.nvim }}}
+
+  -- Quarto, Jupyterlab }}}
+
+  -- {{{ Mix
+
+  -- {{{ Colorizer
+  {
+    "norcalli/nvim-colorizer.lua",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("colorizer").setup()
+    end,
+  },
+  -- Colorizer }}}
+
+  -- {{{ Maximize window
+  { "szw/vim-maximizer" },
+  -- Maximize window }}}
+
+  -- Mix }}}
 
 })
 -- }}}
