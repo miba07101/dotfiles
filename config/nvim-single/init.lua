@@ -386,234 +386,6 @@ map("n", "<leader>od", ":!rm '%:p'<cr>:bd<cr>", { desc = "delete note" })
 
 -- [[ KEYMAPS ]] }}}
 
--- {{{ [[ AUTOCOMANDS ]]
-local mygroup = vim.api.nvim_create_augroup("vimrc", { clear = true })
-
--- {{{ Highlight on Yank
-vim.api.nvim_create_autocmd("TextYankPost", {
-  callback = function()
-    vim.highlight.on_yank({
-      higroup = "incsearch",
-      timeout = 300,
-    })
-  end,
-  group = mygroup,
-  desc = "Highlight yanked text",
-})
--- End Highlight on Yank }}}
-
--- {{{ Set Fold Markers for init.lua
-vim.api.nvim_create_autocmd("BufReadPost", {
-  pattern = "init.lua",
-  callback = function()
-    vim.opt_local.foldmethod = "marker" -- Use markers for init.lua
-    vim.opt_local.foldexpr = "" -- Disable foldexpr
-    vim.opt_local.foldlevel = 0 -- Start with all folds closed
-  end,
-  group = mygroup,
-  desc = "init.lua folding",
-})
--- End Set Fold Markers for init.lua }}}
-
--- {{{ Unfold at open
-vim.api.nvim_create_autocmd("BufWinEnter", {
-  pattern = { "*.py", "*.css", "*.scss", "*.html", "*.qmd", "*.md" },
-  command = [[:normal zR]], -- zR-open, zM-close folds
-  group = mygroup,
-  desc = "Unfold",
-})
--- End Unfold at open }}}
-
--- {{{ Conceal level = 1
--- vim.api.nvim_create_autocmd("BufRead", {
---   pattern = "*.md",
---   command = [[:setlocal conceallevel=1]],
---   group = mygroup,
---   desc = "Conceal level",
--- })
--- End Conceal level = 1 }}}
-
--- {{{ Autoformat code on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = { "*.py", "*.json", "*.css", "*.scss" },
-  callback = function(args)
-    require("conform").format({ bufnr = args.buf })
-  end,
-  group = mygroup,
-  desc = "Autoformat code on save",
-})
--- End Autoformat code on save }}}
-
--- {{{ Auto linting
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-  pattern = { "*" },
-  callback = function()
-    require("lint").try_lint()
-  end,
-})
--- End Auto linting }}}
-
--- {{{ Sass compilation on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = { "*.sass", "*.scss" },
-  command = [[:silent exec "!sass --no-source-map %:p %:r.css"]],
-  group = mygroup,
-  desc = "SASS compilation on save",
-})
--- End Sass compilation on save }}}
-
--- {{{ Shiftwidth setup
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = { "c", "cpp", "py", "java", "cs" },
---   callback = function()
---     vim.bo.shiftwidth = 4
---   end,
---   group = mygroup,
---   desc = "Set shiftwidth to 4 in these filetypes",
--- })
--- End Shiftwidth setup }}}
-
--- {{{ Restore cursor position
-vim.api.nvim_create_autocmd("BufReadPost", {
-  callback = function()
-    if vim.fn.line("'\"") >= 1 and vim.fn.line("'\"") <= vim.fn.line("$") and vim.fn.expand("&ft") ~= "commit" then
-      vim.cmd('normal! g`"')
-    end
-  end,
-  group = mygroup,
-  desc = "Restore cursor position",
-})
--- End Restore cursor position }}}
-
--- {{{ Show cursor line only in active window
-vim.api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
-  pattern = "*",
-  command = "set cursorline",
-  group = mygroup,
-  desc = "Show cursorline in active window",
-})
-vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
-  pattern = "*",
-  command = "set nocursorline",
-  group = mygroup,
-  desc = "Hide cursorline in inactive window",
-})
--- End Show cursor line only in active window }}}
-
--- {{{ Check if we need to reload the file when it changed
-vim.api.nvim_create_autocmd("FocusGained", {
-  command = [[:checktime]],
-  group = mygroup,
-  desc = "Update file when there are changes",
-})
--- End Check if we need to reload the file when it changed }}}
-
--- {{{ Windows to close with "q"
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "toggleterm", "help", "startuptime", "qf", "lspinfo" },
-  command = [[nnoremap <buffer><silent> q :close<CR>]],
-  group = mygroup,
-  desc = "Close windows with Q",
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "man",
-  command = [[nnoremap <buffer><silent> q :quit<CR>]],
-  group = mygroup,
-  desc = "Close man pages with Q",
-})
--- End Windows to close with "q" }}}
-
--- {{{ Don't auto comment new line
-vim.api.nvim_create_autocmd("BufEnter", {
-  command = [[set formatoptions-=cro]],
-  group = mygroup,
-  desc = "Don't auto comment new line",
-})
--- End Don't auto comment new line }}}
-
--- {{{ Open HELP on right side
--- vim.api.nvim_create_autocmd("BufEnter", {
---   command = [[if &buftype == 'help' | wincmd L | endif]],
---   group = mygroup,
---   desc = "Help on right side",
--- })
--- End Open HELP on right side }}}
-
--- {{{ Open terminal at same location as opened file
-vim.api.nvim_create_autocmd("BufEnter", {
-  command = [[silent! lcd %:p:h]],
-  group = mygroup,
-  desc = "Open terminal in same location as opened file",
-})
--- End Open terminal at same location as opened file }}}
-
--- {{{ Terminal options
-vim.api.nvim_create_autocmd("TermOpen", {
-  callback = function()
-    vim.opt_local.relativenumber = false
-    vim.opt_local.number = false
-    vim.cmd("startinsert!")
-  end,
-  group = mygroup,
-  desc = "Terminal Options",
-})
--- End Terminal options }}}
-
--- {{{ Remove trailling whitespace (medzeru na konci) when SAVE file
-vim.api.nvim_create_autocmd("BufWritePre", {
-  command = [[%s/\s\+$//e]],
-  group = mygroup,
-  desc = "Remove tarilling whitespace",
-})
--- End Remove trailling whitespace (medzeru na konci) when SAVE file }}}
-
--- {{{ Resize vim windows when overall window size changes
-vim.api.nvim_create_autocmd("VimResized", {
-  command = [[wincmd =]],
-  group = mygroup,
-  desc = "Resize windows to equal",
-})
--- End Resize vim windows when overall window size changes }}}
-
--- {{{ PYTHON
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "python",
-  command = [[nnoremap <buffer> <M-p> :w<CR>:terminal python3 "%"<CR>]],
-  group = mygroup,
-  desc = "Open file in python terminal",
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "python",
-  command = [[setlocal colorcolumn=80]],
-  group = mygroup,
-  desc = "Set colorcolumn for python files",
-})
--- End PYTHON }}}
-
--- {{{ Set TYPST filetype - Quarto specific
-vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
-  pattern = "*.typ",
-  command = "set filetype=typst",
-  desc = "Set filetype for typst files",
-})
--- End Set TYPST filetype - Quarto specific }}}
-
--- {{{ Telescope on start
-vim.api.nvim_create_autocmd("VimEnter", {
-  callback = function()
-    if vim.fn.argv(0) == "" then
-      require("telescope.builtin").oldfiles()
-    end
-  end,
-  group = mygroup,
-  desc = "Start Telescope on start",
-})
--- End Telescope on start }}}
-
--- End [[ AUTOCOMMANDS ]] }}}
-
 -- {{{ [[ LAZY MANAGER ]]
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -1223,7 +995,7 @@ require("lazy").setup({
       -- Macro recording status
       local function macro_recording()
         local recording = vim.fn.reg_recording()
-        return recording ~= "" and "󰻃" .. recording or ""
+        return recording ~= "" and "󰻃 " .. recording or ""
       end
 
       -- Lualine setup
@@ -1585,7 +1357,7 @@ require("lazy").setup({
 
   -- {{{ Molten
   (function()
-    if os_type == "linux" or os_type == "wsl" then
+    if os_type == "linux" then
       return {
         "benlubas/molten-nvim",
         dependencies = { "3rd/image.nvim" },
@@ -1603,7 +1375,7 @@ require("lazy").setup({
 
   -- {{{ Image.nvim
   (function()
-    if os_type == "linux" or os_type == "wsl" then
+    if os_type == "linux" then
       return {
         "3rd/image.nvim",
         enabled = true,
@@ -1675,3 +1447,231 @@ require("lazy").setup({
 
 })
 -- }}}
+
+-- {{{ [[ AUTOCOMANDS ]]
+local mygroup = vim.api.nvim_create_augroup("vimrc", { clear = true })
+
+-- {{{ Highlight on Yank
+vim.api.nvim_create_autocmd("TextYankPost", {
+  callback = function()
+    vim.highlight.on_yank({
+      higroup = "incsearch",
+      timeout = 300,
+    })
+  end,
+  group = mygroup,
+  desc = "Highlight yanked text",
+})
+-- End Highlight on Yank }}}
+
+-- {{{ Set Fold Markers for init.lua
+vim.api.nvim_create_autocmd("BufReadPost", {
+  pattern = "init.lua",
+  callback = function()
+    vim.opt_local.foldmethod = "marker" -- Use markers for init.lua
+    vim.opt_local.foldexpr = "" -- Disable foldexpr
+    vim.opt_local.foldlevel = 0 -- Start with all folds closed
+  end,
+  group = mygroup,
+  desc = "init.lua folding",
+})
+-- End Set Fold Markers for init.lua }}}
+
+-- {{{ Unfold at open
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  pattern = { "*.py", "*.css", "*.scss", "*.html", "*.qmd", "*.md" },
+  command = [[:normal zR]], -- zR-open, zM-close folds
+  group = mygroup,
+  desc = "Unfold",
+})
+-- End Unfold at open }}}
+
+-- {{{ Conceal level = 1
+-- vim.api.nvim_create_autocmd("BufRead", {
+--   pattern = "*.md",
+--   command = [[:setlocal conceallevel=1]],
+--   group = mygroup,
+--   desc = "Conceal level",
+-- })
+-- End Conceal level = 1 }}}
+
+-- {{{ Autoformat code on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = { "*.py", "*.json", "*.css", "*.scss" },
+  callback = function(args)
+    require("conform").format({ bufnr = args.buf })
+  end,
+  group = mygroup,
+  desc = "Autoformat code on save",
+})
+-- End Autoformat code on save }}}
+
+-- {{{ Auto linting
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+  pattern = { "*" },
+  callback = function()
+    require("lint").try_lint()
+  end,
+})
+-- End Auto linting }}}
+
+-- {{{ Sass compilation on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = { "*.sass", "*.scss" },
+  command = [[:silent exec "!sass --no-source-map %:p %:r.css"]],
+  group = mygroup,
+  desc = "SASS compilation on save",
+})
+-- End Sass compilation on save }}}
+
+-- {{{ Shiftwidth setup
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = { "c", "cpp", "py", "java", "cs" },
+--   callback = function()
+--     vim.bo.shiftwidth = 4
+--   end,
+--   group = mygroup,
+--   desc = "Set shiftwidth to 4 in these filetypes",
+-- })
+-- End Shiftwidth setup }}}
+
+-- {{{ Restore cursor position
+vim.api.nvim_create_autocmd("BufReadPost", {
+  callback = function()
+    if vim.fn.line("'\"") >= 1 and vim.fn.line("'\"") <= vim.fn.line("$") and vim.fn.expand("&ft") ~= "commit" then
+      vim.cmd('normal! g`"')
+    end
+  end,
+  group = mygroup,
+  desc = "Restore cursor position",
+})
+-- End Restore cursor position }}}
+
+-- {{{ Show cursor line only in active window
+vim.api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
+  pattern = "*",
+  command = "set cursorline",
+  group = mygroup,
+  desc = "Show cursorline in active window",
+})
+vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
+  pattern = "*",
+  command = "set nocursorline",
+  group = mygroup,
+  desc = "Hide cursorline in inactive window",
+})
+-- End Show cursor line only in active window }}}
+
+-- {{{ Check if we need to reload the file when it changed
+vim.api.nvim_create_autocmd("FocusGained", {
+  command = [[:checktime]],
+  group = mygroup,
+  desc = "Update file when there are changes",
+})
+-- End Check if we need to reload the file when it changed }}}
+
+-- {{{ Windows to close with "q"
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "toggleterm", "help", "startuptime", "qf", "lspinfo" },
+  command = [[nnoremap <buffer><silent> q :close<CR>]],
+  group = mygroup,
+  desc = "Close windows with Q",
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "man",
+  command = [[nnoremap <buffer><silent> q :quit<CR>]],
+  group = mygroup,
+  desc = "Close man pages with Q",
+})
+-- End Windows to close with "q" }}}
+
+-- {{{ Don't auto comment new line
+vim.api.nvim_create_autocmd("BufEnter", {
+  command = [[set formatoptions-=cro]],
+  group = mygroup,
+  desc = "Don't auto comment new line",
+})
+-- End Don't auto comment new line }}}
+
+-- {{{ Open HELP on right side
+-- vim.api.nvim_create_autocmd("BufEnter", {
+--   command = [[if &buftype == 'help' | wincmd L | endif]],
+--   group = mygroup,
+--   desc = "Help on right side",
+-- })
+-- End Open HELP on right side }}}
+
+-- {{{ Open terminal at same location as opened file
+vim.api.nvim_create_autocmd("BufEnter", {
+  command = [[silent! lcd %:p:h]],
+  group = mygroup,
+  desc = "Open terminal in same location as opened file",
+})
+-- End Open terminal at same location as opened file }}}
+
+-- {{{ Terminal options
+vim.api.nvim_create_autocmd("TermOpen", {
+  callback = function()
+    vim.opt_local.relativenumber = false
+    vim.opt_local.number = false
+    vim.cmd("startinsert!")
+  end,
+  group = mygroup,
+  desc = "Terminal Options",
+})
+-- End Terminal options }}}
+
+-- {{{ Remove trailling whitespace (medzeru na konci) when SAVE file
+vim.api.nvim_create_autocmd("BufWritePre", {
+  command = [[%s/\s\+$//e]],
+  group = mygroup,
+  desc = "Remove tarilling whitespace",
+})
+-- End Remove trailling whitespace (medzeru na konci) when SAVE file }}}
+
+-- {{{ Resize vim windows when overall window size changes
+vim.api.nvim_create_autocmd("VimResized", {
+  command = [[wincmd =]],
+  group = mygroup,
+  desc = "Resize windows to equal",
+})
+-- End Resize vim windows when overall window size changes }}}
+
+-- {{{ PYTHON
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  command = [[nnoremap <buffer> <M-p> :w<CR>:terminal python3 "%"<CR>]],
+  group = mygroup,
+  desc = "Open file in python terminal",
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  command = [[setlocal colorcolumn=80]],
+  group = mygroup,
+  desc = "Set colorcolumn for python files",
+})
+-- End PYTHON }}}
+
+-- {{{ Set TYPST filetype - Quarto specific
+vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
+  pattern = "*.typ",
+  command = "set filetype=typst",
+  desc = "Set filetype for typst files",
+})
+-- End Set TYPST filetype - Quarto specific }}}
+
+-- {{{ Telescope on start
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    if vim.fn.argv(0) == "" then
+      require("telescope.builtin").oldfiles()
+    end
+  end,
+  group = mygroup,
+  desc = "Start Telescope on start",
+})
+-- End Telescope on start }}}
+
+-- End [[ AUTOCOMMANDS ]] }}}
