@@ -195,18 +195,18 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 -- End Leader Key }}}
 
--- {{{ Save, Quit, Reload
-map({"n","i"}, "<C-s>", "<cmd>w<cr>", { desc = "Save" })
-map({"n","i"}, "<C-w>", "<cmd>wq<cr>", { desc = "Save-Quit" })
-map({"n","i"}, "<C-q>", "<cmd>q!<cr>", { desc = "Quit" })
-map("n", "<leader>x", "<cmd>w<cr><cmd>luafile %<cr><esc>", { desc = "Reload Lua" })
--- End Save, Quit, Reload }}}
+-- {{{ Save, Quit
+map({ "n", "i" }, "<C-s>", "<cmd>w<cr>", { desc = "save" })
+map({ "n", "i" }, "<C-w>", "<cmd>wq<cr>", { desc = "save-quit" })
+map({ "n", "i" }, "<C-q>", "<cmd>q!<cr>", { desc = "quit" })
+-- map("n", "<leader>x", "<cmd>w<cr><cmd>luafile %<cr><esc>", { desc = "Reload Lua" })
+-- }}}
 
 -- {{{ File System Commands
--- map("n", "<leader>fc", "<cmd>!touch<space>", { desc = "Create file" })
+map("n", "<leader>k", ":!touch<space>", { desc = "Create file" })
 -- map("n", "<leader>dc", "<cmd>!mkdir<space>", { desc = "Create directory" })
 -- map("n", "<leader>mv", "<cmd>!mv<space>%<space>", { desc = "Move" })
--- End File System Commands }}}
+-- }}}
 
 -- {{{ Windows
 map("n", "<leader>wv", "<C-w>v", { desc = "vertical" })
@@ -225,19 +225,19 @@ map("n", "<S-Down>", "<cmd>resize -2<cr>", { desc = "Resize DOWN" })
 map("n", "<S-Left>", "<cmd>vertical resize -2<cr>", { desc = "Resize LEFT" })
 map("n", "<S-Right>", "<cmd>vertical resize +2<cr>", { desc = "Resize RIGHT" })
 map("n", "<S-Right>", "<cmd>vertical resize +2<cr>", { desc = "Resize RIGHT" })
--- End Windows }}}
+-- }}}
 
 -- {{{ Buffers
 map("n", "<A-Right>", "<cmd>bnext<cr>", { desc = "Next buffer" })
 map("n", "<A-Left>", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
 map("n", "<A-UP>", "<cmd>bp<bar>bd#<cr>", { desc = "Quit buffer" })
 map("n", "<A-Down>", "<cmd>bp<bar>bd#<cr>", { desc = "Quit buffer" })
--- End Buffers }}}
+-- }}}
 
 -- {{{ Indenting
 map("v", "<", "<gv", { desc = "Unindent line" })
 map("v", ">", ">gv", { desc = "Indent line" })
--- End Indenting }}}
+-- }}}
 
 -- {{{ Move Lines
 map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move text DOWN" })
@@ -248,12 +248,31 @@ map("v", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move text UP" })
 map("v", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move text DOWN" })
 map("x", "<A-j>", "<cmd>move '>+1<cr>gv-gv", { desc = "Move text UP" })
 map("x", "<A-k>", "<cmd>move '<-2<cr>gv-gv", { desc = "Move text DOWN" })
--- End Move Lines }}}
+-- }}}
 
 -- {{{ Better Paste
 map("v", "p", '"_dP', { desc = "Paste no yank" })
 map("n", "x", '"_x', { desc = "Delete character no yank" })
--- End Better Paste }}}
+-- }}}
+
+-- {{{ Vertical move and center
+map("n", "<C-d>", "<C-d>zz", { desc = "up and center" })
+map("n", "<C-u>", "<C-u>zz", { desc = "down and center" })
+-- }}}
+
+-- {{{ Increment/decrement numbers
+map("n", "<leader>+", "<C-a>", { desc = "increment" })
+map("n", "<leader>-", "<C-x>", { desc = "decrement" })
+-- }}}
+
+-- {{{ Replace word under cursor
+map("n", "<leader>r", "*``cgn", { desc = "replace word" })
+-- }}}
+
+-- {{{ Explicitly yank to system clipboard (highlighted and entire row)
+map({ "n", "v" }, "<leader>y", [["+y]], { desc = "yank to clipboard" })
+map("n", "<leader>Y", [["+Y]], { desc = "yank to clipboard" })
+-- }}}
 
 -- {{{ Close floating window with ESC
 local function close_floating()
@@ -266,13 +285,13 @@ end
 map("n", "<Esc>", function()
   close_floating()
 end, { desc = "Close with ESC" })
--- Close floating window with ESC }}}
+-- }}}
 
 -- {{{ Terminal
 map("n", "<C-`>", "<cmd>horizontal terminal<cr>", { desc = "terminal" })
 map("t", "<C-`>", "exit<cr>", { desc = "exit terminal" })
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
--- End Terminal }}}
+-- }}}
 
 -- {{{ Mix
 map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "No highlight" })
@@ -280,7 +299,7 @@ map("n", "<A-a>", "<esc>ggVG<cr>", { desc = "Select all text" })
 map("n", "<BS>", "X", { desc = "TAB as X in NORMAL mode" })
 map("n", "<A-v>", "<C-q>", { desc = "Visual block mode" })
 map("n", "<leader>rw", ":%s/<c-r><c-w>//g<left><left>", { desc = "Replace word" })
--- End Mix }}}
+-- }}}
 
 -- {{{ NeoVim
 map("n", "<leader>vn", "<cmd>set relativenumber!<cr>", { desc = "Numbers toggle" })
@@ -301,12 +320,12 @@ map("n", "<leader>vk", function()
     vim.o.concealcursor = "n"
   end
 end, { desc = "Conceal cursor toggle" })
--- End NeoVim }}}
+-- }}}
 
 -- {{{ File Manager
 map("n", "<leader>e", "<cmd>Neotree toggle %:p:h<cr>", { desc = "File manager" })
 -- map("n", "<leader>eb", "<cmd>Neotree buffers<cr>", { desc = "Buffers manager" })
--- File Manager}}}
+-- }}}
 
 -- {{{ LSP
 map("n", "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Definition" })
@@ -321,7 +340,7 @@ end, { desc = "Formatting" })
 map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code action" })
 map("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "Signature help" })
 map("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "Server info" })
--- End LSP }}}
+-- }}}
 
 -- {{{ Diagnostic
 -- enable / disable diagnostic
@@ -343,15 +362,15 @@ map("n", "<leader>df", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "ope
 map("n", "<leader>dt", "<cmd>windo diffthis<CR>", { desc = "differ this" })
 map("n", "<leader>do", "<cmd>diffoff!<CR>", { desc = "differ off" })
 map("n", "<leader>du", "<cmd>diffupdate<CR>", { desc = "differ update" })
--- End Diagnostic }}}
+-- }}}
 
 -- {{{ Python
 map("n", "<leader>pe", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "pick venvs" })
--- Python }}}
+-- }}}
 
 -- {{{ Lazy
 map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Lazy" })
--- Lazy }}}
+-- }}}
 
 -- {{{ Telescope
 map("n", "<leader>fx", "<cmd>Telescope<cr>", { desc = "telescope" })
@@ -364,7 +383,7 @@ map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "buffers" })
 map("n", "<leader>fc", "<cmd>Telescope colorscheme<cr>", { desc = "colorscheme" })
 map("n", "<leader>fd", "<cmd>Telescope diagnostics<cr>", { desc = "diagnostics" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "tags" })
--- Telescope }}}
+-- }}}
 
 -- {{{ Quarto
 map("n", "<leader>qa", "<cmd>QuartoActivate<cr>", { desc = "activate" })
@@ -376,7 +395,7 @@ map("n", "<leader>qt", "<cmd>TableModeToggle<cr><cr>", { desc = "table mode" })
 -- align columns in markdown table
 -- https://heitorpb.github.io/bla/format-tables-in-vim/
 map("v", "<leader>qt", ":!column -t -s '|' -o '|'<CR><CR>", { desc = "align table" })
--- Quarto }}}
+-- }}}
 
 -- {{{ Otter (for quarto completion)
 map("n", "<leader>qod", "<cmd>lua require('otter').ask_definition()<cr>", { desc = "definition" })
@@ -384,26 +403,40 @@ map("n", "<leader>qoh", "<cmd>lua require('otter').ask_hover()<cr>", { desc = "h
 map("n", "<leader>qor", "<cmd>lua require('otter').ask_references()<cr>", { desc = "references" })
 map("n", "<leader>qon", "<cmd>lua require('otter').ask_rename()<cr>", { desc = "rename" })
 map("n", "<leader>qof", "<cmd>lua require('otter').ask_format()<cr>", { desc = "format" })
--- Otter (for quarto completion) }}}
+-- }}}
 
 -- {{{ Obsidian
 map("n", "<leader>ol", "<cmd>lua require('obsidian').util.gf_passthrough()<cr>", { desc = "wiki links" })
 map("n", "<leader>ob", "<cmd>lua require('obsidian').util.toggle_checkbox()<cr>", { desc = "toggle checkbox" })
 map("n", "<leader>oo", ":cd ${OneDrive_DIR}/Dokumenty/zPoznamky/Obsidian/<cr>", { desc = "open vault" })
-map("n", "<leader>ot", ":ObsidianTemplate t-nvim-note<cr> :lua vim.cmd([[1,/^\\S/s/^\\n\\{1,}//]])<cr>", { desc = "note teplate" })
+map(
+  "n",
+  "<leader>ot",
+  ":ObsidianTemplate t-nvim-note<cr> :lua vim.cmd([[1,/^\\S/s/^\\n\\{1,}//]])<cr>",
+  { desc = "note teplate" }
+)
 -- map("n", "<leader>of", ":s/\\(# \\)[^-]*_/\\1/ | s/-/ /g<cr>", { desc = "strip date - must have cursor on title" })
-map("n", "<leader>os", "<cmd>lua require('telescope.builtin').find_files({ search_dirs = { vim.fn.expand('$OneDrive_DIR') .. '/Dokumenty/zPoznamky/Obsidian/' } })<cr>", { desc = "search in vault" })
-map("n", "<leader>ow", "<cmd>lua require('telescope.builtin').live_grep({ search_dirs = { vim.fn.expand('$OneDrive_DIR') .. '/Dokumenty/zPoznamky/Obsidian/' } })<cr>", { desc = "search in vault" })
+map(
+  "n",
+  "<leader>os",
+  "<cmd>lua require('telescope.builtin').find_files({ search_dirs = { vim.fn.expand('$OneDrive_DIR') .. '/Dokumenty/zPoznamky/Obsidian/' } })<cr>",
+  { desc = "search in vault" }
+)
+map(
+  "n",
+  "<leader>ow",
+  "<cmd>lua require('telescope.builtin').live_grep({ search_dirs = { vim.fn.expand('$OneDrive_DIR') .. '/Dokumenty/zPoznamky/Obsidian/' } })<cr>",
+  { desc = "search in vault" }
+)
 -- map("n", "<leader>os", ":Telescope find_files search_dirs={\"/home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/\"}<cr>", { desc = "search in vault" })
 -- map("n", "<leader>ow", ":Telescope live_grep search_dirs={\"/home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/\"}<cr>", { desc = "search in notes" })
 -- for review workflow
 map("n", "<leader>od", ":!rm '%:p'<cr>:bd<cr>", { desc = "delete note" })
--- Obsidian }}}
+-- }}}
 
 -- {{{ Markdown
--- map("n", "<leader>mp", "<cmd>RenderMarkdownToggle<cr><cr>", { desc = "markdown preview" })
--- Markdown )))
-
+map("n", "<leader>mp", "<cmd>RenderMarkdownToggle<cr><cr>", { desc = "markdown preview" })
+-- )))
 
 -- End [[ KEYMAPS ]] }}}
 
@@ -506,7 +539,7 @@ require("lazy").setup({
           }
         end,
       })
-      vim.cmd.colorscheme ("kanagawa")
+      vim.cmd.colorscheme("kanagawa")
     end,
   },
   -- }}}
@@ -695,7 +728,7 @@ require("lazy").setup({
         automatic_installation = true,
       })
 
-      -- local capabilities = require('blink.cmp').get_lsp_capabilities()
+      local capabilities = require("blink.cmp").get_lsp_capabilities()
       -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
       -- local on_attach = function(client, bufnr)
       --   -- sem zadat on_attach funkcie doplnkov
@@ -798,223 +831,233 @@ require("lazy").setup({
 
   -- {{{ [ Autocompletition ]
 
-  -- {{{ supermaven - ai autocompletition
-  {
-    "supermaven-inc/supermaven-nvim",
-    config = function()
-      require("supermaven-nvim").setup({
-        keymaps = {
-          accept_suggestion = "<Tab>",
-          clear_suggestion = "<A-n>",
-          accept_word = "<A-m>",
-        },
-        ignore_filetypes = { cpp = true }, -- or { "cpp", }
-        color = {
-          suggestion_color = "#ffffff",
-          cterm = 244,
-        },
-        log_level = "info", -- set to "off" to disable logging completely
-        disable_inline_completion = false, -- disables inline completion for use with cmp
-        disable_keymaps = false, -- disables built in keymaps for more manual control
-      })
-    end,
-  },
-  -- }}}
-
-  -- {{{ cmp
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lsp-signature-help",
-      -- codeium
-      -- "jcdickinson/codeium.nvim",
-      -- sorting
-      "lukas-reineke/cmp-under-comparator",
-      -- snippets
-      "L3MON4D3/LuaSnip",
-      "saadparwaiz1/cmp_luasnip",
-      "rafamadriz/friendly-snippets",
-      -- icons
-      "onsails/lspkind.nvim",
-      -- bootstrap
-      "Jezda1337/cmp_bootstrap",
-    },
-    config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-      local lspkind = require("lspkind")
-
-      local has_words_before = function()
-        unpack = unpack or table.unpack
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0
-          and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-      end
-
-      -- luasnip nacita 'snippets' z friendly-snippets
-      require("luasnip.loaders.from_vscode").lazy_load()
-      require("luasnip.loaders.from_vscode").lazy_load({ paths = { "./snippets" } })
-
-      -- bootstrap
-      require("bootstrap-cmp.config"):setup({
-        file_types = { "jinja.html", "html" },
-        url = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
-      })
-
-      -- codeium
-      -- after install run ":Codeium Auth" and insert tokken from web
-      -- require("codeium").setup({})
-
-      cmp.setup({
-        -- enabled = function()
-        --   -- disable completion in comments
-        --   if require"cmp.config.context".in_treesitter_capture("comment")==true
-        -- or require"cmp.config.context".in_syntax_group("Comment") then
-        --     return false
-        --   else
-        --     return true
-        --   end
-        -- end,
-        enabled = true,
-        snippet = {
-          expand = function(args)
-            -- for luasnip
-            require("luasnip").lsp_expand(args.body)
-          end,
-        },
-        mapping = cmp.mapping.preset.insert({
-          -- ak to odkomentujem, tak mi nebude robit selkciu v ponuke
-          -- ["<Up>"] = cmp.config.disable,
-          -- ["<Down>"] = cmp.config.disable,
-          ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
-          ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
-          ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-          ["<C-e>"] = cmp.mapping({ i = cmp.mapping.abort(), c = cmp.mapping.close() }),
-          -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
-          ["<C-y>"] = cmp.config.disable,
-          -- Accept currently selected item. Set `select` to `false`
-          -- to only confirm explicitly selected items.
-          ["<CR>"] = cmp.mapping.confirm({ select = false }),
-          ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_next_item()
-              -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-              -- they way you will only jump inside the snippet region
-            elseif luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
-            elseif has_words_before() then
-              cmp.complete()
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-          ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-        }),
-        formatting = {
-          format = function(entry,item)
-            local color_item = require("nvim-highlight-colors").format(entry, { kind = item.kind })
-            item = lspkind.cmp_format({
-              mode = "symbol_text",
-              ellipsis_char = "...",
-              -- symbol_map = { Codeium = "" },
-              symbol_map = { Supermaven = "" },
-              menu = {
-                buffer = "[buf]",
-                -- codeium = "[cod]",
-                luasnip = "[snip]",
-                nvim_lsp = "[lsp]",
-                bootstrap = "[boot]",
-                -- otter = "[otter]",
-              },
-            })(entry, item)
-            if color_item.abbr_hl_group then
-              item.kind_hl_group = color_item.abbr_hl_group
-              item.kind = color_item.abbr
-            end
-            return item
-          end
-        },
-        sources = {
-          { name = "buffer" },
-          { name = "path" },
-          -- { name = "codeium" },
-          { name = "supermaven" },
-          { name = "luasnip" },
-          { name = "nvim_lsp" },
-          { name = "nvim_lsp_signature_help" },
-          -- { name = "bootstrap" },
-          -- { name = "otter" },
-        },
-        sorting = {
-          comparators = {
-            cmp.config.compare.offset,
-            cmp.config.compare.exact,
-            cmp.config.compare.score,
-            require("cmp-under-comparator").under,
-            cmp.config.compare.kind,
-            cmp.config.compare.sort_text,
-            cmp.config.compare.length,
-            cmp.config.compare.order,
-          },
-        },
-        confirm_opts = {
-          behavior = cmp.ConfirmBehavior.Replace,
-          select = false,
-        },
-        window = {
-          completion = cmp.config.window.bordered({
-            -- farby pre winhighlight su definovane v kanagawa teme
-            winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
-            scrollbar = true,
-          }),
-          documentation = cmp.config.window.bordered({
-            -- farby pre winhighlight su definovane v kanagawa teme
-            winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
-          }),
-        },
-        view = {
-          entries = "custom",
-        },
-        experimental = {
-          -- doplna text pri pisani, trochu otravne
-          -- ghost_text = true,
-          -- ghost_text = {hlgroup = "Comment"}
-        },
-      })
-    end,
-  },
-  -- }}}
-
-  -- -- {{{ blink
+  -- -- {{{ supermaven - ai autocompletition
   -- {
-  --   'saghen/blink.cmp',
-  --   dependencies = 'rafamadriz/friendly-snippets',
-  --
-  --   version = 'v0.*',
-  --
-  --   opts = {
-  --     keymap = { preset = 'default' },
-  --
-  --     appearance = {
-  --       use_nvim_cmp_as_default = true,
-  --       nerd_font_variant = 'mono'
-  --     },
-  --
-  --     signature = { enabled = true }
-  --   },
+  --   "supermaven-inc/supermaven-nvim",
+  --   config = function()
+  --     require("supermaven-nvim").setup({
+  --       keymaps = {
+  --         accept_suggestion = "<Tab>",
+  --         clear_suggestion = "<A-n>",
+  --         accept_word = "<A-m>",
+  --       },
+  --       ignore_filetypes = { cpp = true }, -- or { "cpp", }
+  --       color = {
+  --         suggestion_color = "#717C7C",
+  --         cterm = 244,
+  --       },
+  --       log_level = "info", -- set to "off" to disable logging completely
+  --       disable_inline_completion = true, -- disables inline completion for use with cmp
+  --       disable_keymaps = false, -- disables built in keymaps for more manual control
+  --     })
+  --   end,
   -- },
   -- -- }}}
+
+  -- -- {{{ cmp
+  -- {
+  --   "hrsh7th/nvim-cmp",
+  --   dependencies = {
+  --     "hrsh7th/cmp-buffer",
+  --     "hrsh7th/cmp-path",
+  --     "hrsh7th/cmp-nvim-lsp",
+  --     "hrsh7th/cmp-nvim-lsp-signature-help",
+  --     -- codeium
+  --     -- "jcdickinson/codeium.nvim",
+  --     -- sorting
+  --     "lukas-reineke/cmp-under-comparator",
+  --     -- snippets
+  --     "L3MON4D3/LuaSnip",
+  --     "saadparwaiz1/cmp_luasnip",
+  --     "rafamadriz/friendly-snippets",
+  --     -- icons
+  --     "onsails/lspkind.nvim",
+  --     -- bootstrap
+  --     "Jezda1337/cmp_bootstrap",
+  --   },
+  --   config = function()
+  --     local cmp = require("cmp")
+  --     local luasnip = require("luasnip")
+  --     local lspkind = require("lspkind")
+  --
+  --     local has_words_before = function()
+  --       unpack = unpack or table.unpack
+  --       local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  --       return col ~= 0
+  --         and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+  --     end
+  --
+  --     -- luasnip nacita 'snippets' z friendly-snippets
+  --     require("luasnip.loaders.from_vscode").lazy_load()
+  --     require("luasnip.loaders.from_vscode").lazy_load({ paths = { "./snippets" } })
+  --
+  --     -- bootstrap
+  --     require("bootstrap-cmp.config"):setup({
+  --       file_types = { "jinja.html", "html" },
+  --       url = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
+  --     })
+  --
+  --     -- codeium
+  --     -- after install run ":Codeium Auth" and insert tokken from web
+  --     -- require("codeium").setup({})
+  --
+  --     cmp.setup({
+  --       -- enabled = function()
+  --       --   -- disable completion in comments
+  --       --   if require"cmp.config.context".in_treesitter_capture("comment")==true
+  --       -- or require"cmp.config.context".in_syntax_group("Comment") then
+  --       --     return false
+  --       --   else
+  --       --     return true
+  --       --   end
+  --       -- end,
+  --       enabled = true,
+  --       snippet = {
+  --         expand = function(args)
+  --           -- for luasnip
+  --           require("luasnip").lsp_expand(args.body)
+  --         end,
+  --       },
+  --       mapping = cmp.mapping.preset.insert({
+  --         -- ak to odkomentujem, tak mi nebude robit selkciu v ponuke
+  --         -- ["<Up>"] = cmp.config.disable,
+  --         -- ["<Down>"] = cmp.config.disable,
+  --         ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
+  --         ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
+  --         ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+  --         ["<C-e>"] = cmp.mapping({ i = cmp.mapping.abort(), c = cmp.mapping.close() }),
+  --         -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+  --         ["<C-y>"] = cmp.config.disable,
+  --         -- Accept currently selected item. Set `select` to `false`
+  --         -- to only confirm explicitly selected items.
+  --         ["<CR>"] = cmp.mapping.confirm({ select = false }),
+  --         ["<Tab>"] = cmp.mapping(function(fallback)
+  --           if cmp.visible() then
+  --             cmp.select_next_item()
+  --             -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+  --             -- they way you will only jump inside the snippet region
+  --           elseif luasnip.expand_or_jumpable() then
+  --             luasnip.expand_or_jump()
+  --           elseif has_words_before() then
+  --             cmp.complete()
+  --           else
+  --             fallback()
+  --           end
+  --         end, { "i", "s" }),
+  --         ["<S-Tab>"] = cmp.mapping(function(fallback)
+  --           if cmp.visible() then
+  --             cmp.select_prev_item()
+  --           elseif luasnip.jumpable(-1) then
+  --             luasnip.jump(-1)
+  --           else
+  --             fallback()
+  --           end
+  --         end, { "i", "s" }),
+  --       }),
+  --       formatting = {
+  --         format = function(entry,item)
+  --           local color_item = require("nvim-highlight-colors").format(entry, { kind = item.kind })
+  --           item = lspkind.cmp_format({
+  --             mode = "symbol_text",
+  --             ellipsis_char = "...",
+  --             -- symbol_map = { Codeium = "" },
+  --             symbol_map = { Supermaven = "" },
+  --             menu = {
+  --               buffer = "[buf]",
+  --               -- codeium = "[cod]",
+  --               luasnip = "[snip]",
+  --               nvim_lsp = "[lsp]",
+  --               bootstrap = "[boot]",
+  --               -- otter = "[otter]",
+  --             },
+  --           })(entry, item)
+  --           if color_item.abbr_hl_group then
+  --             item.kind_hl_group = color_item.abbr_hl_group
+  --             item.kind = color_item.abbr
+  --           end
+  --           return item
+  --         end
+  --       },
+  --       sources = {
+  --         { name = "buffer" },
+  --         { name = "path" },
+  --         -- { name = "codeium" },
+  --         { name = "supermaven" },
+  --         { name = "luasnip" },
+  --         { name = "nvim_lsp" },
+  --         { name = "nvim_lsp_signature_help" },
+  --         -- { name = "bootstrap" },
+  --         -- { name = "otter" },
+  --       },
+  --       sorting = {
+  --         comparators = {
+  --           cmp.config.compare.offset,
+  --           cmp.config.compare.exact,
+  --           cmp.config.compare.score,
+  --           require("cmp-under-comparator").under,
+  --           cmp.config.compare.kind,
+  --           cmp.config.compare.sort_text,
+  --           cmp.config.compare.length,
+  --           cmp.config.compare.order,
+  --         },
+  --       },
+  --       confirm_opts = {
+  --         behavior = cmp.ConfirmBehavior.Replace,
+  --         select = false,
+  --       },
+  --       window = {
+  --         completion = cmp.config.window.bordered({
+  --           -- farby pre winhighlight su definovane v kanagawa teme
+  --           winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+  --           scrollbar = true,
+  --         }),
+  --         documentation = cmp.config.window.bordered({
+  --           -- farby pre winhighlight su definovane v kanagawa teme
+  --           winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+  --         }),
+  --       },
+  --       view = {
+  --         entries = "custom",
+  --       },
+  --       experimental = {
+  --         -- doplna text pri pisani, trochu otravne
+  --         -- ghost_text = true,
+  --         -- ghost_text = {hlgroup = "Comment"}
+  --       },
+  --     })
+  --   end,
+  -- },
+  -- -- }}}
+
+  -- {{{ blink
+  {
+    "saghen/blink.cmp",
+    dependencies = "rafamadriz/friendly-snippets",
+    version = "v0.*",
+    opts = {
+      keymap = {
+        preset = "super-tab",
+        ["<CR>"] = { "accept", "fallback" },
+      },
+      appearance = {
+        use_nvim_cmp_as_default = false,
+        nerd_font_variant = "normal",
+      },
+      completion = {
+        menu = {
+          draw = {
+            columns = { { 'kind_icon' }, { 'label', 'label_description', gap = 1 }, { 'source_name', 'kind', gap = 1 }},
+          }
+        }
+      },
+      signature = { enabled = true },
+      sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+      },
+    },
+    opts_extend = { "sources.default" }
+  },
+  -- }}}
 
   -- }}}
 
@@ -1026,9 +1069,15 @@ require("lazy").setup({
       -- Define a custom theme
       local function vscode_theme()
         local colors = {
-          red = "#e74d23", orange = "#FF8800", yellow = "#ffc233", green = "#427b00",
-          blue = "#007ACD", purple = "#67217A", black = "#16161D", white = "#FFFFFF",
-          grey = "#727169"
+          red = "#e74d23",
+          orange = "#FF8800",
+          yellow = "#ffc233",
+          green = "#427b00",
+          blue = "#007ACD",
+          purple = "#67217A",
+          black = "#16161D",
+          white = "#FFFFFF",
+          grey = "#727169",
         }
         return {
           normal = { a = { bg = colors.purple, fg = colors.white } },
@@ -1056,7 +1105,7 @@ require("lazy").setup({
 
       -- Python environment
       local function python_env()
-        local venv = require('swenv.api').get_current_venv()
+        local venv = require("swenv.api").get_current_venv()
         if venv and venv.name then
           return venv.name:match("([^/]+)$") or ""
         end
@@ -1081,10 +1130,10 @@ require("lazy").setup({
       end
 
       -- Lualine setup
-      require('lualine').setup({
+      require("lualine").setup({
         options = {
-          section_separators = '',
-          component_separators = '',
+          section_separators = "",
+          component_separators = "",
           disabled_filetypes = { statusline = { "alpha", "TelescopePrompt" } },
           theme = vscode_theme(),
         },
@@ -1095,23 +1144,29 @@ require("lazy").setup({
             { buffer_counts },
           },
           lualine_b = { { macro_recording } },
-          lualine_c = { },
+          lualine_c = {},
           lualine_x = {},
           -- lualine_y = { { python_env, icon = "" } },
           lualine_y = { { python_env, icon = "" } },
           lualine_z = {
             { lsp_server_icon },
-            { "diagnostics", colored = false, symbols = { error = " ", warn = " ", info = " ", hint = "󰌵 " } },
+            {
+              "diagnostics",
+              colored = false,
+              symbols = { error = " ", warn = " ", info = " ", hint = "󰌵 " },
+            },
             { "%l:%c %p%%/%L" },
           },
         },
         tabline = {
           lualine_b = {
-            { "buffers",
+            {
+              "buffers",
               buffers_color = {
                 active = { fg = "#FF8800" },
               },
-              filetype_names = { alpha = '', TelescopePrompt = '', lazy = '', fzf = '' } },
+              filetype_names = { alpha = "", TelescopePrompt = "", lazy = "", fzf = "" },
+            },
           },
         },
       })
@@ -1120,16 +1175,18 @@ require("lazy").setup({
       vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
         callback = function()
           local delay = vim.fn.reg_recording() == "" and 50 or 0
-          vim.defer_fn(function() require('lualine').refresh({ place = { "statusline" } }) end, delay)
+          vim.defer_fn(function()
+            require("lualine").refresh({ place = { "statusline" } })
+          end, delay)
         end,
       })
-
     end,
   },
   -- }}}
 
   -- {{{ [ File Manager ]
-  { "nvim-neo-tree/neo-tree.nvim",
+  {
+    "nvim-neo-tree/neo-tree.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
@@ -1180,8 +1237,7 @@ require("lazy").setup({
           },
         },
         defaults = {
-          extensions = {
-          },
+          extensions = {},
         },
       })
       -- require("telescope").load_extension("file_browser")
@@ -1193,23 +1249,22 @@ require("lazy").setup({
   {
     "echasnovski/mini.nvim",
     config = function()
-
-      require('mini.comment').setup({
+      require("mini.comment").setup({
         mappings = {
-          comment = '',
-          comment_line = '<C-/>',
-          comment_visual = '<C-/>',
-          textobject = '',
+          comment = "",
+          comment_line = "<C-/>",
+          comment_visual = "<C-/>",
+          textobject = "",
         },
       })
-      require('mini.notify').setup()
-      require('mini.surround').setup()
+      require("mini.notify").setup()
+      require("mini.surround").setup()
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.pairs').setup()
+      require("mini.pairs").setup()
 
-      local miniclue = require('mini.clue')
+      local miniclue = require("mini.clue")
       miniclue.setup({
         window = {
           -- Floating window config
@@ -1219,39 +1274,39 @@ require("lazy").setup({
           delay = 500,
 
           -- Keys to scroll inside the clue window
-          scroll_down = '<C-d>',
-          scroll_up = '<C-u>',
+          scroll_down = "<C-d>",
+          scroll_up = "<C-u>",
         },
         triggers = {
           -- Leader triggers
-          { mode = 'n', keys = '<Leader>' },
-          { mode = 'x', keys = '<Leader>' },
+          { mode = "n", keys = "<Leader>" },
+          { mode = "x", keys = "<Leader>" },
 
           -- Built-in completion
-          { mode = 'i', keys = '<C-x>' },
+          { mode = "i", keys = "<C-x>" },
 
           -- `g` key
-          { mode = 'n', keys = 'g' },
-          { mode = 'x', keys = 'g' },
+          { mode = "n", keys = "g" },
+          { mode = "x", keys = "g" },
 
           -- Marks
-          { mode = 'n', keys = "'" },
-          { mode = 'n', keys = '`' },
-          { mode = 'x', keys = "'" },
-          { mode = 'x', keys = '`' },
+          { mode = "n", keys = "'" },
+          { mode = "n", keys = "`" },
+          { mode = "x", keys = "'" },
+          { mode = "x", keys = "`" },
 
           -- Registers
-          { mode = 'n', keys = '"' },
-          { mode = 'x', keys = '"' },
-          { mode = 'i', keys = '<C-r>' },
-          { mode = 'c', keys = '<C-r>' },
+          { mode = "n", keys = '"' },
+          { mode = "x", keys = '"' },
+          { mode = "i", keys = "<C-r>" },
+          { mode = "c", keys = "<C-r>" },
 
           -- Window commands
           -- { mode = 'n', keys = '<C-w>' },
 
           -- `z` key
-          { mode = 'n', keys = 'z' },
-          { mode = 'x', keys = 'z' },
+          { mode = "n", keys = "z" },
+          { mode = "x", keys = "z" },
         },
 
         clues = {
@@ -1263,18 +1318,18 @@ require("lazy").setup({
           -- miniclue.gen_clues.windows(),
           miniclue.gen_clues.z(),
           -- moje skratky - normal mode
-          { mode = 'n', keys = '<Leader>d', desc = '+Diagnostic' },
-          { mode = 'n', keys = '<Leader>f', desc = '+Telescope' },
-          { mode = 'n', keys = "<Leader>l", desc = "+Lsp" },
-          { mode = 'n', keys = "<Leader>o", desc = "+Obsidian" },
-          { mode = 'n', keys = "<Leader>p", desc = "+Python" },
-          { mode = 'n', keys = "<Leader>q", desc = "+Quarto" },
-          { mode = 'n', keys = "<Leader>qo", desc = "+Otter" },
-          { mode = 'n', keys = "<Leader>v", desc = "+Vim/Neovim" },
-          { mode = 'n', keys = "<Leader>w", desc = "+Window" },
-          { mode = 'n', keys = "<Leader>wl", desc = "+Layout" },
+          { mode = "n", keys = "<Leader>d", desc = "+Diagnostic" },
+          { mode = "n", keys = "<Leader>f", desc = "+Telescope" },
+          { mode = "n", keys = "<Leader>l", desc = "+Lsp" },
+          { mode = "n", keys = "<Leader>o", desc = "+Obsidian" },
+          { mode = "n", keys = "<Leader>p", desc = "+Python" },
+          { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
+          { mode = "n", keys = "<Leader>qo", desc = "+Otter" },
+          { mode = "n", keys = "<Leader>v", desc = "+Vim/Neovim" },
+          { mode = "n", keys = "<Leader>w", desc = "+Window" },
+          { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
           -- moje skratky - visual mode
-          { mode = 'v', keys = "<Leader>q", desc = "+Quarto" },
+          { mode = "v", keys = "<Leader>q", desc = "+Quarto" },
         },
       })
     end,
@@ -1286,33 +1341,21 @@ require("lazy").setup({
   -- {{{ Swenv - change python environments
   {
     "AckslD/swenv.nvim",
-    config = function()
-      local venvs_path
-      if os_type == "windows" then
-        venvs_path = vim.fn.expand("C:/Users/" .. os_username .. "/python-venv") -- Path for Windows
-      elseif os_type == "linux" then
-        venvs_path = vim.fn.expand("~/.py-venv")
-      elseif os_type == "wsl" then
-        venvs_path = vim.fn.expand("/mnt/c/Users/" .. os_username .. "/python-venv") -- Path for WSL
-      else
-        venvs_path = vim.fn.expand("~/.py-venv") -- Default fallback
-      end
-      require("swenv").setup({
-        get_venvs = function(venvs_path)
-          return require("swenv.api").get_venvs(venvs_path)
-        end,
-        -- venvs_path = vim.fn.expand("~/.py-venv"), -- zadat cestu k envs
-        venvs_path = venvs_path,
-        post_set_venv = function()
-          vim.cmd(":LspRestart<cr>")
-        end,
-      })
-    end,
+    event = "FileType python",
+    opts = {
+      get_venvs = function(venvs_path)
+        return require("swenv.api").get_venvs(venvs_path)
+      end,
+      venvs_path = vim.fn.expand("$VENV_HOME"), -- zadat cestu k envs skrz premennu definovanu v .zshrc, resp. powershell
+      post_set_venv = function()
+        vim.cmd(":LspRestart<cr>")
+      end,
+    }
   },
   -- }}}
 
   -- {{{ Jinja template syntax
-  { "lepture/vim-jinja", event = { "BufReadPre", "BufNewFile" } },
+  { "lepture/vim-jinja", event = "VeryLazy" },
   -- }}}
 
   -- }}}
@@ -1352,13 +1395,13 @@ require("lazy").setup({
 
   -- {{{ Markdown
   {
-    'MeanderingProgrammer/markdown.nvim',
+    "MeanderingProgrammer/markdown.nvim",
     lazy = true,
     ft = "markdown",
-    name = 'render-markdown', -- Only needed if you have another plugin named markdown.nvim
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    name = "render-markdown", -- Only needed if you have another plugin named markdown.nvim
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
     config = function()
-      require('render-markdown').setup({})
+      require("render-markdown").setup({})
     end,
   },
   -- }}}
@@ -1486,8 +1529,8 @@ require("lazy").setup({
           -- sudo apt install liblua5.1-0-dev
           -- sudo apt installl luajit
 
-          local image = require "image"
-          image.setup {
+          local image = require("image")
+          image.setup({
             backend = "kitty",
             integrations = {
               markdown = {
@@ -1504,7 +1547,7 @@ require("lazy").setup({
             max_height_window_percentage = math.huge, --30,
             max_width_window_percentage = math.huge, --nil,
             kitty_method = "normal",
-          }
+          })
         end,
       }
     end
@@ -1533,12 +1576,11 @@ require("lazy").setup({
   {
     "brenoprata10/nvim-highlight-colors",
     event = { "BufReadPre", "BufNewFile" },
-    opts = {}
+    opts = {},
   },
   -- }}}
 
   -- }}}
-
 })
 -- }}}
 
