@@ -470,6 +470,8 @@ require("lazy").setup({
     event = "VeryLazy",
     opts = {},
   },
+  -- Status updates for LSP
+  { "j-hui/fidget.nvim", opts = {} },
   -- }}}
 
   -- {{{ [ Colorscheme ]
@@ -630,8 +632,6 @@ require("lazy").setup({
       "stevearc/conform.nvim",
       -- Linting
       "mfussenegger/nvim-lint",
-      -- Status updates for LSP (optional)
-      --{ "j-hui/fidget.nvim", opts = {} },
     },
     config = function()
       -- {{{ LSP Servers
