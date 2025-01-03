@@ -1,8 +1,11 @@
---https://github.com/benfrain/neovim/blob/main/lua/options.lua
---https://github.com/YanivZalach/Vim_Config_NO_PLUGINS/blob/main/.vimrc
---https://github.com/NormTurtle/Windots/blob/main/vi/init.lua
---https://github.com/ntk148v/neovim-config/blob/master/lua/options.lua
---https://github.com/sodabyte/minimal-nvim/blob/main/lua/config/options.lua
+--
+-- ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+-- ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+-- ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
+-- ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+-- ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+-- ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
+--
 
 -- {{{ [[ DETECT OS ]]
 local function detect_os_type()
@@ -47,6 +50,7 @@ opt.hidden = true -- switching from unsaved buffers
 opt.inccommand = "split" -- preview substitutions live, as you type
 opt.iskeyword:remove("_") -- oddeli slova pri mazani, nebude brat ako jedno slovo
 opt.matchtime = 2 -- duration of showmatch, default 5
+opt.matchpairs = { "(:)", "{:}", "[:]", "<:>" }
 opt.mouse = "a" -- mouse
 opt.scrolloff = 5 -- how many lines are displayed on the upper and lower sides of the cursor
 opt.showmode = true -- display the current vim mode (no need)
@@ -205,11 +209,12 @@ map("n", "<leader>x", "<cmd>w<cr><cmd>luafile %<cr><esc>", { desc = "Reload Lua"
 -- End File System Commands }}}
 
 -- {{{ Windows
-map("n", "<leader>wv", "<C-w>v", { desc = "Vertical" })
-map("n", "<leader>wh", "<C-w>s", { desc = "Horizontal" })
-map("n", "<leader>w=", "<C-W>=", { desc = "Equal" })
-map("n", "<leader>wlh", "<cmd>windo wincmd K<cr>", { desc = "Horizontal layout" })
-map("n", "<leader>wlv", "<cmd>windo wincmd H<cr>", { desc = "Vertical layout" })
+map("n", "<leader>wv", "<C-w>v", { desc = "vertical" })
+map("n", "<leader>wh", "<C-w>s", { desc = "horizontal" })
+map("n", "<leader>we", "<C-W>=", { desc = "equal" })
+map("n", "<leader>wx", "<cmd>close<cr>", { desc = "close" })
+map("n", "<leader>wlh", "<cmd>windo wincmd K<cr>", { desc = "horizontal layout" })
+map("n", "<leader>wlv", "<cmd>windo wincmd H<cr>", { desc = "vertical layout" })
 
 map("n", "<C-Up>", "<C-w>k", { desc = "Go UP" })
 map("n", "<C-Down>", "<C-w>j", { desc = "Go DOWN" })
@@ -250,7 +255,22 @@ map("v", "p", '"_dP', { desc = "Paste no yank" })
 map("n", "x", '"_x', { desc = "Delete character no yank" })
 -- End Better Paste }}}
 
+-- {{{ Close floating window with ESC
+local function close_floating()
+  for _, win in pairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_config(win).relative == "win" then
+      vim.api.nvim_win_close(win, false)
+    end
+  end
+end
+map("n", "<Esc>", function()
+  close_floating()
+end, { desc = "Close with ESC" })
+-- Close floating window with ESC }}}
+
 -- {{{ Terminal
+map("n", "<C-`>", "<cmd>horizontal terminal<cr>", { desc = "terminal" })
+map("t", "<C-`>", "exit<cr>", { desc = "exit terminal" })
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 -- End Terminal }}}
 
@@ -259,11 +279,13 @@ map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "No highlight" })
 map("n", "<A-a>", "<esc>ggVG<cr>", { desc = "Select all text" })
 map("n", "<BS>", "X", { desc = "TAB as X in NORMAL mode" })
 map("n", "<A-v>", "<C-q>", { desc = "Visual block mode" })
+map("n", "<leader>rw", ":%s/<c-r><c-w>//g<left><left>", { desc = "Replace word" })
 -- End Mix }}}
 
 -- {{{ NeoVim
 map("n", "<leader>vn", "<cmd>set relativenumber!<cr>", { desc = "Numbers toggle" })
 map("n", "<leader>vl", "<cmd>IBLToggle<cr>", { desc = "Blankline toggle" })
+map("n", "<leader>vh", "<cmd>HighlightColors Toggle<cr>", { desc = "Highlight-colors toggle" })
 map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", { desc = "Background toggle" })
 map("n", "<leader>vc", function()
   if vim.o.conceallevel > 0 then
@@ -333,14 +355,15 @@ map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Lazy" })
 
 -- {{{ Telescope
 map("n", "<leader>fx", "<cmd>Telescope<cr>", { desc = "telescope" })
-map("n", "<leader>fe", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", { desc = "file browser" })
-map("n", "<leader>fn", "<cmd>Telescope notify<cr>", { desc = "notifications" })
+-- map("n", "<leader>fe", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", { desc = "file browser" })
+-- map("n", "<leader>fn", "<cmd>Telescope notify<cr>", { desc = "notifications" })
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "files" })
 map("n", "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "words" })
 map("n", "<leader>fo", "<cmd>Telescope oldfiles<cr>", { desc = "recent files" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "buffers" })
 map("n", "<leader>fc", "<cmd>Telescope colorscheme<cr>", { desc = "colorscheme" })
 map("n", "<leader>fd", "<cmd>Telescope diagnostics<cr>", { desc = "diagnostics" })
+map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "tags" })
 -- Telescope }}}
 
 -- {{{ Quarto
@@ -405,7 +428,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 
-  -- {{{ UI
+  -- {{{ [ UI ]
   { "nvim-lua/plenary.nvim" },
   { "nvim-tree/nvim-web-devicons" },
   { "MunifTanjim/nui.nvim" },
@@ -414,9 +437,9 @@ require("lazy").setup({
     event = "VeryLazy",
     opts = {},
   },
-  -- UI }}}
+  -- }}}
 
-  -- {{{ Colorscheme
+  -- {{{ [ Colorscheme ]
 
   -- {{{ Kanagawa
   {
@@ -486,7 +509,7 @@ require("lazy").setup({
       vim.cmd.colorscheme ("kanagawa")
     end,
   },
-  -- Kanagawa }}}
+  -- }}}
 
   -- {{{ Adwaita
   {
@@ -497,7 +520,7 @@ require("lazy").setup({
       -- vim.cmd.colorscheme("adwaita")
     end,
   },
-  -- Adwaita }}}
+  -- }}}
 
   -- {{{ VsCode
   {
@@ -525,9 +548,9 @@ require("lazy").setup({
   },
   -- VsCode }}}
 
-  -- Colorscheme }}}
+  -- }}}
 
-  -- {{{ Treesitter
+  -- {{{ [ Treesitter ]
   {
     "nvim-treesitter/nvim-treesitter",
     version = false,
@@ -562,7 +585,7 @@ require("lazy").setup({
   },
   -- }}}
 
-  -- {{{ LSP
+  -- {{{ [ LSP ]
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -672,6 +695,7 @@ require("lazy").setup({
         automatic_installation = true,
       })
 
+      -- local capabilities = require('blink.cmp').get_lsp_capabilities()
       -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
       -- local on_attach = function(client, bufnr)
       --   -- sem zadat on_attach funkcie doplnkov
@@ -680,7 +704,7 @@ require("lazy").setup({
       require("mason-lspconfig").setup_handlers({
         function(server)
           local server_opts = servers[server] or {}
-          --server_opts.capabilities = capabilities
+          -- server_opts.capabilities = capabilities
           --server_opts.on_attach = on_attach
           require("lspconfig")[server].setup(server_opts)
         end,
@@ -770,9 +794,34 @@ require("lazy").setup({
       -- End LSP Linters/Formaters }}}
     end,
   },
-  -- END LSP }}}
+  -- }}}
 
-  -- {{{ Autocompletition
+  -- {{{ [ Autocompletition ]
+
+  -- {{{ supermaven - ai autocompletition
+  {
+    "supermaven-inc/supermaven-nvim",
+    config = function()
+      require("supermaven-nvim").setup({
+        keymaps = {
+          accept_suggestion = "<Tab>",
+          clear_suggestion = "<A-n>",
+          accept_word = "<A-m>",
+        },
+        ignore_filetypes = { cpp = true }, -- or { "cpp", }
+        color = {
+          suggestion_color = "#ffffff",
+          cterm = 244,
+        },
+        log_level = "info", -- set to "off" to disable logging completely
+        disable_inline_completion = false, -- disables inline completion for use with cmp
+        disable_keymaps = false, -- disables built in keymaps for more manual control
+      })
+    end,
+  },
+  -- }}}
+
+  -- {{{ cmp
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
@@ -873,24 +922,34 @@ require("lazy").setup({
           end, { "i", "s" }),
         }),
         formatting = {
-          format = lspkind.cmp_format({
-            mode = "symbol_text",
-            ellipsis_char = "...",
-            -- symbol_map = { Codeium = "" },
-            menu = {
-              buffer = "[buf]",
-              -- codeium = "[cod]",
-              luasnip = "[snip]",
-              nvim_lsp = "[lsp]",
-              bootstrap = "[boot]",
-              -- otter = "[otter]",
-            },
-          }),
+          format = function(entry,item)
+            local color_item = require("nvim-highlight-colors").format(entry, { kind = item.kind })
+            item = lspkind.cmp_format({
+              mode = "symbol_text",
+              ellipsis_char = "...",
+              -- symbol_map = { Codeium = "" },
+              symbol_map = { Supermaven = "" },
+              menu = {
+                buffer = "[buf]",
+                -- codeium = "[cod]",
+                luasnip = "[snip]",
+                nvim_lsp = "[lsp]",
+                bootstrap = "[boot]",
+                -- otter = "[otter]",
+              },
+            })(entry, item)
+            if color_item.abbr_hl_group then
+              item.kind_hl_group = color_item.abbr_hl_group
+              item.kind = color_item.abbr
+            end
+            return item
+          end
         },
         sources = {
           { name = "buffer" },
           { name = "path" },
           -- { name = "codeium" },
+          { name = "supermaven" },
           { name = "luasnip" },
           { name = "nvim_lsp" },
           { name = "nvim_lsp_signature_help" },
@@ -935,11 +994,34 @@ require("lazy").setup({
       })
     end,
   },
-  -- Autocompletition }}}
+  -- }}}
 
-  -- {{{ Statusline
+  -- -- {{{ blink
+  -- {
+  --   'saghen/blink.cmp',
+  --   dependencies = 'rafamadriz/friendly-snippets',
+  --
+  --   version = 'v0.*',
+  --
+  --   opts = {
+  --     keymap = { preset = 'default' },
+  --
+  --     appearance = {
+  --       use_nvim_cmp_as_default = true,
+  --       nerd_font_variant = 'mono'
+  --     },
+  --
+  --     signature = { enabled = true }
+  --   },
+  -- },
+  -- -- }}}
+
+  -- }}}
+
+  -- {{{ [ Statusline ]
   {
     "nvim-lualine/lualine.nvim",
+    event = "VeryLazy",
     config = function()
       -- Define a custom theme
       local function vscode_theme()
@@ -1044,9 +1126,9 @@ require("lazy").setup({
 
     end,
   },
-  -- Statusline }}}
+  -- }}}
 
-  -- {{{ File Manager
+  -- {{{ [ File Manager ]
   { "nvim-neo-tree/neo-tree.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -1083,9 +1165,9 @@ require("lazy").setup({
       },
     },
   },
-  -- File Manger }}}
+  -- }}}
 
-  -- {{{ Telescope
+  -- {{{ [ Telescope ]
   {
     "nvim-telescope/telescope.nvim",
     lazy = false,
@@ -1105,9 +1187,9 @@ require("lazy").setup({
       -- require("telescope").load_extension("file_browser")
     end,
   },
-  -- Telescope }}}
+  -- }}}
 
-  -- {{{ Mini.nvim collection
+  -- {{{ [ Mini.nvim collection ]
   {
     "echasnovski/mini.nvim",
     config = function()
@@ -1197,9 +1279,9 @@ require("lazy").setup({
       })
     end,
   },
-  -- Mini.nvim collection }}}
+  -- }}}
 
-  -- {{{ Python
+  -- {{{ [ Python ]
 
   -- {{{ Swenv - change python environments
   {
@@ -1227,15 +1309,15 @@ require("lazy").setup({
       })
     end,
   },
-  -- Swenv - change python environments }}}
+  -- }}}
 
   -- {{{ Jinja template syntax
   { "lepture/vim-jinja", event = { "BufReadPre", "BufNewFile" } },
-  -- Jinja template syntax }}}
+  -- }}}
 
-  -- Python }}}
+  -- }}}
 
-  -- {{{ Notes
+  -- {{{ [ Notes ]
   -- {{{ Obsidian
   {
     "epwalsh/obsidian.nvim",
@@ -1266,18 +1348,20 @@ require("lazy").setup({
       },
     },
   },
-  -- Obsidian }}}
+  -- }}}
 
   -- {{{ Markdown
   {
     'MeanderingProgrammer/markdown.nvim',
+    lazy = true,
+    ft = "markdown",
     name = 'render-markdown', -- Only needed if you have another plugin named markdown.nvim
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     config = function()
       require('render-markdown').setup({})
     end,
   },
-  -- Markdown }}}
+  -- }}}
 
   -- {{{ Markdown highlight headings and code blocks
   {
@@ -1310,18 +1394,19 @@ require("lazy").setup({
       })
     end,
   },
-  -- Markdown highlight headings and code blocks }}}
+  -- }}}
 
   -- {{{ Vim-table-mode
   {
     "dhruvasagar/vim-table-mode",
+    lazy = true,
     ft = { "markdown", "quarto" },
   },
-  -- Vim-table-mode }}}
+  -- }}}
 
-  -- Notes }}}
+  -- }}}
 
-  -- {{{ Quarto, Jupyterlab
+  -- {{{ [ Quarto, Jupyterlab ]
 
   -- {{{ Quarto
   {
@@ -1353,13 +1438,14 @@ require("lazy").setup({
       },
     },
   },
-  -- Quarto }}}
+  -- }}}
 
   -- {{{ Molten
   (function()
     if os_type == "linux" then
       return {
         "benlubas/molten-nvim",
+        ft = { "quarto" },
         dependencies = { "3rd/image.nvim" },
         init = function()
           vim.g.molten_image_provider = "image.nvim"
@@ -1371,7 +1457,7 @@ require("lazy").setup({
       }
     end
   end)(),
-  -- Molten }}}
+  -- }}}
 
   -- {{{ Image.nvim
   (function()
@@ -1423,27 +1509,35 @@ require("lazy").setup({
       }
     end
   end)(),
-  -- Image.nvim }}}
+  -- }}}
 
-  -- Quarto, Jupyterlab }}}
+  -- }}}
 
-  -- {{{ Mix
+  -- {{{ [ Mix ]
 
   -- {{{ Colorizer
   {
-    "norcalli/nvim-colorizer.lua",
-    event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      require("colorizer").setup()
-    end,
+    -- "norcalli/nvim-colorizer.lua",
+    -- event = { "BufReadPre", "BufNewFile" },
+    -- config = function()
+    --   require("colorizer").setup()
+    -- end,
   },
-  -- Colorizer }}}
+  -- }}}
 
   -- {{{ Maximize window
   { "szw/vim-maximizer" },
-  -- Maximize window }}}
+  -- }}}
 
-  -- Mix }}}
+  -- {{{ Nvim-highlight-colors
+  {
+    "brenoprata10/nvim-highlight-colors",
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {}
+  },
+  -- }}}
+
+  -- }}}
 
 })
 -- }}}
