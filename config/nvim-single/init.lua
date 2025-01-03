@@ -175,7 +175,7 @@ for i = 1, #disable_builtin_plugins do
 end
 -- End Disable Built-in Plugins }}}
 
--- End [[ OPTIONS ]] }}}
+-- }}}
 
 -- {{{ [[ KEYMAPS ]]
 
@@ -288,8 +288,13 @@ end, { desc = "Close with ESC" })
 -- }}}
 
 -- {{{ Terminal
-map("n", "<C-`>", "<cmd>horizontal terminal<cr>", { desc = "terminal" })
-map("t", "<C-`>", "exit<cr>", { desc = "exit terminal" })
+if os_type == "linux" then
+  map("n", "<C-`>", "<cmd>horizontal terminal<cr>", { desc = "terminal" })
+  map("t", "<C-`>", "exit<cr>", { desc = "exit terminal" })
+else
+  map("n", "<C-`>`", "<cmd>horizontal terminal<cr>", { desc = "terminal" })
+  map("t", "<C-`>`", "exit<cr>", { desc = "exit terminal" })
+end
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 -- }}}
 
@@ -440,7 +445,7 @@ map("n", "<leader>mp", "<cmd>RenderMarkdownToggle<cr><cr>", { desc = "markdown p
 
 -- End [[ KEYMAPS ]] }}}
 
--- [[ KEYMAPS ]] }}}
+-- }}}
 
 -- {{{ [[ LAZY MANAGER ]]
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -1249,21 +1254,41 @@ require("lazy").setup({
   {
     "echasnovski/mini.nvim",
     config = function()
+
+      -- {{{ mini.comment
+      local mappings_config = (os_type == "linux") and {
+        comment = "",
+        comment_line = "<C-/>",
+        comment_visual = "<C-/>",
+        textobject = "",
+      } or {
+        comment = "",
+        comment_line = "<C-_>",
+        comment_visual = "<C-_>",
+        textobject = "",
+      }
+
       require("mini.comment").setup({
-        mappings = {
-          comment = "",
-          comment_line = "<C-/>",
-          comment_visual = "<C-/>",
-          textobject = "",
-        },
+        mappings = mappings_config,
       })
+      -- }}}
+
+      -- {{{ mini.notify
       require("mini.notify").setup()
+      -- }}}
+
+      -- {{{ mini.surround
       require("mini.surround").setup()
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require("mini.pairs").setup()
+      -- }}}
 
+      -- {{{ mini.pairs
+      require("mini.pairs").setup()
+      -- }}}
+
+      -- {{{ mini.clue
       local miniclue = require("mini.clue")
       miniclue.setup({
         window = {
@@ -1332,6 +1357,8 @@ require("lazy").setup({
           { mode = "v", keys = "<Leader>q", desc = "+Quarto" },
         },
       })
+      -- }}}
+
     end,
   },
   -- }}}
@@ -1581,6 +1608,7 @@ require("lazy").setup({
   -- }}}
 
   -- }}}
+
 })
 -- }}}
 
@@ -1598,7 +1626,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   group = mygroup,
   desc = "Highlight yanked text",
 })
--- End Highlight on Yank }}}
+-- }}}
 
 -- {{{ Set Fold Markers for init.lua
 vim.api.nvim_create_autocmd("BufReadPost", {
@@ -1611,7 +1639,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   group = mygroup,
   desc = "init.lua folding",
 })
--- End Set Fold Markers for init.lua }}}
+-- }}}
 
 -- {{{ Unfold at open
 vim.api.nvim_create_autocmd("BufWinEnter", {
@@ -1620,7 +1648,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
   group = mygroup,
   desc = "Unfold",
 })
--- End Unfold at open }}}
+-- }}}
 
 -- {{{ Conceal level = 1
 -- vim.api.nvim_create_autocmd("BufRead", {
@@ -1629,7 +1657,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 --   group = mygroup,
 --   desc = "Conceal level",
 -- })
--- End Conceal level = 1 }}}
+-- }}}
 
 -- {{{ Autoformat code on save
 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -1640,7 +1668,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   group = mygroup,
   desc = "Autoformat code on save",
 })
--- End Autoformat code on save }}}
+-- }}}
 
 -- {{{ Auto linting
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
@@ -1649,7 +1677,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
     require("lint").try_lint()
   end,
 })
--- End Auto linting }}}
+-- }}}
 
 -- {{{ Sass compilation on save
 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -1658,7 +1686,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   group = mygroup,
   desc = "SASS compilation on save",
 })
--- End Sass compilation on save }}}
+-- }}}
 
 -- {{{ Shiftwidth setup
 -- vim.api.nvim_create_autocmd("FileType", {
@@ -1669,7 +1697,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 --   group = mygroup,
 --   desc = "Set shiftwidth to 4 in these filetypes",
 -- })
--- End Shiftwidth setup }}}
+-- }}}
 
 -- {{{ Restore cursor position
 vim.api.nvim_create_autocmd("BufReadPost", {
@@ -1681,7 +1709,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   group = mygroup,
   desc = "Restore cursor position",
 })
--- End Restore cursor position }}}
+-- }}}
 
 -- {{{ Show cursor line only in active window
 vim.api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
@@ -1696,7 +1724,7 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
   group = mygroup,
   desc = "Hide cursorline in inactive window",
 })
--- End Show cursor line only in active window }}}
+-- }}}
 
 -- {{{ Check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd("FocusGained", {
@@ -1704,7 +1732,7 @@ vim.api.nvim_create_autocmd("FocusGained", {
   group = mygroup,
   desc = "Update file when there are changes",
 })
--- End Check if we need to reload the file when it changed }}}
+-- }}}
 
 -- {{{ Windows to close with "q"
 vim.api.nvim_create_autocmd("FileType", {
@@ -1720,7 +1748,7 @@ vim.api.nvim_create_autocmd("FileType", {
   group = mygroup,
   desc = "Close man pages with Q",
 })
--- End Windows to close with "q" }}}
+-- }}}
 
 -- {{{ Don't auto comment new line
 vim.api.nvim_create_autocmd("BufEnter", {
@@ -1728,7 +1756,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
   group = mygroup,
   desc = "Don't auto comment new line",
 })
--- End Don't auto comment new line }}}
+-- }}}
 
 -- {{{ Open HELP on right side
 -- vim.api.nvim_create_autocmd("BufEnter", {
@@ -1736,7 +1764,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 --   group = mygroup,
 --   desc = "Help on right side",
 -- })
--- End Open HELP on right side }}}
+-- }}}
 
 -- {{{ Open terminal at same location as opened file
 vim.api.nvim_create_autocmd("BufEnter", {
@@ -1744,7 +1772,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
   group = mygroup,
   desc = "Open terminal in same location as opened file",
 })
--- End Open terminal at same location as opened file }}}
+-- }}}
 
 -- {{{ Terminal options
 vim.api.nvim_create_autocmd("TermOpen", {
@@ -1756,7 +1784,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
   group = mygroup,
   desc = "Terminal Options",
 })
--- End Terminal options }}}
+-- }}}
 
 -- {{{ Remove trailling whitespace (medzeru na konci) when SAVE file
 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -1764,7 +1792,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   group = mygroup,
   desc = "Remove tarilling whitespace",
 })
--- End Remove trailling whitespace (medzeru na konci) when SAVE file }}}
+-- }}}
 
 -- {{{ Resize vim windows when overall window size changes
 vim.api.nvim_create_autocmd("VimResized", {
@@ -1772,7 +1800,7 @@ vim.api.nvim_create_autocmd("VimResized", {
   group = mygroup,
   desc = "Resize windows to equal",
 })
--- End Resize vim windows when overall window size changes }}}
+-- }}}
 
 -- {{{ PYTHON
 vim.api.nvim_create_autocmd("FileType", {
@@ -1788,7 +1816,7 @@ vim.api.nvim_create_autocmd("FileType", {
   group = mygroup,
   desc = "Set colorcolumn for python files",
 })
--- End PYTHON }}}
+-- }}}
 
 -- {{{ Set TYPST filetype - Quarto specific
 vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
@@ -1796,7 +1824,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
   command = "set filetype=typst",
   desc = "Set filetype for typst files",
 })
--- End Set TYPST filetype - Quarto specific }}}
+-- }}}
 
 -- {{{ Telescope on start
 vim.api.nvim_create_autocmd("VimEnter", {
@@ -1808,6 +1836,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
   group = mygroup,
   desc = "Start Telescope on start",
 })
--- End Telescope on start }}}
+-- }}}
 
--- End [[ AUTOCOMMANDS ]] }}}
+-- }}}
