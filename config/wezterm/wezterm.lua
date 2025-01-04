@@ -60,7 +60,7 @@ config.window_padding = {
 
 -- cursor
 config.force_reverse_video_cursor = true
-config.default_cursor_style = 'BlinkingBlock'
+config.default_cursor_style = 'BlinkingBar'
 config.cursor_blink_rate = 500
 config.cursor_blink_ease_in = "Constant"
 config.cursor_blink_ease_out = "Constant"
