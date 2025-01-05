@@ -1,16 +1,19 @@
+# zlozi prazdny riadok medzi prompt
+# add_newline = true
+
 # zmena prompt formatu
 format = """\
-[╭╴](gray)$env_var\
-$all[╰─](gray)$character"""
+[╭╴](240)$env_var\
+$all[╰─](240)$character"""
 
 # zmena prompt symbolu
 [character]
-success_symbol = "[❯](bold green)"
-error_symbol = "[❯](bold red)"
+success_symbol = "[❯](240)"
+error_symbol = "[❯](red)"
 
 # zobrazi ikonu OS
 [env_var.STARSHIP_DISTRO]
-format = "[$env_value](bold gray)"
+format = "[$env_value](bold white)"
 variable = "STARSHIP_DISTRO"
 disabled = false
 
@@ -19,13 +22,14 @@ disabled = false
 # truncation_symbol = "…/"
 style = "cyan"
 home_symbol = "  ~"
-read_only_style = "red"
+read_only_style = "197"
 read_only = " "
 format = "[$read_only]($read_only_style)[$path]($style) "
 
 # SYMBOLS
 [python]
 symbol = " "
+# python_binary = "python3"
 
 [conda]
 symbol = " "

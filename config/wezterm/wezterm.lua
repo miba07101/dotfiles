@@ -37,6 +37,7 @@ end
 
 -- fonts
 config.font = wezterm.font 'Hack Nerd Font'
+-- config.font = wezterm.font 'CaskaydiaCove Nerd Font'
 config.font_size = 11.0
 config.warn_about_missing_glyphs=false
 config.line_height = 1.1
@@ -60,7 +61,7 @@ config.window_padding = {
 
 -- cursor
 config.force_reverse_video_cursor = true
-config.default_cursor_style = 'BlinkingBar'
+config.default_cursor_style = 'BlinkingBlock'
 config.cursor_blink_rate = 500
 config.cursor_blink_ease_in = "Constant"
 config.cursor_blink_ease_out = "Constant"

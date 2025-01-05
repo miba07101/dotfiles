@@ -1,0 +1,180 @@
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema-preview",
+    "actions": [],
+    "copyFormatting": "none",
+    "copyOnSelect": false,
+    "defaultProfile": "{bc2da056-dd06-5879-b969-1dfcefc8d2c7}",
+    "keybindings": 
+    [
+        {
+            "id": "Terminal.CopyToClipboard",
+            "keys": "ctrl+c"
+        },
+        {
+            "id": "Terminal.PasteFromClipboard",
+            "keys": "ctrl+v"
+        },
+        {
+            "id": "Terminal.DuplicatePaneAuto",
+            "keys": "alt+shift+d"
+        }
+    ],
+    "newTabMenu": 
+    [
+        {
+            "type": "remainingProfiles"
+        }
+    ],
+    "profiles": 
+    {
+        "defaults": 
+        {
+            "colorScheme": "KanagawaWave",
+            "cursorShape": "filledBox",
+            "font": 
+            {
+                "face": "Hack Nerd Font",
+                "size": 11
+            }
+        },
+        "list": 
+        [
+            {
+                "commandline": "C:\\Program Files\\PowerShell\\7\\pwsh.exe -nologo",
+                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+                "hidden": false,
+                "name": "PowerShell",
+                "source": "Windows.Terminal.PowershellCore"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\cmd.exe",
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "hidden": false,
+                "name": "Command Prompt"
+            },
+            {
+                "guid": "{bc2da056-dd06-5879-b969-1dfcefc8d2c7}",
+                "hidden": false,
+                "icon": "C:\\Users\\vimi\\AppData\\Local\\Packages\\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\\RoamingState\\opensuse-logo.png",
+                "name": "Tumbleweed",
+                "source": "Windows.Terminal.Wsl"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "hidden": false,
+                "name": "Windows PowerShell"
+            },
+            {
+                "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
+                "hidden": false,
+                "name": "Azure Cloud Shell",
+                "source": "Windows.Terminal.Azure"
+            },
+            {
+                "guid": "{2ece5bfe-50ed-5f3a-ab87-5cd4baafed2b}",
+                "hidden": false,
+                "name": "Git Bash",
+                "source": "Git"
+            }
+        ]
+    },
+    "schemes": 
+    [
+        {
+            "background": "#181616",
+            "black": "#0D0C0C",
+            "blue": "#8BA4B0",
+            "brightBlack": "#A6A69C",
+            "brightBlue": "#7FB4CA",
+            "brightCyan": "#7AA89F",
+            "brightGreen": "#87A987",
+            "brightPurple": "#8992A7",
+            "brightRed": "#E46876",
+            "brightWhite": "#C5C9C5",
+            "brightYellow": "#E6C384",
+            "cursorColor": "#C5C9C5",
+            "cyan": "#8EA4A2",
+            "foreground": "#C8C093",
+            "green": "#8A9A7B",
+            "name": "KanagawaDragon",
+            "purple": "#A292A3",
+            "red": "#C4746E",
+            "selectionBackground": "#223249",
+            "white": "#C8C093",
+            "yellow": "#C4B28A"
+        },
+        {
+            "background": "#F2ECBC",
+            "black": "#1F1F28",
+            "blue": "#4D699B",
+            "brightBlack": "#8A8980",
+            "brightBlue": "#6693BF",
+            "brightCyan": "#5E857A",
+            "brightGreen": "#6E915F",
+            "brightPurple": "#624C83",
+            "brightRed": "#D7474B",
+            "brightWhite": "#43436C",
+            "brightYellow": "#836F4A",
+            "cursorColor": "#C9CBD1",
+            "cyan": "#597B75",
+            "foreground": "#545464",
+            "green": "#6F894E",
+            "name": "KanagawaLotus",
+            "purple": "#B35B79",
+            "red": "#C84053",
+            "selectionBackground": "#B5CBD2",
+            "white": "#545464",
+            "yellow": "#77713F"
+        },
+        {
+            "background": "#1F1F28",
+            "black": "#090618",
+            "blue": "#7E9CD8",
+            "brightBlack": "#727169",
+            "brightBlue": "#7FB4CA",
+            "brightCyan": "#7AA89F",
+            "brightGreen": "#98BB6C",
+            "brightPurple": "#938AA9",
+            "brightRed": "#E82424",
+            "brightWhite": "#DCD7BA",
+            "brightYellow": "#E6C384",
+            "cursorColor": "#C8C093",
+            "cyan": "#6A9589",
+            "foreground": "#DCD7BA",
+            "green": "#76946A",
+            "name": "KanagawaWave",
+            "purple": "#957FB8",
+            "red": "#C34043",
+            "selectionBackground": "#2D4F67",
+            "white": "#C8C093",
+            "yellow": "#C0A36E"
+        },
+        {
+            "background": "#17222B",
+            "black": "#17222B",
+            "blue": "#006FD1",
+            "brightBlack": "#81C2C2",
+            "brightBlue": "#5AA2E0",
+            "brightCyan": "#15C1BB",
+            "brightGreen": "#7DC030",
+            "brightPurple": "#B968D9",
+            "brightRed": "#E74D23",
+            "brightWhite": "#E5E9F0",
+            "brightYellow": "#FFC233",
+            "cursorColor": "#006FD1",
+            "cyan": "#119C97",
+            "foreground": "#C3D2DF",
+            "green": "#427B00",
+            "name": "toast",
+            "purple": "#A53BCE",
+            "red": "#D12D00",
+            "selectionBackground": "#FFFFFF",
+            "white": "#E5E9F0",
+            "yellow": "#B68200"
+        }
+    ],
+    "theme": "dark",
+    "themes": []
+}
