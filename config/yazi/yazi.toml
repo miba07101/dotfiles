@@ -1,2 +1,13 @@
 [manager]
 show_hidden = true
+
+[opener]
+edit = [
+    { run = '$EDITOR "$@"', block = true, for = "unix" },
+	{ run = "nvim %*", block = true, for = "windows" },
+]
+
+play = [
+	{ run = 'mpv "$@"', orphan = true, for = "unix" },
+	{ run = '"C:\Users\%USERNAME%\AppData\Local\Microsoft\WindowsApps\mpv.exe %*"', orphan = true, for = "windows" }
+]
