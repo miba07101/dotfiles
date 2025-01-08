@@ -37,11 +37,16 @@ end
 
 -- fonts
 -- config.font = wezterm.font 'Hack Nerd Font'
+-- config.font = wezterm.font 
+-- {
+--   family = 'UbuntuSansMono Nerd Font',
+--   weight = 'Regular',
+--   -- harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
+-- }
 config.font = wezterm.font 
 {
-  family = 'UbuntuSansMono Nerd Font',
+  family = 'Hack',
   weight = 'Regular',
-  -- harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
 }
 config.font_size = 11.0
 config.warn_about_missing_glyphs=false
