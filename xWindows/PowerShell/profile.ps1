@@ -7,7 +7,18 @@ Import-Module -Name Terminal-Icons
 
 # enviroment variables
 # premenna pre python virtual enviroments priecinok, pouzitie v neovime
-$env:VENV_HOME = "C:\Users\$env:UserName\.py-venv\"
+$env:VENV_HOME = "C:\Users\$($env:UserName)\.py-venv\"
+# premenna pre onedrive priecinok, pouzitie v neovime pre obsidian
+function Set-OneDrivePath {
+    # Determine the OneDrive directory based on the username
+    if ($env:UserName -eq "mech") {
+        $env:OneDrive_DIR = "C:\Users\$($env:UserName)\OneDrive - VUZ\"
+    } else {
+        $env:OneDrive_DIR = "C:\Users\$($env:UserName)\OneDrive\"
+    }
+}
+# Call the function to set the environment variable
+Set-OneDrivePath
 
 # yazi file manager
 function y {
