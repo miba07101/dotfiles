@@ -32,10 +32,12 @@ local os_type = detect_os_type()
 local os_username = os.getenv("USERNAME") or os.getenv("USER")
 local py_venvs_path = os.getenv("VENV_HOME")
 local onedrive_path = os.getenv("OneDrive_DIR")
-local obsidian_path = vim.fn.expand(onedrive_path) .. (os_username == "mech" and "Poznámkové bloky/Obsidian/" or "Dokumenty/zPoznamky/Obsidian/")
+local obsidian_path = vim.fn.expand(onedrive_path .. (os_username == "mech" and "Poznámkové bloky/Obsidian/" or "Dokumenty/zPoznamky/Obsidian/"))
+local notes_path = obsidian_path .. "inbox/"
 
-print(obsidian_path)
-print("detected os: " .. os_type)
+
+-- print(obsidian_path)
+-- print("detected os: " .. os_type)
 -- print("detected username: " .. os_username)
 -- print("detected venv_path: " .. py_venvs_path)
 -- }}}
@@ -116,7 +118,7 @@ opt.wrapscan = true -- search the entire file repeatedly
 -- End Search }}}
 
 -- {{{ UI
--- opt.cmdheight = 0 -- command line height
+opt.cmdheight = 0 -- command line height
 opt.cursorline = true -- highlight the current line
 opt.laststatus = 3 -- global status bar (sposobuje nefunkcnost resource lua.init)
 opt.number = true -- absolute line numbers
@@ -418,30 +420,41 @@ map("n", "<leader>qof", "<cmd>lua require('otter').ask_format()<cr>", { desc = "
 -- {{{ Obsidian
 map("n", "<leader>ol", "<cmd>lua require('obsidian').util.gf_passthrough()<cr>", { desc = "wiki links" })
 map("n", "<leader>ob", "<cmd>lua require('obsidian').util.toggle_checkbox()<cr>", { desc = "toggle checkbox" })
--- map("n", "<leader>oo", ":cd obsidian_path<cr>", { desc = "open vault" })
-map("n", "<leader>oo", function() vim.cmd("cd " .. obsidian_path) end, { desc = "open vault" })
-
 map(
   "n",
   "<leader>ot",
   ":ObsidianTemplate t-nvim-note<cr> :lua vim.cmd([[1,/^\\S/s/^\\n\\{1,}//]])<cr>",
-  { desc = "note teplate" }
+  { desc = "note template" }
 )
 -- map("n", "<leader>of", ":s/\\(# \\)[^-]*_/\\1/ | s/-/ /g<cr>", { desc = "strip date - must have cursor on title" })
+-- search note
 map(
   "n",
   "<leader>os",
-  "<cmd>lua require('telescope.builtin').find_files({ search_dirs = { vim.fn.expand(os.getenv('OneDrive_DIR')) .. 'Poznámkové bloky/Obsidian/' } })<cr>",
-  { desc = "search in vault" }
+  function()
+    require('telescope.builtin').find_files({ search_dirs = { obsidian_path } })
+  end,
+  { desc = "search note" }
 )
+-- create new note in inbox folder
 map(
   "n",
-  "<leader>ow",
-  "<cmd>lua require('telescope.builtin').live_grep({ search_dirs = { vim.fn.expand('$OneDrive_DIR') .. '/Dokumenty/zPoznamky/Obsidian/' } })<cr>",
-  { desc = "search in vault" }
+  "<leader>on",
+  function()
+    vim.wo.conceallevel = 1 -- Temporarily set conceallevel to 1 to avoid warning
+    local note_name = vim.fn.input("Enter note name without .md: ")  -- Prompt user for note name
+    -- Check if the user entered a name
+    if note_name == "" then
+      print("Note name cannot be empty!")
+      return
+    end
+    -- Construct the full path for the new note
+    local new_note_path = notes_path .. note_name .. ".md"  -- Add .md extension
+    -- Create and open the new note
+    vim.cmd("edit " .. new_note_path)
+  end,
+  { desc = "create note" }
 )
--- map("n", "<leader>os", ":Telescope find_files search_dirs={\"/home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/\"}<cr>", { desc = "search in vault" })
--- map("n", "<leader>ow", ":Telescope live_grep search_dirs={\"/home/vimi/OneDrive/Dokumenty/zPoznamky/Obsidian/\"}<cr>", { desc = "search in notes" })
 -- for review workflow
 map("n", "<leader>od", ":!rm '%:p'<cr>:bd<cr>", { desc = "delete note" })
 -- }}}
@@ -1388,7 +1401,7 @@ require("lazy").setup(
           get_venvs = function(venvs_path)
             return require("swenv.api").get_venvs(venvs_path)
           end,
-          venvs_path = vim.fn.expand(py_venvs_path), -- py_venvs_path, premennu definovanu v [[ DETECT OS]]
+          venvs_path = py_venvs_path, -- py_venvs_path, premennu definovanu v [[ DETECT OS]]
           post_set_venv = function()
             vim.cmd(":LspRestart<cr>")
           end,
@@ -1419,7 +1432,6 @@ require("lazy").setup(
           workspaces = {
             {
               name = "Obsidian",
-              -- path = vim.fn.expand(obsidian_path) .. "Dokumenty/zPoznamky/Obsidian/",
               path = obsidian_path -- premenna obsidian_path je definovana v [[ DETECT OS ]]
             },
           },
@@ -1673,12 +1685,12 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 -- }}}
 
 -- {{{ Conceal level = 1
--- vim.api.nvim_create_autocmd("BufRead", {
---   pattern = "*.md",
---   command = [[:setlocal conceallevel=1]],
---   group = mygroup,
---   desc = "Conceal level",
--- })
+vim.api.nvim_create_autocmd("BufRead", {
+  pattern = "*.md",
+  command = [[:setlocal conceallevel=1]],
+  group = mygroup,
+  desc = "Conceal level",
+})
 -- }}}
 
 -- {{{ Autoformat code on save
