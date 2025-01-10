@@ -5,6 +5,10 @@ Import-Module -Name Terminal-Icons
 # oh-my-posh
 # oh-my-posh init pwsh --config 'C:\Users\mech\AppData\Local\Programs\oh-my-posh\themes\spaceship-my.omp.json' | Invoke-Expression
 
+# enviroment variables
+# premenna pre python virtual enviroments priecinok, pouzitie v neovime
+$env:VENV_HOME = "C:\Users\$env:UserName\.py-venv\"
+
 # yazi file manager
 function y {
     $tmp = [System.IO.Path]::GetTempFileName()
@@ -50,7 +54,7 @@ Set-Alias dea deactivate
 # jupyter lab
 # Function JupyterLab {
 # 	cd C:\Users\$env:USERNAME\github\python
-#     	.\.venv\Scripts\Activate.ps1 
+#     	.\.venv\Scripts\Activate.ps1
 # 	jupyter lab
 # }
 # Set-Alias jupy JupyterLab

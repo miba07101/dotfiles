@@ -1,0 +1,7 @@
+[manager]
+prepend_keymap = [
+	{ on = [ "g", "D" ], run = "cd D:", desc = "go D: drive" },
+	{ on = [ "g", ".", "r" ], run = "cd ~/git-repos/", desc = "go git-repos" },
+	{ on = [ "g", ".", "d" ], run = "cd ~/git-repos/dotfiles/", desc = "go dotfiles" },
+	{ on = [ "g", "o", "d" ], run = "cd ~/OneDrive", desc = "go Onedrive" },
+]
