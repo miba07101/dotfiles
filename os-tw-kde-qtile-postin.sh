@@ -800,7 +800,7 @@ fonts(){
     [[ ! -d $HOME/${FONTS_DIR} ]] && mkdir -p $HOME/${FONTS_DIR}
 
     fonts_list=(
-      "Hack:hack nerd fonts"
+      "HackNerd:hack nerd fonts"
       "CascadiaCode:Cascadia code nerd fonts"
     )
 
@@ -943,6 +943,7 @@ gnome_kde_dotfiles(){
     ln -sf ${CWD}/config/nvim/after                 ${HOME}/.config/nvim/after
     ln -sf ${CWD}/config/nvim/snippets              ${HOME}/.config/nvim/snippets
     ln -sf ${CWD}/config/ranger                     ${HOME}/.config/ranger
+    ln -sf ${CWD}/config/yazi                       ${HOME}/.config/yazi
     ln -sf ${CWD}/config/zsh/.zshrc                 ${HOME}/.config/zsh/.zshrc
     ln -sf ${CWD}/config/zsh/.zshenv                ${HOME}/.config/zsh/.zshenv
     ln -sf ${CWD}/config/starship.toml              ${HOME}/.config/starship.toml
@@ -1017,6 +1018,7 @@ qtile_dotfiles(){
     ln -sf ${CWD}/config/qtile                  ${HOME}/.config/qtile
     ln -sf ${CWD}/config/qutebrowser            ${HOME}/.config/qutebrowser
     ln -sf ${CWD}/config/ranger                 ${HOME}/.config/ranger
+    ln -sf ${CWD}/config/yazi                   ${HOME}/.config/yazi
     ln -sf ${CWD}/config/rofi                   ${HOME}/.config/rofi
     ln -sf ${CWD}/config/sioyek                 ${HOME}/.config/sioyek
     ln -sf ${CWD}/config/zsh/.zshrc             ${HOME}/.config/zsh/.zshrc
@@ -1078,6 +1080,7 @@ wsl_dotfiles(){
     ln -sf ${CWD}/config/nvim/after                 ${HOME}/.config/nvim/after
     ln -sf ${CWD}/config/nvim/snippets              ${HOME}/.config/nvim/snippets
     ln -sf ${CWD}/config/ranger                     ${HOME}/.config/ranger
+    ln -sf ${CWD}/config/yazi                       ${HOME}/.config/yazi
     ln -sf ${CWD}/xWSL/starship.toml                ${HOME}/.config/starship.toml
     ln -sf ${CWD}/home/.bashrc                      ${HOME}/.bashrc
     ln -sf ${CWD}/home/.ticker.yaml                 ${HOME}/.ticker.yaml

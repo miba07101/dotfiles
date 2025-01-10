@@ -26,31 +26,23 @@ local config = wezterm.config_builder()
 -- check if on windows
 if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   config.default_prog = { 'pwsh.exe', '-NoLogo' }
-  config.color_scheme = 'nord'
+  config.color_scheme = "kanagawa-dark"
+  config.font = wezterm.font { family = 'Hack', weight = 'Regular' }
 else
-  -- colorscheme
+  -- config.color_scheme = 'nord'
   -- config.color_scheme = 'iceberg-light'
   -- config.color_scheme = 'Kanagawa (Gogh)'
-  config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
+  -- config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
   -- config.color_scheme = is_night()
+  config.color_scheme = "kanagawa-dark"
+  config.font = wezterm.font 'Hack Nerd Font'
 end
 
--- fonts
--- config.font = wezterm.font 'Hack Nerd Font'
--- config.font = wezterm.font 
--- {
---   family = 'UbuntuSansMono Nerd Font',
---   weight = 'Regular',
---   -- harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
--- }
-config.font = wezterm.font 
-{
-  family = 'Hack',
-  weight = 'Regular',
-}
+-- fonts settings
 config.font_size = 11.0
 config.warn_about_missing_glyphs=false
 config.line_height = 1.1
+-- config.harfbuzz_features = { "calt=1", "clig=1", "liga=1" }
 
 -- sounds
 config.audible_bell="Disabled"
@@ -63,10 +55,10 @@ config.window_close_confirmation = 'NeverPrompt'
 config.initial_rows = 32
 config.initial_cols = 96
 config.window_padding = {
-  -- left = 0,
-  -- right = 0,
-  -- top = 0,
-  bottom = 0,
+  left = "1cell",
+  right = "1cell",
+  top = "0.5cell",
+  bottom = "0.5cell",
 }
 
 -- cursor
