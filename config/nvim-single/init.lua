@@ -6,7 +6,6 @@
 -- ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
 -- ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
 --
--- config
 
 -- {{{ [[ DETECT OS ]]
 local function detect_os_type()
@@ -32,9 +31,11 @@ end
 local os_type = detect_os_type()
 local os_username = os.getenv("USERNAME") or os.getenv("USER")
 local py_venvs_path = os.getenv("VENV_HOME")
+local onedrive_path = os.getenv("OneDrive_DIR")
+local obsidian_path = vim.fn.expand(onedrive_path) .. (os_username == "mech" and "Poznámkové bloky/Obsidian/" or "Dokumenty/zPoznamky/Obsidian/")
 
-
--- print("detected os: " .. os_type)
+print(obsidian_path)
+print("detected os: " .. os_type)
 -- print("detected username: " .. os_username)
 -- print("detected venv_path: " .. py_venvs_path)
 -- }}}
@@ -115,7 +116,7 @@ opt.wrapscan = true -- search the entire file repeatedly
 -- End Search }}}
 
 -- {{{ UI
-opt.cmdheight = 0 -- command line height
+-- opt.cmdheight = 0 -- command line height
 opt.cursorline = true -- highlight the current line
 opt.laststatus = 3 -- global status bar (sposobuje nefunkcnost resource lua.init)
 opt.number = true -- absolute line numbers
@@ -417,7 +418,9 @@ map("n", "<leader>qof", "<cmd>lua require('otter').ask_format()<cr>", { desc = "
 -- {{{ Obsidian
 map("n", "<leader>ol", "<cmd>lua require('obsidian').util.gf_passthrough()<cr>", { desc = "wiki links" })
 map("n", "<leader>ob", "<cmd>lua require('obsidian').util.toggle_checkbox()<cr>", { desc = "toggle checkbox" })
-map("n", "<leader>oo", ":cd ${OneDrive_DIR}/Dokumenty/zPoznamky/Obsidian/<cr>", { desc = "open vault" })
+-- map("n", "<leader>oo", ":cd obsidian_path<cr>", { desc = "open vault" })
+map("n", "<leader>oo", function() vim.cmd("cd " .. obsidian_path) end, { desc = "open vault" })
+
 map(
   "n",
   "<leader>ot",
@@ -428,7 +431,7 @@ map(
 map(
   "n",
   "<leader>os",
-  "<cmd>lua require('telescope.builtin').find_files({ search_dirs = { vim.fn.expand('$OneDrive_DIR') .. '/Dokumenty/zPoznamky/Obsidian/' } })<cr>",
+  "<cmd>lua require('telescope.builtin').find_files({ search_dirs = { vim.fn.expand(os.getenv('OneDrive_DIR')) .. 'Poznámkové bloky/Obsidian/' } })<cr>",
   { desc = "search in vault" }
 )
 map(
@@ -1381,7 +1384,6 @@ require("lazy").setup(
       -- {{{ Swenv - change python environments
       {
         "AckslD/swenv.nvim",
-        event = "FileType python",
         opts = {
           get_venvs = function(venvs_path)
             return require("swenv.api").get_venvs(venvs_path)
@@ -1417,7 +1419,8 @@ require("lazy").setup(
           workspaces = {
             {
               name = "Obsidian",
-              path = vim.fn.expand("$OneDrive_DIR") .. "Dokumenty/zPoznamky/Obsidian/",
+              -- path = vim.fn.expand(obsidian_path) .. "Dokumenty/zPoznamky/Obsidian/",
+              path = obsidian_path -- premenna obsidian_path je definovana v [[ DETECT OS ]]
             },
           },
           notes_subdir = "inbox",
