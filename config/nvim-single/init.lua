@@ -1436,7 +1436,7 @@ require("lazy").setup(
             },
           },
           notes_subdir = "inbox",
-          new_notes_location = "notes_subdir",
+          new_notes_location = "inbox",
           disable_frontmatter = true,
           templates = {
             subdir = "templates",
@@ -1452,16 +1452,16 @@ require("lazy").setup(
       -- }}}
 
       -- {{{ Markdown
-      {
-        "MeanderingProgrammer/markdown.nvim",
-        lazy = true,
-        ft = "markdown",
-        name = "render-markdown", -- Only needed if you have another plugin named markdown.nvim
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-        config = function()
-          require("render-markdown").setup({})
-        end,
-      },
+      -- {
+      --   "MeanderingProgrammer/markdown.nvim",
+      --   lazy = true,
+      --   ft = "markdown",
+      --   name = "render-markdown", -- Only needed if you have another plugin named markdown.nvim
+      --   dependencies = { "nvim-treesitter/nvim-treesitter" },
+      --   config = function()
+      --     require("render-markdown").setup({})
+      --   end,
+      -- },
       -- }}}
 
       -- {{{ Markdown highlight headings and code blocks
