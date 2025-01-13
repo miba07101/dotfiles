@@ -41,6 +41,7 @@ function hard-symlink ([String] $real, [String] $link) {
     }
 }
 
+# kpirovanie config suborov - potrebne pre vuz pc - nedaju sa vytvorit symlinky bez admin
 function CopyGitRepo {
     param (
         [switch]$Reverse # Add a switch to toggle reverse copying
@@ -85,7 +86,7 @@ function CopyGitRepo {
 Set-Alias pull CopyGitRepo
 
 function CopyGitRepoReverse {
-    Copy-GitRepoItems -Reverse
+    CopyGitRepo -Reverse
 }
 Set-Alias push CopyGitRepoReverse
 
