@@ -49,8 +49,8 @@ local g = vim.g
 -- {{{ File
 opt.backup = false -- create a backup file
 opt.clipboard = "unnamedplus" -- system clipboard
-opt.concealcursor = "" -- conceal cursor disable
-opt.conceallevel = 0 -- conceal level disable
+-- opt.concealcursor = "" -- conceal cursor disable
+-- opt.conceallevel = 0 -- conceal level disable
 opt.fileencoding = "utf-8" -- character encoding
 opt.filetype = "plugin" -- plugin loading of file types
 opt.hidden = true -- switching from unsaved buffers
@@ -1462,40 +1462,47 @@ require("lazy").setup(
       --     require("render-markdown").setup({})
       --   end,
       -- },
-      -- }}}
-
-      -- {{{ Markdown highlight headings and code blocks
       {
-        "lukas-reineke/headlines.nvim",
-        enabled = true,
+        'MeanderingProgrammer/render-markdown.nvim',
         lazy = true,
-        ft = { "markdown", "quarto" },
-        dependencies = "nvim-treesitter/nvim-treesitter",
-        config = function()
-          require("headlines").setup({
-            quarto = {
-              query = vim.treesitter.query.parse(
-                "markdown",
-                [[
-                (fenced_code_block) @codeblock
-                ]]
-              ),
-              codeblock_highlight = "CodeBlock",
-              treesitter_language = "markdown",
-            },
-            markdown = {
-              query = vim.treesitter.query.parse(
-                "markdown",
-                [[
-                (fenced_code_block) @codeblock
-                ]]
-              ),
-              codeblock_highlight = "CodeBlock",
-            },
-          })
-        end,
+        ft = "markdown",
+        dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+        opts = {},
       },
       -- }}}
+
+      -- -- {{{ Markdown highlight headings and code blocks
+      -- {
+      --   "lukas-reineke/headlines.nvim",
+      --   enabled = true,
+      --   lazy = true,
+      --   ft = { "markdown", "quarto" },
+      --   dependencies = "nvim-treesitter/nvim-treesitter",
+      --   config = function()
+      --     require("headlines").setup({
+      --       quarto = {
+      --         query = vim.treesitter.query.parse(
+      --           "markdown",
+      --           [[
+      --           (fenced_code_block) @codeblock
+      --           ]]
+      --         ),
+      --         codeblock_highlight = "CodeBlock",
+      --         treesitter_language = "markdown",
+      --       },
+      --       markdown = {
+      --         query = vim.treesitter.query.parse(
+      --           "markdown",
+      --           [[
+      --           (fenced_code_block) @codeblock
+      --           ]]
+      --         ),
+      --         codeblock_highlight = "CodeBlock",
+      --       },
+      --     })
+      --   end,
+      -- },
+      -- -- }}}
 
       -- {{{ Vim-table-mode
       {
