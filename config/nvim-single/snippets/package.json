@@ -1,0 +1,35 @@
+{
+  "name": "jinja-snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": [
+          "jinja",
+          "jinja.html",
+          "markdown",
+          "quarto"
+        ],
+        "path": "./snippets/all.json"
+      },
+      {
+        "language": [
+          "jinja",
+          "jinja.html"
+        ],
+        "path": "./jinja.json"
+      },
+      {
+        "language": [
+          "markdown"
+        ],
+        "path": "./markdown.json"
+      },
+      {
+        "language": [
+          "quarto"
+        ],
+        "path": "./quarto.json"
+      }
+    ]
+  }
+}
