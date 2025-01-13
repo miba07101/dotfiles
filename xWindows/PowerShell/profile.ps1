@@ -41,6 +41,55 @@ function hard-symlink ([String] $real, [String] $link) {
     }
 }
 
+function CopyGitRepo {
+    param (
+        [switch]$Reverse # Add a switch to toggle reverse copying
+    )
+
+    # Define source-to-destination mappings
+    $PathMappings = @{
+        "C:\Users\mech\git-repos\dotfiles\xWindows\PowerShell\profile.ps1" = "C:\Users\mech\Documents\PowerShell\profile.ps1"
+        "C:\Users\mech\git-repos\dotfiles\config\starship.toml" = "C:\Users\mech\Documents\PowerShell\starship.toml"
+        "C:\Users\mech\git-repos\dotfiles\config\wezterm" = "C:\Users\mech\.config\wezterm"
+        "C:\Users\mech\git-repos\dotfiles\config\nvim-single\init.lua" = "C:\Users\mech\AppData\Local\nvim\init.lua"
+        "C:\Users\mech\git-repos\dotfiles\config\VSCodium\settings.json" = "C:\Users\mech\scoop\apps\vscodium\1.96.2.24355\data\user-data\User\settings.json"
+        "C:\Users\mech\git-repos\dotfiles\config\VSCodium\keybindings.json" = "C:\Users\mech\scoop\apps\vscodium\1.96.2.24355\data\user-data\User\keybindings.json"
+        "C:\Users\mech\git-repos\dotfiles\config\yazi\keymap.toml" = "C:\Users\mech\AppData\Roaming\yazi\config\keymap.toml"
+        "C:\Users\mech\git-repos\dotfiles\config\yazi\theme.toml" = "C:\Users\mech\AppData\Roaming\yazi\config\theme.toml"
+        "C:\Users\mech\git-repos\dotfiles\config\yazi\yazi.toml" = "C:\Users\mech\AppData\Roaming\yazi\config\yazi.toml"
+    }
+
+    # Copy files
+    foreach ($Mapping in $PathMappings.GetEnumerator()) {
+        if ($Reverse) {
+            # Reverse copying: destination -> source
+            $Source = $Mapping.Value
+            $Destination = $Mapping.Key
+        } else {
+            # Normal copying: source -> destination
+            $Source = $Mapping.Key
+            $Destination = $Mapping.Value
+        }
+
+        # Remove the destination folder/file if it exists
+        if (Test-Path -Path $Destination) {
+            Remove-Item -Path $Destination -Recurse -Force
+            Write-Host "Cleared existing destination: $Destination"
+        }
+
+        # Copy the source to the destination
+        Copy-Item -Path $Source -Destination $Destination -Recurse -Force
+        Write-Host "Copied: $Source -> $Destination"
+    }
+}
+Set-Alias pull CopyGitRepo
+
+function CopyGitRepoReverse {
+    Copy-GitRepoItems -Reverse
+}
+Set-Alias push CopyGitRepoReverse
+
+
 # neovim config init.lua
 function NeovimInit {
     nvim C:\Users\$env:USERNAME\AppData\Local\nvim\init.lua
