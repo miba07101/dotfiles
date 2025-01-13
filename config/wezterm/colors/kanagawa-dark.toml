@@ -17,14 +17,14 @@ brights = [
     "#7fb4ca",
     "#938aa9",
     "#7aa89f",
-    "#c8c093",
+    "#FEFEFA",
     ]
 
 background ="#1f1f28"
-foreground = "#fefefa"
-cursor_bg = "#fefefa"
-cursor_border = "#fefefa"
-cursor_fg = "#1f1f28"
+foreground = "#FEFEFA"
+cursor_bg = "#FEFEFA"
+cursor_border = "#FEFEFA"
+cursor_fg = "#FEFEFA"
 
 selection_bg = "#2d4f67"
 selection_fg = "#fefefa"
