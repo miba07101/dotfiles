@@ -460,7 +460,9 @@ map("n", "<leader>od", ":!rm '%:p'<cr>:bd<cr>", { desc = "delete note" })
 -- }}}
 
 -- {{{ Markdown
-map("n", "<leader>mp", "<cmd>RenderMarkdownToggle<cr><cr>", { desc = "markdown preview" })
+map("n", "<leader>mp", "<cmd>RenderMarkdown toggle<cr><cr>", { desc = "render toggle" })
+map("n", "<leader>mi", "<cmd>RenderMarkdown expand<cr><cr>", { desc = "increase conceal" })
+map("n", "<leader>md", "<cmd>RenderMarkdown contract<cr><cr>", { desc = "decrease conceal" })
 -- )))
 
 -- End [[ KEYMAPS ]] }}}
@@ -991,14 +993,14 @@ require("lazy").setup(
                   mode = "symbol_text",
                   ellipsis_char = "...",
                   -- symbol_map = { Codeium = "" },
-                  symbol_map = { Supermaven = "" },
+                  -- symbol_map = { Supermaven = "" },
                   menu = {
                     buffer = "[buf]",
                     -- codeium = "[cod]",
                     luasnip = "[snip]",
                     nvim_lsp = "[lsp]",
                     bootstrap = "[boot]",
-                    -- otter = "[otter]",
+                    otter = "[otter]",
                   },
                 })(entry, item)
                 if color_item.abbr_hl_group then
@@ -1012,12 +1014,13 @@ require("lazy").setup(
               { name = "buffer" },
               { name = "path" },
               -- { name = "codeium" },
-              { name = "supermaven" },
+              -- { name = "supermaven" },
               { name = "luasnip" },
               { name = "nvim_lsp" },
               { name = "nvim_lsp_signature_help" },
-              -- { name = "bootstrap" },
-              -- { name = "otter" },
+              { name = "bootstrap" },
+              { name = "otter" },
+              { name = "render-markdown" },
             },
             sorting = {
               comparators = {
@@ -1452,22 +1455,54 @@ require("lazy").setup(
       -- }}}
 
       -- {{{ Markdown
-      -- {
-      --   "MeanderingProgrammer/markdown.nvim",
-      --   lazy = true,
-      --   ft = "markdown",
-      --   name = "render-markdown", -- Only needed if you have another plugin named markdown.nvim
-      --   dependencies = { "nvim-treesitter/nvim-treesitter" },
-      --   config = function()
-      --     require("render-markdown").setup({})
-      --   end,
-      -- },
       {
         'MeanderingProgrammer/render-markdown.nvim',
         lazy = true,
-        ft = "markdown",
+        ft = { "markdown", "quarto" },
         dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-        opts = {},
+        init = function()
+          local colors = {
+            {bg = "#C34043", fg = "#FEFEFA"},
+            {bg = "#FF9E3B", fg = "#FEFEFA"},
+            {bg = "#938AA9", fg = "#FEFEFA"},
+            {bg = "#7FB4CA", fg = "#FEFEFA"},
+            {bg = "#98BB6C", fg = "#FEFEFA"},
+            {bg = "#DCA561", fg = "#FEFEFA"},
+          }
+
+          -- Heading colors (when not hovered over), extends through the entire line
+          for i, color in ipairs(colors) do
+            vim.cmd(string.format([[highlight Headline%dBg guifg=%s guibg=%s]], i, color.fg, color.bg))
+          end
+
+          -- Highlight for the heading and sign icons (symbol on the left)
+          -- I have the sign disabled for now, so this makes no effect
+          for i, color in ipairs(colors) do
+            vim.cmd(string.format([[highlight Headline%dFg cterm=bold gui=bold guifg=%s]], i, color.bg))
+          end
+        end,
+        opts = {
+          heading = {
+            -- icons = { '󰲡 ', '󰲣 ', '󰲥 ', '󰲧 ', '󰲩 ', '󰲫 ' },
+            icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+            backgrounds = {
+              "Headline1Bg",
+              "Headline2Bg",
+              "Headline3Bg",
+              "Headline4Bg",
+              "Headline5Bg",
+              "Headline6Bg",
+            },
+            foregrounds = {
+              "Headline1Fg",
+              "Headline2Fg",
+              "Headline3Fg",
+              "Headline4Fg",
+              "Headline5Fg",
+              "Headline6Fg",
+            },
+          }
+        },
       },
       -- }}}
 
