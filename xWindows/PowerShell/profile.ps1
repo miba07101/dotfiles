@@ -86,7 +86,7 @@ function CopyGitRepo {
                 # Ask for a commit message dynamically
                 $CommitMessage = Read-Host "Enter a commit message (or press Enter for default)"
                 if (-not $CommitMessage) {
-                    $CommitMessage = "Update dotfiles from PC ($(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'))"
+                    $CommitMessage = "up dotfiles vuz ($(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'))"
                 }
 
                 # Perform git add, commit, and push

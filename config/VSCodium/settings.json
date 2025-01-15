@@ -113,9 +113,9 @@
       "tab.hoverBackground": "#EDEBDA",
       "titleBar.activeBackground": "#FEFEFA"
     },
-    "statusBar.background": "#67217A",
-    "statusBar.noFolderBackground": "#67217A",
-    "statusBar.debuggingBackground": "#67217A",
+    "statusBar.background": "#007ACD",
+    "statusBar.noFolderBackground": "#007ACD",
+    "statusBar.debuggingBackground": "#007ACD",
     "statusBar.foreground": "#FFFFFF",
     "statusBar.debuggingForeground": "#FFFFFF"
   },
