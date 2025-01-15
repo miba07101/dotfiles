@@ -61,28 +61,66 @@ function CopyGitRepo {
         "C:\Users\mech\git-repos\dotfiles\config\yazi\yazi.toml" = "C:\Users\mech\AppData\Roaming\yazi\config\yazi.toml"
     }
 
-    # Copy files
-    foreach ($Mapping in $PathMappings.GetEnumerator()) {
-        if ($Reverse) {
-            # Reverse copying: destination -> source
-            $Source = $Mapping.Value
-            $Destination = $Mapping.Key
-        } else {
-            # Normal copying: source -> destination
-            $Source = $Mapping.Key
-            $Destination = $Mapping.Value
+    # Navigate to the dotfiles repository
+    $RepoPath = "C:\Users\$env:USERNAME\git-repos\dotfiles"
+    Push-Location $RepoPath
+
+    try {
+            if ($Reverse) {
+                # Reverse copying: destination -> source
+                foreach ($Mapping in $PathMappings.GetEnumerator()) {
+                    $Source = $Mapping.Value
+                    $Destination = $Mapping.Key
+
+                    # Remove the destination folder/file if it exists
+                    if (Test-Path -Path $Destination) {
+                        Remove-Item -Path $Destination -Recurse -Force
+                        Write-Host "Cleared existing destination: $Destination"
+                    }
+
+                    # Copy the source to the destination
+                    Copy-Item -Path $Source -Destination $Destination -Recurse -Force
+                    Write-Host "Copied: $Source -> $Destination"
+                }
+
+                # Ask for a commit message dynamically
+                $CommitMessage = Read-Host "Enter a commit message (or press Enter for default)"
+                if (-not $CommitMessage) {
+                    $CommitMessage = "Update dotfiles from PC ($(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'))"
+                }
+
+                # Perform git add, commit, and push
+                git add .
+                git commit -m $CommitMessage
+                git push
+                Write-Host "Changes pushed to the repository with commit message: '$CommitMessage'."
+            } else {
+                # Normal copying: source -> destination
+                # Perform a git pull
+                git pull
+                Write-Host "Repository updated with the latest changes."
+
+                foreach ($Mapping in $PathMappings.GetEnumerator()) {
+                    $Source = $Mapping.Key
+                    $Destination = $Mapping.Value
+
+                    # Remove the destination folder/file if it exists
+                    if (Test-Path -Path $Destination) {
+                        Remove-Item -Path $Destination -Recurse -Force
+                        Write-Host "Cleared existing destination: $Destination"
+                    }
+
+                    # Copy the source to the destination
+                    Copy-Item -Path $Source -Destination $Destination -Recurse -Force
+                    Write-Host "Copied: $Source -> $Destination"
+                }
+            }
+        } catch {
+            Write-Host "An error occurred: $_" -ForegroundColor Red
+        } finally {
+            Pop-Location
         }
 
-        # Remove the destination folder/file if it exists
-        if (Test-Path -Path $Destination) {
-            Remove-Item -Path $Destination -Recurse -Force
-            Write-Host "Cleared existing destination: $Destination"
-        }
-
-        # Copy the source to the destination
-        Copy-Item -Path $Source -Destination $Destination -Recurse -Force
-        Write-Host "Copied: $Source -> $Destination"
-    }
 }
 Set-Alias pull CopyGitRepo
 
