@@ -418,8 +418,6 @@ map("n", "<leader>qof", "<cmd>lua require('otter').ask_format()<cr>", { desc = "
 -- }}}
 
 -- {{{ Obsidian
-map("n", "<leader>ol", "<cmd>lua require('obsidian').util.gf_passthrough()<cr>", { desc = "wiki links" })
-map("n", "<leader>ob", "<cmd>lua require('obsidian').util.toggle_checkbox()<cr>", { desc = "toggle checkbox" })
 map(
   "n",
   "<leader>ot",
@@ -643,6 +641,7 @@ require("lazy").setup(
             "vimdoc",
             "yaml",
             "typst",
+            "latex",
           },
           auto_install = true,
           highlight = { enable = true },
@@ -1505,7 +1504,14 @@ require("lazy").setup(
               "Headline5Fg",
               "Headline6Fg",
             },
-          }
+          },
+          latex = {
+            enabled = true,
+            converter = 'latex2text',
+            highlight = 'RenderMarkdownMath',
+            top_pad = 0,
+            bottom_pad = 0,
+          },
         },
       },
       -- }}}
