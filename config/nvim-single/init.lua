@@ -1064,35 +1064,42 @@ require("lazy").setup(
 
       -- -- {{{ blink
       -- {
-      -- 	"saghen/blink.cmp",
-      -- 	dependencies = "rafamadriz/friendly-snippets",
-      -- 	version = "v0.*",
-      -- 	opts = {
-      -- 		keymap = {
-      -- 			preset = "super-tab",
-      -- 			["<CR>"] = { "accept", "fallback" },
-      -- 		},
-      -- 		appearance = {
-      -- 			use_nvim_cmp_as_default = false,
-      -- 			nerd_font_variant = "normal",
-      -- 		},
-      -- 		completion = {
-      -- 			menu = {
-      -- 				draw = {
-      -- 					columns = {
-      -- 						{ "kind_icon" },
-      -- 						{ "label", "label_description", gap = 1 },
-      -- 						{ "source_name", "kind", gap = 1 },
-      -- 					},
-      -- 				},
-      -- 			},
-      -- 		},
-      -- 		signature = { enabled = true },
-      -- 		sources = {
-      -- 			default = { "lsp", "path", "snippets", "buffer" },
-      -- 		},
-      -- 	},
-      -- 	opts_extend = { "sources.default" },
+      --   "saghen/blink.cmp",
+      --   dependencies = "rafamadriz/friendly-snippets",
+      --   version = "v0.*",
+      --   opts = {
+      --     keymap = {
+      --       preset = "super-tab",
+      --       ["<CR>"] = { "accept", "fallback" },
+      --     },
+      --     appearance = {
+      --       use_nvim_cmp_as_default = false,
+      --       nerd_font_variant = "normal",
+      --     },
+      --     completion = {
+      --       menu = {
+      --         draw = {
+      --           columns = {
+      --             { "kind_icon" },
+      --             { "label", "label_description", gap = 1 },
+      --             { "source_name", "kind", gap = 1 },
+      --           },
+      --         },
+      --       },
+      --     },
+      --     signature = { enabled = true },
+      --     sources = {
+      --       default = { "lsp", "path", "snippets", "buffer" },
+      --       providers = {
+      --         markdown = {
+      --           name = 'RenderMarkdown',
+      --           module = 'render-markdown.integ.blink',
+      --           fallbacks = { 'lsp' },
+      --         },
+      --       },
+      --     },
+      --   },
+      --   opts_extend = { "sources.default" },
       -- },
       -- -- }}}
 
@@ -1462,21 +1469,17 @@ require("lazy").setup(
         dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
         init = function()
           local colors = {
-            {bg = "#C34043", fg = "#FEFEFA"},
-            {bg = "#FF9E3B", fg = "#FEFEFA"},
-            {bg = "#938AA9", fg = "#FEFEFA"},
-            {bg = "#7FB4CA", fg = "#FEFEFA"},
-            {bg = "#98BB6C", fg = "#FEFEFA"},
-            {bg = "#DCA561", fg = "#FEFEFA"},
+            {bg = "#43242B", fg = "#C34043"},
+            {bg = "#49443C", fg = "#DCA561"},
+            {bg = "#2B3328", fg = "#76946A"},
+            {bg = "#252535", fg = "#938AA9"},
+            {bg = "#252535", fg = "#658594"},
+            {bg = "#252535", fg = "#717C7C"},
           }
-
           -- Heading colors (when not hovered over), extends through the entire line
           for i, color in ipairs(colors) do
             vim.cmd(string.format([[highlight Headline%dBg guifg=%s guibg=%s]], i, color.fg, color.bg))
           end
-
-          -- Highlight for the heading and sign icons (symbol on the left)
-          -- I have the sign disabled for now, so this makes no effect
           for i, color in ipairs(colors) do
             vim.cmd(string.format([[highlight Headline%dFg cterm=bold gui=bold guifg=%s]], i, color.bg))
           end
