@@ -50,7 +50,7 @@ local g = vim.g
 opt.backup = false -- create a backup file
 opt.clipboard = "unnamedplus" -- system clipboard
 -- opt.concealcursor = "" -- conceal cursor disable
--- opt.conceallevel = 0 -- conceal level disable
+-- opt.conceallevel = 1 -- conceal level disable
 opt.fileencoding = "utf-8" -- character encoding
 opt.filetype = "plugin" -- plugin loading of file types
 opt.hidden = true -- switching from unsaved buffers
@@ -1439,6 +1439,7 @@ require("lazy").setup(
           "nvim-lua/plenary.nvim",
         },
         opts = {
+          ui = { enable = false }, -- vypnute ui pre doplnok render-markdown
           workspaces = {
             {
               name = "Obsidian",
