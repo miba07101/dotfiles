@@ -96,7 +96,7 @@ Set-Alias push CopyGitRepoReverse
 # enviroment variables
 
 # premenna pre python virtual enviroments priecinok, pouzitie v neovime
-$env:VENV_HOME = "C:\Users\$($env:UserName)\.py-venv\"
+$env:VENV_HOME = "C:\Users\$($env:UserName)\.py-venv"
 
 # premenna pre onedrive priecinok, pouzitie v neovime pre obsidian
 function Set-OneDrivePath {
