@@ -775,6 +775,7 @@ python(){
     pip3 install efficalc
     pip3 install pint
     pip3 install forallpeople
+    pip3 install pylatexenc # pre render-markdown.nvim
     ## pre molten.nvim a image.nvim
     pip3 install pynvim
     pip3 install jupyter_client
