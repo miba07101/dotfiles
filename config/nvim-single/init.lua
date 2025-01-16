@@ -203,9 +203,9 @@ vim.g.maplocalleader = " "
 -- End Leader Key }}}
 
 -- {{{ Save, Quit
-map({ "n", "i" }, "<C-s>", "<cmd>w<cr>", { desc = "save" })
-map({ "n", "i" }, "<C-w>", "<cmd>wq<cr>", { desc = "save-quit" })
-map({ "n", "i" }, "<C-q>", "<cmd>q!<cr>", { desc = "quit" })
+map({ "n", "v", "i", "x" }, "<C-s>", "<cmd>w<cr>", { desc = "save" })
+map({ "n", "v", "i", "x" }, "<C-w>", "<cmd>wq<cr>", { desc = "save-quit" })
+map({ "n", "v", "i", "x" }, "<C-q>", "<cmd>q!<cr>", { desc = "quit" })
 -- map("n", "<leader>x", "<cmd>w<cr><cmd>luafile %<cr><esc>", { desc = "Reload Lua" })
 -- }}}
 
@@ -418,22 +418,17 @@ map("n", "<leader>qof", "<cmd>lua require('otter').ask_format()<cr>", { desc = "
 -- }}}
 
 -- {{{ Obsidian
-map(
-  "n",
-  "<leader>ot",
-  ":ObsidianTemplate t-nvim-note<cr> :lua vim.cmd([[1,/^\\S/s/^\\n\\{1,}//]])<cr>",
-  { desc = "note template" }
-)
--- map("n", "<leader>of", ":s/\\(# \\)[^-]*_/\\1/ | s/-/ /g<cr>", { desc = "strip date - must have cursor on title" })
--- search note
-map(
-  "n",
-  "<leader>os",
+map("n", "<leader>ot", ":ObsidianTemplate t-nvim-note<cr> :lua vim.cmd([[1,/^\\S/s/^\\n\\{1,}//]])<cr>", { desc = "note template" })
+map("n", "<leader>oc", ":ObsidianToggleCheckbox<cr>", { desc = "checkbox toggle" })
+map("n", "<leader>olf", ":ObsidianFollowLink<cr>", { desc = "link follow" })
+map({"v", "x"}, "<leader>oln", ":ObsidianLinkNew<cr>", { desc = "link new" })
+map("n", "<leader>os",
   function()
     require('telescope.builtin').find_files({ search_dirs = { obsidian_path } })
   end,
   { desc = "search note" }
 )
+
 -- create new note in inbox folder
 map(
   "n",
@@ -1447,7 +1442,6 @@ require("lazy").setup(
           },
           notes_subdir = "inbox",
           new_notes_location = "inbox",
-          disable_frontmatter = true,
           templates = {
             subdir = "templates",
             date_format = "%Y-%m-%d",
@@ -1457,6 +1451,93 @@ require("lazy").setup(
             nvim_cmp = true,
             min_chars = 2,
           },
+          note_id_func = function(title)
+            title = title or "Untitled"
+            local sanitized_title = title:gsub(" ", "-") -- Replace spaces with underscores for file names
+            return sanitized_title -- Return the sanitized title as the file name
+          end,
+          disable_frontmatter = true,
+          -- note_frontmatter_func = function(note)
+          --   local created_time = os.date("!%Y-%m-%dT%H:%M:%SZ") -- ISO 8601 UTC format
+          --   return {
+          --     created = created_time,
+          --     hubs = {}, -- Initialize with an empty list
+          --     tags = {}, -- Initialize with an empty list
+          --     urls = {}, -- Initialize with an empty list
+          --   }
+          -- end,
+          -- -- Add a note content function to include title as H1
+          -- note_content_func = function(note)
+          --   local title = note.title or "Untitled"
+          --   local frontmatter = note.frontmatter or {}
+          --
+          --   -- Serialize frontmatter as YAML
+          --   local frontmatter_lines = { "---" }
+          --   for key, value in pairs(frontmatter) do
+          --     if type(value) == "table" then
+          --       table.insert(frontmatter_lines, key .. ": [" .. table.concat(value, ", ") .. "]")
+          --     else
+          --       table.insert(frontmatter_lines, key .. ": " .. tostring(value))
+          --     end
+          --   end
+          --   table.insert(frontmatter_lines, "---")
+          --
+          --   -- Add title as H1 after frontmatter
+          --   table.insert(frontmatter_lines, "# " .. title)
+          --
+          --   -- Return the complete content
+          --   return table.concat(frontmatter_lines, "\n")
+          -- end,
+
+          -- Custom function to override note creation behavior
+          config = function(_, opts)
+            local obsidian = require("obsidian")
+            obsidian.setup(opts)
+            local client = obsidian -- Alias for simplicity
+
+            -- Function to create a new note
+            local function new_note(subdir, ask_name, template)
+              -- Prompt user for a note name or generate a timestamp-based name
+              local fname = ""
+              if ask_name then
+                -- Get the file name from user input
+                fname = vim.fn.input("Enter note name (without .md): ", ""):gsub("%s+", "_") -- Replace spaces with underscores
+
+                -- If no name is provided, cancel note creation
+                if fname == "" then
+                  print("Note creation canceled. No name provided.")
+                  return
+                end
+              else
+                -- Generate a timestamp-based file name if no input is needed
+                -- fname = os.date("%Y%m%d%H%M%S") -- Format: YYYYMMDDHHMMSS
+              end
+
+              -- Determine the note's location (workspace + optional subdirectory)
+              local query = fname .. ".md"
+              local dir_path = client.dir -- Base workspace directory
+              if subdir then
+                query = subdir .. "/" .. query
+                dir_path = dir_path .. "/" .. subdir
+              end
+
+              -- Check if the note already exists, and create it if not
+              local note = client:resolve_note(query)
+              if not note then
+                note = client:new_note(fname, fname, dir_path)
+              end
+
+              -- Apply the template, if provided
+              if template then
+                vim.cmd("ObsidianTemplate " .. template .. ".md")
+              end
+            end
+            vim.keymap.set("n", "<leader>nN", function()
+              -- Create a note in the root directory, ask for a name, and use the "basic" template
+              new_note(nil, true, "t-nvim-note")
+            end, { noremap = true, desc = "Create a Permanent Note in Root" })
+
+          end,
         },
       },
       -- }}}
@@ -1516,44 +1597,12 @@ require("lazy").setup(
       },
       -- }}}
 
-      -- -- {{{ Markdown highlight headings and code blocks
-      -- {
-      --   "lukas-reineke/headlines.nvim",
-      --   enabled = true,
-      --   lazy = true,
-      --   ft = { "markdown", "quarto" },
-      --   dependencies = "nvim-treesitter/nvim-treesitter",
-      --   config = function()
-      --     require("headlines").setup({
-      --       quarto = {
-      --         query = vim.treesitter.query.parse(
-      --           "markdown",
-      --           [[
-      --           (fenced_code_block) @codeblock
-      --           ]]
-      --         ),
-      --         codeblock_highlight = "CodeBlock",
-      --         treesitter_language = "markdown",
-      --       },
-      --       markdown = {
-      --         query = vim.treesitter.query.parse(
-      --           "markdown",
-      --           [[
-      --           (fenced_code_block) @codeblock
-      --           ]]
-      --         ),
-      --         codeblock_highlight = "CodeBlock",
-      --       },
-      --     })
-      --   end,
-      -- },
-      -- -- }}}
-
-      -- {{{ Vim-table-mode
+      -- {{{ Table-mode
       {
-        "dhruvasagar/vim-table-mode",
+        'Kicamon/markdown-table-mode.nvim',
         lazy = true,
         ft = { "markdown", "quarto" },
+        opts = {}
       },
       -- }}}
 
@@ -1699,6 +1748,7 @@ require("lazy").setup(
 -- }}}
 
 -- {{{ [[ AUTOCOMANDS ]]
+
 local mygroup = vim.api.nvim_create_augroup("vimrc", { clear = true })
 
 -- {{{ Highlight on Yank
@@ -1730,7 +1780,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 -- {{{ Unfold at open
 vim.api.nvim_create_autocmd("BufWinEnter", {
   pattern = { "*.py", "*.css", "*.scss", "*.html", "*.qmd", "*.md" },
-  command = [[:normal zR]], -- zR-open, zM-close folds
+  command = [[:normal! zR]], -- zR-open, zM-close folds
   group = mygroup,
   desc = "Unfold",
 })
