@@ -33,7 +33,7 @@ local os_username = os.getenv("USERNAME") or os.getenv("USER")
 local py_venvs_path = os.getenv("VENV_HOME")
 local onedrive_path = os.getenv("OneDrive_DIR")
 local obsidian_path = vim.fn.expand(onedrive_path .. (os_username == "mech" and "Poznámkové bloky/Obsidian/" or "Dokumenty/zPoznamky/Obsidian/"))
-local notes_path = obsidian_path .. "inbox/"
+-- local notes_path = obsidian_path .. "inbox/"
 
 
 -- print(obsidian_path)
@@ -418,7 +418,44 @@ map("n", "<leader>qof", "<cmd>lua require('otter').ask_format()<cr>", { desc = "
 -- }}}
 
 -- {{{ Obsidian
-map("n", "<leader>ot", ":ObsidianTemplate t-nvim-note<cr> :lua vim.cmd([[1,/^\\S/s/^\\n\\{1,}//]])<cr>", { desc = "note template" })
+local function new_note(create_with_template, template_name, custom_folder)
+  vim.wo.conceallevel = 1  -- Temporarily set conceallevel to 1 to avoid warnings
+  local note_name = vim.fn.input("Enter note name without .md: ")  -- Prompt user for note name
+  -- Check if the user entered a name
+  if note_name == "" then
+    print("Note name cannot be empty!")
+    return
+  end
+
+   -- Default folder is "inbox", or use custom_folder if provided
+  local notes_folder = custom_folder or "inbox"
+  local notes_path = obsidian_path .. notes_folder .. "/"
+  local new_note_path = notes_path .. note_name .. ".md"  -- Add .md extension
+
+  -- create new note (an empty file)
+  vim.cmd("edit " .. new_note_path)
+
+  -- create note with an Obsidian template
+  if create_with_template then
+    local templates = {
+      basic = "t-nvim-note.md",
+      person = "t-person.md"
+    }
+    if templates[template_name] then
+      vim.cmd("ObsidianTemplate " .. templates[template_name])
+    else
+      print("Invalid template name: " .. template_name)
+    end
+  end
+end
+
+
+map("n", "<leader>on", function()new_note(false)end, { desc = "note" })
+-- map("n", "<leader>ov", function()new_note(true, "person", "vuz")end, { desc = "note" })
+map("n", "<leader>otb", function()new_note(true, "basic")end, { desc = "note template basic" })
+map("n", "<leader>otp", function()new_note(true, "person")end, { desc = "note template person" })
+
+
 map("n", "<leader>oc", ":ObsidianToggleCheckbox<cr>", { desc = "checkbox toggle" })
 map("n", "<leader>olf", ":ObsidianFollowLink<cr>", { desc = "link follow" })
 map({"v", "x"}, "<leader>oln", ":ObsidianLinkNew<cr>", { desc = "link new" })
@@ -429,25 +466,6 @@ map("n", "<leader>os",
   { desc = "search note" }
 )
 
--- create new note in inbox folder
-map(
-  "n",
-  "<leader>on",
-  function()
-    vim.wo.conceallevel = 1 -- Temporarily set conceallevel to 1 to avoid warning
-    local note_name = vim.fn.input("Enter note name without .md: ")  -- Prompt user for note name
-    -- Check if the user entered a name
-    if note_name == "" then
-      print("Note name cannot be empty!")
-      return
-    end
-    -- Construct the full path for the new note
-    local new_note_path = notes_path .. note_name .. ".md"  -- Add .md extension
-    -- Create and open the new note
-    vim.cmd("edit " .. new_note_path)
-  end,
-  { desc = "create note" }
-)
 -- for review workflow
 map("n", "<leader>od", ":!rm '%:p'<cr>:bd<cr>", { desc = "delete note" })
 -- }}}
@@ -1457,87 +1475,6 @@ require("lazy").setup(
             return sanitized_title -- Return the sanitized title as the file name
           end,
           disable_frontmatter = true,
-          -- note_frontmatter_func = function(note)
-          --   local created_time = os.date("!%Y-%m-%dT%H:%M:%SZ") -- ISO 8601 UTC format
-          --   return {
-          --     created = created_time,
-          --     hubs = {}, -- Initialize with an empty list
-          --     tags = {}, -- Initialize with an empty list
-          --     urls = {}, -- Initialize with an empty list
-          --   }
-          -- end,
-          -- -- Add a note content function to include title as H1
-          -- note_content_func = function(note)
-          --   local title = note.title or "Untitled"
-          --   local frontmatter = note.frontmatter or {}
-          --
-          --   -- Serialize frontmatter as YAML
-          --   local frontmatter_lines = { "---" }
-          --   for key, value in pairs(frontmatter) do
-          --     if type(value) == "table" then
-          --       table.insert(frontmatter_lines, key .. ": [" .. table.concat(value, ", ") .. "]")
-          --     else
-          --       table.insert(frontmatter_lines, key .. ": " .. tostring(value))
-          --     end
-          --   end
-          --   table.insert(frontmatter_lines, "---")
-          --
-          --   -- Add title as H1 after frontmatter
-          --   table.insert(frontmatter_lines, "# " .. title)
-          --
-          --   -- Return the complete content
-          --   return table.concat(frontmatter_lines, "\n")
-          -- end,
-
-          -- Custom function to override note creation behavior
-          config = function(_, opts)
-            local obsidian = require("obsidian")
-            obsidian.setup(opts)
-            local client = obsidian -- Alias for simplicity
-
-            -- Function to create a new note
-            local function new_note(subdir, ask_name, template)
-              -- Prompt user for a note name or generate a timestamp-based name
-              local fname = ""
-              if ask_name then
-                -- Get the file name from user input
-                fname = vim.fn.input("Enter note name (without .md): ", ""):gsub("%s+", "_") -- Replace spaces with underscores
-
-                -- If no name is provided, cancel note creation
-                if fname == "" then
-                  print("Note creation canceled. No name provided.")
-                  return
-                end
-              else
-                -- Generate a timestamp-based file name if no input is needed
-                -- fname = os.date("%Y%m%d%H%M%S") -- Format: YYYYMMDDHHMMSS
-              end
-
-              -- Determine the note's location (workspace + optional subdirectory)
-              local query = fname .. ".md"
-              local dir_path = client.dir -- Base workspace directory
-              if subdir then
-                query = subdir .. "/" .. query
-                dir_path = dir_path .. "/" .. subdir
-              end
-
-              -- Check if the note already exists, and create it if not
-              local note = client:resolve_note(query)
-              if not note then
-                note = client:new_note(fname, fname, dir_path)
-              end
-
-              -- Apply the template, if provided
-              if template then
-                vim.cmd("ObsidianTemplate " .. template .. ".md")
-              end
-            end
-            vim.keymap.set("n", "<leader>nN", function()
-              -- Create a note in the root directory, ask for a name, and use the "basic" template
-              new_note(nil, true, "t-nvim-note")
-            end, { noremap = true, desc = "Create a Permanent Note in Root" })
-
-          end,
         },
       },
       -- }}}
