@@ -1512,6 +1512,7 @@ require("lazy").setup(
           end
         end,
         opts = {
+          log_level = 'debug',
           heading = {
             -- icons = { '󰲡 ', '󰲣 ', '󰲥 ', '󰲧 ', '󰲩 ', '󰲫 ' },
             icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
@@ -1533,7 +1534,14 @@ require("lazy").setup(
             },
           },
           latex = {
-            enabled = true,
+            -- enabled = true,
+            enabled = function()
+              if os_type == "windows" and os_username == "mech" then
+                return false
+              else
+                return true
+              end
+            end,
             converter = 'latex2text',
             highlight = 'RenderMarkdownMath',
             top_pad = 0,
