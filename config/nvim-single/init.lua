@@ -1512,7 +1512,7 @@ require("lazy").setup(
           end
         end,
         opts = {
-          log_level = 'debug',
+          -- log_level = 'debug',
           heading = {
             -- icons = { '󰲡 ', '󰲣 ', '󰲥 ', '󰲧 ', '󰲩 ', '󰲫 ' },
             icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
