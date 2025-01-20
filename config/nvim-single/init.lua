@@ -33,7 +33,7 @@ local os_username = os.getenv("USERNAME") or os.getenv("USER")
 local py_venvs_path = os.getenv("VENV_HOME")
 local onedrive_path = os.getenv("OneDrive_DIR")
 local obsidian_path = vim.fn.expand(onedrive_path .. (os_username == "mech" and "Poznámkové bloky/Obsidian/" or "Dokumenty/zPoznamky/Obsidian/"))
--- local notes_path = obsidian_path .. "inbox/"
+local notes_path = obsidian_path .. "inbox/"
 
 
 -- print(obsidian_path)
@@ -449,25 +449,27 @@ local function new_note(create_with_template, template_name, custom_folder)
   end
 end
 
-
-map("n", "<leader>on", function()new_note(false)end, { desc = "note" })
--- map("n", "<leader>ov", function()new_note(true, "person", "vuz")end, { desc = "note" })
-map("n", "<leader>otb", function()new_note(true, "basic")end, { desc = "note template basic" })
-map("n", "<leader>otp", function()new_note(true, "person")end, { desc = "note template person" })
-
-
+map("n", "<leader>onn", function()new_note(false)end, { desc = "new note" })
+map("n", "<leader>onb", function()new_note(true, "basic")end, { desc = "new note template basic" })
+map("n", "<leader>onp", function()new_note(true, "person")end, { desc = "new note template person" })
+map("n", "<leader>ot", ":ObsidianTemplate<cr>", { desc = "template pick" })
+map("n", "<leader>oi", ":ObsidianPasteImg<cr>", { desc = "image paste" })
 map("n", "<leader>oc", ":ObsidianToggleCheckbox<cr>", { desc = "checkbox toggle" })
+map("n", "<leader>oq", ":ObsidianQuickSwitch<cr>", { desc = "switch note" })
 map("n", "<leader>olf", ":ObsidianFollowLink<cr>", { desc = "link follow" })
-map({"v", "x"}, "<leader>oln", ":ObsidianLinkNew<cr>", { desc = "link new" })
+map({"n"}, "<leader>olb", ":ObsidianBacklinks<cr>", { desc = "backlinks" })
+map({"n"}, "<leader>oll", ":ObsidianLinks<cr>", { desc = "link pick" })
 map("n", "<leader>os",
   function()
     require('telescope.builtin').find_files({ search_dirs = { obsidian_path } })
   end,
   { desc = "search note" }
 )
-
--- for review workflow
-map("n", "<leader>od", ":!rm '%:p'<cr>:bd<cr>", { desc = "delete note" })
+map("n", "<leader>oT", ":ObsidianTags<cr>", { desc = "tags" })
+-- map("n", "<leader>oD", ":lua local f=vim.fn.expand('%:p'); os.remove(f); vim.cmd('bd!')<cr>", { desc = "delete note" })
+map("n", "<leader>oD", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>", { desc = "delete note" })
+map({"v", "x"}, "<leader>oe", ":ObsidianExtractNote<cr>", { desc = "extract text" })
+map({"v", "x"}, "<leader>ol", ":ObsidianLinkNew<cr>", { desc = "link new" })
 -- }}}
 
 -- {{{ Markdown
@@ -1399,6 +1401,8 @@ require("lazy").setup(
               { mode = "n", keys = "<Leader>f", desc = "+Telescope" },
               { mode = "n", keys = "<Leader>l", desc = "+Lsp" },
               { mode = "n", keys = "<Leader>o", desc = "+Obsidian" },
+              { mode = "n", keys = "<Leader>on", desc = "+Notes" },
+              { mode = "n", keys = "<Leader>ol", desc = "+Links" },
               { mode = "n", keys = "<Leader>p", desc = "+Python" },
               { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
               { mode = "n", keys = "<Leader>qo", desc = "+Otter" },
@@ -1406,7 +1410,9 @@ require("lazy").setup(
               { mode = "n", keys = "<Leader>w", desc = "+Window" },
               { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
               -- moje skratky - visual mode
-              { mode = "v", keys = "<Leader>q", desc = "+Quarto" },
+              { mode = "x", keys = "<Leader>q", desc = "+Quarto" },
+              { mode = "x", keys = "<Leader>o", desc = "+Obsidian" },
+              { mode = "x", keys = "<Leader>ol", desc = "+Links" },
             },
           })
           -- }}}
@@ -1452,6 +1458,7 @@ require("lazy").setup(
         },
         opts = {
           ui = { enable = false }, -- vypnute ui pre doplnok render-markdown
+          disable_frontmatter = true,
           workspaces = {
             {
               name = "Obsidian",
@@ -1474,7 +1481,9 @@ require("lazy").setup(
             local sanitized_title = title:gsub(" ", "-") -- Replace spaces with underscores for file names
             return sanitized_title -- Return the sanitized title as the file name
           end,
-          disable_frontmatter = true,
+          attachments = {
+            img_folder = "images",
+          },
         },
       },
       -- }}}
