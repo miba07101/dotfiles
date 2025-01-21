@@ -1536,6 +1536,7 @@ require("lazy").setup(
             },
           },
           latex = {
+            -- enabled = true,
             enabled = (function()
               if os_type == "windows" and os_username == "mech" then
                 return false

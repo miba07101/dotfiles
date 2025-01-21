@@ -219,8 +219,7 @@ Set-Alias vv NeovimInit
 
 # python virtual enviroment
 function PythonVenvActivate {
-    cd $env:USERPROFILE\.py-venv\base-venv\
-    .\Scripts\Activate
+    . "C:\Users\$env:USERNAME\.py-venv\base-venv\Scripts\Activate.ps1"
 }
 Set-Alias -Name base -Value PythonVenvActivate
 Set-Alias dea deactivate
