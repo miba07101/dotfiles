@@ -1450,6 +1450,7 @@ require("lazy").setup(
       -- {{{ Obsidian
       {
         "epwalsh/obsidian.nvim",
+        enabled = true,
         version = "*", -- recommended, use latest release instead of latest commit
         lazy = true,
         ft = "markdown",
@@ -1491,6 +1492,7 @@ require("lazy").setup(
       -- {{{ Markdown
       {
         'MeanderingProgrammer/render-markdown.nvim',
+        enabled = true,
         lazy = true,
         ft = { "markdown", "quarto" },
         dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
@@ -1534,15 +1536,14 @@ require("lazy").setup(
             },
           },
           latex = {
-            -- enabled = true,
-            enabled = function()
+            enabled = (function()
               if os_type == "windows" and os_username == "mech" then
                 return false
               else
                 return true
               end
-            end,
-            converter = 'latex2text',
+            end)(),
+            converter = "latex2text",
             highlight = 'RenderMarkdownMath',
             top_pad = 0,
             bottom_pad = 0,
@@ -1554,6 +1555,7 @@ require("lazy").setup(
       -- {{{ Table-mode
       {
         'Kicamon/markdown-table-mode.nvim',
+        enabled = true,
         lazy = true,
         ft = { "markdown", "quarto" },
         opts = {}

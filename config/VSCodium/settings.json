@@ -296,5 +296,6 @@
   //-------------------------------------------------------------------
   // OTHERS
   //-------------------------------------------------------------------
-  "workbench.colorTheme": "Kanagawa Lotus"
+  "workbench.colorTheme": "Kanagawa Lotus",
+  "python.defaultInterpreterPath": "C:\\Users\\mech\\scoop\\apps\\python\\current\\python.exe"
 }
