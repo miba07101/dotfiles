@@ -378,6 +378,17 @@ map("n", "<leader>du", "<cmd>diffupdate<CR>", { desc = "differ update" })
 
 -- {{{ Python
 map("n", "<leader>pe", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "pick venvs" })
+map("n", "<leader>prs", "<cmd>IronRepl<cr><esc>", { desc = "start" })
+map("n", "<leader>pre", "<cmd>lua require('iron.core').exit()<CR>", { desc = "exit" } )
+map("n", "<leader>prc", "<cmd>lua require('iron.core').clear()<CR>", { desc = "clear" } )
+map({"v", "x"}, "<leader>psv", "<cmd>lua require('iron.core').visual_send()<CR>", { desc = "send visual" } )
+map("n", "<leader>psf", "<cmd>lua require('iron.core').send_file()<CR>", { desc = "send file" } )
+map("n", "<leader>psl", "<cmd>lua require('iron.core').send_line()<CR>", { desc = "send line" } )
+map("n", "<leader>psc", ":lua send_fenced_code()<CR>", { desc = "send chunk" })
+map("n", "<leader>pms", "<cmd>lua require('iron.core').send_mark()<CR>", { desc = "mark send" } )
+map("n", "<leader>pmm", "<cmd>lua require('iron.core').mark_motion()<CR>", { desc = "mark motion" } )
+map("n", "<leader>pmv", "<cmd>lua require('iron.core').mark_visual()<CR>", { desc = "mark visual" } )
+map("n", "<leader>pmd", "<cmd>lua require('iron.core').remove_mark()<CR>", { desc = "mark delete" } )
 -- }}}
 
 -- {{{ Lazy
@@ -1425,6 +1436,9 @@ require("lazy").setup(
               { mode = "n", keys = "<Leader>on", desc = "+Notes" },
               { mode = "n", keys = "<Leader>ol", desc = "+Links" },
               { mode = "n", keys = "<Leader>p", desc = "+Python" },
+              { mode = "n", keys = "<Leader>pr", desc = "+REPL" },
+              { mode = "n", keys = "<Leader>ps", desc = "+Send to REPL" },
+              { mode = "n", keys = "<Leader>pm", desc = "+Mark" },
               { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
               { mode = "n", keys = "<Leader>qo", desc = "+Otter" },
               { mode = "n", keys = "<Leader>v", desc = "+Vim/Neovim" },
@@ -1434,6 +1448,8 @@ require("lazy").setup(
               { mode = "x", keys = "<Leader>q", desc = "+Quarto" },
               { mode = "x", keys = "<Leader>o", desc = "+Obsidian" },
               { mode = "x", keys = "<Leader>ol", desc = "+Links" },
+              { mode = "x", keys = "<Leader>p", desc = "+Python" },
+              { mode = "x", keys = "<Leader>ps", desc = "+Send to REPL" },
             },
           })
           -- }}}
@@ -1467,6 +1483,94 @@ require("lazy").setup(
       },
       -- }}}
 
+      --- {{{ Iron python REPL
+      {
+        "hkupty/iron.nvim",
+        config = function()
+          local iron = require("iron.core")
+          local view = require("iron.view")
+
+          -- Iron.nvim setup
+          iron.setup({
+            config = {
+              highlight_last = "IronLastSent",
+              repl_definition = {
+                python = {
+                  command = {"python3"},
+                },
+                markdown = {
+                  command = { "ipython", "--no-autoindent" }, -- or use { "python3" } REPL
+                },
+              },
+              repl_open_cmd = view.split("30%"), -- Open REPL in a split window (30% height)
+            },
+          })
+
+            -- Auto-detect file types for REPL setup
+            vim.api.nvim_create_autocmd({ "FileType" }, {
+              pattern = { "markdown", "quarto", "python" },
+              callback = function()
+                vim.b.iron_ft = "python3" -- Use Python REPL for these filetypes
+              end,
+            })
+
+          -- -- {{{ block chunk code sending function
+          -- _G.send_fenced_code = function()
+          --   local cursor_pos = vim.api.nvim_win_get_cursor(0)
+          --   local row = cursor_pos[1] - 1 -- Lua uses 0-based indexing
+          --   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+          --
+          --   -- Find the start and end of the fenced code block
+          --   local start_row, end_row, code_lang
+          --   for i = row, 0, -1 do
+          --     if lines[i]:match("^```") then
+          --       code_lang = lines[i]:match("^```(.*)")
+          --       if code_lang == "python" then
+          --         start_row = i
+          --       end
+          --       break
+          --     end
+          --   end
+          --
+          --   for i = row + 1, #lines do
+          --     if lines[i]:match("^```$") then
+          --       end_row = i
+          --       break
+          --     end
+          --   end
+          --
+          --   if not start_row or not end_row then
+          --     print("No fenced code block found!")
+          --     return
+          --   end
+          --
+          --   if code_lang ~= "python" then
+          --     print("Code block is not Python!")
+          --     return
+          --   end
+          --
+          --   -- Extract the code inside the block
+          --   local code = {}
+          --   for i = start_row + 1, end_row - 1 do
+          --     local line = lines[i]:gsub("%s+$", "") -- Remove trailing whitespace
+          --     if line ~= "" then -- Skip blank lines
+          --       table.insert(code, line)
+          --     end
+          --   end
+          --
+          --   if #code == 0 then
+          --     print("Code block is empty!")
+          --     return
+          --   end
+          --
+          --   -- Send code to REPL
+          --   require("iron.core").send(nil, code)
+          -- end
+          -- -- }}}
+
+        end,
+      },
+      -- }}}
 
       -- }}}
 
