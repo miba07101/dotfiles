@@ -507,16 +507,25 @@ require("lazy").setup(
   end, {
 
       -- {{{ [ UI ]
-      { "nvim-lua/plenary.nvim" },
-      { "nvim-tree/nvim-web-devicons" },
-      { "MunifTanjim/nui.nvim" },
+      { "nvim-lua/plenary.nvim",
+        enabled = true,
+      },
+      { "nvim-tree/nvim-web-devicons",
+        enabled = true,
+      },
+      { "MunifTanjim/nui.nvim",
+        enabled = true,
+      },
       {
         "stevearc/dressing.nvim",
+        enabled = true,
         event = "VeryLazy",
         opts = {},
       },
       -- Status updates for LSP
-      { "j-hui/fidget.nvim", opts = {} },
+      { "j-hui/fidget.nvim",
+        enabled = true,
+        opts = {} },
       -- }}}
 
       -- {{{ [ Colorscheme ]
@@ -524,6 +533,7 @@ require("lazy").setup(
       -- {{{ Kanagawa
       {
         "rebelot/kanagawa.nvim",
+        enabled = true,
         priority = 1000,
         config = function()
           require("kanagawa").setup({
@@ -594,6 +604,7 @@ require("lazy").setup(
       -- {{{ Adwaita
       {
         "Mofiqul/adwaita.nvim",
+        enabled = false,
         lazy = false,
         priority = 1000,
         config = function()
@@ -605,6 +616,7 @@ require("lazy").setup(
       -- {{{ VsCode
       {
         "Mofiqul/vscode.nvim",
+        enabled = false,
         priority = 1000,
         config = function()
           local c = require("vscode.colors").get_colors()
@@ -633,6 +645,7 @@ require("lazy").setup(
       -- {{{ [ Treesitter ]
       {
         "nvim-treesitter/nvim-treesitter",
+        enabled = true,
         version = false,
         build = ":TSUpdate",
         lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
@@ -669,6 +682,7 @@ require("lazy").setup(
       -- {{{ [ LSP ]
       {
         "neovim/nvim-lspconfig",
+        enabled = true,
         dependencies = {
           -- LSP
           "williamboman/mason.nvim",
@@ -880,6 +894,7 @@ require("lazy").setup(
       -- -- {{{ supermaven - ai autocompletition
       -- {
       --   "supermaven-inc/supermaven-nvim",
+      --   enabled = true,
       --   config = function()
       --     require("supermaven-nvim").setup({
       --       keymaps = {
@@ -903,6 +918,7 @@ require("lazy").setup(
       -- {{{ cmp
       {
         "hrsh7th/nvim-cmp",
+        enabled = true,
         dependencies = {
           "hrsh7th/cmp-buffer",
           "hrsh7th/cmp-path",
@@ -1079,6 +1095,7 @@ require("lazy").setup(
       -- -- {{{ blink
       -- {
       --   "saghen/blink.cmp",
+      --   enabled = true,
       --   dependencies = "rafamadriz/friendly-snippets",
       --   version = "v0.*",
       --   opts = {
@@ -1122,6 +1139,7 @@ require("lazy").setup(
       -- {{{ [ Statusline ]
       {
         "nvim-lualine/lualine.nvim",
+        enabled = true,
         event = "VeryLazy",
         config = function()
           -- Define a custom theme
@@ -1245,6 +1263,7 @@ require("lazy").setup(
       -- {{{ [ File Manager ]
       {
         "nvim-neo-tree/neo-tree.nvim",
+        enabled = true,
         dependencies = {
           "nvim-lua/plenary.nvim",
           "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
@@ -1285,6 +1304,7 @@ require("lazy").setup(
       -- {{{ [ Telescope ]
       {
         "nvim-telescope/telescope.nvim",
+        enabled = true,
         lazy = false,
         config = function()
           local actions = require("telescope.actions")
@@ -1306,6 +1326,7 @@ require("lazy").setup(
       -- {{{ [ Mini.nvim collection ]
       {
         "echasnovski/mini.nvim",
+        enabled = true,
         config = function()
           -- {{{ mini.comment
           local mappings_config = (os_type == "linux")
@@ -1425,6 +1446,7 @@ require("lazy").setup(
       -- {{{ Swenv - change python environments
       {
         "AckslD/swenv.nvim",
+        enabled = true,
         opts = {
           get_venvs = function(venvs_path)
             return require("swenv.api").get_venvs(venvs_path)
@@ -1440,9 +1462,11 @@ require("lazy").setup(
       -- {{{ Jinja template syntax
       {
         "lepture/vim-jinja",
+        enabled = true,
         ft = { "jinja.html", "html" },
       },
       -- }}}
+
 
       -- }}}
 
@@ -1570,6 +1594,7 @@ require("lazy").setup(
       -- {{{ Quarto
       {
         "quarto-dev/quarto-nvim",
+        enabled = true,
         ft = { "quarto" },
         dev = false,
         opts = {
@@ -1604,6 +1629,7 @@ require("lazy").setup(
         if os_type == "linux" then
           return {
             "benlubas/molten-nvim",
+            enabled = true,
             ft = { "quarto" },
             dependencies = { "3rd/image.nvim" },
             init = function()
@@ -1677,22 +1703,15 @@ require("lazy").setup(
       -- {{{ [ Mix ]
 
       -- {{{ Maximize window
-      { "szw/vim-maximizer" },
+      { "szw/vim-maximizer",
+        enabled = true,
+      },
       -- }}}
-
-      -- -- {{{ Colorizer
-      -- {
-      --   "norcalli/nvim-colorizer.lua",
-      --   event = { "BufReadPre", "BufNewFile" },
-      --   config = function()
-      --     require("colorizer").setup()
-      --   end,
-      -- },
-      -- -- }}}
 
       -- {{{ Nvim-highlight-colors
       {
         "brenoprata10/nvim-highlight-colors",
+        enabled = true,
         -- event = { "BufReadPre", "BufNewFile" },
         opts = {},
       },
