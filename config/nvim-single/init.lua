@@ -758,30 +758,50 @@ require("lazy").setup(
                 },
               },
             },
-            -- pyright = {
-            --   settings = {
-            --     python = {
-            --       analysis = {
-            --         autoImportCompletions = true,
-            --         typeCheckingMode = "off",
-            --         autoSearchPaths = true,
-            --         diagnosticMode = "workspace",
-            --         useLibraryCodeForTypes = true,
-            --       },
-            --     },
-            --   },
-            -- },
-            basedpyright = {
+            pyright = {
+              -- root_dir = function(fname)
+              --   return vim.fn.fnamemodify(fname, ":p:h")  -- Automatically set the root to the current file's directory
+              -- end,
+              root_dir = function(fname)
+                -- Try to find the directory that contains a pyrightconfig.json file
+                local pyrightconfig_path = vim.fn.findfile("pyrightconfig.json", vim.fn.fnamemodify(fname, ":p:h") .. ";")
+                if pyrightconfig_path ~= "" then
+                  -- If we found pyrightconfig.json, return that directory as root
+                  return vim.fn.fnamemodify(pyrightconfig_path, ":p:h")
+                end
+
+                -- Fallback to using git directory if no pyrightconfig.json is found
+                local git_dir = vim.fn.finddir(".git", vim.fn.fnamemodify(fname, ":p:h") .. ";")
+                if git_dir ~= "" then
+                  return vim.fn.fnamemodify(git_dir, ":p:h") -- Git directory found, use that as root
+                end
+
+                -- As a final fallback, use the current file's directory as root
+                return vim.fn.fnamemodify(fname, ":p:h")
+              end,
               settings = {
                 python = {
                   analysis = {
+                    autoImportCompletions = true,
+                    typeCheckingMode = "off",
                     autoSearchPaths = true,
-                    diagnosticMode = "openFilesOnly",
+                    diagnosticMode = "workspace",
                     useLibraryCodeForTypes = true,
                   },
                 },
               },
             },
+            -- basedpyright = {
+            --   settings = {
+            --     python = {
+            --       analysis = {
+            --         autoSearchPaths = true,
+            --         diagnosticMode = "openFilesOnly",
+            --         useLibraryCodeForTypes = true,
+            --       },
+            --     },
+            --   },
+            -- },
             marksman = {
               filetypes = {
                 "markdown",
@@ -827,7 +847,7 @@ require("lazy").setup(
               focusable = true,
               style = "minimal",
               border = "rounded",
-              source = "always",
+              -- source = "always",
               header = "",
               prefix = "",
             },
@@ -885,7 +905,8 @@ require("lazy").setup(
               json = { "prettier" },
               yaml = { "prettier" },
               lua = { "stylua" },
-              python = { "isort", "black" },
+              -- python = { "isort", "black" },
+              python = { "black" },
             },
           })
 
@@ -1494,6 +1515,21 @@ require("lazy").setup(
           local iron = require("iron.core")
           local view = require("iron.view")
 
+          local function get_python_command()
+            -- Get the path of the active virtual environment
+            local venv = os.getenv("VIRTUAL_ENV")
+            if venv then
+              if os_type == "windows" then
+                return {venv .. "/Scripts/python.exe"} -- For Windows
+              else
+              -- If VIRTUAL_ENV is set, use the Python executable from the venv
+                return {venv .. "/bin/python"} -- For Linux/macOS
+              end
+            else
+              -- Fall back to the global python3 if no venv is active
+              return {"python3"}
+            end
+          end
 
           -- Iron.nvim setup
           iron.setup({
@@ -1501,8 +1537,10 @@ require("lazy").setup(
               highlight_last = "IronLastSent",
               repl_definition = {
                 python = {
-                  command = {"python3"},
-                  format = require("iron.fts.common").bracketed_paste_python,
+                  -- command = { "python3" },
+                  -- command = { py_venvs_path .. "/base-venv/Scripts/python.exe" },
+                  command = get_python_command(), -- Dynamically resolve Python path
+                  -- format = require("iron.fts.common").bracketed_paste_python,
                   -- block_deviders = { "# %%", "#%%" }, -- not working properly
                 },
                 markdown = {

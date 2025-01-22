@@ -23,4 +23,5 @@ play = [
 rules = [
   { mime = "text/*", use = "edit" },
   { name = "*.qmd", use = "edit" },
+  { name = "*.json", use = "edit" },
 ]
