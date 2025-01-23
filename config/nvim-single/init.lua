@@ -35,7 +35,26 @@ local onedrive_path = os.getenv("OneDrive_DIR")
 local obsidian_path = vim.fn.expand(onedrive_path .. (os_username == "mech" and "Poznámkové bloky/Obsidian/" or "Dokumenty/zPoznamky/Obsidian/"))
 local notes_path = obsidian_path .. "inbox/"
 
-
+function _G.python_interpreter()
+  -- Get the path of the active virtual environment
+  local venv = os.getenv("VIRTUAL_ENV")
+  -- Get the current venv from swenv.nvim or fallback to default Python
+  -- local venv = require("swenv.api").get_current_venv()
+  -- print(vim.inspect(venv.path))
+  if venv then
+    if os_type == "windows" then
+      return {venv .. "/Scripts/python.exe"} -- For Windows
+    else
+      return {venv .. "/bin/python"} -- For Linux/macOS
+    end
+  else
+    if os_type == "windows" then
+      return {"python"} -- For Windows
+    else
+      return {"python3"} -- For Linux/macOS
+    end
+  end
+end
 -- print(obsidian_path)
 -- print("detected os: " .. os_type)
 -- print("detected username: " .. os_username)
@@ -295,13 +314,7 @@ end, { desc = "Close with ESC" })
 -- }}}
 
 -- {{{ Terminal
-if os_type == "linux" then
-  map("n", "<C-`>", "<cmd>horizontal terminal<cr>", { desc = "terminal" })
-  map("t", "<C-`>", "exit<cr>", { desc = "exit terminal" })
-else
-  map("n", "<C-`>`", "<cmd>horizontal terminal<cr>", { desc = "terminal" })
-  map("t", "<C-`>`", "exit<cr>", { desc = "exit terminal" })
-end
+map("n", "<leader>tt", "<cmd>horizontal terminal<cr>", { desc = "terminal" })
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 -- }}}
 
@@ -391,6 +404,26 @@ map("n", "<leader>pms", "<cmd>lua require('iron.core').send_mark()<cr>", { desc 
 map("n", "<leader>pmm", "<cmd>lua require('iron.core').mark_motion()<cr>", { desc = "mark motion" } )
 map("n", "<leader>pmv", "<cmd>lua require('iron.core').mark_visual()<cr>", { desc = "mark visual" } )
 map("n", "<leader>pmd", "<cmd>lua require('iron.core').remove_mark()<cr>", { desc = "mark delete" } )
+
+
+
+function _G.open_python_terminal()
+  -- Open a terminal in the bottom 30% of the window height with Python interpreter, using the activated venv.
+  vim.cmd("horizontal new | resize 30% | terminal") -- Open terminal at the bottom 30%
+
+  --
+  -- Get the current buffer ID and reset any possible modifications
+  local current_buf = vim.api.nvim_get_current_buf()
+  vim.api.nvim_buf_set_option(current_buf, "modified", false)
+  vim.fn.termopen(python_interpreter())
+  -- vim.cmd("startinsert") -- Start in insert mode for immediate interaction
+end
+
+-- Keymap for opening the terminal
+vim.api.nvim_set_keymap("n", "<leader>tp", "<cmd>lua open_python_terminal()<CR>", { noremap = true, silent = true })
+
+
+
 -- }}}
 
 -- {{{ Lazy
@@ -1515,36 +1548,22 @@ require("lazy").setup(
           local iron = require("iron.core")
           local view = require("iron.view")
 
-          local function get_python_command()
-            -- Get the path of the active virtual environment
-            local venv = os.getenv("VIRTUAL_ENV")
-            if venv then
-              if os_type == "windows" then
-                return {venv .. "/Scripts/python.exe"} -- For Windows
-              else
-              -- If VIRTUAL_ENV is set, use the Python executable from the venv
-                return {venv .. "/bin/python"} -- For Linux/macOS
-              end
-            else
-              -- Fall back to the global python3 if no venv is active
-              return {"python3"}
-            end
-          end
-
           -- Iron.nvim setup
           iron.setup({
+            highlight = {
+              italic = true
+            },
+            ignore_blank_lines = true,
             config = {
               highlight_last = "IronLastSent",
               repl_definition = {
                 python = {
-                  -- command = { "python3" },
-                  -- command = { py_venvs_path .. "/base-venv/Scripts/python.exe" },
-                  command = get_python_command(), -- Dynamically resolve Python path
+                  command = python_interpreter(), -- function in DETECT OS - dynamically resolve Python interpreter
                   -- format = require("iron.fts.common").bracketed_paste_python,
                   -- block_deviders = { "# %%", "#%%" }, -- not working properly
                 },
                 markdown = {
-                  command = { "ipython", "--no-autoindent" }, -- or use { "python3" } REPL
+                  command = { "ipython", "--no-autoindent" },
                   -- block_deviders = { "```python", "```" }, -- not working properly
                 },
               },
