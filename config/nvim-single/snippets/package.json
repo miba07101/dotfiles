@@ -26,6 +26,12 @@
       },
       {
         "language": [
+          "python"
+        ],
+        "path": "./python.json"
+      },
+      {
+        "language": [
           "quarto"
         ],
         "path": "./quarto.json"

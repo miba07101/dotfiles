@@ -8,7 +8,7 @@
 --
 
 -- {{{ [[ DETECT OS ]]
-local function detect_os_type()
+function _G.detect_os_type()
   local os_name = vim.loop.os_uname().sysname
   local os_type
 
@@ -32,7 +32,17 @@ local os_type = detect_os_type()
 local os_username = os.getenv("USERNAME") or os.getenv("USER")
 local py_venvs_path = os.getenv("VENV_HOME")
 local onedrive_path = os.getenv("OneDrive_DIR")
-local obsidian_path = vim.fn.expand(onedrive_path .. (os_username == "mech" and "Poznámkové bloky/Obsidian/" or "Dokumenty/zPoznamky/Obsidian/"))
+
+-- local obsidian_path = vim.fn.expand(onedrive_path .. (os_username == "mech" and "Poznámkové bloky/Obsidian/" or "Dokumenty/zPoznamky/Obsidian/"))
+function _G.get_obsidian_path()
+  if os_username == "mech" then
+    return "~\\Sync\\Obsidian\\"
+  else
+    return vim.fn.expand(onedrive_path .. "Dokumenty/zPoznamky/Obsidian/")
+  end
+end
+
+local obsidian_path = get_obsidian_path()
 local notes_path = obsidian_path .. "inbox/"
 
 function _G.python_interpreter()
@@ -43,15 +53,15 @@ function _G.python_interpreter()
   -- print(vim.inspect(venv.path))
   if venv then
     if os_type == "windows" then
-      return {venv .. "/Scripts/python.exe"} -- For Windows
+      return venv .. "\\Scripts\\python.exe" -- For Windows
     else
-      return {venv .. "/bin/python"} -- For Linux/macOS
+      return venv .. "/bin/python" -- For Linux/macOS
     end
   else
     if os_type == "windows" then
-      return {"python"} -- For Windows
+      return "python" -- For Windows
     else
-      return {"python3"} -- For Linux/macOS
+      return "python3" -- For Linux/macOS
     end
   end
 end
@@ -162,10 +172,10 @@ if os_type == "wsl" then
 elseif os_type == "linux" then
   opt.shell = "/bin/zsh"
 elseif os_type == "windows" then
-  opt.shell = "pwsh.exe"
-  opt.shellcmdflag = "-NoLogo"
-  opt.shellquote = ""
-  opt.shellxquote = ""
+  -- opt.shell = "pwsh.exe"
+  -- opt.shellcmdflag = "-NoLogo"
+  -- opt.shellquote = ""
+  -- opt.shellxquote = ""
 else
   opt.shell = "/bin/zsh"
 end
@@ -314,8 +324,10 @@ end, { desc = "Close with ESC" })
 -- }}}
 
 -- {{{ Terminal
-map("n", "<leader>tt", "<cmd>horizontal terminal<cr>", { desc = "terminal" })
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+map("n", "<leader>tn", "<cmd>horizontal terminal<cr>", { desc = "terminal new" })
+map("n", "<leader>tp", "<cmd>lua vim.cmd('botright new | resize 30% | terminal'); vim.fn.chansend(vim.b.terminal_job_id, python_interpreter() .. '\\r'); vim.cmd('startinsert')<cr>", { desc = "terminal python" })
+map("n", "<leader>ti", "<cmd>lua vim.cmd('botright new | resize 30% | terminal ipython'); vim.cmd('startinsert')<cr>", { desc = "terminal ipython" })
 -- }}}
 
 -- {{{ Mix
@@ -404,26 +416,6 @@ map("n", "<leader>pms", "<cmd>lua require('iron.core').send_mark()<cr>", { desc 
 map("n", "<leader>pmm", "<cmd>lua require('iron.core').mark_motion()<cr>", { desc = "mark motion" } )
 map("n", "<leader>pmv", "<cmd>lua require('iron.core').mark_visual()<cr>", { desc = "mark visual" } )
 map("n", "<leader>pmd", "<cmd>lua require('iron.core').remove_mark()<cr>", { desc = "mark delete" } )
-
-
-
-function _G.open_python_terminal()
-  -- Open a terminal in the bottom 30% of the window height with Python interpreter, using the activated venv.
-  vim.cmd("horizontal new | resize 30% | terminal") -- Open terminal at the bottom 30%
-
-  --
-  -- Get the current buffer ID and reset any possible modifications
-  local current_buf = vim.api.nvim_get_current_buf()
-  vim.api.nvim_buf_set_option(current_buf, "modified", false)
-  vim.fn.termopen(python_interpreter())
-  -- vim.cmd("startinsert") -- Start in insert mode for immediate interaction
-end
-
--- Keymap for opening the terminal
-vim.api.nvim_set_keymap("n", "<leader>tp", "<cmd>lua open_python_terminal()<CR>", { noremap = true, silent = true })
-
-
-
 -- }}}
 
 -- {{{ Lazy
@@ -473,7 +465,7 @@ local function new_note(create_with_template, template_name, custom_folder)
     return
   end
 
-   -- Default folder is "inbox", or use custom_folder if provided
+  -- Default folder is "inbox", or use custom_folder if provided
   local notes_folder = custom_folder or "inbox"
   local notes_path = obsidian_path .. notes_folder .. "/"
   local new_note_path = notes_path .. note_name .. ".md"  -- Add .md extension
@@ -1034,7 +1026,7 @@ require("lazy").setup(
             enabled = function()
               -- disable completion in comments
               if require"cmp.config.context".in_treesitter_capture("comment")==true
-            or require"cmp.config.context".in_syntax_group("Comment") then
+                or require"cmp.config.context".in_syntax_group("Comment") then
                 return false
               else
                 return true
@@ -1513,133 +1505,6 @@ require("lazy").setup(
       },
       -- }}}
 
-      -- {{{ [ Python ]
-
-      -- {{{ Swenv - change python environments
-      {
-        "AckslD/swenv.nvim",
-        enabled = true,
-        opts = {
-          get_venvs = function(venvs_path)
-            return require("swenv.api").get_venvs(venvs_path)
-          end,
-          venvs_path = py_venvs_path, -- py_venvs_path, premennu definovanu v [[ DETECT OS]]
-          post_set_venv = function()
-            vim.cmd(":LspRestart<cr>")
-          end,
-        },
-      },
-      -- }}}
-
-      -- {{{ Jinja template syntax
-      {
-        "lepture/vim-jinja",
-        enabled = true,
-        ft = { "jinja.html", "html" },
-      },
-      -- }}}
-
-      -- {{{ Iron.nvim REPL
-      {
-        "hkupty/iron.nvim",
-        enabled = true,
-        ft = { "python", "markdown", "quarto"},
-        config = function()
-          local iron = require("iron.core")
-          local view = require("iron.view")
-
-          -- Iron.nvim setup
-          iron.setup({
-            highlight = {
-              italic = true
-            },
-            ignore_blank_lines = true,
-            config = {
-              highlight_last = "IronLastSent",
-              repl_definition = {
-                python = {
-                  command = python_interpreter(), -- function in DETECT OS - dynamically resolve Python interpreter
-                  -- format = require("iron.fts.common").bracketed_paste_python,
-                  -- block_deviders = { "# %%", "#%%" }, -- not working properly
-                },
-                markdown = {
-                  command = { "ipython", "--no-autoindent" },
-                  -- block_deviders = { "```python", "```" }, -- not working properly
-                },
-              },
-              repl_open_cmd = view.split("30%"), -- Open REPL in a split window (30% height)
-            },
-          })
-
-          -- {{{ block chunk code sending function - moja pretoze default nefunguje ako ma
-          _G.send_fenced_code = function()
-            local cursor_pos = vim.api.nvim_win_get_cursor(0)
-            local row = cursor_pos[1] - 1  -- Lua uses 0-based indexing
-            local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-            -- Determine file type and set appropriate block delimiters
-            local filetype = vim.bo.filetype
-            local start_pattern, end_pattern
-
-            if filetype == "python" then
-              -- Python uses "# %%"
-              start_pattern = "^# %%"
-              end_pattern = "^# %%"
-            elseif filetype == "markdown" or filetype == "quarto" then
-              -- Markdown/Quarto uses "```python" and "```"
-              start_pattern = "^```python"
-              end_pattern = "^```"
-            else
-              print("Unsupported file type for code block detection!")
-              return
-            end
-
-            -- Find the start and end of the fenced code block
-            local start_row, end_row
-            for i = row, 0, -1 do
-              if lines[i]:match(start_pattern) then
-                start_row = i
-                break
-              end
-            end
-
-            for i = row + 1, #lines do
-              if lines[i]:match(end_pattern) then
-                end_row = i
-                break
-              end
-            end
-
-            if not start_row or not end_row then
-              print("No fenced code block found!")
-              return
-            end
-
-            -- Extract the code inside the block
-            local code = {}
-            for i = start_row + 1, end_row - 1 do
-              local line = lines[i]:gsub("%s+$", "")  -- Remove trailing whitespace
-              if line ~= "" then  -- Skip blank lines
-                table.insert(code, line)
-              end
-            end
-
-            if #code == 0 then
-              print("Code block is empty!")
-              return
-            end
-
-            -- Send code to REPL
-            require("iron.core").send(nil, code)
-          end
-          -- }}}
-
-        end,
-      },
-      -- }}}
-
-      -- }}}
-
       -- {{{ [ Notes ]
       -- {{{ Obsidian
       {
@@ -1759,6 +1624,34 @@ require("lazy").setup(
 
       -- }}}
 
+      -- {{{ [ Python ]
+
+      -- {{{ Swenv - change python environments
+      {
+        "AckslD/swenv.nvim",
+        enabled = true,
+        opts = {
+          get_venvs = function(venvs_path)
+            return require("swenv.api").get_venvs(venvs_path)
+          end,
+          venvs_path = py_venvs_path, -- py_venvs_path, premennu definovanu v [[ DETECT OS]]
+          post_set_venv = function()
+            vim.cmd(":LspRestart<cr>")
+          end,
+        },
+      },
+      -- }}}
+
+      -- {{{ Jinja template syntax
+      {
+        "lepture/vim-jinja",
+        enabled = true,
+        ft = { "jinja.html", "html" },
+      },
+      -- }}}
+
+      -- }}}
+
       -- {{{ [ Quarto, Jupyterlab ]
 
       -- {{{ Quarto
@@ -1811,7 +1704,19 @@ require("lazy").setup(
             end,
           }
         end
-        return nil
+        return {
+          "benlubas/molten-nvim",
+          enabled = true,
+          ft = { "quarto" },
+          init = function()
+            vim.g.python3_host_prog = python_interpreter()
+            vim.g.molten_image_provider = "image.nvim"
+            vim.g.molten_output_win_max_height = 20
+            vim.g.molten_virt_text_output = true
+            vim.g.molten_wrap_output = true
+            vim.g.molten_auto_open_output = false
+          end,
+        }
       end)(),
       -- }}}
 
@@ -1868,6 +1773,105 @@ require("lazy").setup(
       end)(),
       -- }}}
 
+      -- }}}
+
+      -- {{{ REPL Iron.nvim
+      {
+        "hkupty/iron.nvim",
+        enabled = true,
+        ft = { "python", "markdown", "quarto"},
+        config = function()
+          local iron = require("iron.core")
+          local view = require("iron.view")
+
+          -- Iron.nvim setup
+          iron.setup({
+            highlight = {
+              italic = true
+            },
+            ignore_blank_lines = true,
+            config = {
+              highlight_last = "IronLastSent",
+              repl_definition = {
+                python = {
+                  command = { python_interpreter() }, -- function in DETECT OS - dynamically resolve Python interpreter
+                  -- format = require("iron.fts.common").bracketed_paste_python,
+                  -- block_deviders = { "# %%", "#%%" }, -- not working properly
+                },
+                markdown = {
+                  command = { "ipython", "--no-autoindent" },
+                  -- block_deviders = { "```python", "```" }, -- not working properly
+                },
+              },
+              repl_open_cmd = view.split("30%"), -- Open REPL in a split window (30% height)
+            },
+          })
+
+          -- {{{ block chunk code sending function - moja pretoze default nefunguje ako ma
+          _G.send_fenced_code = function()
+            local cursor_pos = vim.api.nvim_win_get_cursor(0)
+            local row = cursor_pos[1] - 1  -- Lua uses 0-based indexing
+            local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+            -- Determine file type and set appropriate block delimiters
+            local filetype = vim.bo.filetype
+            local start_pattern, end_pattern
+
+            if filetype == "python" then
+              -- Python uses "# %%"
+              start_pattern = "^# %%"
+              end_pattern = "^# %%"
+            elseif filetype == "markdown" or filetype == "quarto" then
+              -- Markdown/Quarto uses "```python" and "```"
+              start_pattern = "^```python"
+              end_pattern = "^```"
+            else
+              print("Unsupported file type for code block detection!")
+              return
+            end
+
+            -- Find the start and end of the fenced code block
+            local start_row, end_row
+            for i = row, 0, -1 do
+              if lines[i]:match(start_pattern) then
+                start_row = i
+                break
+              end
+            end
+
+            for i = row + 1, #lines do
+              if lines[i]:match(end_pattern) then
+                end_row = i
+                break
+              end
+            end
+
+            if not start_row or not end_row then
+              print("No fenced code block found!")
+              return
+            end
+
+            -- Extract the code inside the block
+            local code = {}
+            for i = start_row + 1, end_row - 1 do
+              local line = lines[i]:gsub("%s+$", "")  -- Remove trailing whitespace
+              if line ~= "" then  -- Skip blank lines
+                table.insert(code, line)
+              end
+            end
+
+            if #code == 0 then
+              print("Code block is empty!")
+              return
+            end
+
+            -- Send code to REPL
+            require("iron.core").send(nil, code)
+          end
+          -- }}}
+
+        end,
+      },
       -- }}}
 
       -- {{{ [ Mix ]

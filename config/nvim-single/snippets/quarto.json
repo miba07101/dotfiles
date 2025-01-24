@@ -56,7 +56,7 @@
   },
   "pycode": {
     "prefix": ["pyc"],
-    "body": ["```{python} ", "$1", "```"]
+    "body": ["```{python} ", "$0", "```"]
   },
   "rcode": {
     "prefix": ["rco"],
@@ -69,6 +69,56 @@
   "code": {
     "prefix": ["code"],
     "body": ["```{$1} ", "$2", "```", "$0"]
+  },
+  "create python table code chunk using knitr": {
+    "prefix": "pytblkr",
+    "body": [
+      "```{python}",
+      "#| label: tbl-table",
+      "#| tbl-cap: 'caption of table'",
+      "#| output: asis",
+      "$0",
+      "print(${1:df}.to_markdown(index=False))",
+      "```"
+    ],
+    "description": "create python table code chunk using knitr"
+  },
+  "create python plot chunk": {
+    "prefix": "pyp",
+    "body": [
+      "```{python}",
+      "#| label: fig-figure",
+      "#| fig-cap: 'caption of figure'",
+      "#| fig-align: 'center'",
+      "#| fig-width: 6",
+      "#| fig-height: 3",
+      "#| fig-format: 'jpeg'",
+      "#| fig-dpi: 300",
+      "#| out-width: '100%'",
+      "$0",
+      "```"
+    ],
+    "description": "create python plot code chunk"
+  },
+  "create python table code chunk using jupyter": {
+    "prefix": "pytbljp",
+    "body": [
+      "```{python}",
+      "#| label: tbl-table",
+      "#| tbl-cap: 'caption of table'",
+      "$0",
+      "Markdown(tablulate(${1:df}.values,headers=$1.columns))",
+      "```"
+    ],
+    "description": "create python table code chunk using jupyter"
+  },
+  "code to import printing table method": {
+    "prefix": "pyimptbl",
+    "body": [
+      "from IPython.display import Markdown",
+      "from tabulate import tabulate"
+    ],
+    "description": "code to import printing table method"
   },
   "pyfig2": {
     "prefix": ["pyfig2"],
@@ -302,6 +352,7 @@
     "prefix": "yml"
   },
   "yaml html header": {
+    "prefix": "yml_html",
     "body": [
       "---",
       "title: $1",
@@ -317,10 +368,33 @@
       "    css: $2",
       "    include-in-header:",
       "      - text: $3",
-      "---"
+      "---",
+      "\n",
+      "$4"
     ],
-    "description": "Add HTML yaml header",
-    "prefix": "yml_html"
+    "description": "Add HTML yaml header"
+  },
+  "yaml pdf header": {
+    "prefix": "yml_pdf",
+    "body": [
+      "---",
+      "title: $0",
+      "execute:",
+      "  echo: false",
+      "  warning: false",
+      "  error: false",
+      "format:",
+      "  pdf:",
+      "    toc: true",
+      "    number-sections: true",
+      "    df-print: kable",
+      "    include-in-header:",
+      "      - env.tex",
+      "---",
+      "\n",
+      "$1"
+    ],
+    "description": "create quarto pdf template"
   },
   "ref a wrap figure": {
     "body": "Fig. \\ref{fig-$1}",
