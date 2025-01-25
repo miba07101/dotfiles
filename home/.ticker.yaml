@@ -55,8 +55,8 @@ lots:
     quantity: 1000
     unit_cost: 10.50
   - symbol: "INTC"
-    quantity: 700
-    unit_cost: 30.08
+    quantity: 800
+    unit_cost: 28.95
   - symbol: "MO"
     quantity: 500
     unit_cost: 40.1
