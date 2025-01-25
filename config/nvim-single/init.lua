@@ -1636,7 +1636,7 @@ require("lazy").setup(
           end,
           venvs_path = py_venvs_path, -- py_venvs_path, premennu definovanu v [[ DETECT OS]]
           post_set_venv = function()
-            vim.cmd(":LspRestart<cr>")
+            vim.cmd(":LspRestart")
           end,
         },
       },
