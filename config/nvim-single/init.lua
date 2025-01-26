@@ -176,6 +176,12 @@ elseif os_type == "windows" then
   -- opt.shellcmdflag = "-NoLogo"
   -- opt.shellquote = ""
   -- opt.shellxquote = ""
+  opt.shell = "pwsh.exe"
+  opt.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
+  opt.shellredir = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+  opt.shellpipe = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+  opt.shellquote = ""
+  opt.shellxquote = ""
 else
   opt.shell = "/bin/zsh"
 end
