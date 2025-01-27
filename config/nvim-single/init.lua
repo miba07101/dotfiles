@@ -365,24 +365,19 @@ map("n", "<leader>vk", function()
 end, { desc = "Conceal cursor toggle" })
 -- }}}
 
--- {{{ File Manager
-map("n", "<leader>e", "<cmd>Neotree toggle %:p:h<cr>", { desc = "File manager" })
--- map("n", "<leader>eb", "<cmd>Neotree buffers<cr>", { desc = "Buffers manager" })
--- }}}
-
 -- {{{ LSP
-map("n", "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Definition" })
-map("n", "<leader>lD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Declaration" })
-map("n", "<leader>lk", "<cmd>lua vim.lsp.buf.hover()<cr>", { desc = "Hoover" })
-map("n", "<leader>lI", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "Implementation" })
-map("n", "<leader>lr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "References" })
-map("n", "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "Rename" })
+map("n", "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "definition" })
+map("n", "<leader>lD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "declaration" })
+map("n", "<leader>lk", "<cmd>lua vim.lsp.buf.hover()<cr>", { desc = "hoover" })
+map("n", "<leader>lI", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "implementation" })
+map("n", "<leader>lr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "references" })
+map("n", "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "rename" })
 map("n", "<leader>lf", function()
   require("conform").format({ async = true, lsp_fallback = true })
 end, { desc = "Formatting" })
-map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code action" })
-map("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "Signature help" })
-map("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "Server info" })
+map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "code action" })
+map("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "signature help" })
+map("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "info" })
 -- }}}
 
 -- {{{ Diagnostic
@@ -527,7 +522,7 @@ map("n", "<leader>md", "<cmd>RenderMarkdown contract<cr><cr>", { desc = "decreas
 -- }}}
 
 -- {{{ [[ LAZY MANAGER ]]
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"-- {{{
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
@@ -548,40 +543,66 @@ require("lazy").setup(
   -- aby ich instalovalo len na linuxe
   vim.tbl_filter(function(plugin)
     return plugin ~= nil -- zabezpeci, aby instalovalo len "validne" pluginy
-  end, {
+  end, {-- }}}
 
       -- {{{ [ UI ]
-      { "nvim-lua/plenary.nvim",
-        enabled = true,
-      },
-      { "nvim-tree/nvim-web-devicons",
-        enabled = true,
-      },
-      { "MunifTanjim/nui.nvim",
-        enabled = true,
-      },
-      {
-        "stevearc/dressing.nvim",
-        enabled = true,
+
+      { "nvim-lua/plenary.nvim",-- {{{
+        -- enabled = false,
+        event = "VeryLazy",
+      },-- }}}
+
+      { "nvim-tree/nvim-web-devicons",-- {{{
+        -- enabled = false,
+        event = "VeryLazy",
+      },-- }}}
+
+      { "MunifTanjim/nui.nvim",-- {{{
+        -- enabled = false,
+        event = "VeryLazy",
+      },-- }}}
+
+      { "stevearc/dressing.nvim",-- {{{
+        -- enabled = false,
         event = "VeryLazy",
         opts = {},
-      },
-      -- Status updates for LSP
-      { "j-hui/fidget.nvim",
-        enabled = true,
-        opts = {} },
+      },-- }}}
+
+      { "j-hui/fidget.nvim",-- {{{
+        enabled = false,
+        event = "VeryLazy",
+        opts = {}
+      },-- }}}
+
+      { "folke/noice.nvim",-- {{{
+        -- enabled = false,
+        event = "VeryLazy",
+        dependencies = {-- {{{
+          "MunifTanjim/nui.nvim",
+          "rcarriga/nvim-notify", -- If not available, we use `mini` as the fallback
+        },-- }}}
+        opts = {-- {{{
+          lsp = {
+            -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+            override = {
+              ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+              ["vim.lsp.util.stylize_markdown"] = true,
+              ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+            },
+          },
+        },-- }}}
+      },-- }}}
+
       -- }}}
 
       -- {{{ [ Colorscheme ]
 
-      -- {{{ Kanagawa
-      {
-        "rebelot/kanagawa.nvim",
-        enabled = true,
+      { "rebelot/kanagawa.nvim",-- {{{
+        -- enabled = false,
         priority = 1000,
         config = function()
-          require("kanagawa").setup({
-            colors = {
+          require("kanagawa").setup({-- {{{
+            colors = {-- {{{
               palette = {
                 fujiWhite = "#FEFEFA",
                 -- lotusWhite0 = "#d5cea3",
@@ -613,8 +634,8 @@ require("lazy").setup(
                   },
                 },
               },
-            },
-            overrides = function(colors)
+            },-- }}}
+            overrides = function(colors)-- {{{
               local theme = colors.theme
               return {
                 -- change cmd popup menu colors
@@ -637,41 +658,36 @@ require("lazy").setup(
                 TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
                 TelescopePreviewNormal = { bg = theme.ui.bg_dim },
                 TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+                -- neo-tree
+                NeoTreeNormal = { bg = theme.ui.bg_m1 },
+                NeoTreeNormalNC = { bg = theme.ui.bg_m1 },
               }
-            end,
-          })
+            end,-- }}}
+          })-- }}}
           vim.cmd.colorscheme("kanagawa")
         end,
-      },
-      -- }}}
+      },-- }}}
 
-      -- {{{ Adwaita
-      {
-        "Mofiqul/adwaita.nvim",
+      { "Mofiqul/adwaita.nvim",-- {{{
         enabled = false,
         lazy = false,
         priority = 1000,
         config = function()
-          -- vim.cmd.colorscheme("adwaita")
+          vim.cmd.colorscheme("adwaita")
         end,
-      },
-      -- }}}
+      },-- }}}
 
-      -- {{{ VsCode
-      {
-        "Mofiqul/vscode.nvim",
+      { "Mofiqul/vscode.nvim",-- {{{
         enabled = false,
         priority = 1000,
-        config = function()
+        config = function()-- {{{
           local c = require("vscode.colors").get_colors()
           require("vscode").setup({
-            -- Enable italic comment
             italic_comments = true,
             -- Override colors (see ./lua/vscode/colors.lua)
             color_overrides = {
               -- vscLineNumber = '#4EFCFE',
             },
-
             -- Override highlight groups (see ./lua/vscode/theme.lua)
             group_overrides = {
               -- this supports the same val table as vim.api.nvim_set_hl
@@ -679,25 +695,24 @@ require("lazy").setup(
               -- Cursor = { fg=c.vscDarkBlue, bg=c.vscLightGreen, bold=true },
             },
           })
-          -- vim.cmd.colorscheme("vscode")
-        end,
-      },
-      -- VsCode }}}
+          vim.cmd.colorscheme("vscode")
+        end,-- }}}
+      },-- }}}
 
       -- }}}
 
       -- {{{ [ Treesitter ]
       {
         "nvim-treesitter/nvim-treesitter",
-        enabled = true,
+        -- enabled = false,
         version = false,
         build = ":TSUpdate",
         lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
-        dependencies = {
+        dependencies = {-- {{{
           "windwp/nvim-ts-autotag",
-        },
+        },-- }}}
         main = "nvim-treesitter.configs",
-        opts = {
+        opts = {-- {{{
           ensure_installed = {
             "python",
             "bash",
@@ -714,20 +729,21 @@ require("lazy").setup(
             "yaml",
             "typst",
             "latex",
+            "regex",
           },
           auto_install = true,
           highlight = { enable = true },
           indent = { enable = true },
           autotag = { enable = true },
-        },
+        },-- }}}
       },
       -- }}}
 
       -- {{{ [ LSP ]
       {
         "neovim/nvim-lspconfig",
-        enabled = true,
-        dependencies = {
+        -- enabled = false,
+        dependencies = {-- {{{
           -- LSP
           "williamboman/mason.nvim",
           "williamboman/mason-lspconfig.nvim",
@@ -736,8 +752,8 @@ require("lazy").setup(
           "stevearc/conform.nvim",
           -- Linting
           "mfussenegger/nvim-lint",
-        },
-        config = function()
+        },-- }}}
+        config = function()-- {{{
           -- {{{ LSP Servers
           require("mason").setup()
           local servers = {
@@ -789,50 +805,53 @@ require("lazy").setup(
                 },
               },
             },
-            pyright = {
-              -- root_dir = function(fname)
-              --   return vim.fn.fnamemodify(fname, ":p:h")  -- Automatically set the root to the current file's directory
-              -- end,
-              root_dir = function(fname)
-                -- Try to find the directory that contains a pyrightconfig.json file
-                local pyrightconfig_path = vim.fn.findfile("pyrightconfig.json", vim.fn.fnamemodify(fname, ":p:h") .. ";")
-                if pyrightconfig_path ~= "" then
-                  -- If we found pyrightconfig.json, return that directory as root
-                  return vim.fn.fnamemodify(pyrightconfig_path, ":p:h")
-                end
-
-                -- Fallback to using git directory if no pyrightconfig.json is found
-                local git_dir = vim.fn.finddir(".git", vim.fn.fnamemodify(fname, ":p:h") .. ";")
-                if git_dir ~= "" then
-                  return vim.fn.fnamemodify(git_dir, ":p:h") -- Git directory found, use that as root
-                end
-
-                -- As a final fallback, use the current file's directory as root
-                return vim.fn.fnamemodify(fname, ":p:h")
-              end,
-              settings = {
-                python = {
-                  analysis = {
-                    autoImportCompletions = true,
-                    typeCheckingMode = "off",
-                    autoSearchPaths = true,
-                    diagnosticMode = "workspace",
-                    useLibraryCodeForTypes = true,
-                  },
-                },
-              },
-            },
-            -- basedpyright = {
+            -- pyright = {
+            --   -- root_dir = function(fname)
+            --   --   return vim.fn.fnamemodify(fname, ":p:h")  -- Automatically set the root to the current file's directory
+            --   -- end,
+            --   root_dir = function(fname)
+            --     -- Try to find the directory that contains a pyrightconfig.json file
+            --     local pyrightconfig_path = vim.fn.findfile("pyrightconfig.json", vim.fn.fnamemodify(fname, ":p:h") .. ";")
+            --     if pyrightconfig_path ~= "" then
+            --       -- If we found pyrightconfig.json, return that directory as root
+            --       return vim.fn.fnamemodify(pyrightconfig_path, ":p:h")
+            --     end
+            --
+            --     -- Fallback to using git directory if no pyrightconfig.json is found
+            --     local git_dir = vim.fn.finddir(".git", vim.fn.fnamemodify(fname, ":p:h") .. ";")
+            --     if git_dir ~= "" then
+            --       return vim.fn.fnamemodify(git_dir, ":p:h") -- Git directory found, use that as root
+            --     end
+            --
+            --     -- As a final fallback, use the current file's directory as root
+            --     return vim.fn.fnamemodify(fname, ":p:h")
+            --   end,
             --   settings = {
             --     python = {
             --       analysis = {
+            --         autoImportCompletions = true,
+            --         typeCheckingMode = "off",
             --         autoSearchPaths = true,
-            --         diagnosticMode = "openFilesOnly",
+            --         diagnosticMode = "workspace",
             --         useLibraryCodeForTypes = true,
             --       },
             --     },
             --   },
             -- },
+            basedpyright = {
+              root_dir = function(fname)
+                return vim.fn.fnamemodify(fname, ":p:h")  -- Automatically set the root to the current file's directory
+              end,
+              settings = {
+                python = {
+                  analysis = {
+                    autoSearchPaths = true,
+                    diagnosticMode = "openFilesOnly",
+                    useLibraryCodeForTypes = true,
+                  },
+                },
+              },
+            },
             marksman = {
               filetypes = {
                 "markdown",
@@ -842,6 +861,7 @@ require("lazy").setup(
             tinymist = {
               filetypes = {
                 "typst",
+                "quarto",
               },
             },
           }
@@ -950,41 +970,36 @@ require("lazy").setup(
             python = { "flake8" },
           }
           -- End LSP Linters/Formaters }}}
-        end,
+        end,-- }}}
       },
       -- }}}
 
       -- {{{ [ Autocompletition ]
 
-      -- -- {{{ supermaven - ai autocompletition
-      -- {
-      --   "supermaven-inc/supermaven-nvim",
-      --   enabled = true,
-      --   config = function()
-      --     require("supermaven-nvim").setup({
-      --       keymaps = {
-      --         accept_suggestion = "<Tab>",
-      --         clear_suggestion = "<A-n>",
-      --         accept_word = "<A-m>",
-      --       },
-      --       ignore_filetypes = { cpp = true }, -- or { "cpp", }
-      --       color = {
-      --         suggestion_color = "#717C7C",
-      --         cterm = 244,
-      --       },
-      --       log_level = "info", -- set to "off" to disable logging completely
-      --       disable_inline_completion = true, -- disables inline completion for use with cmp
-      --       disable_keymaps = false, -- disables built in keymaps for more manual control
-      --     })
-      --   end,
-      -- },
-      -- -- }}}
+      { "supermaven-inc/supermaven-nvim",-- {{{
+        enabled = false,
+        config = function()-- {{{
+          require("supermaven-nvim").setup({
+            keymaps = {
+              accept_suggestion = "<Tab>",
+              clear_suggestion = "<A-n>",
+              accept_word = "<A-m>",
+            },
+            ignore_filetypes = { cpp = true }, -- or { "cpp", }
+            color = {
+              suggestion_color = "#717C7C",
+              cterm = 244,
+            },
+            log_level = "info", -- set to "off" to disable logging completely
+            disable_inline_completion = true, -- disables inline completion for use with cmp
+            disable_keymaps = false, -- disables built in keymaps for more manual control
+          })
+        end,-- }}}
+      },-- }}}
 
-      -- {{{ cmp
-      {
-        "hrsh7th/nvim-cmp",
-        enabled = true,
-        dependencies = {
+      { "hrsh7th/nvim-cmp",-- {{{
+        -- enabled = false,
+        dependencies = {-- {{{
           "hrsh7th/cmp-buffer",
           "hrsh7th/cmp-path",
           "hrsh7th/cmp-nvim-lsp",
@@ -1001,8 +1016,8 @@ require("lazy").setup(
           "onsails/lspkind.nvim",
           -- bootstrap
           "Jezda1337/cmp_bootstrap",
-        },
-        config = function()
+        },-- }}}
+        config = function()-- {{{
           local cmp = require("cmp")
           local luasnip = require("luasnip")
           local lspkind = require("lspkind")
@@ -1028,8 +1043,8 @@ require("lazy").setup(
           -- after install run ":Codeium Auth" and insert tokken from web
           -- require("codeium").setup({})
 
-          cmp.setup({
-            enabled = function()
+          cmp.setup({-- {{{
+            enabled = function()-- {{{
               -- disable completion in comments
               if require"cmp.config.context".in_treesitter_capture("comment")==true
                 or require"cmp.config.context".in_syntax_group("Comment") then
@@ -1038,14 +1053,14 @@ require("lazy").setup(
                 return true
               end
             end,
-            -- enabled = true,
-            snippet = {
+            -- enabled = true,}}}
+            snippet = {-- {{{
               expand = function(args)
                 -- for luasnip
                 require("luasnip").lsp_expand(args.body)
               end,
-            },
-            mapping = cmp.mapping.preset.insert({
+            },-- }}}
+            mapping = cmp.mapping.preset.insert({-- {{{
               -- ak to odkomentujem, tak mi nebude robit selkciu v ponuke
               -- ["<Up>"] = cmp.config.disable,
               -- ["<Down>"] = cmp.config.disable,
@@ -1080,8 +1095,8 @@ require("lazy").setup(
                   fallback()
                 end
               end, { "i", "s" }),
-            }),
-            formatting = {
+            }),-- }}}
+            formatting = {-- {{{
               format = function(entry,item)
                 local color_item = require("nvim-highlight-colors").format(entry, { kind = item.kind })
                 item = lspkind.cmp_format({
@@ -1095,7 +1110,7 @@ require("lazy").setup(
                     luasnip = "[snip]",
                     nvim_lsp = "[lsp]",
                     bootstrap = "[boot]",
-                    otter = "[otter]",
+                    -- otter = "[otter]", -- nie je uz nutne
                   },
                 })(entry, item)
                 if color_item.abbr_hl_group then
@@ -1104,8 +1119,8 @@ require("lazy").setup(
                 end
                 return item
               end
-            },
-            sources = {
+            },-- }}}
+            sources = {-- {{{
               { name = "buffer" },
               { name = "path" },
               -- { name = "codeium" },
@@ -1114,10 +1129,10 @@ require("lazy").setup(
               { name = "nvim_lsp" },
               { name = "nvim_lsp_signature_help" },
               { name = "bootstrap" },
-              { name = "otter" },
+              -- { name = "otter" }, -- nie je uz nutne
               { name = "render-markdown" },
-            },
-            sorting = {
+            },-- }}}
+            sorting = {-- {{{
               comparators = {
                 cmp.config.compare.offset,
                 cmp.config.compare.exact,
@@ -1128,12 +1143,12 @@ require("lazy").setup(
                 cmp.config.compare.length,
                 cmp.config.compare.order,
               },
-            },
-            confirm_opts = {
+            },-- }}}
+            confirm_opts = {-- {{{
               behavior = cmp.ConfirmBehavior.Replace,
               select = false,
-            },
-            window = {
+            },-- }}}
+            window = {-- {{{
               completion = cmp.config.window.bordered({
                 -- farby pre winhighlight su definovane v kanagawa teme
                 winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
@@ -1143,72 +1158,67 @@ require("lazy").setup(
                 -- farby pre winhighlight su definovane v kanagawa teme
                 winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
               }),
-            },
-            view = {
+            },-- }}}
+            view = {-- {{{
               entries = "custom",
-            },
-            experimental = {
+            },-- }}}
+            experimental = {-- {{{
               -- doplna text pri pisani, trochu otravne
               -- ghost_text = true,
               -- ghost_text = {hlgroup = "Comment"}
-            },
-          })
-        end,
-      },
-      -- }}}
+            },-- }}}
+          })-- }}}
+        end,-- }}}
+      },-- }}}
 
-      -- -- {{{ blink
-      -- {
-      --   "saghen/blink.cmp",
-      --   enabled = true,
-      --   dependencies = "rafamadriz/friendly-snippets",
-      --   version = "v0.*",
-      --   opts = {
-      --     keymap = {
-      --       preset = "super-tab",
-      --       ["<CR>"] = { "accept", "fallback" },
-      --     },
-      --     appearance = {
-      --       use_nvim_cmp_as_default = false,
-      --       nerd_font_variant = "normal",
-      --     },
-      --     completion = {
-      --       menu = {
-      --         draw = {
-      --           columns = {
-      --             { "kind_icon" },
-      --             { "label", "label_description", gap = 1 },
-      --             { "source_name", "kind", gap = 1 },
-      --           },
-      --         },
-      --       },
-      --     },
-      --     signature = { enabled = true },
-      --     sources = {
-      --       default = { "lsp", "path", "snippets", "buffer" },
-      --       providers = {
-      --         markdown = {
-      --           name = 'RenderMarkdown',
-      --           module = 'render-markdown.integ.blink',
-      --           fallbacks = { 'lsp' },
-      --         },
-      --       },
-      --     },
-      --   },
-      --   opts_extend = { "sources.default" },
-      -- },
-      -- -- }}}
+      { "saghen/blink.cmp",-- {{{
+        enabled = false,
+        dependencies = "rafamadriz/friendly-snippets",
+        version = "v0.*",
+        opts = {-- {{{
+          keymap = {-- {{{
+            preset = "super-tab",
+            ["<CR>"] = { "accept", "fallback" },
+          },-- }}}
+          appearance = {-- {{{
+            use_nvim_cmp_as_default = false,
+            nerd_font_variant = "normal",
+          },-- }}}
+          completion = {-- {{{
+            menu = {
+              draw = {
+                columns = {
+                  { "kind_icon" },
+                  { "label", "label_description", gap = 1 },
+                  { "source_name", "kind", gap = 1 },
+                },
+              },
+            },
+          },-- }}}
+          signature = { enabled = true },
+          sources = {-- {{{
+            default = { "lsp", "path", "snippets", "buffer" },
+            providers = {
+              markdown = {
+                name = 'RenderMarkdown',
+                module = 'render-markdown.integ.blink',
+                fallbacks = { 'lsp' },
+              },
+            },
+          },-- }}}
+        },-- }}}
+        opts_extend = { "sources.default" },
+      },-- }}}
 
       -- }}}
 
       -- {{{ [ Statusline ]
       {
         "nvim-lualine/lualine.nvim",
-        enabled = true,
+        -- enabled = false,
         event = "VeryLazy",
         config = function()
-          -- Define a custom theme
-          local function vscode_theme()
+          local function vscode_theme()-- {{{
             local colors = {
               red = "#e74d23",
               orange = "#FF8800",
@@ -1228,10 +1238,9 @@ require("lazy").setup(
               command = { a = { bg = colors.red, fg = colors.white } },
               inactive = { a = { bg = colors.black, fg = colors.grey } },
             }
-          end
+          end-- }}}
 
-          -- LSP server icon
-          local function lsp_server_icon()
+          local function lsp_server_icon()-- {{{
             local buf_ft = vim.bo.filetype
             for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
               if client.supports_method("textDocument/documentSymbol") then
@@ -1242,19 +1251,17 @@ require("lazy").setup(
               end
             end
             return ""
-          end
+          end-- }}}
 
-          -- Python environment
-          local function python_env()
+          local function python_env()-- {{{
             local venv = require("swenv.api").get_current_venv()
             if venv and venv.name then
               return venv.name:match("([^/]+)$") or ""
             end
             return ""
-          end
+          end-- }}}
 
-          -- Buffer counts
-          local function buffer_counts()
+          local function buffer_counts()-- {{{
             local loaded_buffers = #vim.tbl_filter(function(buf)
               return vim.fn.buflisted(buf) ~= 0
             end, vim.api.nvim_list_bufs())
@@ -1262,16 +1269,14 @@ require("lazy").setup(
               return vim.bo[buf].modified
             end, vim.api.nvim_list_bufs())
             return string.format("󰈔 [%d:%d+]", loaded_buffers, modified_buffers)
-          end
+          end-- }}}
 
-          -- Macro recording status
-          local function macro_recording()
+          local function macro_recording()-- {{{
             local recording = vim.fn.reg_recording()
             return recording ~= "" and "󰻃 " .. recording or ""
-          end
+          end-- }}}
 
-          -- Lualine setup
-          require("lualine").setup({
+          require("lualine").setup({-- {{{
             options = {
               section_separators = "",
               component_separators = "",
@@ -1310,33 +1315,36 @@ require("lazy").setup(
                 },
               },
             },
-          })
+          })-- }}}
 
-          -- Auto-refresh for macro recording status
-          vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
+          vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {-- {{{
             callback = function()
               local delay = vim.fn.reg_recording() == "" and 50 or 0
               vim.defer_fn(function()
                 require("lualine").refresh({ place = { "statusline" } })
               end, delay)
             end,
-          })
+            desc = "Auto-refresh for macro recording status",
+          })-- }}}
         end,
       },
       -- }}}
 
       -- {{{ [ File Manager ]
-      {
-        "nvim-neo-tree/neo-tree.nvim",
-        enabled = true,
-        dependencies = {
+
+      { "nvim-neo-tree/neo-tree.nvim",-- {{{
+        -- enabled = false,
+        dependencies = {-- {{{
           "nvim-lua/plenary.nvim",
           "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
           "MunifTanjim/nui.nvim",
           -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
-        },
-        opts = {
+        },-- }}}
+        opts = {-- {{{
           close_if_last_window = true,
+          filesystem = {
+            follow_current_file = { enabled = true },
+          },
           default_component_configs = {
             indent = {
               with_expanders = true,
@@ -1362,18 +1370,39 @@ require("lazy").setup(
               ["<c-LEFT>"] = "navigate_up",
             },
           },
-        },
-      },
+        },-- }}}
+        keys = {-- {{{
+          { "<leader>e", mode = {"n", "v" }, "<cmd>Neotree toggle %:p:h<cr>", desc = "Neo-tree" },
+          { "<leader>E", mode = {"n", "v" }, "<cmd>Neotree filesystem reveal D:\\<cr>", desc = "Neo-tree D drive" },
+        }-- }}}
+      },-- }}}
+
+      { "mikavilpas/yazi.nvim",-- {{{
+        -- enabled = false,
+        event = "VeryLazy",
+        opts = {-- {{{
+          open_for_directories = false,
+          floating_window_scaling_factor = 0.7,
+          yazi_floating_window_border = "single",
+          keymaps = {
+            show_help = "?",
+          },
+        },-- }}}
+        keys = {-- {{{
+          { "<leader>-", mode = { "n", "v" }, "<cmd>Yazi<cr>", desc = "Yazi" },
+        },-- }}}
+      },-- }}}
+
       -- }}}
 
       -- {{{ [ Telescope ]
       {
         "nvim-telescope/telescope.nvim",
-        enabled = true,
+        -- enabled = false,
         lazy = false,
         config = function()
           local actions = require("telescope.actions")
-          require("telescope").setup({
+          require("telescope").setup({-- {{{
             pickers = {
               colorscheme = {
                 enable_preview = true,
@@ -1382,7 +1411,7 @@ require("lazy").setup(
             defaults = {
               extensions = {},
             },
-          })
+          })-- }}}
           -- require("telescope").load_extension("file_browser")
         end,
       },
@@ -1431,50 +1460,39 @@ require("lazy").setup(
           -- {{{ mini.clue
           local miniclue = require("mini.clue")
           miniclue.setup({
-            window = {
-              -- Floating window config
-              config = {},
-
-              -- Delay before showing clue window
-              delay = 500,
-
+            window = {-- {{{
+              config = {}, -- Floating window config
+              delay = 500, -- Delay before showing clue window
               -- Keys to scroll inside the clue window
               scroll_down = "<C-d>",
               scroll_up = "<C-u>",
-            },
-            triggers = {
+            },-- }}}
+            triggers = {-- {{{
               -- Leader triggers
               { mode = "n", keys = "<Leader>" },
               { mode = "x", keys = "<Leader>" },
-
               -- Built-in completion
               { mode = "i", keys = "<C-x>" },
-
               -- `g` key
               { mode = "n", keys = "g" },
               { mode = "x", keys = "g" },
-
               -- Marks
               { mode = "n", keys = "'" },
               { mode = "n", keys = "`" },
               { mode = "x", keys = "'" },
               { mode = "x", keys = "`" },
-
               -- Registers
               { mode = "n", keys = '"' },
               { mode = "x", keys = '"' },
               { mode = "i", keys = "<C-r>" },
               { mode = "c", keys = "<C-r>" },
-
               -- Window commands
               -- { mode = 'n', keys = '<C-w>' },
-
               -- `z` key
               { mode = "n", keys = "z" },
               { mode = "x", keys = "z" },
-            },
-
-            clues = {
+            },-- }}}
+            clues = {-- {{{
               -- Enhance this by adding descriptions for <Leader> mapping groups
               miniclue.gen_clues.builtin_completion(),
               miniclue.gen_clues.g(),
@@ -1504,7 +1522,7 @@ require("lazy").setup(
               { mode = "x", keys = "<Leader>ol", desc = "+Links" },
               { mode = "x", keys = "<Leader>p", desc = "+Python" },
               { mode = "x", keys = "<Leader>ps", desc = "+Send to REPL" },
-            },
+            },-- }}}
           })
           -- }}}
         end,
@@ -1512,17 +1530,16 @@ require("lazy").setup(
       -- }}}
 
       -- {{{ [ Notes ]
-      -- {{{ Obsidian
-      {
-        "epwalsh/obsidian.nvim",
-        enabled = true,
+
+      { "epwalsh/obsidian.nvim",-- {{{
+        -- enabled = false,
         version = "*", -- recommended, use latest release instead of latest commit
         lazy = true,
         ft = "markdown",
-        dependencies = {
+        dependencies = {-- {{{
           "nvim-lua/plenary.nvim",
-        },
-        opts = {
+        },-- }}}
+        opts = {-- {{{
           ui = { enable = false }, -- vypnute ui pre doplnok render-markdown
           disable_frontmatter = true,
           workspaces = {
@@ -1549,19 +1566,19 @@ require("lazy").setup(
           end,
           attachments = {
             img_folder = "images",
-          },
+          },-- }}}
         },
-      },
-      -- }}}
+      },-- }}}
 
-      -- {{{ Markdown
-      {
-        'MeanderingProgrammer/render-markdown.nvim',
-        enabled = true,
+      { "MeanderingProgrammer/render-markdown.nvim",-- {{{
+        -- enabled = false,
         lazy = true,
         ft = { "markdown", "quarto" },
-        dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-        init = function()
+        dependencies = {-- {{{
+          "nvim-treesitter/nvim-treesitter",
+          "nvim-tree/nvim-web-devicons"
+        },-- }}}
+        init = function()-- {{{
           local colors = {
             {bg = "#43242B", fg = "#C34043"},
             {bg = "#49443C", fg = "#DCA561"},
@@ -1577,10 +1594,10 @@ require("lazy").setup(
           for i, color in ipairs(colors) do
             vim.cmd(string.format([[highlight Headline%dFg cterm=bold gui=bold guifg=%s]], i, color.bg))
           end
-        end,
-        opts = {
+        end,-- }}}
+        opts = {-- {{{
           -- log_level = 'debug',
-          heading = {
+          heading = {-- {{{
             -- icons = { '󰲡 ', '󰲣 ', '󰲥 ', '󰲧 ', '󰲩 ', '󰲫 ' },
             icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
             backgrounds = {
@@ -1599,8 +1616,8 @@ require("lazy").setup(
               "Headline5Fg",
               "Headline6Fg",
             },
-          },
-          latex = {
+          },-- }}}
+          latex = {-- {{{
             -- enabled = true,
             enabled = (function()
               if os_type == "windows" and os_username == "mech" then
@@ -1613,30 +1630,24 @@ require("lazy").setup(
             highlight = 'RenderMarkdownMath',
             top_pad = 0,
             bottom_pad = 0,
-          },
-        },
-      },
-      -- }}}
+          },-- }}}
+        },-- }}}
+      },-- }}}
 
-      -- {{{ Table-mode
-      {
-        'Kicamon/markdown-table-mode.nvim',
-        enabled = true,
+      { 'Kicamon/markdown-table-mode.nvim',-- {{{
+        -- enabled = false,
         lazy = true,
         ft = { "markdown", "quarto" },
         opts = {}
-      },
-      -- }}}
+      },-- }}}
 
       -- }}}
 
       -- {{{ [ Python ]
 
-      -- {{{ Swenv - change python environments
-      {
-        "AckslD/swenv.nvim",
-        enabled = true,
-        opts = {
+      { "AckslD/swenv.nvim",-- {{{
+        -- enabled = false,
+        opts = {-- {{{
           get_venvs = function(venvs_path)
             return require("swenv.api").get_venvs(venvs_path)
           end,
@@ -1644,61 +1655,51 @@ require("lazy").setup(
           post_set_venv = function()
             vim.cmd(":LspRestart")
           end,
-        },
-      },
-      -- }}}
+        },-- }}}
+      },-- }}}
 
-      -- {{{ Jinja template syntax
-      {
-        "lepture/vim-jinja",
-        enabled = true,
+      { "lepture/vim-jinja",-- {{{
+        -- enabled = false,
         ft = { "jinja.html", "html" },
-      },
-      -- }}}
+      },-- }}}
 
       -- }}}
 
       -- {{{ [ Quarto, Jupyterlab ]
 
-      -- {{{ Quarto
-      {
-        "quarto-dev/quarto-nvim",
-        enabled = true,
+      { "quarto-dev/quarto-nvim",-- {{{
+        -- enabled = false,
         ft = { "quarto" },
         dev = false,
-        opts = {
+        opts = {-- {{{
           lspFeatures = {
             languages = { "python", "bash", "lua", "html", "javascript" },
           },
-          -- codeRunner = {
-          --   enabled = true,
-          --   default_method = 'slime',
-          -- },
-        },
-        dependencies = {
+        },-- }}}
+        dependencies = {-- {{{
           {
-            -- for language features in code cells
-            -- added as a nvim-cmp source
             "jmbuhr/otter.nvim",
+            ft = { "quarto", "markdown" },
             dev = false,
-            opts = {},
+            config = function()
+              -- autocommand to call "otter.activate()"{{{
+              vim.api.nvim_create_autocmd("FileType", {
+                pattern = { "quarto", "markdown" },
+                callback = function()
+                  require('otter').activate()
+                end,
+              })-- }}}
+            end,
           },
-          {
-            -- Slime
-            -- send code from python/r/qmd documets to a terminal or REPL
-            -- like ipython, R, bash
-            -- "jpalardy/vim-slime"
-          },
-        },
-      },
-      -- }}}
+        },-- }}}
+      },-- }}}
 
       -- {{{ Molten
       (function()
         if os_type == "linux" then
           return {
             "benlubas/molten-nvim",
-            enabled = true,
+            -- enabled = false,
             ft = { "quarto" },
             dependencies = { "3rd/image.nvim" },
             init = function()
@@ -1712,7 +1713,7 @@ require("lazy").setup(
         end
         return {
           "benlubas/molten-nvim",
-          enabled = true,
+          -- enabled = false,
           ft = { "quarto" },
           init = function()
             vim.g.python3_host_prog = python_interpreter()
@@ -1729,12 +1730,12 @@ require("lazy").setup(
       -- {{{ Image.nvim
       (function()
         if os_type == "linux" then
-          return {
+          return {-- {{{
             "3rd/image.nvim",
-            enabled = true,
+            -- enabled = false,
             dev = false,
             ft = { "markdown", "quarto", "vimwiki" },
-            dependencies = {
+            dependencies = {-- {{{
               {
                 "vhyrro/luarocks.nvim",
                 priority = 1001, -- this plugin needs to run before anything else
@@ -1742,8 +1743,9 @@ require("lazy").setup(
                   rocks = { "magick" },
                 },
               },
-            },
-            config = function()
+            },-- }}}
+            config = function()-- {{{
+              local image = require("image")
               -- Requirements
               -- https://github.com/3rd/image.nvim?tab=readme-ov-file#requirements
               -- check for dependencies with `:checkhealth kickstart`
@@ -1752,9 +1754,7 @@ require("lazy").setup(
               -- sudo apt install libmagickwand-dev
               -- sudo apt install liblua5.1-0-dev
               -- sudo apt installl luajit
-
-              local image = require("image")
-              image.setup({
+              image.setup({-- {{{
                 backend = "kitty",
                 integrations = {
                   markdown = {
@@ -1771,9 +1771,9 @@ require("lazy").setup(
                 max_height_window_percentage = math.huge, --30,
                 max_width_window_percentage = math.huge, --nil,
                 kitty_method = "normal",
-              })
-            end,
-          }
+              })-- }}}
+            end,-- }}}
+          }-- }}}
         end
         return nil
       end)(),
@@ -1781,17 +1781,16 @@ require("lazy").setup(
 
       -- }}}
 
-      -- {{{ REPL Iron.nvim
+      -- {{{ [ REPL Iron.nvim ]
       {
         "hkupty/iron.nvim",
-        enabled = true,
+        -- enabled = false,
         ft = { "python", "markdown", "quarto"},
         config = function()
           local iron = require("iron.core")
           local view = require("iron.view")
 
-          -- Iron.nvim setup
-          iron.setup({
+          iron.setup({-- {{{
             highlight = {
               italic = true
             },
@@ -1811,7 +1810,7 @@ require("lazy").setup(
               },
               repl_open_cmd = view.split("30%"), -- Open REPL in a split window (30% height)
             },
-          })
+          })-- }}}
 
           -- {{{ block chunk code sending function - moja pretoze default nefunguje ako ma
           _G.send_fenced_code = function()
@@ -1882,22 +1881,79 @@ require("lazy").setup(
 
       -- {{{ [ Mix ]
 
-      -- {{{ Maximize window
-      { "szw/vim-maximizer",
-        enabled = true,
-      },
-      -- }}}
+      { "szw/vim-maximizer",-- {{{
+        -- enabled = false,
+        event = "VeryLazy",
+      },-- }}}
 
-      -- {{{ Nvim-highlight-colors
-      {
-        "brenoprata10/nvim-highlight-colors",
-        enabled = true,
+      { "brenoprata10/nvim-highlight-colors",-- {{{
+        -- enabled = false,
         -- event = { "BufReadPre", "BufNewFile" },
         opts = {},
-      },
-      -- }}}
+      },-- }}}
 
       -- }}}
+
+
+      {"akinsho/toggleterm.nvim",
+        config = function()
+          require("toggleterm").setup({
+            size = function(term)
+              if term.direction == "horizontal" then
+                return 15
+              elseif term.direction == "vertical" then
+                return vim.o.columns * 0.4
+              end
+            end,
+            open_mapping = [[<c-\>]],
+          })
+          local Terminal = require("toggleterm.terminal").Terminal
+
+          function _RANGER_TOGGLE()
+            local Path = require("plenary.path")
+            local path = vim.fn.tempname()
+            local ranger = Terminal:new({
+              direction = "float",
+              cmd = ('ranger --choosefiles "%s"'):format(path),
+              close_on_exit = true,
+              on_close = function()
+                Data = Path:new(path):read()
+                vim.schedule(function()
+                  vim.cmd("e " .. Data)
+                end)
+              end,
+            })
+            ranger:toggle()
+          end
+
+          function _PYTHON_TOGGLE()
+            local python = Terminal:new({
+              direction = "horizontal",
+              cmd = "ipython",
+              hidden = true,
+            })
+            python:toggle()
+          end
+
+          function _WEB_TOGGLE()
+            local web = Terminal:new({
+              direction = "horizontal",
+              cmd = "live-server .",
+            })
+            web:toggle()
+          end
+
+          function _LAZYGIT_TOGGLE()
+            local lazygit = Terminal:new({
+              direction = "float",
+              cmd = "lazygit",
+              dir = "git_dir",
+              hidden = true,
+            })
+            lazygit:toggle()
+          end
+        end,
+      },
 
     })
 ) -- ukoncuje require("lazy").setup(
