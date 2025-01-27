@@ -1941,6 +1941,38 @@ require("lazy").setup(
         end,
       },
 
+      {
+        "Dan7h3x/neaterm.nvim",
+        branch = "stable",
+        event = "VeryLazy",
+        opts = {
+          -- Your custom options here (optional)
+          terminals = {
+            yazi = {
+              name = "Yazi",
+              cmd = "yazi",
+              type = "float",
+              float_width = 0.8,
+              float_height = 0.8,
+              keymaps = {
+                quit = "q",
+                select = "<CR>",
+                preview = "p",
+              },
+              on_exit = function(selected_file)
+                if selected_file then
+                  vim.cmd('edit ' .. selected_file)
+                end
+              end
+            },
+          },
+        },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      -- "ibhagwan/fzf-lua",
+    },
+},
+
     })
 ) -- ukoncuje require("lazy").setup(
 -- }}}
