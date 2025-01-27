@@ -533,14 +533,14 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     os.exit(1)
   end
 end
-vim.opt.rtp:prepend(lazypath)
+vim.opt.rtp:prepend(lazypath)-- }}}
 
 require("lazy").setup(
   -- f-cia pre spravne fungovanie instalacnych f-cii pre molten a image.nvim,
   -- aby ich instalovalo len na linuxe
   vim.tbl_filter(function(plugin)
     return plugin ~= nil -- zabezpeci, aby instalovalo len "validne" pluginy
-  end, {-- }}}
+  end, {
 
       -- {{{ [ UI ]
 
@@ -1454,6 +1454,10 @@ require("lazy").setup(
           require("mini.pairs").setup()
           -- }}}
 
+          -- {{{ mini.ai
+          require('mini.ai').setup()
+          -- }}}
+
           -- {{{ mini.clue
           local miniclue = require("mini.clue")
           miniclue.setup({
@@ -1891,8 +1895,9 @@ require("lazy").setup(
 
       -- }}}
 
+      -- {{{ [ Terminal ]
 
-      {"akinsho/toggleterm.nvim",
+      {"akinsho/toggleterm.nvim",-- {{{
         opts = {
           size = function(term)
             if term.direction == "horizontal" then
@@ -1903,17 +1908,16 @@ require("lazy").setup(
           end,
         },
         keys = {
-          { "<leader>tp", mode = { "n" }, "<cmd>lua PythonTerminal()<cr>", desc = "python terminal" },
-          { "<leader>ti", mode = { "n" }, "<cmd>lua IpythonTerminal()<cr>", desc = "ipython terminal" },
           { "<leader>tt", mode = { "n" }, "<cmd>ToggleTerm<cr>", desc = "new terminal" },
           { "<leader>tf", mode = { "n" }, "<cmd>ToggleTerm direction=float<cr>", desc = "terminal float" },
--- map("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "toggle" })
--- map("n", "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", { desc = "float" })
--- map("n", "<leader>th", "<cmd>ToggleTerm direction=horizontal<cr>", { desc = "horizontal" })
--- map("n", "<leader>tv", "<cmd>ToggleTerm direction=vertical<cr>", { desc = "vertical" })
--- map("n", "<leader>tl", "<cmd>ToggleTermSendCurrentLine<cr>", { desc = "send line" })
--- map("v", "<leader>tb", "<cmd>ToggleTermSendVisualLines<cr>", { desc = "send block lines" })
--- map("v", "<leader>ts", "<cmd>ToggleTermSendVisualSelection<cr>", { desc = "send selection" })
+          { "<leader>tp", mode = { "n" }, "<cmd>lua PythonTerminal()<cr>", desc = "python terminal" },
+          { "<leader>ti", mode = { "n" }, "<cmd>lua IpythonTerminal()<cr>", desc = "ipython terminal" },
+          { "<leader>tr", mode = { "n" }, "<cmd>lua Ranger()<cr>", desc = "ranger" },
+          { "<leader>ty", mode = { "n" }, "<cmd>lua Yazi()<cr>", desc = "yazi" },
+          { "<leader>tw", mode = { "n" }, "<cmd>lua LiveServer()<cr>", desc = "web live server" },
+          { "<leader>tg", mode = { "n" }, "<cmd>lua LazyGit()<cr>", desc = "lazygit" },
+          { "<leader>tl", mode = { "n" }, "<cmd>ToggleTermSendCurrentLine<cr>", desc = "send line" },
+          { "<leader>tl", mode = { "v" }, "<cmd>ToggleTermSendVisualLines<cr>", desc = "send lines" },
         },
 
         config = function(_,opts)
@@ -1938,11 +1942,62 @@ require("lazy").setup(
             ipython:toggle()
           end
 
-        end,
-      },
+          function _G.Ranger()
+            local Path = require("plenary.path")
+            local path = vim.fn.tempname()
+            local ranger = Terminal:new({
+              direction = "float",
+              cmd = ('ranger --choosefiles "%s"'):format(path),
+              close_on_exit = true,
+              on_close = function()
+                Data = Path:new(path):read()
+                vim.schedule(function()
+                  vim.cmd("edit" .. Data)
+                end)
+              end,
+            })
+            ranger:toggle()
+          end
 
-      {
-        "Dan7h3x/neaterm.nvim",
+          function _G.Yazi()
+            local Path = require("plenary.path")
+            local path = vim.fn.tempname()
+            local yazi = Terminal:new({
+              direction = "float",
+              cmd = ('yazi'):format(path),
+              close_on_exit = true,
+              on_close = function()
+                Data = Path:new(path):read()
+                vim.schedule(function()
+                  vim.cmd("edit" .. Data)
+                end)
+              end,
+            })
+            yazi:toggle()
+          end
+
+          function _G.LiveServer()
+            local web = Terminal:new({
+              direction = "horizontal",
+              cmd = "live-server .",
+            })
+            web:toggle()
+          end
+
+          function _G.LazyGit()
+            local lazygit = Terminal:new({
+              direction = "float",
+              cmd = "lazygit",
+              dir = "git_dir",
+              hidden = true,
+            })
+            lazygit:toggle()
+          end
+
+        end,
+      },-- }}}
+
+      { "Dan7h3x/neaterm.nvim",-- {{{
         branch = "stable",
         event = "VeryLazy",
         opts = {
@@ -1967,11 +2022,13 @@ require("lazy").setup(
             },
           },
         },
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      -- "ibhagwan/fzf-lua",
-    },
-},
+        dependencies = {
+          "nvim-lua/plenary.nvim",
+          -- "ibhagwan/fzf-lua",
+        },
+      },-- }}}
+
+      -- }}}
 
     })
 ) -- ukoncuje require("lazy").setup(
