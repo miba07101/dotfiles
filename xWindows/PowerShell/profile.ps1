@@ -1,3 +1,6 @@
+# Disable PowerShell update notifications
+$env:POWERSHELL_UPDATECHECK = "Off"
+
 # terminal icons
 # install: Install-Module -Name Terminal-Icons -Repository PSGallery
 Import-Module -Name Terminal-Icons

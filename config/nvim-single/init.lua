@@ -331,9 +331,14 @@ end, { desc = "Close with ESC" })
 
 -- {{{ Terminal
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-map("n", "<leader>tn", "<cmd>horizontal terminal<cr>", { desc = "terminal new" })
-map("n", "<leader>tp", "<cmd>lua vim.cmd('botright new | resize 30% | terminal'); vim.fn.chansend(vim.b.terminal_job_id, python_interpreter() .. '\\r'); vim.cmd('startinsert')<cr>", { desc = "terminal python" })
-map("n", "<leader>ti", "<cmd>lua vim.cmd('botright new | resize 30% | terminal ipython'); vim.cmd('startinsert')<cr>", { desc = "terminal ipython" })
+-- map("n", "<leader>tn", "<cmd>horizontal terminal<cr>", { desc = "terminal new" })
+-- map("n", "<leader>tp", "<cmd>lua vim.cmd('botright new | resize 30% | terminal'); vim.fn.chansend(vim.b.terminal_job_id, python_interpreter() .. '\\r'); vim.cmd('startinsert')<cr>", { desc = "terminal python" })
+-- map("n", "<leader>ti", "<cmd>lua vim.cmd('botright new | resize 30% | terminal ipython'); vim.cmd('startinsert')<cr>", { desc = "terminal ipython" })
+
+
+-- map("n", "<leader>tr", "<cmd>lua _RANGER_TOGGLE()<cr>", { desc = "ranger" })
+-- map("n", "<leader>ty", "<cmd>lua YaziToggle()<cr>", { desc = "yazi" })
+-- map("n", "<leader>tp", "<cmd>lua PythonToggle()<cr>", { desc = "python" })
 -- }}}
 
 -- {{{ Mix
@@ -1896,63 +1901,51 @@ require("lazy").setup(
 
 
       {"akinsho/toggleterm.nvim",
-        config = function()
-          require("toggleterm").setup({
-            size = function(term)
-              if term.direction == "horizontal" then
-                return 15
-              elseif term.direction == "vertical" then
-                return vim.o.columns * 0.4
-              end
-            end,
-            open_mapping = [[<c-\>]],
-          })
-          local Terminal = require("toggleterm.terminal").Terminal
+        opts = {
+          size = function(term)
+            if term.direction == "horizontal" then
+              return 25
+            elseif term.direction == "vertical" then
+              return vim.o.columns * 0.4
+            end
+          end,
+        },
+        keys = {
+          { "<leader>tp", mode = { "n" }, "<cmd>lua PythonTerminal()<cr>", desc = "ipython terminal" },
+          { "<leader>ti", mode = { "n" }, "<cmd>lua PythonTerminal()<cr>", desc = "python terminal" },
+          { "<leader>tt", mode = { "n" }, "<cmd>ToggleTerm direction=vertical<cr>", desc = "terminal vertical" },
+          { "<leader>tf", mode = { "n" }, "<cmd>ToggleTerm direction=float<cr>", desc = "terminal float" },
+-- map("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "toggle" })
+-- map("n", "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", { desc = "float" })
+-- map("n", "<leader>th", "<cmd>ToggleTerm direction=horizontal<cr>", { desc = "horizontal" })
+-- map("n", "<leader>tv", "<cmd>ToggleTerm direction=vertical<cr>", { desc = "vertical" })
+-- map("n", "<leader>tl", "<cmd>ToggleTermSendCurrentLine<cr>", { desc = "send line" })
+-- map("v", "<leader>tb", "<cmd>ToggleTermSendVisualLines<cr>", { desc = "send block lines" })
+-- map("v", "<leader>ts", "<cmd>ToggleTermSendVisualSelection<cr>", { desc = "send selection" })
+        },
+        -- config = function()
+        --   local Terminal = require("toggleterm.terminal").Terminal
+        --
+        --   function _G.PythonTerminal()
+        --     local python = Terminal:new({
+        --       direction = "horizontal",
+        --       cmd = python_interpreter(),
+        --       hidden = true,
+        --     })
+        --     python:toggle()
+        --   end
+        --
+        --   function _G.IpythonTerminal()
+        --     local ipython = Terminal:new({
+        --       direction = "horizontal",
+        --       cmd = "ipython --no-autoindent",
+        --       hidden = true,
+        --     })
+        --     ipython:toggle()
+        --   end
 
-          function _RANGER_TOGGLE()
-            local Path = require("plenary.path")
-            local path = vim.fn.tempname()
-            local ranger = Terminal:new({
-              direction = "float",
-              cmd = ('ranger --choosefiles "%s"'):format(path),
-              close_on_exit = true,
-              on_close = function()
-                Data = Path:new(path):read()
-                vim.schedule(function()
-                  vim.cmd("e " .. Data)
-                end)
-              end,
-            })
-            ranger:toggle()
-          end
+        -- end
 
-          function _PYTHON_TOGGLE()
-            local python = Terminal:new({
-              direction = "horizontal",
-              cmd = "ipython",
-              hidden = true,
-            })
-            python:toggle()
-          end
-
-          function _WEB_TOGGLE()
-            local web = Terminal:new({
-              direction = "horizontal",
-              cmd = "live-server .",
-            })
-            web:toggle()
-          end
-
-          function _LAZYGIT_TOGGLE()
-            local lazygit = Terminal:new({
-              direction = "float",
-              cmd = "lazygit",
-              dir = "git_dir",
-              hidden = true,
-            })
-            lazygit:toggle()
-          end
-        end,
       },
 
     })
