@@ -330,23 +330,15 @@ end, { desc = "Close with ESC" })
 -- }}}
 
 -- {{{ Terminal
-map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
--- map("n", "<leader>tn", "<cmd>horizontal terminal<cr>", { desc = "terminal new" })
--- map("n", "<leader>tp", "<cmd>lua vim.cmd('botright new | resize 30% | terminal'); vim.fn.chansend(vim.b.terminal_job_id, python_interpreter() .. '\\r'); vim.cmd('startinsert')<cr>", { desc = "terminal python" })
--- map("n", "<leader>ti", "<cmd>lua vim.cmd('botright new | resize 30% | terminal ipython'); vim.cmd('startinsert')<cr>", { desc = "terminal ipython" })
-
-
--- map("n", "<leader>tr", "<cmd>lua _RANGER_TOGGLE()<cr>", { desc = "ranger" })
--- map("n", "<leader>ty", "<cmd>lua YaziToggle()<cr>", { desc = "yazi" })
--- map("n", "<leader>tp", "<cmd>lua PythonToggle()<cr>", { desc = "python" })
+map("t", "<Esc>", "<C-\\><C-n>", { desc = "exit terminal" })
 -- }}}
 
 -- {{{ Mix
-map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "No highlight" })
-map("n", "<A-a>", "<esc>ggVG<cr>", { desc = "Select all text" })
-map("n", "<BS>", "X", { desc = "TAB as X in NORMAL mode" })
-map("n", "<A-v>", "<C-q>", { desc = "Visual block mode" })
-map("n", "<leader>rw", ":%s/<c-r><c-w>//g<left><left>", { desc = "Replace word" })
+map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "no highlight" })
+map("n", "<A-a>", "<esc>ggVG<cr>", { desc = "select all text" })
+map("n", "<BS>", "X", { desc = "TAB as X in normal mode" })
+map("n", "<A-v>", "<C-q>", { desc = "visual block mode" })
+-- map("n", "<leader>rw", ":%s/<c-r><c-w>//g<left><left>", { desc = "replace word" })
 -- }}}
 
 -- {{{ NeoVim
@@ -1911,9 +1903,9 @@ require("lazy").setup(
           end,
         },
         keys = {
-          { "<leader>tp", mode = { "n" }, "<cmd>lua PythonTerminal()<cr>", desc = "ipython terminal" },
-          { "<leader>ti", mode = { "n" }, "<cmd>lua PythonTerminal()<cr>", desc = "python terminal" },
-          { "<leader>tt", mode = { "n" }, "<cmd>ToggleTerm direction=vertical<cr>", desc = "terminal vertical" },
+          { "<leader>tp", mode = { "n" }, "<cmd>lua PythonTerminal()<cr>", desc = "python terminal" },
+          { "<leader>ti", mode = { "n" }, "<cmd>lua IpythonTerminal()<cr>", desc = "ipython terminal" },
+          { "<leader>tt", mode = { "n" }, "<cmd>ToggleTerm<cr>", desc = "new terminal" },
           { "<leader>tf", mode = { "n" }, "<cmd>ToggleTerm direction=float<cr>", desc = "terminal float" },
 -- map("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "toggle" })
 -- map("n", "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", { desc = "float" })
@@ -1923,29 +1915,30 @@ require("lazy").setup(
 -- map("v", "<leader>tb", "<cmd>ToggleTermSendVisualLines<cr>", { desc = "send block lines" })
 -- map("v", "<leader>ts", "<cmd>ToggleTermSendVisualSelection<cr>", { desc = "send selection" })
         },
-        -- config = function()
-        --   local Terminal = require("toggleterm.terminal").Terminal
-        --
-        --   function _G.PythonTerminal()
-        --     local python = Terminal:new({
-        --       direction = "horizontal",
-        --       cmd = python_interpreter(),
-        --       hidden = true,
-        --     })
-        --     python:toggle()
-        --   end
-        --
-        --   function _G.IpythonTerminal()
-        --     local ipython = Terminal:new({
-        --       direction = "horizontal",
-        --       cmd = "ipython --no-autoindent",
-        --       hidden = true,
-        --     })
-        --     ipython:toggle()
-        --   end
 
-        -- end
+        config = function(_,opts)
+          require("toggleterm").setup(opts)
+          local Terminal = require("toggleterm.terminal").Terminal
 
+          function _G.PythonTerminal()
+            local python = Terminal:new({
+              direction = "horizontal",
+              cmd = python_interpreter(),
+              hidden = true,
+            })
+            python:toggle()
+          end
+
+          function _G.IpythonTerminal()
+            local ipython = Terminal:new({
+              direction = "horizontal",
+              cmd = "ipython --no-autoindent",
+              hidden = true,
+            })
+            ipython:toggle()
+          end
+
+        end,
       },
 
     })
