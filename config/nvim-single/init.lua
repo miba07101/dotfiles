@@ -460,8 +460,6 @@ map({"v", "x"}, "<leader>ol", ":ObsidianLinkNew<cr>", { desc = "link new" })
 
 -- End [[ KEYMAPS ]] }}}
 
--- }}}
-
 -- {{{ [[ LAZY MANAGER ]]
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"-- {{{
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -1350,11 +1348,11 @@ require("lazy").setup(
             },
             defaults = {
               layout_strategy = "vertical",
-                layout_config = {
-                  preview_height = 0.55,
-                  width = 0.85,
-                  height = 0.85,
-              },
+                -- layout_config = {
+                --   preview_height = 0.55,
+                --   width = 0.85,
+                --   height = 0.85,
+              -- },
               extensions = {},
             },
           })-- }}}
@@ -1764,7 +1762,7 @@ require("lazy").setup(
             ignore_blank_lines = true,
             keymaps = {},
             config = {
-              highlight_last = "ironlastsent",
+              highlight_last = "IronLastSent",
               repl_definition = {
                 python = {
                   command = { python_interpreter() }, -- function in detect os - dynamically resolve python interpreter
@@ -1784,7 +1782,7 @@ require("lazy").setup(
           })-- }}}
 
           -- {{{ block chunk code sending function - moja pretoze default nefunguje ako ma
-          _G.send_fenced_code = function()
+          _G.SendFencedCode = function()
             local cursor_pos = vim.api.nvim_win_get_cursor(0)
             local row = cursor_pos[1] - 1  -- lua uses 0-based indexing
             local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
@@ -1805,7 +1803,7 @@ require("lazy").setup(
               start_pattern = "^```{python}"
               end_pattern = "^```"
             else
-              print("unsupported file type for code block detection!")
+              print("Unsupported file type for code block detection!")
               return
             end
 
@@ -1826,7 +1824,7 @@ require("lazy").setup(
             end
 
             if not start_row or not end_row then
-              print("no fenced code block found!")
+              print("No fenced code block found!")
               return
             end
 
@@ -1840,7 +1838,7 @@ require("lazy").setup(
             end
 
             if #code == 0 then
-              print("code block is empty!")
+              print("Code block is empty!")
               return
             end
 
@@ -1851,32 +1849,32 @@ require("lazy").setup(
 
         end,-- }}}
         keys = {-- {{{
-          { "<leader>rs", mode = { "n" }, "<cmd>ironrepl<cr>", desc = "repl start", noremap = true, silent = true },
+          { "<leader>rs", mode = { "n" }, "<cmd>IronRepl<cr>", desc = "repl start", noremap = true, silent = true },
           { "<leader>rq", mode = { "n" }, "<cmd>lua require('iron.core').close_repl()<cr>", desc = "repl quit", noremap = true, silent = true },
           { "<leader>rl", mode = { "n" }, "<cmd>lua require('iron.core').send_line()<cr>", desc = "send line", noremap = true, silent = true },
           { "<leader>rf", mode = { "n" }, "<cmd>lua require('iron.core').send_file()<cr>", desc = "send file", noremap = true, silent = true },
-          { "<leader>rb", mode = { "n" }, "<cmd>lua send_fenced_code()<cr>", desc = "send block", noremap = true, silent = true },
+          { "<leader>rb", mode = { "n" }, "<cmd>lua SendFencedCode()<cr>", desc = "send block", noremap = true, silent = true },
           { "<leader>rl", mode = { "v" }, "<cmd>lua require('iron.core').visual_send()<cr>", desc = "send lines", noremap = true, silent = true },
         },-- }}}
       },
       -- }}}
 
-      -- {{{ [ mix ]
+      -- {{{ [ Mix ]
 
       { "szw/vim-maximizer",-- {{{
         -- enabled = false,
-        -- event = "verylazy",
+        event = "VeryLazy",
       },-- }}}
 
       { "brenoprata10/nvim-highlight-colors",-- {{{
         -- enabled = false,
-        -- event = { "bufreadpre", "bufnewfile" },
+        -- event = { "BufReadPre", "BufNewFile" },
         opts = {},
       },-- }}}
 
       -- }}}
 
-      -- {{{ [ terminal ]
+      -- {{{ [ Terminal ]
 
       { "akinsho/toggleterm.nvim",-- {{{
         -- enabled = false,
@@ -1892,10 +1890,10 @@ require("lazy").setup(
 
         config = function(_,opts)
           require("toggleterm").setup(opts)
-          local terminal = require("toggleterm.terminal").terminal
+          local Terminal = require("toggleterm.terminal").Terminal
 
-          function _g.pythonterminal()
-            local python = terminal:new({
+          function _G.PythonTerminal()
+            local python = Terminal:new({
               direction = "horizontal",
               cmd = python_interpreter(),
               hidden = true,
@@ -1903,8 +1901,8 @@ require("lazy").setup(
             python:toggle()
           end
 
-          function _g.ipythonterminal()
-            local ipython = terminal:new({
+          function _G.IpythonTerminal()
+            local ipython = Terminal:new({
               direction = "horizontal",
               cmd = "ipython --no-autoindent",
               hidden = true,
@@ -1912,50 +1910,50 @@ require("lazy").setup(
             ipython:toggle()
           end
 
-          function _g.ranger()
-            local path = require("plenary.path")
+          function _G.Ranger()
+            local Path = require("plenary.path")
             local path = vim.fn.tempname()
-            local ranger = terminal:new({
+            local ranger = Terminal:new({
               direction = "float",
               cmd = ('ranger --choosefiles "%s"'):format(path),
               close_on_exit = true,
               on_close = function()
-                data = path:new(path):read()
+                Data = Path:new(path):read()
                 vim.schedule(function()
-                  vim.cmd("edit" .. data)
+                  vim.cmd("edit" .. Data)
                 end)
               end,
             })
             ranger:toggle()
           end
 
-          function _g.yazi()
-            local path = require("plenary.path")
+          function _G.Yazi()
+            local Path = require("plenary.path")
             local path = vim.fn.tempname()
-            local yazi = terminal:new({
+            local yazi = Terminal:new({
               direction = "float",
               cmd = ('yazi'):format(path),
               close_on_exit = true,
               on_close = function()
-                data = path:new(path):read()
+                Data = Path:new(path):read()
                 vim.schedule(function()
-                  vim.cmd("edit" .. data)
+                  vim.cmd("edit" .. Data)
                 end)
               end,
             })
             yazi:toggle()
           end
 
-          function _g.liveserver()
-            local web = terminal:new({
+          function _G.LiveServer()
+            local web = Terminal:new({
               direction = "horizontal",
               cmd = "live-server .",
             })
             web:toggle()
           end
 
-          function _g.lazygit()
-            local lazygit = terminal:new({
+          function _G.LazyGit()
+            local lazygit = Terminal:new({
               direction = "float",
               cmd = "lazygit",
               dir = "git_dir",
@@ -1966,16 +1964,16 @@ require("lazy").setup(
 
         end,
         keys = {
-          { "<leader>tt", mode = { "n" }, "<cmd>toggleterm<cr>", desc = "new terminal", noremap = true, silent = true },
-          { "<leader>tf", mode = { "n" }, "<cmd>toggleterm direction=float<cr>", desc = "terminal float", noremap = true, silent = true },
-          { "<leader>tp", mode = { "n" }, "<cmd>lua pythonterminal()<cr>", desc = "python terminal", noremap = true, silent = true },
-          { "<leader>ti", mode = { "n" }, "<cmd>lua ipythonterminal()<cr>", desc = "ipython terminal", noremap = true, silent = true },
-          { "<leader>tr", mode = { "n" }, "<cmd>lua ranger()<cr>", desc = "ranger", noremap = true, silent = true },
-          { "<leader>ty", mode = { "n" }, "<cmd>lua yazi()<cr>", desc = "yazi", noremap = true, silent = true },
-          { "<leader>tw", mode = { "n" }, "<cmd>lua liveserver()<cr>", desc = "web live server", noremap = true, silent = true },
-          { "<leader>tg", mode = { "n" }, "<cmd>lua lazygit()<cr>", desc = "lazygit", noremap = true, silent = true },
-          { "<leader>tl", mode = { "n" }, "<cmd>toggletermsendcurrentline<cr>", desc = "send line", noremap = true, silent = true },
-          { "<leader>tl", mode = { "v" }, "<cmd>toggletermsendvisuallines<cr>", desc = "send lines", noremap = true, silent = true },
+          { "<leader>tt", mode = { "n" }, "<cmd>ToggleTerm<cr>", desc = "new terminal", noremap = true, silent = true },
+          { "<leader>tf", mode = { "n" }, "<cmd>ToggleTerm direction=float<cr>", desc = "terminal float", noremap = true, silent = true },
+          { "<leader>tp", mode = { "n" }, "<cmd>lua PythonTerminal()<cr>", desc = "python terminal", noremap = true, silent = true },
+          { "<leader>ti", mode = { "n" }, "<cmd>lua IpythonTerminal()<cr>", desc = "ipython terminal", noremap = true, silent = true },
+          { "<leader>tr", mode = { "n" }, "<cmd>lua Ranger()<cr>", desc = "ranger", noremap = true, silent = true },
+          { "<leader>ty", mode = { "n" }, "<cmd>lua Yazi()<cr>", desc = "yazi", noremap = true, silent = true },
+          { "<leader>tw", mode = { "n" }, "<cmd>lua LiveServer()<cr>", desc = "web live server", noremap = true, silent = true },
+          { "<leader>tg", mode = { "n" }, "<cmd>lua LazyGit()<cr>", desc = "lazygit", noremap = true, silent = true },
+          { "<leader>tl", mode = { "n" }, "<cmd>ToggleTermsendCurrentLine<cr>", desc = "send line", noremap = true, silent = true },
+          { "<leader>tl", mode = { "v" }, "<cmd>ToggleTermSendVisualLines<cr>", desc = "send lines", noremap = true, silent = true },
         },
       },-- }}}
 
@@ -1990,10 +1988,10 @@ require("lazy").setup(
 local mygroup = vim.api.nvim_create_augroup("vimrc", { clear = true })
 
 -- {{{ highlight on yank
-vim.api.nvim_create_autocmd("textyankpost", {
+vim.api.nvim_create_autocmd("TextYankPost", {
   callback = function()
     vim.highlight.on_yank({
-      higroup = "incsearch",
+      higroup = "IncSearch",
       timeout = 300,
     })
   end,
@@ -2003,7 +2001,7 @@ vim.api.nvim_create_autocmd("textyankpost", {
 -- }}}
 
 -- {{{ set fold markers for init.lua
-vim.api.nvim_create_autocmd("bufreadpost", {
+vim.api.nvim_create_autocmd("BufReadPost", {
   pattern = "init.lua",
   callback = function()
     vim.opt_local.foldmethod = "marker" -- use markers for init.lua
@@ -2016,16 +2014,16 @@ vim.api.nvim_create_autocmd("bufreadpost", {
 -- }}}
 
 -- {{{ unfold at open
-vim.api.nvim_create_autocmd("bufwinenter", {
+vim.api.nvim_create_autocmd("BufWinEnter", {
   pattern = { "*.py", "*.css", "*.scss", "*.html", "*.qmd", "*.md" },
-  command = [[:normal! zr]], -- zr-open, zm-close folds
+  command = [[:normal! zR]], -- zR-open, zM-close folds
   group = mygroup,
   desc = "unfold",
 })
 -- }}}
 
 -- {{{ conceal level = 1
-vim.api.nvim_create_autocmd("bufread", {
+vim.api.nvim_create_autocmd("BufRead", {
   pattern = "*.md",
   command = [[:setlocal conceallevel=1]],
   group = mygroup,
@@ -2034,7 +2032,7 @@ vim.api.nvim_create_autocmd("bufread", {
 -- }}}
 
 -- {{{ autoformat code on save
-vim.api.nvim_create_autocmd("bufwritepre", {
+vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = { "*.py", "*.json", "*.css", "*.scss" },
   callback = function(args)
     require("conform").format({ bufnr = args.buf })
@@ -2045,7 +2043,7 @@ vim.api.nvim_create_autocmd("bufwritepre", {
 -- }}}
 
 -- {{{ auto linting
-vim.api.nvim_create_autocmd({ "bufenter", "bufwritepost", "insertleave" }, {
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
   pattern = { "*" },
   callback = function()
     require("lint").try_lint()
@@ -2054,7 +2052,7 @@ vim.api.nvim_create_autocmd({ "bufenter", "bufwritepost", "insertleave" }, {
 -- }}}
 
 -- {{{ sass compilation on save
-vim.api.nvim_create_autocmd("bufwritepre", {
+vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = { "*.sass", "*.scss" },
   command = [[:silent exec "!sass --no-source-map %:p %:r.css"]],
   group = mygroup,
@@ -2074,7 +2072,7 @@ vim.api.nvim_create_autocmd("bufwritepre", {
 -- }}}
 
 -- {{{ restore cursor position
-vim.api.nvim_create_autocmd("bufreadpost", {
+vim.api.nvim_create_autocmd("BufReadPost", {
   callback = function()
     if vim.fn.line("'\"") >= 1 and vim.fn.line("'\"") <= vim.fn.line("$") and vim.fn.expand("&ft") ~= "commit" then
       vim.cmd('normal! g`"')
@@ -2086,13 +2084,13 @@ vim.api.nvim_create_autocmd("bufreadpost", {
 -- }}}
 
 -- {{{ show cursor line only in active window
-vim.api.nvim_create_autocmd({ "insertleave", "winenter" }, {
+vim.api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
   pattern = "*",
   command = "set cursorline",
   group = mygroup,
   desc = "show cursorline in active window",
 })
-vim.api.nvim_create_autocmd({ "insertenter", "winleave" }, {
+vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
   pattern = "*",
   command = "set nocursorline",
   group = mygroup,
@@ -2101,7 +2099,7 @@ vim.api.nvim_create_autocmd({ "insertenter", "winleave" }, {
 -- }}}
 
 -- {{{ check if we need to reload the file when it changed
-vim.api.nvim_create_autocmd("focusgained", {
+vim.api.nvim_create_autocmd("FocusGained", {
   command = [[:checktime]],
   group = mygroup,
   desc = "update file when there are changes",
@@ -2109,14 +2107,14 @@ vim.api.nvim_create_autocmd("focusgained", {
 -- }}}
 
 -- {{{ windows to close with "q"
-vim.api.nvim_create_autocmd("filetype", {
+vim.api.nvim_create_autocmd("FileType", {
   pattern = { "toggleterm", "help", "startuptime", "qf", "lspinfo" },
   command = [[nnoremap <buffer><silent> q :close<cr>]],
   group = mygroup,
   desc = "close windows with q",
 })
 
-vim.api.nvim_create_autocmd("filetype", {
+vim.api.nvim_create_autocmd("FileType", {
   pattern = "man",
   command = [[nnoremap <buffer><silent> q :quit<cr>]],
   group = mygroup,
@@ -2125,7 +2123,7 @@ vim.api.nvim_create_autocmd("filetype", {
 -- }}}
 
 -- {{{ don't auto comment new line
-vim.api.nvim_create_autocmd("bufenter", {
+vim.api.nvim_create_autocmd("BufEnter", {
   command = [[set formatoptions-=cro]],
   group = mygroup,
   desc = "don't auto comment new line",
@@ -2133,7 +2131,7 @@ vim.api.nvim_create_autocmd("bufenter", {
 -- }}}
 
 -- {{{ open help on right side
--- vim.api.nvim_create_autocmd("bufenter", {
+-- vim.api.nvim_create_autocmd("BufEnter", {
 --   command = [[if &buftype == 'help' | wincmd l | endif]],
 --   group = mygroup,
 --   desc = "help on right side",
@@ -2141,7 +2139,7 @@ vim.api.nvim_create_autocmd("bufenter", {
 -- }}}
 
 -- {{{ open terminal at same location as opened file
-vim.api.nvim_create_autocmd("bufenter", {
+vim.api.nvim_create_autocmd("BufEnter", {
   command = [[silent! lcd %:p:h]],
   group = mygroup,
   desc = "open terminal in same location as opened file",
@@ -2149,7 +2147,7 @@ vim.api.nvim_create_autocmd("bufenter", {
 -- }}}
 
 -- {{{ terminal options
-vim.api.nvim_create_autocmd("termopen", {
+vim.api.nvim_create_autocmd("TermOpen", {
   callback = function()
     vim.opt_local.relativenumber = false
     vim.opt_local.number = false
@@ -2161,7 +2159,7 @@ vim.api.nvim_create_autocmd("termopen", {
 -- }}}
 
 -- {{{ remove trailling whitespace (medzeru na konci) when save file
-vim.api.nvim_create_autocmd("bufwritepre", {
+vim.api.nvim_create_autocmd("BufWritePre", {
   command = [[%s/\s\+$//e]],
   group = mygroup,
   desc = "remove tarilling whitespace",
@@ -2169,7 +2167,7 @@ vim.api.nvim_create_autocmd("bufwritepre", {
 -- }}}
 
 -- {{{ resize vim windows when overall window size changes
-vim.api.nvim_create_autocmd("vimresized", {
+vim.api.nvim_create_autocmd("VimResized", {
   command = [[wincmd =]],
   group = mygroup,
   desc = "resize windows to equal",
@@ -2177,9 +2175,9 @@ vim.api.nvim_create_autocmd("vimresized", {
 -- }}}
 
 -- {{{ python
-vim.api.nvim_create_autocmd("filetype", {
+vim.api.nvim_create_autocmd("FileType", {
   pattern = "python",
-  command = [[nnoremap <buffer> <m-p> :w<cr>:terminal python3 "%"<cr>]],
+  command = [[nnoremap <buffer> <M-p> :w<cr>:terminal python3 "%"<cr>]],
   group = mygroup,
   desc = "open file in python terminal",
 })
@@ -2193,7 +2191,7 @@ vim.api.nvim_create_autocmd("filetype", {
 -- }}}
 
 -- {{{ set typst filetype - quarto specific
-vim.api.nvim_create_autocmd({ "bufenter", "bufnewfile" }, {
+vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
   pattern = "*.typ",
   command = "set filetype=typst",
   desc = "set filetype for typst files",
@@ -2201,7 +2199,7 @@ vim.api.nvim_create_autocmd({ "bufenter", "bufnewfile" }, {
 -- }}}
 
 -- {{{ telescope on start
-vim.api.nvim_create_autocmd("vimenter", {
+vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     if vim.fn.argv(0) == "" then
       require("telescope.builtin").oldfiles()
