@@ -1878,7 +1878,7 @@ require("lazy").setup(
 
       { "akinsho/toggleterm.nvim",-- {{{
         -- enabled = false,
-        opts = {
+        opts = {-- {{{
           size = function(term)
             if term.direction == "horizontal" then
               return 25
@@ -1886,31 +1886,30 @@ require("lazy").setup(
               return vim.o.columns * 0.4
             end
           end,
-        },
-
-        config = function(_,opts)
+        },-- }}}
+        config = function(_,opts)-- {{{
           require("toggleterm").setup(opts)
           local Terminal = require("toggleterm.terminal").Terminal
 
-          function _G.PythonTerminal()
+          function _G.PythonTerminal()-- {{{
             local python = Terminal:new({
               direction = "horizontal",
               cmd = python_interpreter(),
               hidden = true,
             })
             python:toggle()
-          end
+          end-- }}}
 
-          function _G.IpythonTerminal()
+          function _G.IpythonTerminal()-- {{{
             local ipython = Terminal:new({
               direction = "horizontal",
               cmd = "ipython --no-autoindent",
               hidden = true,
             })
             ipython:toggle()
-          end
+          end-- }}}
 
-          function _G.Ranger()
+          function _G.Ranger()-- {{{
             local Path = require("plenary.path")
             local path = vim.fn.tempname()
             local ranger = Terminal:new({
@@ -1925,9 +1924,9 @@ require("lazy").setup(
               end,
             })
             ranger:toggle()
-          end
+          end-- }}}
 
-          function _G.Yazi()
+          function _G.Yazi()-- {{{
             local Path = require("plenary.path")
             local path = vim.fn.tempname()
             local yazi = Terminal:new({
@@ -1942,17 +1941,17 @@ require("lazy").setup(
               end,
             })
             yazi:toggle()
-          end
+          end-- }}}
 
-          function _G.LiveServer()
+          function _G.LiveServer()-- {{{
             local web = Terminal:new({
               direction = "horizontal",
               cmd = "live-server .",
             })
             web:toggle()
-          end
+          end-- }}}
 
-          function _G.LazyGit()
+          function _G.LazyGit()-- {{{
             local lazygit = Terminal:new({
               direction = "float",
               cmd = "lazygit",
@@ -1960,10 +1959,10 @@ require("lazy").setup(
               hidden = true,
             })
             lazygit:toggle()
-          end
+          end-- }}}
 
-        end,
-        keys = {
+        end,-- }}}
+        keys = {-- {{{
           { "<leader>tt", mode = { "n" }, "<cmd>ToggleTerm<cr>", desc = "new terminal", noremap = true, silent = true },
           { "<leader>tf", mode = { "n" }, "<cmd>ToggleTerm direction=float<cr>", desc = "terminal float", noremap = true, silent = true },
           { "<leader>tp", mode = { "n" }, "<cmd>lua PythonTerminal()<cr>", desc = "python terminal", noremap = true, silent = true },
@@ -1974,7 +1973,7 @@ require("lazy").setup(
           { "<leader>tg", mode = { "n" }, "<cmd>lua LazyGit()<cr>", desc = "lazygit", noremap = true, silent = true },
           { "<leader>tl", mode = { "n" }, "<cmd>ToggleTermsendCurrentLine<cr>", desc = "send line", noremap = true, silent = true },
           { "<leader>tl", mode = { "v" }, "<cmd>ToggleTermSendVisualLines<cr>", desc = "send lines", noremap = true, silent = true },
-        },
+        },-- }}}
       },-- }}}
 
       -- }}}
@@ -1983,7 +1982,7 @@ require("lazy").setup(
 ) -- ukoncuje require("lazy").setup(
 -- }}}
 
--- {{{ [[ autocomands ]]
+-- {{{ [[ AUTOCOMANDS ]]
 
 local mygroup = vim.api.nvim_create_augroup("vimrc", { clear = true })
 
