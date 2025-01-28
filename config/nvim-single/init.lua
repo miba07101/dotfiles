@@ -244,12 +244,6 @@ map({ "n", "v", "i", "x" }, "<C-q>", "<cmd>q!<cr>", { desc = "quit" })
 -- map("n", "<leader>x", "<cmd>w<cr><cmd>luafile %<cr><esc>", { desc = "Reload Lua" })
 -- }}}
 
--- {{{ File System Commands
-map("n", "<leader>k", ":!touch<space>", { desc = "Create file" })
--- map("n", "<leader>dc", "<cmd>!mkdir<space>", { desc = "Create directory" })
--- map("n", "<leader>mv", "<cmd>!mv<space>%<space>", { desc = "Move" })
--- }}}
-
 -- {{{ Windows
 map("n", "<leader>wv", "<C-w>v", { desc = "vertical" })
 map("n", "<leader>wh", "<C-w>s", { desc = "horizontal" })
@@ -302,20 +296,6 @@ map("n", "<C-d>", "<C-d>zz", { desc = "up and center" })
 map("n", "<C-u>", "<C-u>zz", { desc = "down and center" })
 -- }}}
 
--- {{{ Increment/decrement numbers
-map("n", "<leader>+", "<C-a>", { desc = "increment" })
-map("n", "<leader>-", "<C-x>", { desc = "decrement" })
--- }}}
-
--- {{{ Replace word under cursor
-map("n", "<leader>r", "*``cgn", { desc = "replace word" })
--- }}}
-
--- {{{ Explicitly yank to system clipboard (highlighted and entire row)
-map({ "n", "v" }, "<leader>y", [["+y]], { desc = "yank to clipboard" })
-map("n", "<leader>Y", [["+Y]], { desc = "yank to clipboard" })
--- }}}
-
 -- {{{ Close floating window with ESC
 local function close_floating()
   for _, win in pairs(vim.api.nvim_list_wins()) do
@@ -331,14 +311,21 @@ end, { desc = "Close with ESC" })
 
 -- {{{ Terminal
 map("t", "<Esc>", "<C-\\><C-n>", { desc = "exit terminal" })
+map("t", "<C-Up>", "<cmd>wincmd k<cr>", { desc = "up from terminal" })
+map("t", "<C-Down>", "<cmd>wincmd j<cr>", { desc = "down from terminal" })
+map("t", "<C-Left>", "<cmd>wincmd h<cr>", { desc = "left from terminal" })
+map("t", "<C-Right>", "<cmd>wincmd l<cr>", { desc = "right from terminal" })
 -- }}}
 
 -- {{{ Mix
 map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "no highlight" })
-map("n", "<A-a>", "<esc>ggVG<cr>", { desc = "select all text" })
 map("n", "<BS>", "X", { desc = "TAB as X in normal mode" })
+map("n", "<A-a>", "<esc>ggVG<cr>", { desc = "select all text" })
 map("n", "<A-v>", "<C-q>", { desc = "visual block mode" })
+map("n", "<A-+>", "<C-a>", { desc = "increment number" })
+map("n", "<A-->", "<C-x>", { desc = "decrement number" })
 -- map("n", "<leader>rw", ":%s/<c-r><c-w>//g<left><left>", { desc = "replace word" })
+-- map("n", "<leader>r", "*``cgn", { desc = "replace word under cursor" })
 -- }}}
 
 -- {{{ NeoVim
@@ -399,23 +386,6 @@ map("n", "<leader>do", "<cmd>diffoff!<CR>", { desc = "differ off" })
 map("n", "<leader>du", "<cmd>diffupdate<CR>", { desc = "differ update" })
 -- }}}
 
--- {{{ Python
-map("n", "<leader>pe", "<cmd>lua require('swenv.api').pick_venv()<cr>", { desc = "pick venvs" })
--- Iron.nvim
-map("n", "<leader>prs", "<cmd>IronRepl<cr><esc>", { desc = "start" })
-map("n", "<leader>pre", "<cmd>lua require('iron.core').exit()<cr>", { desc = "exit" } )
-map("n", "<leader>prc", "<cmd>lua require('iron.core').clear()<cr>", { desc = "clear" } )
-map({"v", "x"}, "<leader>psv", "<cmd>lua require('iron.core').visual_send()<cr>", { desc = "send visual" } )
-map("n", "<leader>psf", "<cmd>lua require('iron.core').send_file()<cr>", { desc = "send file" } )
-map("n", "<leader>psl", "<cmd>lua require('iron.core').send_line()<cr>", { desc = "send line" } )
--- map("n", "<leader>psb", "<cmd>lua require('iron.core').send_code_block()<CR>", { desc = "send code block" } )
-map("n", "<leader>psb", "<cmd>lua send_fenced_code()<cr>", { desc = "send block code" })
-map("n", "<leader>pms", "<cmd>lua require('iron.core').send_mark()<cr>", { desc = "mark send" } )
-map("n", "<leader>pmm", "<cmd>lua require('iron.core').mark_motion()<cr>", { desc = "mark motion" } )
-map("n", "<leader>pmv", "<cmd>lua require('iron.core').mark_visual()<cr>", { desc = "mark visual" } )
-map("n", "<leader>pmd", "<cmd>lua require('iron.core').remove_mark()<cr>", { desc = "mark delete" } )
--- }}}
-
 -- {{{ Lazy
 map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Lazy" })
 -- }}}
@@ -423,7 +393,7 @@ map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Lazy" })
 -- {{{ Telescope
 map("n", "<leader>fx", "<cmd>Telescope<cr>", { desc = "telescope" })
 -- map("n", "<leader>fe", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", { desc = "file browser" })
--- map("n", "<leader>fn", "<cmd>Telescope notify<cr>", { desc = "notifications" })
+map("n", "<leader>fn", "<cmd>Telescope notify<cr>", { desc = "notifications" })
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "files" })
 map("n", "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "words" })
 map("n", "<leader>fo", "<cmd>Telescope oldfiles<cr>", { desc = "recent files" })
@@ -431,26 +401,6 @@ map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "buffers" })
 map("n", "<leader>fc", "<cmd>Telescope colorscheme<cr>", { desc = "colorscheme" })
 map("n", "<leader>fd", "<cmd>Telescope diagnostics<cr>", { desc = "diagnostics" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "tags" })
--- }}}
-
--- {{{ Quarto
-map("n", "<leader>qa", "<cmd>QuartoActivate<cr>", { desc = "activate" })
-map("n", "<leader>qp", "<cmd>lua require'quarto'.quartoPreview()<cr>", { desc = "preview" })
-map("n", "<leader>qq", "<cmd>lua require'quarto'.quartoClosePreview()<cr>", { desc = "quit" })
-map("n", "<leader>qh", "<cmd>QuartoHelp<cr>", { desc = "help" })
--- vim-table-mode
-map("n", "<leader>qt", "<cmd>TableModeToggle<cr><cr>", { desc = "table mode" })
--- align columns in markdown table
--- https://heitorpb.github.io/bla/format-tables-in-vim/
-map("v", "<leader>qt", ":!column -t -s '|' -o '|'<CR><CR>", { desc = "align table" })
--- }}}
-
--- {{{ Otter (for quarto completion)
-map("n", "<leader>qod", "<cmd>lua require('otter').ask_definition()<cr>", { desc = "definition" })
-map("n", "<leader>qoh", "<cmd>lua require('otter').ask_hover()<cr>", { desc = "hover" })
-map("n", "<leader>qor", "<cmd>lua require('otter').ask_references()<cr>", { desc = "references" })
-map("n", "<leader>qon", "<cmd>lua require('otter').ask_rename()<cr>", { desc = "rename" })
-map("n", "<leader>qof", "<cmd>lua require('otter').ask_format()<cr>", { desc = "format" })
 -- }}}
 
 -- {{{ Obsidian
@@ -507,12 +457,6 @@ map("n", "<leader>oD", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('De
 map({"v", "x"}, "<leader>oe", ":ObsidianExtractNote<cr>", { desc = "extract text" })
 map({"v", "x"}, "<leader>ol", ":ObsidianLinkNew<cr>", { desc = "link new" })
 -- }}}
-
--- {{{ Markdown
-map("n", "<leader>mp", "<cmd>RenderMarkdown toggle<cr><cr>", { desc = "render toggle" })
-map("n", "<leader>mi", "<cmd>RenderMarkdown expand<cr><cr>", { desc = "increase conceal" })
-map("n", "<leader>md", "<cmd>RenderMarkdown contract<cr><cr>", { desc = "decrease conceal" })
--- )))
 
 -- End [[ KEYMAPS ]] }}}
 
@@ -858,7 +802,6 @@ require("lazy").setup(
             tinymist = {
               filetypes = {
                 "typst",
-                "quarto",
               },
             },
           }
@@ -1369,14 +1312,14 @@ require("lazy").setup(
           },
         },-- }}}
         keys = {-- {{{
-          { "<leader>e", mode = {"n", "v" }, "<cmd>Neotree toggle %:p:h<cr>", desc = "Neo-tree" },
-          { "<leader>E", mode = {"n", "v" }, "<cmd>Neotree filesystem reveal D:\\<cr>", desc = "Neo-tree D drive" },
+          { "<leader>e", mode = {"n", "v" }, "<cmd>Neotree toggle %:p:h<cr>", desc = "Neo-tree", noremap = true, silent = true },
+          { "<leader>E", mode = {"n", "v" }, "<cmd>Neotree filesystem reveal D:\\<cr>", desc = "Neo-tree D drive", noremap = true, silent = true },
         }-- }}}
       },-- }}}
 
       { "mikavilpas/yazi.nvim",-- {{{
         -- enabled = false,
-        event = "VeryLazy",
+        -- event = "VeryLazy",
         opts = {-- {{{
           open_for_directories = false,
           floating_window_scaling_factor = 0.7,
@@ -1386,7 +1329,7 @@ require("lazy").setup(
           },
         },-- }}}
         keys = {-- {{{
-          { "<leader>-", mode = { "n", "v" }, "<cmd>Yazi<cr>", desc = "Yazi" },
+          { "<leader>-", mode = { "n", "v" }, "<cmd>Yazi<cr>", desc = "yazi", noremap = true, silent = true },
         },-- }}}
       },-- }}}
 
@@ -1406,6 +1349,12 @@ require("lazy").setup(
               },
             },
             defaults = {
+              layout_strategy = "vertical",
+                layout_config = {
+                  preview_height = 0.55,
+                  width = 0.85,
+                  height = 0.85,
+              },
               extensions = {},
             },
           })-- }}}
@@ -1505,24 +1454,23 @@ require("lazy").setup(
               { mode = "n", keys = "<Leader>d", desc = "+Diagnostic" },
               { mode = "n", keys = "<Leader>f", desc = "+Telescope" },
               { mode = "n", keys = "<Leader>l", desc = "+Lsp" },
+              { mode = "n", keys = "<Leader>m", desc = "+Markdown" },
               { mode = "n", keys = "<Leader>o", desc = "+Obsidian" },
               { mode = "n", keys = "<Leader>on", desc = "+Notes" },
               { mode = "n", keys = "<Leader>ol", desc = "+Links" },
               { mode = "n", keys = "<Leader>p", desc = "+Python" },
-              { mode = "n", keys = "<Leader>pr", desc = "+REPL" },
-              { mode = "n", keys = "<Leader>ps", desc = "+Send to REPL" },
-              { mode = "n", keys = "<Leader>pm", desc = "+Mark" },
+              { mode = "n", keys = "<Leader>r", desc = "+REPL" },
+              { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
               { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
-              { mode = "n", keys = "<Leader>qo", desc = "+Otter" },
               { mode = "n", keys = "<Leader>v", desc = "+Vim/Neovim" },
               { mode = "n", keys = "<Leader>w", desc = "+Window" },
               { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
               -- moje skratky - visual mode
-              { mode = "x", keys = "<Leader>q", desc = "+Quarto" },
+              { mode = "x", keys = "<Leader>m", desc = "+Markdown" },
               { mode = "x", keys = "<Leader>o", desc = "+Obsidian" },
               { mode = "x", keys = "<Leader>ol", desc = "+Links" },
-              { mode = "x", keys = "<Leader>p", desc = "+Python" },
-              { mode = "x", keys = "<Leader>ps", desc = "+Send to REPL" },
+              { mode = "x", keys = "<Leader>r", desc = "+REPL" },
+              { mode = "x", keys = "<Leader>t", desc = "+Terminal" },
             },-- }}}
           })
           -- }}}
@@ -1573,7 +1521,6 @@ require("lazy").setup(
 
       { "MeanderingProgrammer/render-markdown.nvim",-- {{{
         -- enabled = false,
-        lazy = true,
         ft = { "markdown", "quarto" },
         dependencies = {-- {{{
           "nvim-treesitter/nvim-treesitter",
@@ -1633,13 +1580,23 @@ require("lazy").setup(
             bottom_pad = 0,
           },-- }}}
         },-- }}}
+        keys = {-- {{{
+          { "<leader>mp", mode = { "n" }, "<cmd>RenderMarkdown toggle<cr><cr>", desc = "preview toggle", noremap = true, silent = true },
+          { "<leader>mi", mode = { "n" }, "<cmd>RenderMarkdown expand<cr><cr>", desc = "increase conceal", noremap = true, silent = true },
+          { "<leader>md", mode = { "n" }, "<cmd>RenderMarkdown contract<cr><cr>", desc = "decrease conceal", noremap = true, silent = true },
+          -- align columns in markdown table
+          -- https://heitorpb.github.io/bla/format-tables-in-vim/
+          { "<leader>mT", mode = { "v" }, ":! tr -s ' ' | column -t -s '|' -o '|'<cr>", desc = "align table only linux", noremap = true, silent = true },
+          -- https://lazybea.rs/posts/markdown-tables-and-neovim
+          { "<leader>mt", mode = { "v" }, ":!pandoc -t markdown-simple_tables<cr>", desc = "align table using pandoc", noremap = true, silent = true },
+        },-- }}}
       },-- }}}
 
-      { 'Kicamon/markdown-table-mode.nvim',-- {{{
+      { "Kicamon/markdown-table-mode.nvim",-- {{{
         -- enabled = false,
         lazy = true,
-        ft = { "markdown", "quarto" },
-        opts = {}
+        ft = { "markdown", "*qmd" },
+        opts = {},
       },-- }}}
 
       -- }}}
@@ -1657,6 +1614,9 @@ require("lazy").setup(
             vim.cmd(":LspRestart")
           end,
         },-- }}}
+        keys = {
+          { "<leader>pe", mode = { "n" }, "<cmd>lua require('swenv.api').pick_venv()<cr>", desc = "python venvs", noremap = true, silent = true },
+        },
       },-- }}}
 
       { "lepture/vim-jinja",-- {{{
@@ -1692,6 +1652,12 @@ require("lazy").setup(
               })-- }}}
             end,
           },
+        },-- }}}
+        keys = {-- {{{
+          { "<leader>qa", mode = { "n" }, "<cmd>QuartoActivate<cr>", desc = "quarto activate", noremap = true, silent = true },
+          { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "quarto preview", noremap = true, silent = true },
+          { "<leader>qq", mode = { "n" }, "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = "quarto quit", noremap = true, silent = true },
+          { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "quarto help", noremap = true, silent = true },
         },-- }}}
       },-- }}}
 
@@ -1787,7 +1753,7 @@ require("lazy").setup(
         "hkupty/iron.nvim",
         -- enabled = false,
         ft = { "python", "markdown", "quarto"},
-        config = function()
+        config = function()-- {{{
           local iron = require("iron.core")
           local view = require("iron.view")
 
@@ -1796,11 +1762,12 @@ require("lazy").setup(
               italic = true
             },
             ignore_blank_lines = true,
+            keymaps = {},
             config = {
-              highlight_last = "IronLastSent",
+              highlight_last = "ironlastsent",
               repl_definition = {
                 python = {
-                  command = { python_interpreter() }, -- function in DETECT OS - dynamically resolve Python interpreter
+                  command = { python_interpreter() }, -- function in detect os - dynamically resolve python interpreter
                   -- format = require("iron.fts.common").bracketed_paste_python,
                   -- block_deviders = { "# %%", "#%%" }, -- not working properly
                 },
@@ -1808,35 +1775,41 @@ require("lazy").setup(
                   command = { "ipython", "--no-autoindent" },
                   -- block_deviders = { "```python", "```" }, -- not working properly
                 },
+                quarto = {
+                  command = { "ipython", "--no-autoindent" },
+                },
               },
-              repl_open_cmd = view.split("30%"), -- Open REPL in a split window (30% height)
+              repl_open_cmd = view.split("30%"), -- open repl in a split window (30% height)
             },
           })-- }}}
 
           -- {{{ block chunk code sending function - moja pretoze default nefunguje ako ma
           _G.send_fenced_code = function()
             local cursor_pos = vim.api.nvim_win_get_cursor(0)
-            local row = cursor_pos[1] - 1  -- Lua uses 0-based indexing
+            local row = cursor_pos[1] - 1  -- lua uses 0-based indexing
             local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
-            -- Determine file type and set appropriate block delimiters
+            -- determine file type and set appropriate block delimiters
             local filetype = vim.bo.filetype
             local start_pattern, end_pattern
 
             if filetype == "python" then
-              -- Python uses "# %%"
+              -- python uses "# %%"
               start_pattern = "^# %%"
               end_pattern = "^# %%"
-            elseif filetype == "markdown" or filetype == "quarto" then
-              -- Markdown/Quarto uses "```python" and "```"
+            elseif filetype == "markdown" then
+              -- markdown/quarto uses "```python" and "```"
               start_pattern = "^```python"
               end_pattern = "^```"
+            elseif filetype == "quarto" then
+              start_pattern = "^```{python}"
+              end_pattern = "^```"
             else
-              print("Unsupported file type for code block detection!")
+              print("unsupported file type for code block detection!")
               return
             end
 
-            -- Find the start and end of the fenced code block
+            -- find the start and end of the fenced code block
             local start_row, end_row
             for i = row, 0, -1 do
               if lines[i]:match(start_pattern) then
@@ -1853,51 +1826,60 @@ require("lazy").setup(
             end
 
             if not start_row or not end_row then
-              print("No fenced code block found!")
+              print("no fenced code block found!")
               return
             end
 
-            -- Extract the code inside the block
+            -- extract the code inside the block
             local code = {}
             for i = start_row + 1, end_row - 1 do
-              local line = lines[i]:gsub("%s+$", "")  -- Remove trailing whitespace
-              if line ~= "" then  -- Skip blank lines
+              local line = lines[i]:gsub("%s+$", "")  -- remove trailing whitespace
+              if line ~= "" then  -- skip blank lines
                 table.insert(code, line)
               end
             end
 
             if #code == 0 then
-              print("Code block is empty!")
+              print("code block is empty!")
               return
             end
 
-            -- Send code to REPL
+            -- send code to repl
             require("iron.core").send(nil, code)
           end
           -- }}}
 
-        end,
+        end,-- }}}
+        keys = {-- {{{
+          { "<leader>rs", mode = { "n" }, "<cmd>ironrepl<cr>", desc = "repl start", noremap = true, silent = true },
+          { "<leader>rq", mode = { "n" }, "<cmd>lua require('iron.core').close_repl()<cr>", desc = "repl quit", noremap = true, silent = true },
+          { "<leader>rl", mode = { "n" }, "<cmd>lua require('iron.core').send_line()<cr>", desc = "send line", noremap = true, silent = true },
+          { "<leader>rf", mode = { "n" }, "<cmd>lua require('iron.core').send_file()<cr>", desc = "send file", noremap = true, silent = true },
+          { "<leader>rb", mode = { "n" }, "<cmd>lua send_fenced_code()<cr>", desc = "send block", noremap = true, silent = true },
+          { "<leader>rl", mode = { "v" }, "<cmd>lua require('iron.core').visual_send()<cr>", desc = "send lines", noremap = true, silent = true },
+        },-- }}}
       },
       -- }}}
 
-      -- {{{ [ Mix ]
+      -- {{{ [ mix ]
 
       { "szw/vim-maximizer",-- {{{
         -- enabled = false,
-        event = "VeryLazy",
+        -- event = "verylazy",
       },-- }}}
 
       { "brenoprata10/nvim-highlight-colors",-- {{{
         -- enabled = false,
-        -- event = { "BufReadPre", "BufNewFile" },
+        -- event = { "bufreadpre", "bufnewfile" },
         opts = {},
       },-- }}}
 
       -- }}}
 
-      -- {{{ [ Terminal ]
+      -- {{{ [ terminal ]
 
-      {"akinsho/toggleterm.nvim",-- {{{
+      { "akinsho/toggleterm.nvim",-- {{{
+        -- enabled = false,
         opts = {
           size = function(term)
             if term.direction == "horizontal" then
@@ -1907,25 +1889,13 @@ require("lazy").setup(
             end
           end,
         },
-        keys = {
-          { "<leader>tt", mode = { "n" }, "<cmd>ToggleTerm<cr>", desc = "new terminal" },
-          { "<leader>tf", mode = { "n" }, "<cmd>ToggleTerm direction=float<cr>", desc = "terminal float" },
-          { "<leader>tp", mode = { "n" }, "<cmd>lua PythonTerminal()<cr>", desc = "python terminal" },
-          { "<leader>ti", mode = { "n" }, "<cmd>lua IpythonTerminal()<cr>", desc = "ipython terminal" },
-          { "<leader>tr", mode = { "n" }, "<cmd>lua Ranger()<cr>", desc = "ranger" },
-          { "<leader>ty", mode = { "n" }, "<cmd>lua Yazi()<cr>", desc = "yazi" },
-          { "<leader>tw", mode = { "n" }, "<cmd>lua LiveServer()<cr>", desc = "web live server" },
-          { "<leader>tg", mode = { "n" }, "<cmd>lua LazyGit()<cr>", desc = "lazygit" },
-          { "<leader>tl", mode = { "n" }, "<cmd>ToggleTermSendCurrentLine<cr>", desc = "send line" },
-          { "<leader>tl", mode = { "v" }, "<cmd>ToggleTermSendVisualLines<cr>", desc = "send lines" },
-        },
 
         config = function(_,opts)
           require("toggleterm").setup(opts)
-          local Terminal = require("toggleterm.terminal").Terminal
+          local terminal = require("toggleterm.terminal").terminal
 
-          function _G.PythonTerminal()
-            local python = Terminal:new({
+          function _g.pythonterminal()
+            local python = terminal:new({
               direction = "horizontal",
               cmd = python_interpreter(),
               hidden = true,
@@ -1933,8 +1903,8 @@ require("lazy").setup(
             python:toggle()
           end
 
-          function _G.IpythonTerminal()
-            local ipython = Terminal:new({
+          function _g.ipythonterminal()
+            local ipython = terminal:new({
               direction = "horizontal",
               cmd = "ipython --no-autoindent",
               hidden = true,
@@ -1942,50 +1912,50 @@ require("lazy").setup(
             ipython:toggle()
           end
 
-          function _G.Ranger()
-            local Path = require("plenary.path")
+          function _g.ranger()
+            local path = require("plenary.path")
             local path = vim.fn.tempname()
-            local ranger = Terminal:new({
+            local ranger = terminal:new({
               direction = "float",
               cmd = ('ranger --choosefiles "%s"'):format(path),
               close_on_exit = true,
               on_close = function()
-                Data = Path:new(path):read()
+                data = path:new(path):read()
                 vim.schedule(function()
-                  vim.cmd("edit" .. Data)
+                  vim.cmd("edit" .. data)
                 end)
               end,
             })
             ranger:toggle()
           end
 
-          function _G.Yazi()
-            local Path = require("plenary.path")
+          function _g.yazi()
+            local path = require("plenary.path")
             local path = vim.fn.tempname()
-            local yazi = Terminal:new({
+            local yazi = terminal:new({
               direction = "float",
               cmd = ('yazi'):format(path),
               close_on_exit = true,
               on_close = function()
-                Data = Path:new(path):read()
+                data = path:new(path):read()
                 vim.schedule(function()
-                  vim.cmd("edit" .. Data)
+                  vim.cmd("edit" .. data)
                 end)
               end,
             })
             yazi:toggle()
           end
 
-          function _G.LiveServer()
-            local web = Terminal:new({
+          function _g.liveserver()
+            local web = terminal:new({
               direction = "horizontal",
               cmd = "live-server .",
             })
             web:toggle()
           end
 
-          function _G.LazyGit()
-            local lazygit = Terminal:new({
+          function _g.lazygit()
+            local lazygit = terminal:new({
               direction = "float",
               cmd = "lazygit",
               dir = "git_dir",
@@ -1995,36 +1965,17 @@ require("lazy").setup(
           end
 
         end,
-      },-- }}}
-
-      { "Dan7h3x/neaterm.nvim",-- {{{
-        branch = "stable",
-        event = "VeryLazy",
-        opts = {
-          -- Your custom options here (optional)
-          terminals = {
-            yazi = {
-              name = "Yazi",
-              cmd = "yazi",
-              type = "float",
-              float_width = 0.8,
-              float_height = 0.8,
-              keymaps = {
-                quit = "q",
-                select = "<CR>",
-                preview = "p",
-              },
-              on_exit = function(selected_file)
-                if selected_file then
-                  vim.cmd('edit ' .. selected_file)
-                end
-              end
-            },
-          },
-        },
-        dependencies = {
-          "nvim-lua/plenary.nvim",
-          -- "ibhagwan/fzf-lua",
+        keys = {
+          { "<leader>tt", mode = { "n" }, "<cmd>toggleterm<cr>", desc = "new terminal", noremap = true, silent = true },
+          { "<leader>tf", mode = { "n" }, "<cmd>toggleterm direction=float<cr>", desc = "terminal float", noremap = true, silent = true },
+          { "<leader>tp", mode = { "n" }, "<cmd>lua pythonterminal()<cr>", desc = "python terminal", noremap = true, silent = true },
+          { "<leader>ti", mode = { "n" }, "<cmd>lua ipythonterminal()<cr>", desc = "ipython terminal", noremap = true, silent = true },
+          { "<leader>tr", mode = { "n" }, "<cmd>lua ranger()<cr>", desc = "ranger", noremap = true, silent = true },
+          { "<leader>ty", mode = { "n" }, "<cmd>lua yazi()<cr>", desc = "yazi", noremap = true, silent = true },
+          { "<leader>tw", mode = { "n" }, "<cmd>lua liveserver()<cr>", desc = "web live server", noremap = true, silent = true },
+          { "<leader>tg", mode = { "n" }, "<cmd>lua lazygit()<cr>", desc = "lazygit", noremap = true, silent = true },
+          { "<leader>tl", mode = { "n" }, "<cmd>toggletermsendcurrentline<cr>", desc = "send line", noremap = true, silent = true },
+          { "<leader>tl", mode = { "v" }, "<cmd>toggletermsendvisuallines<cr>", desc = "send lines", noremap = true, silent = true },
         },
       },-- }}}
 
@@ -2034,12 +1985,12 @@ require("lazy").setup(
 ) -- ukoncuje require("lazy").setup(
 -- }}}
 
--- {{{ [[ AUTOCOMANDS ]]
+-- {{{ [[ autocomands ]]
 
 local mygroup = vim.api.nvim_create_augroup("vimrc", { clear = true })
 
--- {{{ Highlight on Yank
-vim.api.nvim_create_autocmd("TextYankPost", {
+-- {{{ highlight on yank
+vim.api.nvim_create_autocmd("textyankpost", {
   callback = function()
     vim.highlight.on_yank({
       higroup = "incsearch",
@@ -2047,54 +1998,54 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     })
   end,
   group = mygroup,
-  desc = "Highlight yanked text",
+  desc = "highlight yanked text",
 })
 -- }}}
 
--- {{{ Set Fold Markers for init.lua
-vim.api.nvim_create_autocmd("BufReadPost", {
+-- {{{ set fold markers for init.lua
+vim.api.nvim_create_autocmd("bufreadpost", {
   pattern = "init.lua",
   callback = function()
-    vim.opt_local.foldmethod = "marker" -- Use markers for init.lua
-    vim.opt_local.foldexpr = "" -- Disable foldexpr
-    vim.opt_local.foldlevel = 0 -- Start with all folds closed
+    vim.opt_local.foldmethod = "marker" -- use markers for init.lua
+    vim.opt_local.foldexpr = "" -- disable foldexpr
+    vim.opt_local.foldlevel = 0 -- start with all folds closed
   end,
   group = mygroup,
   desc = "init.lua folding",
 })
 -- }}}
 
--- {{{ Unfold at open
-vim.api.nvim_create_autocmd("BufWinEnter", {
+-- {{{ unfold at open
+vim.api.nvim_create_autocmd("bufwinenter", {
   pattern = { "*.py", "*.css", "*.scss", "*.html", "*.qmd", "*.md" },
-  command = [[:normal! zR]], -- zR-open, zM-close folds
+  command = [[:normal! zr]], -- zr-open, zm-close folds
   group = mygroup,
-  desc = "Unfold",
+  desc = "unfold",
 })
 -- }}}
 
--- {{{ Conceal level = 1
-vim.api.nvim_create_autocmd("BufRead", {
+-- {{{ conceal level = 1
+vim.api.nvim_create_autocmd("bufread", {
   pattern = "*.md",
   command = [[:setlocal conceallevel=1]],
   group = mygroup,
-  desc = "Conceal level",
+  desc = "conceal level",
 })
 -- }}}
 
--- {{{ Autoformat code on save
-vim.api.nvim_create_autocmd("BufWritePre", {
+-- {{{ autoformat code on save
+vim.api.nvim_create_autocmd("bufwritepre", {
   pattern = { "*.py", "*.json", "*.css", "*.scss" },
   callback = function(args)
     require("conform").format({ bufnr = args.buf })
   end,
   group = mygroup,
-  desc = "Autoformat code on save",
+  desc = "autoformat code on save",
 })
 -- }}}
 
--- {{{ Auto linting
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+-- {{{ auto linting
+vim.api.nvim_create_autocmd({ "bufenter", "bufwritepost", "insertleave" }, {
   pattern = { "*" },
   callback = function()
     require("lint").try_lint()
@@ -2102,162 +2053,162 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 })
 -- }}}
 
--- {{{ Sass compilation on save
-vim.api.nvim_create_autocmd("BufWritePre", {
+-- {{{ sass compilation on save
+vim.api.nvim_create_autocmd("bufwritepre", {
   pattern = { "*.sass", "*.scss" },
   command = [[:silent exec "!sass --no-source-map %:p %:r.css"]],
   group = mygroup,
-  desc = "SASS compilation on save",
+  desc = "sass compilation on save",
 })
 -- }}}
 
--- {{{ Shiftwidth setup
--- vim.api.nvim_create_autocmd("FileType", {
+-- {{{ shiftwidth setup
+-- vim.api.nvim_create_autocmd("filetype", {
 --   pattern = { "c", "cpp", "py", "java", "cs" },
 --   callback = function()
 --     vim.bo.shiftwidth = 4
 --   end,
 --   group = mygroup,
---   desc = "Set shiftwidth to 4 in these filetypes",
+--   desc = "set shiftwidth to 4 in these filetypes",
 -- })
 -- }}}
 
--- {{{ Restore cursor position
-vim.api.nvim_create_autocmd("BufReadPost", {
+-- {{{ restore cursor position
+vim.api.nvim_create_autocmd("bufreadpost", {
   callback = function()
     if vim.fn.line("'\"") >= 1 and vim.fn.line("'\"") <= vim.fn.line("$") and vim.fn.expand("&ft") ~= "commit" then
       vim.cmd('normal! g`"')
     end
   end,
   group = mygroup,
-  desc = "Restore cursor position",
+  desc = "restore cursor position",
 })
 -- }}}
 
--- {{{ Show cursor line only in active window
-vim.api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
+-- {{{ show cursor line only in active window
+vim.api.nvim_create_autocmd({ "insertleave", "winenter" }, {
   pattern = "*",
   command = "set cursorline",
   group = mygroup,
-  desc = "Show cursorline in active window",
+  desc = "show cursorline in active window",
 })
-vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
+vim.api.nvim_create_autocmd({ "insertenter", "winleave" }, {
   pattern = "*",
   command = "set nocursorline",
   group = mygroup,
-  desc = "Hide cursorline in inactive window",
+  desc = "hide cursorline in inactive window",
 })
 -- }}}
 
--- {{{ Check if we need to reload the file when it changed
-vim.api.nvim_create_autocmd("FocusGained", {
+-- {{{ check if we need to reload the file when it changed
+vim.api.nvim_create_autocmd("focusgained", {
   command = [[:checktime]],
   group = mygroup,
-  desc = "Update file when there are changes",
+  desc = "update file when there are changes",
 })
 -- }}}
 
--- {{{ Windows to close with "q"
-vim.api.nvim_create_autocmd("FileType", {
+-- {{{ windows to close with "q"
+vim.api.nvim_create_autocmd("filetype", {
   pattern = { "toggleterm", "help", "startuptime", "qf", "lspinfo" },
-  command = [[nnoremap <buffer><silent> q :close<CR>]],
+  command = [[nnoremap <buffer><silent> q :close<cr>]],
   group = mygroup,
-  desc = "Close windows with Q",
+  desc = "close windows with q",
 })
 
-vim.api.nvim_create_autocmd("FileType", {
+vim.api.nvim_create_autocmd("filetype", {
   pattern = "man",
-  command = [[nnoremap <buffer><silent> q :quit<CR>]],
+  command = [[nnoremap <buffer><silent> q :quit<cr>]],
   group = mygroup,
-  desc = "Close man pages with Q",
+  desc = "close man pages with q",
 })
 -- }}}
 
--- {{{ Don't auto comment new line
-vim.api.nvim_create_autocmd("BufEnter", {
+-- {{{ don't auto comment new line
+vim.api.nvim_create_autocmd("bufenter", {
   command = [[set formatoptions-=cro]],
   group = mygroup,
-  desc = "Don't auto comment new line",
+  desc = "don't auto comment new line",
 })
 -- }}}
 
--- {{{ Open HELP on right side
--- vim.api.nvim_create_autocmd("BufEnter", {
---   command = [[if &buftype == 'help' | wincmd L | endif]],
+-- {{{ open help on right side
+-- vim.api.nvim_create_autocmd("bufenter", {
+--   command = [[if &buftype == 'help' | wincmd l | endif]],
 --   group = mygroup,
---   desc = "Help on right side",
+--   desc = "help on right side",
 -- })
 -- }}}
 
--- {{{ Open terminal at same location as opened file
-vim.api.nvim_create_autocmd("BufEnter", {
+-- {{{ open terminal at same location as opened file
+vim.api.nvim_create_autocmd("bufenter", {
   command = [[silent! lcd %:p:h]],
   group = mygroup,
-  desc = "Open terminal in same location as opened file",
+  desc = "open terminal in same location as opened file",
 })
 -- }}}
 
--- {{{ Terminal options
-vim.api.nvim_create_autocmd("TermOpen", {
+-- {{{ terminal options
+vim.api.nvim_create_autocmd("termopen", {
   callback = function()
     vim.opt_local.relativenumber = false
     vim.opt_local.number = false
     vim.cmd("startinsert!")
   end,
   group = mygroup,
-  desc = "Terminal Options",
+  desc = "terminal options",
 })
 -- }}}
 
--- {{{ Remove trailling whitespace (medzeru na konci) when SAVE file
-vim.api.nvim_create_autocmd("BufWritePre", {
+-- {{{ remove trailling whitespace (medzeru na konci) when save file
+vim.api.nvim_create_autocmd("bufwritepre", {
   command = [[%s/\s\+$//e]],
   group = mygroup,
-  desc = "Remove tarilling whitespace",
+  desc = "remove tarilling whitespace",
 })
 -- }}}
 
--- {{{ Resize vim windows when overall window size changes
-vim.api.nvim_create_autocmd("VimResized", {
+-- {{{ resize vim windows when overall window size changes
+vim.api.nvim_create_autocmd("vimresized", {
   command = [[wincmd =]],
   group = mygroup,
-  desc = "Resize windows to equal",
+  desc = "resize windows to equal",
 })
 -- }}}
 
--- {{{ PYTHON
-vim.api.nvim_create_autocmd("FileType", {
+-- {{{ python
+vim.api.nvim_create_autocmd("filetype", {
   pattern = "python",
-  command = [[nnoremap <buffer> <M-p> :w<CR>:terminal python3 "%"<CR>]],
+  command = [[nnoremap <buffer> <m-p> :w<cr>:terminal python3 "%"<cr>]],
   group = mygroup,
-  desc = "Open file in python terminal",
+  desc = "open file in python terminal",
 })
 
-vim.api.nvim_create_autocmd("FileType", {
+vim.api.nvim_create_autocmd("filetype", {
   pattern = "python",
   command = [[setlocal colorcolumn=80]],
   group = mygroup,
-  desc = "Set colorcolumn for python files",
+  desc = "set colorcolumn for python files",
 })
 -- }}}
 
--- {{{ Set TYPST filetype - Quarto specific
-vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
+-- {{{ set typst filetype - quarto specific
+vim.api.nvim_create_autocmd({ "bufenter", "bufnewfile" }, {
   pattern = "*.typ",
   command = "set filetype=typst",
-  desc = "Set filetype for typst files",
+  desc = "set filetype for typst files",
 })
 -- }}}
 
--- {{{ Telescope on start
-vim.api.nvim_create_autocmd("VimEnter", {
+-- {{{ telescope on start
+vim.api.nvim_create_autocmd("vimenter", {
   callback = function()
     if vim.fn.argv(0) == "" then
       require("telescope.builtin").oldfiles()
     end
   end,
   group = mygroup,
-  desc = "Start Telescope on start",
+  desc = "start telescope on start",
 })
 -- }}}
 
