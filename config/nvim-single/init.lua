@@ -1971,7 +1971,7 @@ require("lazy").setup(
           { "<leader>ty", mode = { "n" }, "<cmd>lua Yazi()<cr>", desc = "yazi", noremap = true, silent = true },
           { "<leader>tw", mode = { "n" }, "<cmd>lua LiveServer()<cr>", desc = "web live server", noremap = true, silent = true },
           { "<leader>tg", mode = { "n" }, "<cmd>lua LazyGit()<cr>", desc = "lazygit", noremap = true, silent = true },
-          { "<leader>tl", mode = { "n" }, "<cmd>ToggleTermsendCurrentLine<cr>", desc = "send line", noremap = true, silent = true },
+          { "<leader>tl", mode = { "n" }, "<cmd>ToggleTermSendCurrentLine<cr>", desc = "send line", noremap = true, silent = true },
           { "<leader>tl", mode = { "v" }, "<cmd>ToggleTermSendVisualLines<cr>", desc = "send lines", noremap = true, silent = true },
         },-- }}}
       },-- }}}
