@@ -8,7 +8,7 @@
 --
 
 -- {{{ [[ DETECT OS ]]
-function _G.detect_os_type()
+function _G.DetectOsType()-- {{{
   local os_name = vim.loop.os_uname().sysname
   local os_type
 
@@ -26,26 +26,14 @@ function _G.detect_os_type()
   end
 
   return os_type
-end
+end-- }}}
 
-local os_type = detect_os_type()
+local os_type = DetectOsType()
 local os_username = os.getenv("USERNAME") or os.getenv("USER")
 local py_venvs_path = os.getenv("VENV_HOME")
 local onedrive_path = os.getenv("OneDrive_DIR")
 
--- local obsidian_path = vim.fn.expand(onedrive_path .. (os_username == "mech" and "Poznámkové bloky/Obsidian/" or "Dokumenty/zPoznamky/Obsidian/"))
-function _G.get_obsidian_path()
-  if os_username == "mech" then
-    return "~\\Sync\\Obsidian\\"
-  else
-    return vim.fn.expand(onedrive_path .. "Dokumenty/zPoznamky/Obsidian/")
-  end
-end
-
-local obsidian_path = get_obsidian_path()
-local notes_path = obsidian_path .. "inbox/"
-
-function _G.python_interpreter()
+function _G.PythonInterpreter()-- {{{
   -- Get the path of the active virtual environment
   local venv = os.getenv("VIRTUAL_ENV")
   -- Get the current venv from swenv.nvim or fallback to default Python
@@ -64,11 +52,27 @@ function _G.python_interpreter()
       return "python3" -- For Linux/macOS
     end
   end
-end
--- print(obsidian_path)
--- print("detected os: " .. os_type)
--- print("detected username: " .. os_username)
--- print("detected venv_path: " .. py_venvs_path)
+end-- }}}
+
+function _G.ObsidianPath()-- {{{
+  return os_username == "mech" and "~\\Sync\\Obsidian/"
+    or vim.fn.expand(onedrive_path .. "Dokumenty/zPoznamky/Obsidian/")
+end-- }}}
+
+function _G.ObsidianNewNote(use_template, template, folder)-- {{{
+  local obsidian_path = ObsidianPath()
+  local note_name = vim.fn.input("Enter note name without .md: ")
+  if note_name == "" then return print("Note name cannot be empty!") end
+
+  local new_note_path = string.format("%s%s/%s.md", obsidian_path, folder or "inbox", note_name)
+  vim.cmd("edit " .. new_note_path)
+
+  if use_template then
+    local templates = { basic = "t-nvim-note.md", person = "t-person.md" }
+    vim.cmd(templates[template] and "ObsidianTemplate " .. templates[template] or "echo 'Invalid template name'")
+  end
+end-- }}}
+
 -- }}}
 
 -- {{{ [[ OPTIONS ]]
@@ -252,43 +256,42 @@ map("n", "<leader>wx", "<cmd>close<cr>", { desc = "close" })
 map("n", "<leader>wlh", "<cmd>windo wincmd K<cr>", { desc = "horizontal layout" })
 map("n", "<leader>wlv", "<cmd>windo wincmd H<cr>", { desc = "vertical layout" })
 
-map("n", "<C-Up>", "<C-w>k", { desc = "Go UP" })
-map("n", "<C-Down>", "<C-w>j", { desc = "Go DOWN" })
-map("n", "<C-Left>", "<C-w>h", { desc = "Go LEFT" })
-map("n", "<C-Right>", "<C-w>l", { desc = "Go RIGHT" })
-map("n", "<S-Up>", "<cmd>resize +2<cr>", { desc = "Resize UP" })
-map("n", "<S-Down>", "<cmd>resize -2<cr>", { desc = "Resize DOWN" })
-map("n", "<S-Left>", "<cmd>vertical resize -2<cr>", { desc = "Resize LEFT" })
-map("n", "<S-Right>", "<cmd>vertical resize +2<cr>", { desc = "Resize RIGHT" })
-map("n", "<S-Right>", "<cmd>vertical resize +2<cr>", { desc = "Resize RIGHT" })
+map("n", "<C-Up>", "<C-w>k", { desc = "go up" })
+map("n", "<C-Down>", "<C-w>j", { desc = "go down" })
+map("n", "<C-Left>", "<C-w>h", { desc = "go left" })
+map("n", "<C-Right>", "<C-w>l", { desc = "go right" })
+map("n", "<S-Up>", "<cmd>resize +2<cr>", { desc = "resize up" })
+map("n", "<S-Down>", "<cmd>resize -2<cr>", { desc = "resize down" })
+map("n", "<S-Left>", "<cmd>vertical resize -2<cr>", { desc = "resize left" })
+map("n", "<S-Right>", "<cmd>vertical resize +2<cr>", { desc = "resize right" })
 -- }}}
 
 -- {{{ Buffers
-map("n", "<A-Right>", "<cmd>bnext<cr>", { desc = "Next buffer" })
-map("n", "<A-Left>", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
-map("n", "<A-UP>", "<cmd>bp<bar>bd#<cr>", { desc = "Quit buffer" })
-map("n", "<A-Down>", "<cmd>bp<bar>bd#<cr>", { desc = "Quit buffer" })
+map("n", "<A-Right>", "<cmd>bnext<cr>", { desc = "next buffer" })
+map("n", "<A-Left>", "<cmd>bprevious<cr>", { desc = "previous buffer" })
+map("n", "<A-UP>", "<cmd>bp<bar>bd#<cr>", { desc = "quit buffer" })
+map("n", "<A-Down>", "<cmd>bp<bar>bd#<cr>", { desc = "quit buffer" })
 -- }}}
 
 -- {{{ Indenting
-map("v", "<", "<gv", { desc = "Unindent line" })
-map("v", ">", ">gv", { desc = "Indent line" })
+map("v", "<", "<gv", { desc = "unindent line" })
+map("v", ">", ">gv", { desc = "indent line" })
 -- }}}
 
 -- {{{ Move Lines
-map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move text DOWN" })
-map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move text UP" })
-map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move text DOWN" })
-map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move text UP" })
-map("v", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move text UP" })
-map("v", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move text DOWN" })
-map("x", "<A-j>", "<cmd>move '>+1<cr>gv-gv", { desc = "Move text UP" })
-map("x", "<A-k>", "<cmd>move '<-2<cr>gv-gv", { desc = "Move text DOWN" })
+map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "move text down" })
+map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "move text up" })
+map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "move text down" })
+map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "move text up" })
+map("v", "<A-j>", "<cmd>m .+1<cr>==", { desc = "move text up" })
+map("v", "<A-k>", "<cmd>m .-2<cr>==", { desc = "move text down" })
+map("x", "<A-j>", "<cmd>move '>+1<cr>gv-gv", { desc = "move text up" })
+map("x", "<A-k>", "<cmd>move '<-2<cr>gv-gv", { desc = "move text down" })
 -- }}}
 
 -- {{{ Better Paste
-map("v", "p", '"_dP', { desc = "Paste no yank" })
-map("n", "x", '"_x', { desc = "Delete character no yank" })
+map("v", "p", '"_dP', { desc = "paste no yank" })
+map("n", "x", '"_x', { desc = "delete character no yank" })
 -- }}}
 
 -- {{{ Vertical move and center
@@ -306,7 +309,7 @@ local function close_floating()
 end
 map("n", "<Esc>", function()
   close_floating()
-end, { desc = "Close with ESC" })
+end, { desc = "close with ESC" })
 -- }}}
 
 -- {{{ Terminal
@@ -328,40 +331,32 @@ map("n", "<A-->", "<C-x>", { desc = "decrement number" })
 -- map("n", "<leader>r", "*``cgn", { desc = "replace word under cursor" })
 -- }}}
 
--- {{{ NeoVim
-map("n", "<leader>vn", "<cmd>set relativenumber!<cr>", { desc = "Numbers toggle" })
-map("n", "<leader>vl", "<cmd>IBLToggle<cr>", { desc = "Blankline toggle" })
-map("n", "<leader>vh", "<cmd>HighlightColors Toggle<cr>", { desc = "Highlight-colors toggle" })
-map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", { desc = "Background toggle" })
-map("n", "<leader>vc", function()
-  if vim.o.conceallevel > 0 then
-    vim.o.conceallevel = 0
-  else
-    vim.o.conceallevel = 1
-  end
-end, { desc = "Conceal level toggle" })
-map("n", "<leader>vk", function()
-  if vim.o.concealcursor == "n" then
-    vim.o.concealcursor = ""
-  else
-    vim.o.concealcursor = "n"
-  end
-end, { desc = "Conceal cursor toggle" })
+-- {{{ Lazy
+map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Lazy" })
+-- }}}
+
+-- {{{ NeoVim toggles
+map("n", "<leader>vn", "<cmd>set relativenumber!<cr>", { desc = "numbers toggle" })
+map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", { desc = "background toggle" })
+
+local function conceal_toggle_option(option, true_val, false_val)
+  vim.o[option] = vim.o[option] == true_val and false_val or true_val
+end
+map("n", "<leader>vc", function() conceal_toggle_option("conceallevel", 0, 1) end, { desc = "toggle conceal level" })
+map("n", "<leader>vk", function() conceal_toggle_option("concealcursor", "n", "") end, { desc = "toggle conceal cursor" })
 -- }}}
 
 -- {{{ LSP
+map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "code action" })
 map("n", "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "definition" })
 map("n", "<leader>lD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "declaration" })
+map("n", "<leader>lf", function()require("conform").format({ async = true, lsp_fallback = true })end, { desc = "formatting" })
+map("n", "<leader>li", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "implementation" })
+map("n", "<leader>lI", "<cmd>LspInfo<cr>", { desc = "info" })
 map("n", "<leader>lk", "<cmd>lua vim.lsp.buf.hover()<cr>", { desc = "hoover" })
-map("n", "<leader>lI", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "implementation" })
 map("n", "<leader>lr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "references" })
 map("n", "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "rename" })
-map("n", "<leader>lf", function()
-  require("conform").format({ async = true, lsp_fallback = true })
-end, { desc = "Formatting" })
-map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "code action" })
 map("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "signature help" })
-map("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "info" })
 -- }}}
 
 -- {{{ Diagnostic
@@ -384,78 +379,6 @@ map("n", "<leader>df", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "ope
 map("n", "<leader>dt", "<cmd>windo diffthis<CR>", { desc = "differ this" })
 map("n", "<leader>do", "<cmd>diffoff!<CR>", { desc = "differ off" })
 map("n", "<leader>du", "<cmd>diffupdate<CR>", { desc = "differ update" })
--- }}}
-
--- {{{ Lazy
-map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Lazy" })
--- }}}
-
--- {{{ Telescope
-map("n", "<leader>fx", "<cmd>Telescope<cr>", { desc = "telescope" })
--- map("n", "<leader>fe", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", { desc = "file browser" })
-map("n", "<leader>fn", "<cmd>Telescope notify<cr>", { desc = "notifications" })
-map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "files" })
-map("n", "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "words" })
-map("n", "<leader>fo", "<cmd>Telescope oldfiles<cr>", { desc = "recent files" })
-map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "buffers" })
-map("n", "<leader>fc", "<cmd>Telescope colorscheme<cr>", { desc = "colorscheme" })
-map("n", "<leader>fd", "<cmd>Telescope diagnostics<cr>", { desc = "diagnostics" })
-map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "tags" })
--- }}}
-
--- {{{ Obsidian
-local function new_note(create_with_template, template_name, custom_folder)
-  vim.wo.conceallevel = 1  -- Temporarily set conceallevel to 1 to avoid warnings
-  local note_name = vim.fn.input("Enter note name without .md: ")  -- Prompt user for note name
-  -- Check if the user entered a name
-  if note_name == "" then
-    print("Note name cannot be empty!")
-    return
-  end
-
-  -- Default folder is "inbox", or use custom_folder if provided
-  local notes_folder = custom_folder or "inbox"
-  local notes_path = obsidian_path .. notes_folder .. "/"
-  local new_note_path = notes_path .. note_name .. ".md"  -- Add .md extension
-
-  -- create new note (an empty file)
-  vim.cmd("edit " .. new_note_path)
-
-  -- create note with an Obsidian template
-  if create_with_template then
-    local templates = {
-      basic = "t-nvim-note.md",
-      person = "t-person.md"
-    }
-    if templates[template_name] then
-      vim.cmd("ObsidianTemplate " .. templates[template_name])
-    else
-      print("Invalid template name: " .. template_name)
-    end
-  end
-end
-
-map("n", "<leader>onn", function()new_note(false)end, { desc = "new note" })
-map("n", "<leader>onb", function()new_note(true, "basic")end, { desc = "new note template basic" })
-map("n", "<leader>onp", function()new_note(true, "person")end, { desc = "new note template person" })
-map("n", "<leader>ot", ":ObsidianTemplate<cr>", { desc = "template pick" })
-map("n", "<leader>oi", ":ObsidianPasteImg<cr>", { desc = "image paste" })
-map("n", "<leader>oc", ":ObsidianToggleCheckbox<cr>", { desc = "checkbox toggle" })
-map("n", "<leader>oq", ":ObsidianQuickSwitch<cr>", { desc = "switch note" })
-map("n", "<leader>olf", ":ObsidianFollowLink<cr>", { desc = "link follow" })
-map({"n"}, "<leader>olb", ":ObsidianBacklinks<cr>", { desc = "backlinks" })
-map({"n"}, "<leader>oll", ":ObsidianLinks<cr>", { desc = "link pick" })
-map("n", "<leader>os",
-  function()
-    require('telescope.builtin').find_files({ search_dirs = { obsidian_path } })
-  end,
-  { desc = "search note" }
-)
-map("n", "<leader>oT", ":ObsidianTags<cr>", { desc = "tags" })
--- map("n", "<leader>oD", ":lua local f=vim.fn.expand('%:p'); os.remove(f); vim.cmd('bd!')<cr>", { desc = "delete note" })
-map("n", "<leader>oD", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>", { desc = "delete note" })
-map({"v", "x"}, "<leader>oe", ":ObsidianExtractNote<cr>", { desc = "extract text" })
-map({"v", "x"}, "<leader>ol", ":ObsidianLinkNew<cr>", { desc = "link new" })
 -- }}}
 
 -- End [[ KEYMAPS ]] }}}
@@ -696,12 +619,12 @@ require("lazy").setup(
           -- {{{ LSP Servers
           require("mason").setup()
           local servers = {
-            bashls = {
+            bashls = {-- {{{
               filetypes = { "zsh", "bash", "sh" },
-            },
+            },-- }}}
             cssls = {},
             jsonls = {},
-            emmet_ls = {
+            emmet_ls = {-- {{{
               filetypes = {
                 "html",
                 "htmldjango",
@@ -722,8 +645,8 @@ require("lazy").setup(
                   },
                 },
               },
-            },
-            lua_ls = {
+            },-- }}}
+            lua_ls = {-- {{{
               settings = {
                 Lua = {
                   completion = {
@@ -743,27 +666,10 @@ require("lazy").setup(
                   },
                 },
               },
-            },
-            -- pyright = {
-            --   -- root_dir = function(fname)
-            --   --   return vim.fn.fnamemodify(fname, ":p:h")  -- Automatically set the root to the current file's directory
-            --   -- end,
+            },-- }}}
+            -- pyright = {-- {{{
             --   root_dir = function(fname)
-            --     -- Try to find the directory that contains a pyrightconfig.json file
-            --     local pyrightconfig_path = vim.fn.findfile("pyrightconfig.json", vim.fn.fnamemodify(fname, ":p:h") .. ";")
-            --     if pyrightconfig_path ~= "" then
-            --       -- If we found pyrightconfig.json, return that directory as root
-            --       return vim.fn.fnamemodify(pyrightconfig_path, ":p:h")
-            --     end
-            --
-            --     -- Fallback to using git directory if no pyrightconfig.json is found
-            --     local git_dir = vim.fn.finddir(".git", vim.fn.fnamemodify(fname, ":p:h") .. ";")
-            --     if git_dir ~= "" then
-            --       return vim.fn.fnamemodify(git_dir, ":p:h") -- Git directory found, use that as root
-            --     end
-            --
-            --     -- As a final fallback, use the current file's directory as root
-            --     return vim.fn.fnamemodify(fname, ":p:h")
+            --     return vim.fn.fnamemodify(fname, ":p:h")  -- Automatically set the root to the current file's directory
             --   end,
             --   settings = {
             --     python = {
@@ -776,8 +682,8 @@ require("lazy").setup(
             --       },
             --     },
             --   },
-            -- },
-            basedpyright = {
+            -- },-- }}}
+            basedpyright = {-- {{{
               root_dir = function(fname)
                 return vim.fn.fnamemodify(fname, ":p:h")  -- Automatically set the root to the current file's directory
               end,
@@ -790,18 +696,18 @@ require("lazy").setup(
                   },
                 },
               },
-            },
-            marksman = {
+            },-- }}}
+            marksman = {-- {{{
               filetypes = {
                 "markdown",
                 "quarto",
               },
-            },
-            tinymist = {
+            },-- }}}
+            tinymist = {-- {{{
               filetypes = {
                 "typst",
               },
-            },
+            },-- }}}
           }
 
           -- Auto install servers
@@ -862,6 +768,7 @@ require("lazy").setup(
           -- Signature help window configuration
           vim.lsp.handlers["textDocument/signatureHelp"] =
           vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+
           -- End LSP Diagnostic }}}
 
           -- {{{ LSP Linters/Formaters
@@ -1337,8 +1244,7 @@ require("lazy").setup(
       {
         "nvim-telescope/telescope.nvim",
         -- enabled = false,
-        lazy = false,
-        config = function()
+        config = function()-- {{{
           local actions = require("telescope.actions")
           require("telescope").setup({-- {{{
             pickers = {
@@ -1357,7 +1263,20 @@ require("lazy").setup(
             },
           })-- }}}
           -- require("telescope").load_extension("file_browser")
-        end,
+        end,-- }}}
+        keys = {-- {{{
+          { "<leader>fx", mode = "n", "<cmd>Telescope<cr>", desc = "telescope", noremap = true, silent = true },
+          { "<leader>fn", mode = "n", "<cmd>Telescope notify<cr>", desc = "notifications", noremap = true, silent = true },
+          { "<leader>ff", mode = "n", "<cmd>Telescope find_files<cr>", desc = "files", noremap = true, silent = true },
+          { "<leader>fw", mode = "n", "<cmd>Telescope live_grep<cr>", desc = "words", noremap = true, silent = true },
+          { "<leader>fo", mode = "n", "<cmd>Telescope oldfiles<cr>", desc = "recent files", noremap = true, silent = true },
+          { "<leader>fb", mode = "n", "<cmd>Telescope buffers<cr>", desc = "buffers", noremap = true, silent = true },
+          { "<leader>fc", mode = "n", "<cmd>Telescope colorscheme<cr>", desc = "colorscheme", noremap = true, silent = true },
+          { "<leader>fd", mode = "n", "<cmd>Telescope diagnostics<cr>", desc = "diagnostics", noremap = true, silent = true },
+          { "<leader>fh", mode = "n", "<cmd>Telescope help_tags<cr>", desc = "help tags", noremap = true, silent = true },
+          { "<leader>fk", mode = "n", "<cmd>Telescope keymaps<cr>", desc = "keymaps", noremap = true, silent = true },
+          -- { "<leader>fe", mode = "n", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", desc = "file browser", noremap = true, silent = true },
+        },-- }}}
       },
       -- }}}
 
@@ -1492,7 +1411,7 @@ require("lazy").setup(
           workspaces = {
             {
               name = "Obsidian",
-              path = obsidian_path -- premenna obsidian_path je definovana v [[ DETECT OS ]]
+              path = ObsidianPath() -- definovane v [[ DETECT OS ]]
             },
           },
           notes_subdir = "inbox",
@@ -1513,8 +1432,25 @@ require("lazy").setup(
           end,
           attachments = {
             img_folder = "images",
-          },-- }}}
-        },
+          },
+        },-- }}}
+        keys = {-- {{{
+          { "<leader>onn", mode = "n", function()ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
+          { "<leader>onb", mode = "n", function()ObsidianNewNote(true, "basic")end, desc = "new note template basic", noremap = true, silent = true },
+          { "<leader>onp", mode = "n", function()ObsidianNewNote(true, "person")end, desc = "new note template person", noremap = true, silent = true },
+          { "<leader>ot", mode = "n", ":ObsidianTemplate<cr>", desc = "template pick", noremap = true, silent = true },
+          { "<leader>oi", mode = "n", ":ObsidianPasteImg<cr>", desc = "image paste", noremap = true, silent = true },
+          { "<leader>oc", mode = "n", ":ObsidianToggleCheckbox<cr>", desc = "checkbox toggle", noremap = true, silent = true },
+          { "<leader>oq", mode = "n", ":ObsidianQuickSwitch<cr>", desc = "switch note", noremap = true, silent = true },
+          { "<leader>olf", mode = "n", ":ObsidianFollowLink<cr>", desc = "link follow", noremap = true, silent = true },
+          { "<leader>olb", mode = "n", ":ObsidianBacklinks<cr>", desc = "backlinks", noremap = true, silent = true },
+          { "<leader>oll", mode = "n", ":ObsidianLinks<cr>", desc = "link pick", noremap = true, silent = true },
+          { "<leader>oT", mode = "n", ":ObsidianTags<cr>", desc = "tags", noremap = true, silent = true },
+          { "<leader>oD", mode = "n", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>", desc = "delete note", noremap = true, silent = true },
+          { "<leader>os", mode = "n", function()require('telescope.builtin').find_files({ search_dirs = { ObsidianPath() } })end, desc = "search note", noremap = true, silent = true },
+          { "<leader>oe", mode = {"v", "x"}, ":ObsidianExtractNote<cr>", desc = "extract text", noremap = true, silent = true },
+          { "<leader>ol", mode = {"v", "x"}, ":ObsidianLinkNew<cr>", desc = "link new", noremap = true, silent = true },
+        },-- }}}
       },-- }}}
 
       { "MeanderingProgrammer/render-markdown.nvim",-- {{{
@@ -1593,7 +1529,7 @@ require("lazy").setup(
       { "Kicamon/markdown-table-mode.nvim",-- {{{
         -- enabled = false,
         lazy = true,
-        ft = { "markdown", "*qmd" },
+        ft = { "markdown", "quarto" },
         opts = {},
       },-- }}}
 
@@ -1681,7 +1617,7 @@ require("lazy").setup(
           -- enabled = false,
           ft = { "quarto" },
           init = function()
-            vim.g.python3_host_prog = python_interpreter()
+            vim.g.python3_host_prog = PythonInterpreter()
             vim.g.molten_image_provider = "image.nvim"
             vim.g.molten_output_win_max_height = 20
             vim.g.molten_virt_text_output = true
@@ -1765,7 +1701,7 @@ require("lazy").setup(
               highlight_last = "IronLastSent",
               repl_definition = {
                 python = {
-                  command = { python_interpreter() }, -- function in detect os - dynamically resolve python interpreter
+                  command = { PythonInterpreter() }, -- function in detect os - dynamically resolve python interpreter
                   -- format = require("iron.fts.common").bracketed_paste_python,
                   -- block_deviders = { "# %%", "#%%" }, -- not working properly
                 },
@@ -1863,13 +1799,17 @@ require("lazy").setup(
 
       { "szw/vim-maximizer",-- {{{
         -- enabled = false,
-        event = "VeryLazy",
+        keys = {-- {{{
+          { "<leader>wm", mode = {"n", "v"}, "<cmd>MaximizerToggle<cr>", desc = "maximize", noremap = true, silent = true },
+        },-- }}}
       },-- }}}
 
       { "brenoprata10/nvim-highlight-colors",-- {{{
         -- enabled = false,
-        -- event = { "BufReadPre", "BufNewFile" },
         opts = {},
+        keys = {-- {{{
+          { "<leader>vh", mode = "n", "<cmd>HighlightColors Toggle<cr>", desc = "highlight-colors toggle", noremap = true, silent = true },
+        },-- }}}
       },-- }}}
 
       -- }}}
@@ -1894,7 +1834,7 @@ require("lazy").setup(
           function _G.PythonTerminal()-- {{{
             local python = Terminal:new({
               direction = "horizontal",
-              cmd = python_interpreter(),
+              cmd = PythonInterpreter(),
               hidden = true,
             })
             python:toggle()
