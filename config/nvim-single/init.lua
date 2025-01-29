@@ -1633,6 +1633,7 @@ require("lazy").setup(
           "benlubas/molten-nvim",
           -- enabled = false,
           ft = { "python", "quarto", "markdown" },
+          -- "pynvim" nainstalovat vo "venv"
           -- v mojom venv, kde som nainstaloval "ipykernel", resp. "jupyterlab", tak spustim:
           -- "python -m ipykernel install --user --name project_name"
           -- "project_name" dam nazov mojho venv, napr. venv: "base-venv", tak project_name:"base-venv"
