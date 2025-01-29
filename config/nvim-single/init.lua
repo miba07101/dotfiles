@@ -34,16 +34,15 @@ local py_venvs_path = os.getenv("VENV_HOME")
 local onedrive_path = os.getenv("OneDrive_DIR")
 
 function _G.PythonInterpreter()-- {{{
-  -- Get the path of the active virtual environment
-  local venv = os.getenv("VIRTUAL_ENV")
-  -- Get the current venv from swenv.nvim or fallback to default Python
-  -- local venv = require("swenv.api").get_current_venv()
-  -- print(vim.inspect(venv.path))
-  if venv then
+  local venv_path = os.getenv("VIRTUAL_ENV") -- Get the path of the active virtual environment
+    -- Get the current venv from swenv.nvim or fallback to default Python
+    -- local venv = require("swenv.api").get_current_venv()
+    -- print(vim.inspect(venv.path))
+  if venv_path then
     if os_type == "windows" then
-      return venv .. "\\Scripts\\python.exe" -- For Windows
+      return venv_path .. "\\Scripts\\python.exe" -- For Windows
     else
-      return venv .. "/bin/python" -- For Linux/macOS
+      return venv_path .. "/bin/python" -- For Linux/macOS
     end
   else
     if os_type == "windows" then
@@ -51,6 +50,18 @@ function _G.PythonInterpreter()-- {{{
     else
       return "python3" -- For Linux/macOS
     end
+  end
+end-- }}}
+
+function _G.MoltenInitialize()-- {{{
+  local venv_path = os.getenv("VIRTUAL_ENV") -- musi byt priamo v tejto funkcii, aby ked zmenim "venv", tak to vedelo inicializovat molten kernel
+  if venv_path then
+    -- Extract venv name (e.g., from "C:\\Users\\mech\\.py-venv\\myenv" -> "myenv")
+    local venv_name = venv_path:match("[^/\\]+$") or "python3"
+    -- Initialize Molten with extracted venv name
+    vim.cmd(("MoltenInit %s"):format(venv_name))
+  else
+    vim.notify("No virtual environment. Please activate one.", vim.log.levels.INFO)
   end
 end-- }}}
 
@@ -1564,7 +1575,7 @@ require("lazy").setup(
 
       { "quarto-dev/quarto-nvim",-- {{{
         -- enabled = false,
-        ft = { "quarto" },
+        ft = { "quarto", "markdown" },
         dev = false,
         opts = {-- {{{
           lspFeatures = {
@@ -1592,6 +1603,12 @@ require("lazy").setup(
           { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "quarto preview", noremap = true, silent = true },
           { "<leader>qq", mode = { "n" }, "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = "quarto quit", noremap = true, silent = true },
           { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "quarto help", noremap = true, silent = true },
+          -- align columns in markdown table
+          -- to iste je aj v render-markdown.nvim keys
+          -- https://heitorpb.github.io/bla/format-tables-in-vim/
+          { "<leader>qT", mode = { "v" }, ":! tr -s ' ' | column -t -s '|' -o '|'<cr>", desc = "align table only linux", noremap = true, silent = true },
+          -- https://lazybea.rs/posts/markdown-tables-and-neovim
+          { "<leader>qt", mode = { "v" }, ":!pandoc -t markdown-simple_tables<cr>", desc = "align table using pandoc", noremap = true, silent = true },
         },-- }}}
       },-- }}}
 
@@ -1601,7 +1618,7 @@ require("lazy").setup(
           return {
             "benlubas/molten-nvim",
             -- enabled = false,
-            ft = { "quarto" },
+            ft = { "python", "quarto", "markdown" },
             dependencies = { "3rd/image.nvim" },
             init = function()
               vim.g.molten_image_provider = "image.nvim"
@@ -1615,14 +1632,25 @@ require("lazy").setup(
         return {
           "benlubas/molten-nvim",
           -- enabled = false,
-          ft = { "quarto" },
+          ft = { "python", "quarto", "markdown" },
+          -- v mojom venv, kde som nainstaloval "ipykernel", resp. "jupyterlab", tak spustim:
+          -- "python -m ipykernel install --user --name project_name"
+          -- "project_name" dam nazov mojho venv, napr. venv: "base-venv", tak project_name:"base-venv"
+          -- for windows read: https://github.com/benlubas/molten-nvim/blob/main/docs/Windows.md
+          -- after that, update remote plugins ":UpdateRemotePlugins"
+          -- restart neovim
           init = function()
+            -- vim.g.python3_host_prog = "C:\\Users\\mech\\.py-venv\\base-venv\\Scripts\\python"
             vim.g.python3_host_prog = PythonInterpreter()
-            vim.g.molten_image_provider = "image.nvim"
+            vim.g.molten_image_provider = "none"
             vim.g.molten_output_win_max_height = 20
             vim.g.molten_virt_text_output = true
             vim.g.molten_wrap_output = true
             vim.g.molten_auto_open_output = false
+
+            vim.keymap.set("n", "<leader>ip", MoltenInitialize, { desc = "Initialize Molten for Python", silent = true })
+
+
           end,
         }
       end)(),
