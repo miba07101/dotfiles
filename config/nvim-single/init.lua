@@ -113,7 +113,8 @@ opt.syntax = "on"
 opt.termguicolors = true -- terminal supports more colors
 opt.timeoutlen = 400 -- time to wait for a mapped sequence to complete, default 1000
 opt.updatetime = 100 -- speed up response time
-opt.whichwrap:append("<,>,[,],h,l") -- keys allowed to move to the previous/next line when the beginning/end of line is reached
+-- opt.whichwrap:append("<,>,[,]") -- keys allowed to move to the previous/next line when the beginning/end of line is reached
+opt.whichwrap:remove("l,h,<Left>,<Right>") -- keys removed to move to the previous/next line when the beginning/end of line is reached
 opt.wrap = false -- disable wrapping of lines longer than the width of window
 opt.writebackup = false -- create backups when writing files
 opt.modifiable = true
@@ -1146,10 +1147,13 @@ require("lazy").setup(
                 { buffer_counts },
               },
               lualine_b = { { macro_recording } },
-              lualine_c = {},
+              lualine_c = { },
               lualine_x = {},
               -- lualine_y = { { python_env, icon = "" } },
-              lualine_y = { { python_env, icon = "" } },
+              lualine_y = {
+                { python_env, icon = "" },
+                -- { molten_init, icon = "󰑙" }
+              },
               lualine_z = {
                 { lsp_server_icon },
                 {
@@ -1182,6 +1186,7 @@ require("lazy").setup(
             end,
             desc = "Auto-refresh for macro recording status",
           })-- }}}
+
         end,
       },
       -- }}}
@@ -1387,6 +1392,7 @@ require("lazy").setup(
               { mode = "n", keys = "<Leader>on", desc = "+Notes" },
               { mode = "n", keys = "<Leader>ol", desc = "+Links" },
               { mode = "n", keys = "<Leader>p", desc = "+Python" },
+              { mode = "n", keys = "<Leader>pm", desc = "+Molten" },
               { mode = "n", keys = "<Leader>r", desc = "+REPL" },
               { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
               { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
@@ -1397,6 +1403,8 @@ require("lazy").setup(
               { mode = "x", keys = "<Leader>m", desc = "+Markdown" },
               { mode = "x", keys = "<Leader>o", desc = "+Obsidian" },
               { mode = "x", keys = "<Leader>ol", desc = "+Links" },
+              { mode = "x", keys = "<Leader>p", desc = "+Python" },
+              { mode = "x", keys = "<Leader>pm", desc = "+Molten" },
               { mode = "x", keys = "<Leader>r", desc = "+REPL" },
               { mode = "x", keys = "<Leader>t", desc = "+Terminal" },
             },-- }}}
@@ -1406,7 +1414,7 @@ require("lazy").setup(
       },
       -- }}}
 
-      -- {{{ [ Notes ]
+      -- {{{ [ Notes, Markdown ]
 
       { "epwalsh/obsidian.nvim",-- {{{
         -- enabled = false,
@@ -1546,7 +1554,7 @@ require("lazy").setup(
 
       -- }}}
 
-      -- {{{ [ Python ]
+      -- {{{ [ Python, Quarto, Jupyterlab ]
 
       { "AckslD/swenv.nvim",-- {{{
         -- enabled = false,
@@ -1564,24 +1572,10 @@ require("lazy").setup(
         },
       },-- }}}
 
-      { "lepture/vim-jinja",-- {{{
-        -- enabled = false,
-        ft = { "jinja.html", "html" },
-      },-- }}}
-
-      -- }}}
-
-      -- {{{ [ Quarto, Jupyterlab ]
-
       { "quarto-dev/quarto-nvim",-- {{{
         -- enabled = false,
         ft = { "quarto", "markdown" },
         dev = false,
-        opts = {-- {{{
-          lspFeatures = {
-            languages = { "python", "bash", "lua", "html", "javascript" },
-          },
-        },-- }}}
         dependencies = {-- {{{
           {
             "jmbuhr/otter.nvim",
@@ -1598,6 +1592,23 @@ require("lazy").setup(
             end,
           },
         },-- }}}
+        opts = {-- {{{
+          lspFeatures = {
+            languages = { "python", "bash", "lua", "html", "javascript" },
+            chunks = "all",
+            diagnostics = {
+              enabled = true,
+              triggers = { "BufWritePost" },
+            },
+            completion = {
+              enabled = true,
+            },
+          },
+          codeRunner = {
+            enabled = true,
+            default_method = "molten",
+          },
+        },-- }}}
         keys = {-- {{{
           { "<leader>qa", mode = { "n" }, "<cmd>QuartoActivate<cr>", desc = "quarto activate", noremap = true, silent = true },
           { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "quarto preview", noremap = true, silent = true },
@@ -1612,50 +1623,55 @@ require("lazy").setup(
         },-- }}}
       },-- }}}
 
-      -- {{{ Molten
-      (function()
-        if os_type == "linux" then
-          return {
-            "benlubas/molten-nvim",
-            -- enabled = false,
-            ft = { "python", "quarto", "markdown" },
-            dependencies = { "3rd/image.nvim" },
-            init = function()
-              vim.g.molten_image_provider = "image.nvim"
-              vim.g.molten_output_win_max_height = 20
-              vim.g.molten_virt_text_output = true
-              vim.g.molten_wrap_output = true
-              vim.g.molten_auto_open_output = false
-            end,
-          }
-        end
-        return {
-          "benlubas/molten-nvim",
-          -- enabled = false,
-          ft = { "python", "quarto", "markdown" },
-          -- "pynvim" nainstalovat vo "venv"
-          -- v mojom venv, kde som nainstaloval "ipykernel", resp. "jupyterlab", tak spustim:
-          -- "python -m ipykernel install --user --name project_name"
-          -- "project_name" dam nazov mojho venv, napr. venv: "base-venv", tak project_name:"base-venv"
-          -- for windows read: https://github.com/benlubas/molten-nvim/blob/main/docs/Windows.md
-          -- after that, update remote plugins ":UpdateRemotePlugins"
-          -- restart neovim
-          init = function()
-            -- vim.g.python3_host_prog = "C:\\Users\\mech\\.py-venv\\base-venv\\Scripts\\python"
-            vim.g.python3_host_prog = PythonInterpreter()
-            vim.g.molten_image_provider = "none"
-            vim.g.molten_output_win_max_height = 20
-            vim.g.molten_virt_text_output = true
-            vim.g.molten_wrap_output = true
-            vim.g.molten_auto_open_output = false
+      { "benlubas/molten-nvim",-- {{{
+        -- enabled = false,
+        ft = { "python", "quarto", "markdown" },
+        dependencies = os_type == "linux"-- {{{
+          and { "3rd/image.nvim" }
+          or { "willothy/wezterm.nvim", config = true },-- }}}
+        init = function()-- {{{
+        -- "pynvim" nainstalovat vo "venv"
+        -- v mojom venv, kde som nainstaloval "ipykernel", resp. "jupyterlab", tak spustim:
+        -- "python -m ipykernel install --user --name project_name"
+        -- "project_name" dam nazov mojho venv, napr. venv: "base-venv", tak project_name:"base-venv"
+        -- for windows read: https://github.com/benlubas/molten-nvim/blob/main/docs/Windows.md
+        -- after that, update remote plugins ":UpdateRemotePlugins"
+        -- restart neovim
+          vim.g.python3_host_prog = PythonInterpreter()
+          if os_type == "linux" then
+            vim.g.molten_image_provider = "image.nvim"
+          else
+            vim.g.molten_image_provider = "wezterm"
+            vim.g.molten_split_direction = "right" --direction of the output window, options are "right", "left", "top", "bottom"
+            vim.g.molten_split_size = 40 --(0-100) % size of the screen dedicated to the output window
+          end
+          vim.g.molten_output_win_max_height = 20
+          vim.g.molten_virt_text_output = true
+          vim.g.molten_wrap_output = true
+          vim.g.molten_auto_open_output = false -- cannot be true if molten_image_provider = "wezterm"
+          vim.g.molten_virt_lines_off_by_1 = true -- this will make it so the output shows up below the \`\`\` cell delimiter
 
-            vim.keymap.set("n", "<leader>ip", MoltenInitialize, { desc = "Initialize Molten for Python", silent = true })
+        end,-- }}}
+        keys = {-- {{{
+          { "<leader>pmi", mode = "n", MoltenInitialize, desc = "molten initialize", noremap = true, silent = true },
+          { "<leader>pmo", mode = "n", ":MoltenEvaluateOperator<cr>", desc = "operator evaluate", noremap = true, silent = true },
+          { "<leader>pml", mode = "n", ":MoltenEvaluateLine<cr>", desc = "line evaluate", noremap = true, silent = true },
+          { "<leader>pmr", mode = "n", ":MoltenReevaluateCell<cr>", desc = "re-evaluate cell", noremap = true, silent = true },
+          { "<leader>pmd", mode = "n", ":MoltenDelete<cr>", desc = "delete cell", noremap = true, silent = true },
+          { "<leader>pmh", mode = "n", ":MoltenHideOutput<cr>", desc = "hide output", noremap = true, silent = true },
+          { "<leader>pms", mode = "n", ":noautocmd MoltenEnterOutput<cr>", desc = "show/enter output", noremap = true, silent = true },
+          { "<leader>pmb", mode = "n", ":MoltenOpenInBrowser<cr>", desc = "open in browser (html only)", noremap = true, silent = true },
+          { "<leader>pml", mode = "v", ":<C-u>MoltenEvaluateVisual<cr>gv", desc = "evaluate selection", noremap = true, silent = true },
 
-
-          end,
-        }
-      end)(),
-      -- }}}
+          -- Quarto runner keymaps (lazy-load "quarto.runner")
+          { "<leader>prc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "run cell", noremap = true, silent = true },
+          { "<leader>pra", mode = "n", function() require("quarto.runner").run_above() end, desc = "run cell and above", noremap = true, silent = true },
+          { "<leader>prA", mode = "n", function() require("quarto.runner").run_all() end, desc = "run all cells", noremap = true, silent = true },
+          { "<leader>prl", mode = "n", function() require("quarto.runner").run_line() end, desc = "run line", noremap = true, silent = true },
+          { "<leader>pRA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "run all cells of all languages", noremap = true, silent = true },
+          { "<leader>pr", mode = "v", function() require("quarto.runner").run_range() end, desc = "run visual range", noremap = true, silent = true },
+        },-- }}}
+      },-- }}}
 
       -- {{{ Image.nvim
       (function()
@@ -1708,6 +1724,17 @@ require("lazy").setup(
         return nil
       end)(),
       -- }}}
+
+      { "GCBallesteros/jupytext.nvim",-- {{{
+        -- enabled = false,
+        config = function()
+          require("jupytext").setup({
+            style = "markdown",
+            output_extension = "md",
+            force_ft = "markdown",
+          })
+        end,
+      },-- }}}
 
       -- }}}
 
@@ -1841,6 +1868,11 @@ require("lazy").setup(
         },-- }}}
       },-- }}}
 
+      { "lepture/vim-jinja",-- {{{
+        -- enabled = false,
+        ft = { "jinja.html", "html" },
+      },-- }}}
+
       -- }}}
 
       -- {{{ [ Terminal ]
@@ -1896,18 +1928,10 @@ require("lazy").setup(
           end-- }}}
 
           function _G.Yazi()-- {{{
-            local Path = require("plenary.path")
-            local path = vim.fn.tempname()
             local yazi = Terminal:new({
-              direction = "float",
-              cmd = ('yazi'):format(path),
+              direction = "horizontal",
+              cmd = 'yazi',
               close_on_exit = true,
-              on_close = function()
-                Data = Path:new(path):read()
-                vim.schedule(function()
-                  vim.cmd("edit" .. Data)
-                end)
-              end,
             })
             yazi:toggle()
           end-- }}}
