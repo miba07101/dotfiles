@@ -45,9 +45,6 @@ lots:
   - symbol: "BAS.DE"
     quantity: 1800.0
     unit_cost: 45.81
-  - symbol: "XIACF"
-    quantity: 1050
-    unit_cost: 1.27
   - symbol: "SPCE"
     quantity: 70
     unit_cost: 246.68
@@ -55,8 +52,8 @@ lots:
     quantity: 1000
     unit_cost: 10.50
   - symbol: "INTC"
-    quantity: 1000
-    unit_cost: 27.14
+    quantity: 1100
+    unit_cost: 26.46
   - symbol: "MO"
     quantity: 500
     unit_cost: 40.1
