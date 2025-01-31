@@ -604,8 +604,6 @@ require("lazy").setup(
         lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
         dependencies = {-- {{{
           "windwp/nvim-ts-autotag",
-          "nvim-treesitter/nvim-treesitter-textobjects",
-          "nvim-treesitter/playground",
         },-- }}}
         main = "nvim-treesitter.configs",
         opts = {-- {{{
@@ -631,41 +629,6 @@ require("lazy").setup(
           highlight = { enable = true },
           indent = { enable = true },
           autotag = { enable = true },
-          textobjects = {-- {{{
-            move = {
-              enable = true,
-              set_jumps = false, -- you can change this if you want.
-              goto_next_start = {
-                --- ... other keymaps
-                ["]b"] = { query = "@code_cell.inner", desc = "next code block" },
-              },
-              goto_previous_start = {
-                --- ... other keymaps
-                ["[b"] = { query = "@code_cell.inner", desc = "previous code block" },
-              },
-            },
-            select = {
-              enable = true,
-              lookahead = true, -- you can change this if you want
-              keymaps = {
-                --- ... other keymaps
-                ["ib"] = { query = "@code_cell.inner", desc = "in block" },
-                ["ab"] = { query = "@code_cell.outer", desc = "around block" },
-              },
-            },
-            swap = { -- Swap only works with code blocks that are under the same
-              -- markdown header
-              enable = true,
-              swap_next = {
-                --- ... other keymap
-                ["<leader>sbl"] = "@code_cell.outer",
-              },
-              swap_previous = {
-                --- ... other keymap
-                ["<leader>sbh"] = "@code_cell.outer",
-              },
-            },
-          }-- }}}
         },-- }}}
       },
       -- }}}
@@ -1690,7 +1653,7 @@ require("lazy").setup(
 
       { "benlubas/molten-nvim",-- {{{
         -- enabled = false,
-        -- build = ":UpdateRemotePlugins",
+        build = ":UpdateRemotePlugins",
         ft = { "python", "quarto", "markdown" },
         dependencies = os_type == "linux"-- {{{
           and { "3rd/image.nvim" }
