@@ -604,10 +604,12 @@ require("lazy").setup(
         lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
         dependencies = {-- {{{
           "windwp/nvim-ts-autotag",
+          "nvim-treesitter/nvim-treesitter-textobjects",
+          "nvim-treesitter/playground",
         },-- }}}
         main = "nvim-treesitter.configs",
         opts = {-- {{{
-          ensure_installed = {
+          ensure_installed = {-- {{{
             "python",
             "bash",
             "lua",
@@ -624,11 +626,46 @@ require("lazy").setup(
             "typst",
             "latex",
             "regex",
-          },
+          },-- }}}
           auto_install = true,
           highlight = { enable = true },
           indent = { enable = true },
           autotag = { enable = true },
+          textobjects = {-- {{{
+            move = {
+              enable = true,
+              set_jumps = false, -- you can change this if you want.
+              goto_next_start = {
+                --- ... other keymaps
+                ["]b"] = { query = "@code_cell.inner", desc = "next code block" },
+              },
+              goto_previous_start = {
+                --- ... other keymaps
+                ["[b"] = { query = "@code_cell.inner", desc = "previous code block" },
+              },
+            },
+            select = {
+              enable = true,
+              lookahead = true, -- you can change this if you want
+              keymaps = {
+                --- ... other keymaps
+                ["ib"] = { query = "@code_cell.inner", desc = "in block" },
+                ["ab"] = { query = "@code_cell.outer", desc = "around block" },
+              },
+            },
+            swap = { -- Swap only works with code blocks that are under the same
+              -- markdown header
+              enable = true,
+              swap_next = {
+                --- ... other keymap
+                ["<leader>sbl"] = "@code_cell.outer",
+              },
+              swap_previous = {
+                --- ... other keymap
+                ["<leader>sbh"] = "@code_cell.outer",
+              },
+            },
+          }-- }}}
         },-- }}}
       },
       -- }}}
@@ -1717,7 +1754,7 @@ require("lazy").setup(
         end,-- }}}
         keys = {-- {{{
           { "<leader>pmi", mode = "n", MoltenInitialize, desc = "molten initialize", noremap = true, silent = true },
-          { "<leader>pmo", mode = "n", ":MoltenEvaluateOperator<cr>", desc = "operator evaluate", noremap = true, silent = true },
+          { "<leader>pmo", mode = "n", ":MoltenEvaluateOperator<cr>ib", desc = "operator evaluate", noremap = true, silent = true },
           { "<leader>pml", mode = "n", ":MoltenEvaluateLine<cr>", desc = "line evaluate", noremap = true, silent = true },
           { "<leader>pmr", mode = "n", ":MoltenReevaluateCell<cr>", desc = "re-evaluate cell", noremap = true, silent = true },
           { "<leader>pmd", mode = "n", ":MoltenDelete<cr>", desc = "delete cell", noremap = true, silent = true },
