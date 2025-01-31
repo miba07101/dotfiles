@@ -285,6 +285,13 @@ map("n", "<A-UP>", "<cmd>bp<bar>bd#<cr>", { desc = "quit buffer" })
 map("n", "<A-Down>", "<cmd>bp<bar>bd#<cr>", { desc = "quit buffer" })
 -- }}}
 
+-- {{{ Move in insert mode
+map("i", "<C-h>", "<Left>", { desc = "go left" })
+map("i", "<C-j>", "<Down>", { desc = "go down" })
+map("i", "<C-k>", "<Up>", { desc = "go up" })
+map("i", "<C-l>", "<Right>", { desc = "go right" })
+-- }}}
+
 -- {{{ Indenting
 map("v", "<", "<gv", { desc = "unindent line" })
 map("v", ">", ">gv", { desc = "indent line" })
@@ -535,6 +542,19 @@ require("lazy").setup(
                 -- neo-tree
                 NeoTreeNormal = { bg = theme.ui.bg_m1 },
                 NeoTreeNormalNC = { bg = theme.ui.bg_m1 },
+                -- render-markdown headings
+                RenderMarkdownH1Bg = { bg = theme.ui.bg_m1, fg = colors.palette.autumnRed },
+                RenderMarkdownH2Bg = { bg = theme.ui.bg_m1, fg = colors.palette.autumnYellow },
+                RenderMarkdownH3Bg = { bg = theme.ui.bg_m1, fg = colors.palette.autumnGreen  },
+                RenderMarkdownH4Bg = { bg = theme.ui.bg_m1, fg = colors.palette.oniViolet },
+                RenderMarkdownH5Bg = { bg = theme.ui.bg_m1, fg = colors.palette.dragonBlue },
+                RenderMarkdownH6Bg = { bg = theme.ui.bg_m1, fg = "#717C7C" },
+                RenderMarkdownH1 = { fg = colors.palette.autumnRed },
+                RenderMarkdownH2 = { fg = colors.palette.autumnYellow },
+                RenderMarkdownH3 = { fg = colors.palette.autumnGreen  },
+                RenderMarkdownH4 = { fg = colors.palette.oniViolet },
+                RenderMarkdownH5 = { fg = colors.palette.dragonBlue },
+                RenderMarkdownH6 = { fg = "#717C7C" },
               }
             end,-- }}}
           })-- }}}
@@ -691,6 +711,9 @@ require("lazy").setup(
             --         autoSearchPaths = true,
             --         diagnosticMode = "workspace",
             --         useLibraryCodeForTypes = true,
+            --         diagnosticSeverityOverrides = {
+            --           reportUnusedExpression = "none", -- disable pyright diagnostic in notebook cell
+            --         },
             --       },
             --     },
             --   },
@@ -705,6 +728,11 @@ require("lazy").setup(
                     autoSearchPaths = true,
                     diagnosticMode = "openFilesOnly",
                     useLibraryCodeForTypes = true,
+                    -- added from pyright
+                    autoImportCompletions = true,
+                    diagnosticSeverityOverrides = {
+                      reportUnusedExpression = "none", -- disable pyright diagnostic in notebook cell
+                    },
                   },
                 },
               },
@@ -1304,16 +1332,16 @@ require("lazy").setup(
           -- {{{ mini.comment
           local mappings_config = (os_type == "linux")
           and {
-            comment = "",
+            comment = "<C-/>",
             comment_line = "<C-/>",
             comment_visual = "<C-/>",
-            textobject = "",
+            textobject = "<C-/>",
           }
           or {
-            comment = "",
+            comment = "<C-_>",
             comment_line = "<C-_>",
             comment_visual = "<C-_>",
-            textobject = "",
+            textobject = "<C-_>",
           }
 
           require("mini.comment").setup({
@@ -1480,43 +1508,43 @@ require("lazy").setup(
           "nvim-tree/nvim-web-devicons"
         },-- }}}
         init = function()-- {{{
-          local colors = {
-            {bg = "#43242B", fg = "#C34043"},
-            {bg = "#49443C", fg = "#DCA561"},
-            {bg = "#2B3328", fg = "#76946A"},
-            {bg = "#252535", fg = "#938AA9"},
-            {bg = "#252535", fg = "#658594"},
-            {bg = "#252535", fg = "#717C7C"},
-          }
-          -- Heading colors (when not hovered over), extends through the entire line
-          for i, color in ipairs(colors) do
-            vim.cmd(string.format([[highlight Headline%dBg guifg=%s guibg=%s]], i, color.fg, color.bg))
-          end
-          for i, color in ipairs(colors) do
-            vim.cmd(string.format([[highlight Headline%dFg cterm=bold gui=bold guifg=%s]], i, color.bg))
-          end
+          -- local colors = {
+          --   {bg = "#43242B", fg = "#C34043"},
+          --   {bg = "#49443C", fg = "#DCA561"},
+          --   {bg = "#2B3328", fg = "#76946A"},
+          --   {bg = "#252535", fg = "#938AA9"},
+          --   {bg = "#252535", fg = "#658594"},
+          --   {bg = "#252535", fg = "#717C7C"},
+          -- }
+          -- -- Heading colors (when not hovered over), extends through the entire line
+          -- for i, color in ipairs(colors) do
+          --   vim.cmd(string.format([[highlight Headline%dBg guifg=%s guibg=%s]], i, color.fg, color.bg))
+          -- end
+          -- for i, color in ipairs(colors) do
+          --   vim.cmd(string.format([[highlight Headline%dFg cterm=bold gui=bold guifg=%s]], i, color.bg))
+          -- end
         end,-- }}}
         opts = {-- {{{
           -- log_level = 'debug',
           heading = {-- {{{
             -- icons = { '󰲡 ', '󰲣 ', '󰲥 ', '󰲧 ', '󰲩 ', '󰲫 ' },
             icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
-            backgrounds = {
-              "Headline1Bg",
-              "Headline2Bg",
-              "Headline3Bg",
-              "Headline4Bg",
-              "Headline5Bg",
-              "Headline6Bg",
-            },
-            foregrounds = {
-              "Headline1Fg",
-              "Headline2Fg",
-              "Headline3Fg",
-              "Headline4Fg",
-              "Headline5Fg",
-              "Headline6Fg",
-            },
+            -- backgrounds = {
+            --   "Headline1Bg",
+            --   "Headline2Bg",
+            --   "Headline3Bg",
+            --   "Headline4Bg",
+            --   "Headline5Bg",
+            --   "Headline6Bg",
+            -- },
+            -- foregrounds = {
+            --   "Headline1Fg",
+            --   "Headline2Fg",
+            --   "Headline3Fg",
+            --   "Headline4Fg",
+            --   "Headline5Fg",
+            --   "Headline6Fg",
+            -- },
           },-- }}}
           latex = {-- {{{
             -- enabled = true,
@@ -1625,6 +1653,7 @@ require("lazy").setup(
 
       { "benlubas/molten-nvim",-- {{{
         -- enabled = false,
+        -- build = ":UpdateRemotePlugins",
         ft = { "python", "quarto", "markdown" },
         dependencies = os_type == "linux"-- {{{
           and { "3rd/image.nvim" }
@@ -1642,14 +1671,48 @@ require("lazy").setup(
             vim.g.molten_image_provider = "image.nvim"
           else
             vim.g.molten_image_provider = "wezterm"
-            vim.g.molten_split_direction = "right" --direction of the output window, options are "right", "left", "top", "bottom"
-            vim.g.molten_split_size = 40 --(0-100) % size of the screen dedicated to the output window
+            vim.g.molten_split_direction = "bottom" --direction of the output window, options are "right", "left", "top", "bottom"
+            vim.g.molten_split_size = 30 --(0-100) % size of the screen dedicated to the output window
           end
           vim.g.molten_output_win_max_height = 20
-          vim.g.molten_virt_text_output = true
           vim.g.molten_wrap_output = true
           vim.g.molten_auto_open_output = false -- cannot be true if molten_image_provider = "wezterm"
-          vim.g.molten_virt_lines_off_by_1 = true -- this will make it so the output shows up below the \`\`\` cell delimiter
+          -- vim.g.molten_virt_lines_off_by_1 = true -- this will make it so the output shows up below the \`\`\` cell delimiter
+          -- vim.g.molten_virt_text_output = true
+
+          -- change the configuration when editing a python file{{{
+          vim.api.nvim_create_autocmd("BufEnter", {
+            pattern = "*.py",
+            callback = function(e)
+              if string.match(e.file, ".otter.") then
+                return
+              end
+              if require("molten.status").initialized() == "Molten" then -- this is kinda a hack...
+                vim.fn.MoltenUpdateOption("virt_lines_off_by_1", false)
+                vim.fn.MoltenUpdateOption("virt_text_output", false)
+              else
+                vim.g.molten_virt_lines_off_by_1 = false
+                vim.g.molten_virt_text_output = false
+              end
+            end,
+          })-- }}}
+
+          -- Undo those config changes when we go back to a markdown or quarto file{{{
+          vim.api.nvim_create_autocmd("BufEnter", {
+            pattern = { "*.qmd", "*.md", "*.ipynb" },
+            callback = function(e)
+              if string.match(e.file, ".otter.") then
+                return
+              end
+              if require("molten.status").initialized() == "Molten" then
+                vim.fn.MoltenUpdateOption("virt_lines_off_by_1", true)
+                vim.fn.MoltenUpdateOption("virt_text_output", true)
+              else
+                vim.g.molten_virt_lines_off_by_1 = true
+                vim.g.molten_virt_text_output = true
+              end
+            end,
+          })-- }}}
 
         end,-- }}}
         keys = {-- {{{
@@ -1735,6 +1798,7 @@ require("lazy").setup(
           })
         end,
       },-- }}}
+
 
       -- }}}
 
@@ -1853,11 +1917,9 @@ require("lazy").setup(
 
       -- {{{ [ Mix ]
 
-      { "szw/vim-maximizer",-- {{{
+      { "lepture/vim-jinja",-- {{{
         -- enabled = false,
-        keys = {-- {{{
-          { "<leader>wm", mode = {"n", "v"}, "<cmd>MaximizerToggle<cr>", desc = "maximize", noremap = true, silent = true },
-        },-- }}}
+        ft = { "jinja.html", "html" },
       },-- }}}
 
       { "brenoprata10/nvim-highlight-colors",-- {{{
@@ -1868,9 +1930,52 @@ require("lazy").setup(
         },-- }}}
       },-- }}}
 
-      { "lepture/vim-jinja",-- {{{
+      { "uga-rosa/ccc.nvim", -- color picker (:CccPick){{{
         -- enabled = false,
-        ft = { "jinja.html", "html" },
+        opts = {-- {{{
+          highlighter = {
+            auto_enable = true,
+            lsp = true,
+          },
+        },-- }}}
+        keys = {-- {{{
+          { "<leader>vp", mode = "n", "<cmd>CccPick<cr>", desc = "color picker", noremap = true, silent = true },
+        },-- }}}
+      },-- }}}
+
+      { "szw/vim-maximizer",-- {{{
+        -- enabled = false,
+        keys = {-- {{{
+          { "<leader>wm", mode = {"n", "v"}, "<cmd>MaximizerToggle<cr>", desc = "maximize", noremap = true, silent = true },
+        },-- }}}
+      },-- }}}
+
+      { "godlygeek/tabular", -- align stuff (:Tabularize \|){{{
+        -- enabled = false,
+        keys = {-- {{{
+          { "<leader>a=", mode = {"n", "v"}, "<cmd>Tabularize /=<cr>", desc = "align by =", noremap = true, silent = true },
+          { "<leader>a|", mode = {"n", "v"}, "<cmd>Tabularize /|<cr>", desc = "align by |", noremap = true, silent = true },
+          { "<leader>a:", mode = {"n", "v"}, "<cmd>Tabularize /:<cr>", desc = "align by :", noremap = true, silent = true },
+          { "<leader>a<space>", mode = {"n", "v"}, "<cmd>Tabularize /<space><cr>", desc = "align by space", noremap = true, silent = true },
+        },-- }}}
+      },-- }}}
+
+      { "Vonr/align.nvim",-- {{{
+        enabled = false,
+        branch = "v2",
+        lazy = true,
+        init = function()
+          vim.keymap.set( 'x', 'aa', function() require'align'.align_to_string({ preview = true, regex = false, }) end, { desc = "maximize", noremap = true, silent = true })
+        end
+      },-- }}}
+
+      { "2kabhishek/nerdy.nvim", -- nerd-fonts {{{
+        -- enabled = false,
+        dependencies = {-- {{{
+          'stevearc/dressing.nvim',
+          'nvim-telescope/telescope.nvim',
+        },-- }}}
+        cmd = 'Nerdy',
       },-- }}}
 
       -- }}}
@@ -2007,7 +2112,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 -- {{{ unfold at open
 vim.api.nvim_create_autocmd("BufWinEnter", {
-  pattern = { "*.py", "*.css", "*.scss", "*.html", "*.qmd", "*.md" },
+  pattern = { "*.py", "*.ipynb", "*.css", "*.scss", "*.html", "*.qmd", "*.md" },
   command = [[:normal! zR]], -- zR-open, zM-close folds
   group = mygroup,
   desc = "unfold",
@@ -2181,6 +2286,75 @@ vim.api.nvim_create_autocmd("filetype", {
   desc = "set colorcolumn for python files",
 })
 -- }}}
+
+-- create a new Python notebook (Jupyter notebook){{{
+-- https://github.com/benlubas/molten-nvim/blob/main/docs/Notebook-Setup.md
+-- note: the metadata is needed for Jupytext to understand how to parse the notebook.
+-- if you use another language than Python, you should change it in the template.
+
+-- JSON template{{{
+local default_notebook = [[
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [""]
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython"
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
+]]
+--}}}
+
+local function new_notebook(filename)-- {{{
+  -- upravena povodna funkcia pomocou AI
+  local path = filename .. ".ipynb"
+  local file, err = io.open(path, "wb")  -- Use "wb" to ensure binary mode (no BOM)
+
+  if not file then
+    vim.api.nvim_err_writeln("Error: Could not open " .. path .. " for writing: " .. err)
+    return
+  end
+
+  -- Ensure UTF-8 without BOM encoding
+  file:write(default_notebook)
+  file:close()
+
+  -- Delay opening slightly to ensure Jupytext reads a valid file
+  vim.defer_fn(function()
+    vim.cmd("edit " .. path)
+  end, 100)  -- 100ms delay
+end-- }}}
+
+vim.api.nvim_create_user_command('NewNotebook', function(opts)-- {{{
+  new_notebook(opts.args)
+end, {
+  nargs = 1,
+  complete = 'file'
+})-- }}}
+
+-- keymap for new Jupyter notebook creation
+map("n", "<leader>pJ", function() local file_name=vim.fn.input("Notebook name: ") if file_name ~= "" then vim.cmd("NewNotebook " .. file_name) end end, { desc = "Create new Jupyter notebook" })
+--}}}
 
 -- {{{ set typst filetype - quarto specific
 vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
