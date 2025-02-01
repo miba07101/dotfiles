@@ -49,8 +49,9 @@ config.audible_bell="Disabled"
 
 -- appearance
 config.enable_wayland = false
-config.window_decorations = "TITLE | RESIZE"
-config.hide_tab_bar_if_only_one_tab = true
+-- config.window_decorations = "TITLE | RESIZE"
+config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
+-- config.hide_tab_bar_if_only_one_tab = true
 config.window_close_confirmation = 'NeverPrompt'
 config.initial_rows = 32
 config.initial_cols = 96
