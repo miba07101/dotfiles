@@ -25,7 +25,7 @@ local config = wezterm.config_builder()
 
 -- check if on windows
 if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
-  config.default_prog = { 'pwsh.exe', '-NoLogo', '-NoProfile' }
+  config.default_prog = { 'pwsh.exe', '-NoLogo' }
   config.color_scheme = "kanagawa-dark"
   config.font = wezterm.font { family = 'Hack', weight = 'Regular' }
 else
