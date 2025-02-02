@@ -48,6 +48,8 @@ config.line_height = 1.1
 config.audible_bell="Disabled"
 
 -- appearance
+-- config.max_fps = 144
+-- config.animation_fps = 1
 config.enable_wayland = false
 -- config.window_decorations = "TITLE | RESIZE"
 config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
