@@ -1695,7 +1695,7 @@ require("lazy").setup(
 
       { "benlubas/molten-nvim",-- {{{
         -- enabled = false,
-        build = ":UpdateRemotePlugins",
+        -- build = ":UpdateRemotePlugins",
         ft = { "python", "quarto", "markdown" },
         dependencies = os_type == "linux"-- {{{
           and { "3rd/image.nvim" }
@@ -1713,8 +1713,11 @@ require("lazy").setup(
             vim.g.molten_image_provider = "image.nvim"
           else
             vim.g.molten_image_provider = "wezterm"
-            vim.g.molten_split_direction = "bottom" --direction of the output window, options are "right", "left", "top", "bottom"
-            vim.g.molten_split_size = 30 --(0-100) % size of the screen dedicated to the output window
+            -- image_provider_opts = {
+            --   command = "wezterm imgcat"  -- Remove `--tmux-passthru`
+            -- }
+            vim.g.molten_split_direction = "right" --direction of the output window, options are "right", "left", "top", "bottom"
+            vim.g.molten_split_size = 40 --(0-100) % size of the screen dedicated to the output window
           end
           vim.g.molten_output_win_max_height = 20
           vim.g.molten_wrap_output = true
