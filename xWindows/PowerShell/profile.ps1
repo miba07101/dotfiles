@@ -3,7 +3,19 @@ $env:POWERSHELL_UPDATECHECK = "Off"
 
 # terminal icons
 # install: Install-Module -Name Terminal-Icons -Repository PSGallery
-Import-Module -Name Terminal-Icons
+# Import-Module -Name Terminal-Icons
+
+function Enable-TerminalIcons {
+    if (-not (Get-Module -Name Terminal-Icons)) {
+        Import-Module Terminal-Icons
+    }
+}
+
+function Ls-WithIcons {
+    Enable-TerminalIcons
+    Get-ChildItem @args
+}
+Set-Alias lsi Ls-WithIcons
 
 # oh-my-posh
 # oh-my-posh init pwsh --config 'C:\Users\mech\AppData\Local\Programs\oh-my-posh\themes\spaceship-my.omp.json' | Invoke-Expression
@@ -274,5 +286,6 @@ Set-Alias aics AiOllamaCodeStop
 
 # starship prompt
 $ENV:STARSHIP_CONFIG = "$HOME\Documents\PowerShell\starship.toml"
-$ENV:STARSHIP_DISTRO = "  "
-Invoke-Expression (&starship init powershell)
+# $ENV:STARSHIP_DISTRO = "  "
+# Invoke-Expression (&starship init powershell)
+starship init powershell --print-full-init | Out-String | Invoke-Expression

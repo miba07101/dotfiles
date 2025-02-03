@@ -25,8 +25,9 @@ local config = wezterm.config_builder()
 
 -- check if on windows
 if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
-  config.default_prog = { 'pwsh.exe', '-NoLogo' }
-  config.color_scheme = "kanagawa-dark"
+  -- config.default_prog = { 'pwsh.exe', '-NoLogo' }
+  config.default_prog = { 'pwsh' }
+  config.color_scheme = "kanagawa-light"
   config.font = wezterm.font { family = 'Hack', weight = 'Regular' }
 else
   -- config.color_scheme = 'nord'
@@ -48,7 +49,7 @@ config.line_height = 1.1
 config.audible_bell="Disabled"
 
 -- appearance
--- config.max_fps = 144
+config.max_fps = 144
 -- config.animation_fps = 1
 config.enable_wayland = false
 -- config.window_decorations = "TITLE | RESIZE"

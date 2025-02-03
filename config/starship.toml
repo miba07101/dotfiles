@@ -1,21 +1,34 @@
 # zlozi prazdny riadok medzi prompt
-# add_newline = true
+add_newline = true
 
 # zmena prompt formatu
+# format = """\
+# [╭╴](240)$env_var\
+# $all[╰─](240)$character"""
+
 format = """\
-[╭╴](240)$env_var\
-$all[╰─](240)$character"""
+[╭╴](#727169)$os\
+$all[╰──](#727169)$character"""
 
 # zmena prompt symbolu
 [character]
-success_symbol = "[❯](240)"
+success_symbol = "[❯](#727169)"
 error_symbol = "[❯](red)"
 
-# zobrazi ikonu OS
-[env_var.STARSHIP_DISTRO]
-format = "[$env_value](bold white)"
-variable = "STARSHIP_DISTRO"
+# zobrazi ikonu OS - stare riesenie
+# [env_var.STARSHIP_DISTRO]
+# format = "[$env_value](bold white)"
+# variable = "STARSHIP_DISTRO"
+# disabled = false
+
+[os]
+format = '[$symbol]($style)'
+style = "white"
 disabled = false
+
+[os.symbols]
+Windows = "  "
+openSUSE = "  "
 
 [directory]
 # truncation_length = 3

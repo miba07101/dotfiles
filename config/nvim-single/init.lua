@@ -455,6 +455,12 @@ require("lazy").setup(
         opts = {}
       },-- }}}
 
+      { "rcarriga/nvim-notify",-- {{{
+        keys = {
+          { "<leader>x", mode = {"n"}, "<cmd>lua require('notify').dismiss()<cr>", desc = "notify dismiss", noremap = true, silent = true },
+        }
+      },-- }}}
+
       { "folke/noice.nvim",-- {{{
         -- enabled = false,
         event = "VeryLazy",
