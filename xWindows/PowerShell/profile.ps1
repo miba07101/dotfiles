@@ -9,15 +9,15 @@ $env:POWERSHELL_UPDATECHECK = "Off"
 
 # enable terminal icons
 function Enable-TerminalIcons {
-    if (-not (Get-Module -Name Terminal-Icons)) {
-        Import-Module Terminal-Icons
-    }
+  if (-not (Get-Module -Name Terminal-Icons)) {
+    Import-Module Terminal-Icons
+  }
 }
 
 # show/list directory content with terminal icons
 function lsi {
-    Enable-TerminalIcons
-    Get-ChildItem @args
+  Enable-TerminalIcons
+  Get-ChildItem @args
 }
 
 # -----------------------------------------------------------------------------
@@ -39,70 +39,61 @@ function push {
 }
 
 function on {
+param (
+    [Parameter(Mandatory = $true)]
+    [string]$NoteTitle
+  )
+
+  # Call the function from the script with the correct parameter
   . "$scriptPath\obsidian-create-note.ps1"
-  New-ObsidianNote
+  New-ObsidianNote -NoteTitle $NoteTitle
 }
 
+#TODO este otestovat
 function okn {
-  . "$scriptPath\obsidian-create-note.ps1"
+  . "$scriptPath\obsidian-categorize-notes.ps1"
   Obsidian-KategorizeNotes
 }
-# . "$PSScriptRoot\vuz-copy-git-repo.ps1"
-# . "$PSScriptRoot\obsidian-create-note.ps1"
-# . "$PSScriptRoot\obsidian-categorize-notes.ps1"
 
 # -----------------------------------------------------------------------------
 # environment variables
 # -----------------------------------------------------------------------------
 # premenna pre python virtual enviroments priecinok, pouzitie v neovime
-$env:VENV_HOME = "C:\Users\$($env:UserName)\.py-venv"
+if (-not $env:VENV_HOME) {
+  $env:VENV_HOME = "C:\Users\$($env:UserName)\.py-venv"
+}
 
 # premenna pre onedrive priecinok, pouzitie v neovime pre obsidian
-# function Set-OneDrivePath {
-#     # Determine the OneDrive directory based on the username
-#     if ($env:UserName -eq "mech") {
-#         $env:OneDrive_DIR = "C:\Users\$($env:UserName)\OneDrive - VUZ\"
-#     } else {
-#         $env:OneDrive_DIR = "C:\Users\$($env:UserName)\OneDrive\"
-#     }
-# }
-# # Call the function to set the environment variable
-# Set-OneDrivePath
-
-function Set-OneDrivePath {
-    if (-not $env:OneDrive_DIR) {
-        if ($env:UserName -eq "mech") {
-            $env:OneDrive_DIR = "C:\Users\$($env:UserName)\OneDrive - VUZ\"
-        } else {
-            $env:OneDrive_DIR = "C:\Users\$($env:UserName)\OneDrive\"
-        }
-    }
+if (-not $env:OneDrive_DIR) {
+  $env:OneDrive_DIR = if ($env:UserName -eq "mech") {
+    "C:\Users\$env:UserName\OneDrive - VUZ\"
+  } else {
+    "C:\Users\$env:UserName\OneDrive\"
+  }
 }
-Set-OneDrivePath
-
 
 # -----------------------------------------------------------------------------
 # aliases
 # -----------------------------------------------------------------------------
 # yazi file manager
 function y {
-    $tmp = [System.IO.Path]::GetTempFileName()
-    yazi $args --cwd-file="$tmp"
-    $cwd = Get-Content -Path $tmp
-    if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
-        Set-Location -LiteralPath $cwd
-    }
-    Remove-Item -Path $tmp
+  $tmp = [System.IO.Path]::GetTempFileName()
+  yazi $args --cwd-file="$tmp"
+  $cwd = Get-Content -Path $tmp
+  if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
+    Set-Location -LiteralPath $cwd
+  }
+  Remove-Item -Path $tmp
 }
 
 # neovim config init.lua
 function vv {
-    nvim C:\Users\$env:USERNAME\AppData\Local\nvim\init.lua
+  nvim C:\Users\$env:USERNAME\AppData\Local\nvim\init.lua
 }
 
 # python virtual enviroment
 function base {
-    . "C:\Users\$env:USERNAME\.py-venv\base-venv\Scripts\Activate.ps1"
+  . "C:\Users\$env:USERNAME\.py-venv\base-venv\Scripts\Activate.ps1"
 }
 Set-Alias dea deactivate
 
