@@ -36,4 +36,4 @@ function New-ObsidianNote {
     # Open the file in Neovim
     nvim $FilePath
 }
-Set-Alias on New-ObsidianNote
+# Set-Alias on New-ObsidianNote

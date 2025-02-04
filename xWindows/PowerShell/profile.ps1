@@ -21,20 +21,32 @@ function lsi {
 }
 
 # -----------------------------------------------------------------------------
-# lazy load scripts/functions
+# load scripts/functions
 # -----------------------------------------------------------------------------
 
-$scriptPath = "C:\Users\$env:UserName\Documents\PowerShell\"
+$scriptPath = "C:\Users\$env:UserName\Documents\PowerShell"
 
 function pull {
-    . "$scriptPath\vuz-copy-git-repo.ps1"
+  # dot-source the script
+  . "$scriptPath\vuz-copy-git-repo.ps1"
+  # call function
+  CopyGitRepo
 }
 
 function push {
-    . "$scriptPath\vuz-copy-git-repo.ps1"  # Dot-source the script
-    CopyGitRepoReverse  # Call the CopyGitRepoReverse function for push
+  . "$scriptPath\vuz-copy-git-repo.ps1"
+  CopyGitRepoReverse
 }
 
+function on {
+  . "$scriptPath\obsidian-create-note.ps1"
+  New-ObsidianNote
+}
+
+function okn {
+  . "$scriptPath\obsidian-create-note.ps1"
+  Obsidian-KategorizeNotes
+}
 # . "$PSScriptRoot\vuz-copy-git-repo.ps1"
 # . "$PSScriptRoot\obsidian-create-note.ps1"
 # . "$PSScriptRoot\obsidian-categorize-notes.ps1"

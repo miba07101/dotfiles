@@ -45,4 +45,4 @@ function Obsidian-KategorizeNotes {
 
     Write-Host "Done"
 }
-Set-Alias okn Obsidian-KategorizeNotes
+# Set-Alias okn Obsidian-KategorizeNotes
