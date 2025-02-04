@@ -24,26 +24,20 @@ function lsi {
 # lazy load scripts/functions
 # -----------------------------------------------------------------------------
 
-# $scriptPath = "C:\Users\$env:UserName\Documents\PowerShell\"
-#
-# function pull {
-#     . "$scriptPath\vuz-copy-git-repo.ps1"
-# }
-#
-# function push {
-#     # Ensure the script path is correct and the script exists
-#     $scriptFile = "$scriptPath\vuz-copy-git-repo.ps1"
-#     if (Test-Path $scriptFile) {
-#         # Run the script with -Reverse parameter
-#         & $scriptFile -Reverse
-#     } else {
-#         Write-Host "Script not found: $scriptFile" -ForegroundColor Red
-#     }
-# }
+$scriptPath = "C:\Users\$env:UserName\Documents\PowerShell\"
 
-. "$PSScriptRoot\vuz-copy-git-repo.ps1"
-. "$PSScriptRoot\obsidian-create-note.ps1"
-. "$PSScriptRoot\obsidian-categorize-notes.ps1"
+function pull {
+    . "$scriptPath\vuz-copy-git-repo.ps1"
+}
+
+function push {
+    . "$scriptPath\vuz-copy-git-repo.ps1"  # Dot-source the script
+    CopyGitRepoReverse  # Call the CopyGitRepoReverse function for push
+}
+
+# . "$PSScriptRoot\vuz-copy-git-repo.ps1"
+# . "$PSScriptRoot\obsidian-create-note.ps1"
+# . "$PSScriptRoot\obsidian-categorize-notes.ps1"
 
 # -----------------------------------------------------------------------------
 # environment variables

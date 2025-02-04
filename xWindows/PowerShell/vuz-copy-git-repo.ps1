@@ -82,9 +82,10 @@ function CopyGitRepo {
         }
 
 }
-Set-Alias pull CopyGitRepo
 
 function CopyGitRepoReverse {
     CopyGitRepo -Reverse
 }
-Set-Alias push CopyGitRepoReverse
+
+# Set-Alias pull CopyGitRepo
+# Set-Alias push CopyGitRepoReverse
