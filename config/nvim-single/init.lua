@@ -318,17 +318,24 @@ map("n", "<C-d>", "<C-d>zz", { desc = "up and center" })
 map("n", "<C-u>", "<C-u>zz", { desc = "down and center" })
 -- }}}
 
--- {{{ Close floating window with ESC
-local function close_floating()
+-- {{{ Close floating window, notification and clear search with ESC
+local function close_floating_and_clear_search()
+  -- Close floating windows
   for _, win in pairs(vim.api.nvim_list_wins()) do
-    if vim.api.nvim_win_get_config(win).relative == "win" then
+    local win_config = vim.api.nvim_win_get_config(win)
+    if win_config.relative ~= "" then
       vim.api.nvim_win_close(win, false)
     end
   end
+
+  -- Dismiss nvim-notify notifications
+  require("notify").dismiss({ silent = true, pending = true })
+
+  -- Clear search highlights
+  vim.cmd("nohlsearch")
 end
-map("n", "<Esc>", function()
-  close_floating()
-end, { desc = "close with ESC" })
+
+map("n", "<Esc>", close_floating_and_clear_search, { desc = "close floating windows, dismiss notifications, and clear search" })
 -- }}}
 
 -- {{{ Terminal
@@ -340,7 +347,6 @@ map("t", "<C-Right>", "<cmd>wincmd l<cr>", { desc = "right from terminal" })
 -- }}}
 
 -- {{{ Mix
-map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "no highlight" })
 map("n", "<BS>", "X", { desc = "TAB as X in normal mode" })
 map("n", "<A-a>", "<esc>ggVG<cr>", { desc = "select all text" })
 map("n", "<A-v>", "<C-q>", { desc = "visual block mode" })
@@ -456,9 +462,7 @@ require("lazy").setup(
       },-- }}}
 
       { "rcarriga/nvim-notify",-- {{{
-        keys = {
-          { "<leader>x", mode = {"n"}, "<cmd>lua require('notify').dismiss()<cr>", desc = "notify dismiss", noremap = true, silent = true },
-        }
+        enabled = true,
       },-- }}}
 
       { "folke/noice.nvim",-- {{{
@@ -1716,14 +1720,14 @@ require("lazy").setup(
             -- image_provider_opts = {
             --   command = "wezterm imgcat"  -- Remove `--tmux-passthru`
             -- }
-            vim.g.molten_split_direction = "right" --direction of the output window, options are "right", "left", "top", "bottom"
+            vim.g.molten_split_direction = "bottom" --direction of the output window, options are "right", "left", "top", "bottom"
             vim.g.molten_split_size = 40 --(0-100) % size of the screen dedicated to the output window
           end
           vim.g.molten_output_win_max_height = 20
           vim.g.molten_wrap_output = true
           vim.g.molten_auto_open_output = false -- cannot be true if molten_image_provider = "wezterm"
-          -- vim.g.molten_virt_lines_off_by_1 = true -- this will make it so the output shows up below the \`\`\` cell delimiter
-          -- vim.g.molten_virt_text_output = true
+          vim.g.molten_virt_lines_off_by_1 = true -- this will make it so the output shows up below the \`\`\` cell delimiter
+          vim.g.molten_virt_text_output = true
 
           -- -- change the configuration when editing a python file{{{
           -- vim.api.nvim_create_autocmd("BufEnter", {
@@ -2249,18 +2253,18 @@ vim.api.nvim_create_autocmd("FocusGained", {
 
 -- {{{ windows to close with "q"
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "toggleterm", "help", "startuptime", "qf", "lspinfo" },
+  pattern = { "toggleterm", "help", "startuptime", "qf", "lspinfo", "man" },
   command = [[nnoremap <buffer><silent> q :close<cr>]],
   group = mygroup,
   desc = "close windows with q",
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "man",
-  command = [[nnoremap <buffer><silent> q :quit<cr>]],
-  group = mygroup,
-  desc = "close man pages with q",
-})
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = "man",
+--   command = [[nnoremap <buffer><silent> q :quit<cr>]],
+--   group = mygroup,
+--   desc = "close man pages with q",
+-- })
 -- }}}
 
 -- {{{ don't auto comment new line

@@ -27,8 +27,8 @@ local config = wezterm.config_builder()
 if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   -- config.default_prog = { 'pwsh.exe', '-NoLogo' }
   config.default_prog = { 'pwsh' }
-  config.color_scheme = "kanagawa-light"
-  config.font = wezterm.font { family = 'Hack', weight = 'Regular' }
+  config.color_scheme = "kanagawa-dark"
+  config.font = wezterm.font { family = 'Hack Nerd Font', weight = 'Regular' }
 else
   -- config.color_scheme = 'nord'
   -- config.color_scheme = 'iceberg-light'
@@ -36,20 +36,20 @@ else
   -- config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
   -- config.color_scheme = is_night()
   config.color_scheme = "kanagawa-dark"
-  config.font = wezterm.font 'Hack Nerd Font'
+  config.font = wezterm.font { family = 'Hack Nerd Font', weight = 'Regular' }
 end
 
 -- fonts settings
-config.font_size = 11.0
+config.font_size = 11.2 -- je tam .2 kvoli lepsiemu renderovaniu
 config.warn_about_missing_glyphs=false
-config.line_height = 1.1
+-- config.line_height = 1.1
 -- config.harfbuzz_features = { "calt=1", "clig=1", "liga=1" }
 
 -- sounds
 config.audible_bell="Disabled"
 
 -- appearance
-config.max_fps = 144
+-- config.max_fps = 144
 -- config.animation_fps = 1
 config.enable_wayland = false
 -- config.window_decorations = "TITLE | RESIZE"
