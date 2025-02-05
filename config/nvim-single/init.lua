@@ -32,6 +32,7 @@ local os_type = DetectOsType()
 local os_username = os.getenv("USERNAME") or os.getenv("USER")
 local py_venvs_path = os.getenv("VENV_HOME")
 local onedrive_path = os.getenv("OneDrive_DIR")
+local python_ver = os_type == "windows" and "python" or "python3"
 
 function _G.PythonInterpreter()-- {{{
   local venv_path = os.getenv("VIRTUAL_ENV") -- Get the path of the active virtual environment
@@ -367,8 +368,8 @@ map("n", "<leader>vb", "<cmd>let &bg=(&bg == 'dark' ? 'light' : 'dark' )<CR>", {
 local function conceal_toggle_option(option, true_val, false_val)
   vim.o[option] = vim.o[option] == true_val and false_val or true_val
 end
-map("n", "<leader>vc", function() conceal_toggle_option("conceallevel", 0, 1) end, { desc = "toggle conceal level" })
-map("n", "<leader>vk", function() conceal_toggle_option("concealcursor", "n", "") end, { desc = "toggle conceal cursor" })
+map("n", "<leader>vcc", function() conceal_toggle_option("conceallevel", 0, 1) end, { desc = "conceal level toggle " })
+map("n", "<leader>vck", function() conceal_toggle_option("concealcursor", "n", "") end, { desc = "conceal cursor toggle " })
 -- }}}
 
 -- {{{ LSP
@@ -645,11 +646,9 @@ require("lazy").setup(
               enable = true,
               set_jumps = false, -- you can change this if you want.
               goto_next_start = {
-                --- ... other keymaps
                 ["]b"] = { query = "@code_cell.inner", desc = "next code block" },
               },
               goto_previous_start = {
-                --- ... other keymaps
                 ["[b"] = { query = "@code_cell.inner", desc = "previous code block" },
               },
             },
@@ -657,7 +656,6 @@ require("lazy").setup(
               enable = true,
               lookahead = true, -- you can change this if you want
               keymaps = {
-                --- ... other keymaps
                 ["ib"] = { query = "@code_cell.inner", desc = "in block" },
                 ["ab"] = { query = "@code_cell.outer", desc = "around block" },
               },
@@ -666,11 +664,9 @@ require("lazy").setup(
               -- markdown header
               enable = true,
               swap_next = {
-                --- ... other keymap
                 ["<leader>sbl"] = "@code_cell.outer",
               },
               swap_previous = {
-                --- ... other keymap
                 ["<leader>sbh"] = "@code_cell.outer",
               },
             },
@@ -857,7 +853,7 @@ require("lazy").setup(
 
           -- End LSP Diagnostic }}}
 
-          -- {{{ LSP Linters/Formaters
+          -- {{{ LSP Linters/Formaters/Debug(DAP)
           -- Auto install
           require("mason-tool-installer").setup({
             ensure_installed = {
@@ -872,6 +868,7 @@ require("lazy").setup(
               "eslint_d", -- js linter
               "djlint", -- django linter
               "tree-sitter-cli", -- treesitter latex integration
+              "debugpy", -- python debuger
             },
           })
 
@@ -1357,7 +1354,8 @@ require("lazy").setup(
         keys = {-- {{{
           { "<leader>fx", mode = "n", "<cmd>Telescope<cr>", desc = "telescope", noremap = true, silent = true },
           { "<leader>fn", mode = "n", "<cmd>Telescope notify<cr>", desc = "notifications", noremap = true, silent = true },
-          { "<leader>ff", mode = "n", "<cmd>Telescope find_files<cr>", desc = "files", noremap = true, silent = true },
+          { "<leader>ff", mode = "n", "<cmd>Telescope find_files<cr>", desc = "files cwd", noremap = true, silent = true },
+          { "<leader>fF", mode = "n", function()require('telescope.builtin').find_files({ search_dirs = { "~/" } })end, desc = "files home", noremap = true, silent = true },
           { "<leader>fw", mode = "n", "<cmd>Telescope live_grep<cr>", desc = "words", noremap = true, silent = true },
           { "<leader>fo", mode = "n", "<cmd>Telescope oldfiles<cr>", desc = "recent files", noremap = true, silent = true },
           { "<leader>fb", mode = "n", "<cmd>Telescope buffers<cr>", desc = "buffers", noremap = true, silent = true },
@@ -1461,26 +1459,29 @@ require("lazy").setup(
               { mode = "n", keys = "<Leader>d", desc = "+Diagnostic" },
               { mode = "n", keys = "<Leader>f", desc = "+Telescope" },
               { mode = "n", keys = "<Leader>l", desc = "+Lsp" },
-              { mode = "n", keys = "<Leader>m", desc = "+Markdown" },
               { mode = "n", keys = "<Leader>o", desc = "+Obsidian" },
               { mode = "n", keys = "<Leader>on", desc = "+Notes" },
               { mode = "n", keys = "<Leader>ol", desc = "+Links" },
               { mode = "n", keys = "<Leader>p", desc = "+Python" },
+              { mode = "n", keys = "<Leader>pc", desc = "+Code cell" },
               { mode = "n", keys = "<Leader>pm", desc = "+Molten" },
-              { mode = "n", keys = "<Leader>r", desc = "+REPL" },
+              { mode = "n", keys = "<Leader>r", desc = "+Run code" },
               { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
               { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
               { mode = "n", keys = "<Leader>v", desc = "+Vim/Neovim" },
+              { mode = "n", keys = "<Leader>va", desc = "+Align" },
+              { mode = "n", keys = "<Leader>vc", desc = "+Conceal" },
               { mode = "n", keys = "<Leader>w", desc = "+Window" },
               { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
               -- moje skratky - visual mode
-              { mode = "x", keys = "<Leader>m", desc = "+Markdown" },
               { mode = "x", keys = "<Leader>o", desc = "+Obsidian" },
               { mode = "x", keys = "<Leader>ol", desc = "+Links" },
               { mode = "x", keys = "<Leader>p", desc = "+Python" },
-              { mode = "x", keys = "<Leader>pm", desc = "+Molten" },
-              { mode = "x", keys = "<Leader>r", desc = "+REPL" },
+              -- { mode = "x", keys = "<Leader>pm", desc = "+Molten" },
+              -- { mode = "x", keys = "<Leader>r", desc = "+REPL" },
               { mode = "x", keys = "<Leader>t", desc = "+Terminal" },
+              { mode = "x", keys = "<Leader>v", desc = "+Vim/Neovim" },
+              { mode = "x", keys = "<Leader>va", desc = "+Align" },
             },-- }}}
           })
           -- }}}
@@ -1608,18 +1609,13 @@ require("lazy").setup(
           },-- }}}
         },-- }}}
         keys = {-- {{{
-          { "<leader>mp", mode = { "n" }, "<cmd>RenderMarkdown toggle<cr><cr>", desc = "preview toggle", noremap = true, silent = true },
-          { "<leader>mi", mode = { "n" }, "<cmd>RenderMarkdown expand<cr><cr>", desc = "increase conceal", noremap = true, silent = true },
-          { "<leader>md", mode = { "n" }, "<cmd>RenderMarkdown contract<cr><cr>", desc = "decrease conceal", noremap = true, silent = true },
-          -- align columns in markdown table
-          -- https://heitorpb.github.io/bla/format-tables-in-vim/
-          { "<leader>mT", mode = { "v" }, ":! tr -s ' ' | column -t -s '|' -o '|'<cr>", desc = "align table only linux", noremap = true, silent = true },
-          -- https://lazybea.rs/posts/markdown-tables-and-neovim
-          { "<leader>mt", mode = { "v" }, ":!pandoc -t markdown-simple_tables<cr>", desc = "align table using pandoc", noremap = true, silent = true },
+          { "<leader>vm", mode = { "n" }, "<cmd>RenderMarkdown toggle<cr>", desc = "markdown preview toggle", noremap = true, silent = true },
+          -- { "<leader>mi", mode = { "n" }, "<cmd>RenderMarkdown expand<cr>", desc = "increase conceal", noremap = true, silent = true },
+          -- { "<leader>md", mode = { "n" }, "<cmd>RenderMarkdown contract<cr>", desc = "decrease conceal", noremap = true, silent = true },
         },-- }}}
       },-- }}}
 
-      { "Kicamon/markdown-table-mode.nvim",-- {{{
+      { "Kicamon/markdown-table-mode.nvim", -- auto format table in markdown {{{
         -- enabled = false,
         lazy = true,
         ft = { "markdown", "quarto" },
@@ -1684,16 +1680,19 @@ require("lazy").setup(
           },
         },-- }}}
         keys = {-- {{{
-          { "<leader>qa", mode = { "n" }, "<cmd>QuartoActivate<cr>", desc = "quarto activate", noremap = true, silent = true },
-          { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "quarto preview", noremap = true, silent = true },
-          { "<leader>qq", mode = { "n" }, "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = "quarto quit", noremap = true, silent = true },
-          { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "quarto help", noremap = true, silent = true },
-          -- align columns in markdown table
-          -- to iste je aj v render-markdown.nvim keys
-          -- https://heitorpb.github.io/bla/format-tables-in-vim/
-          { "<leader>qT", mode = { "v" }, ":! tr -s ' ' | column -t -s '|' -o '|'<cr>", desc = "align table only linux", noremap = true, silent = true },
-          -- https://lazybea.rs/posts/markdown-tables-and-neovim
-          { "<leader>qt", mode = { "v" }, ":!pandoc -t markdown-simple_tables<cr>", desc = "align table using pandoc", noremap = true, silent = true },
+          { "<leader>qa", mode = { "n" }, "<cmd>QuartoActivate<cr>", desc = "activate", noremap = true, silent = true },
+          { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "preview", noremap = true, silent = true },
+          { "<leader>qq", mode = { "n" }, "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = "quit", noremap = true, silent = true },
+          { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "help", noremap = true, silent = true },
+
+          -- Quarto runner keymaps (code cell)
+          { "<leader>ra", mode = "n", MoltenInitialize, desc = "runner (molten) activate", noremap = true, silent = true },
+          { "<leader>rc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "run cell", noremap = true, silent = true },
+          -- { "<leader>pca", mode = "n", function() require("quarto.runner").run_above() end, desc = "run cell and above", noremap = true, silent = true },
+          { "<leader>rC", mode = "n", function() require("quarto.runner").run_all() end, desc = "run all cells", noremap = true, silent = true },
+          { "<leader>rl", mode = "n", function() require("quarto.runner").run_line() end, desc = "run line", noremap = true, silent = true },
+          -- { "<leader>pRA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "run all cells of all languages", noremap = true, silent = true },
+          { "<leader>rs", mode = "v", function() require("quarto.runner").run_range() end, desc = "run selection", noremap = true, silent = true },
         },-- }}}
       },-- }}}
 
@@ -1765,23 +1764,16 @@ require("lazy").setup(
 
         end,-- }}}
         keys = {-- {{{
-          { "<leader>pmi", mode = "n", MoltenInitialize, desc = "molten initialize", noremap = true, silent = true },
-          { "<leader>pmo", mode = "n", ":MoltenEvaluateOperator<cr>ib", desc = "operator evaluate", noremap = true, silent = true },
-          { "<leader>pml", mode = "n", ":MoltenEvaluateLine<cr>", desc = "line evaluate", noremap = true, silent = true },
-          { "<leader>pmr", mode = "n", ":MoltenReevaluateCell<cr>", desc = "re-evaluate cell", noremap = true, silent = true },
-          { "<leader>pmd", mode = "n", ":MoltenDelete<cr>", desc = "delete cell", noremap = true, silent = true },
-          { "<leader>pmh", mode = "n", ":MoltenHideOutput<cr>", desc = "hide output", noremap = true, silent = true },
-          { "<leader>pms", mode = "n", ":noautocmd MoltenEnterOutput<cr>", desc = "show/enter output", noremap = true, silent = true },
+          { "<leader>pma", mode = "n", MoltenInitialize, desc = "activate", noremap = true, silent = true },
           { "<leader>pmb", mode = "n", ":MoltenOpenInBrowser<cr>", desc = "open in browser (html only)", noremap = true, silent = true },
-          { "<leader>pml", mode = "v", ":<C-u>MoltenEvaluateVisual<cr>gv", desc = "evaluate selection", noremap = true, silent = true },
+          -- { "<leader>pmo", mode = "n", ":MoltenEvaluateOperator<cr>", desc = "operator evaluate", noremap = true, silent = true },
+          -- { "<leader>pml", mode = "n", ":MoltenEvaluateLine<cr>", desc = "line evaluate", noremap = true, silent = true },
+          -- { "<leader>pcR", mode = "n", ":MoltenReevaluateCell<cr>", desc = "re-evaluate cell", noremap = true, silent = true },
+          { "<leader>pmd", mode = "n", ":MoltenDelete<cr>", desc = "delete output", noremap = true, silent = true },
+          { "<leader>pmh", mode = "n", ":MoltenHideOutput<cr>", desc = "hide output", noremap = true, silent = true },
+          { "<leader>pme", mode = "n", ":noautocmd MoltenEnterOutput<cr>", desc = "show/enter cell output", noremap = true, silent = true },
+          -- { "<leader>pl", mode = "v", ":<C-u>MoltenEvaluateVisual<cr>gv", desc = "run lines", noremap = true, silent = true },
 
-          -- Quarto runner keymaps (lazy-load "quarto.runner")
-          { "<leader>prc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "run cell", noremap = true, silent = true },
-          { "<leader>pra", mode = "n", function() require("quarto.runner").run_above() end, desc = "run cell and above", noremap = true, silent = true },
-          { "<leader>prA", mode = "n", function() require("quarto.runner").run_all() end, desc = "run all cells", noremap = true, silent = true },
-          { "<leader>prl", mode = "n", function() require("quarto.runner").run_line() end, desc = "run line", noremap = true, silent = true },
-          { "<leader>pRA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "run all cells of all languages", noremap = true, silent = true },
-          { "<leader>pr", mode = "v", function() require("quarto.runner").run_range() end, desc = "run visual range", noremap = true, silent = true },
         },-- }}}
       },-- }}}
 
@@ -1839,6 +1831,7 @@ require("lazy").setup(
 
       { "GCBallesteros/jupytext.nvim",-- {{{
         -- enabled = false,
+        ft = { "python", "quarto", "markdown", "*ipynb" },
         config = function()
           require("jupytext").setup({
             style = "markdown",
@@ -1853,7 +1846,7 @@ require("lazy").setup(
       -- {{{ [ REPL Iron.nvim ]
       {
         "hkupty/iron.nvim",
-        -- enabled = false,
+        enabled = false,
         ft = { "python", "markdown", "quarto"},
         config = function()-- {{{
           local iron = require("iron.core")
@@ -1965,12 +1958,12 @@ require("lazy").setup(
 
       -- {{{ [ Mix ]
 
-      { "lepture/vim-jinja",-- {{{
+      { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
         -- enabled = false,
         ft = { "jinja.html", "html" },
       },-- }}}
 
-      { "brenoprata10/nvim-highlight-colors",-- {{{
+      { "brenoprata10/nvim-highlight-colors", -- show colors {{{
         -- enabled = false,
         opts = {},
         keys = {-- {{{
@@ -1991,30 +1984,26 @@ require("lazy").setup(
         },-- }}}
       },-- }}}
 
-      { "szw/vim-maximizer",-- {{{
+      { "szw/vim-maximizer", -- maximize window {{{
         -- enabled = false,
         keys = {-- {{{
-          { "<leader>wm", mode = {"n", "v"}, "<cmd>MaximizerToggle<cr>", desc = "maximize", noremap = true, silent = true },
+          { "<leader>wm", mode = {"n"}, "<cmd>MaximizerToggle<cr>", desc = "maximize", noremap = true, silent = true },
         },-- }}}
       },-- }}}
 
       { "godlygeek/tabular", -- align stuff (:Tabularize \|){{{
         -- enabled = false,
         keys = {-- {{{
-          { "<leader>a=", mode = {"n", "v"}, "<cmd>Tabularize /=<cr>", desc = "align by =", noremap = true, silent = true },
-          { "<leader>a|", mode = {"n", "v"}, "<cmd>Tabularize /|<cr>", desc = "align by |", noremap = true, silent = true },
-          { "<leader>a:", mode = {"n", "v"}, "<cmd>Tabularize /:<cr>", desc = "align by :", noremap = true, silent = true },
-          { "<leader>a<space>", mode = {"n", "v"}, "<cmd>Tabularize /<space><cr>", desc = "align by space", noremap = true, silent = true },
+          { "<leader>va=", mode = {"n", "v"}, "<cmd>Tabularize /=<cr>", desc = "text by =", noremap = true, silent = true },
+          { "<leader>va|", mode = {"n", "v"}, "<cmd>Tabularize /|<cr>", desc = "text by |", noremap = true, silent = true },
+          { "<leader>va:", mode = {"n", "v"}, "<cmd>Tabularize /:<cr>", desc = "text by :", noremap = true, silent = true },
+          { "<leader>va<space>", mode = {"n", "v"}, "<cmd>Tabularize /<space><cr>", desc = "text by space", noremap = true, silent = true },
+          -- align table
+          -- https://heitorpb.github.io/bla/format-tables-in-vim/
+          { "<leader>vaT", mode = { "v" }, ":! tr -s ' ' | column -t -s '|' -o '|'<cr>", desc = "table only linux", noremap = true, silent = true },
+          -- https://lazybea.rs/posts/markdown-tables-and-neovim
+          { "<leader>vat", mode = { "v" }, ":!pandoc -t markdown-simple_tables<cr>", desc = "table using pandoc", noremap = true, silent = true },
         },-- }}}
-      },-- }}}
-
-      { "Vonr/align.nvim",-- {{{
-        enabled = false,
-        branch = "v2",
-        lazy = true,
-        init = function()
-          vim.keymap.set( 'x', 'aa', function() require'align'.align_to_string({ preview = true, regex = false, }) end, { desc = "maximize", noremap = true, silent = true })
-        end
       },-- }}}
 
       { "2kabhishek/nerdy.nvim", -- nerd-fonts {{{
@@ -2023,7 +2012,10 @@ require("lazy").setup(
           'stevearc/dressing.nvim',
           'nvim-telescope/telescope.nvim',
         },-- }}}
-        cmd = 'Nerdy',
+        -- cmd = 'Nerdy',
+        keys = {-- {{{
+          { "<leader>vf", mode = { "n" }, "<cmd>Nerdy<cr>", desc = "nerd fonts", noremap = true, silent = true },
+        },-- }}}
       },-- }}}
 
       -- }}}
@@ -2119,6 +2111,7 @@ require("lazy").setup(
           { "<leader>tg", mode = { "n" }, "<cmd>lua LazyGit()<cr>", desc = "lazygit", noremap = true, silent = true },
           { "<leader>tl", mode = { "n" }, "<cmd>ToggleTermSendCurrentLine<cr>", desc = "send line", noremap = true, silent = true },
           { "<leader>tl", mode = { "v" }, "<cmd>ToggleTermSendVisualLines<cr>", desc = "send lines", noremap = true, silent = true },
+          { "<leader>tP", mode = { "n" }, '<cmd>w<cr><cmd>TermExec cmd="' .. python_ver .. ' %" go_back=0<cr>', desc = "send python file", noremap = true, silent = true },
         },-- }}}
       },-- }}}
 
@@ -2401,7 +2394,7 @@ end, {
 })-- }}}
 
 -- keymap for new Jupyter notebook creation
-map("n", "<leader>pJ", function() local file_name=vim.fn.input("Notebook name: ") if file_name ~= "" then vim.cmd("NewNotebook " .. file_name) end end, { desc = "Create new Jupyter notebook" })
+map("n", "<leader>pj", function() local file_name=vim.fn.input("Notebook name: ") if file_name ~= "" then vim.cmd("NewNotebook " .. file_name) end end, { desc = "jupyter notebook" })
 --}}}
 
 -- {{{ set typst filetype - quarto specific

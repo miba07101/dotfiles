@@ -1,8 +1,6 @@
-; extends
-
-((comment) @code_cell.outer
-  (#lua-match? @code_cell.outer "^# %%$"))
+; ; extends
 ;
-; ; Inner content: select all expression statements (between the markers)
-; ((import_statement) @code_cell.inner)
-
+; (
+;   (comment) @code_cell.inner
+;   (#eq? @code_cell.inner "#%%")
+; )
