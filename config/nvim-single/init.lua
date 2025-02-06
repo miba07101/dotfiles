@@ -32,7 +32,7 @@ local os_type = DetectOsType()
 local os_username = os.getenv("USERNAME") or os.getenv("USER")
 local py_venvs_path = os.getenv("VENV_HOME")
 local onedrive_path = os.getenv("OneDrive_DIR")
-local python_ver = os_type == "windows" and "python" or "python3"
+local python_os = os_type == "windows" and "python" or "python3"
 
 function _G.PythonInterpreter()-- {{{
   local venv_path = os.getenv("VIRTUAL_ENV") -- Get the path of the active virtual environment
@@ -84,6 +84,13 @@ function _G.ObsidianNewNote(use_template, template, folder)-- {{{
     vim.cmd(templates[template] and "ObsidianTemplate " .. templates[template] or "echo 'Invalid template name'")
   end
 end-- }}}
+
+-- vim.filetype.add({
+--   extension = {
+--     ipynb = 'ipynb',  -- associate .ipynb extension with the 'ipynb' filetype
+--   },
+-- })
+
 
 -- }}}
 
@@ -646,28 +653,28 @@ require("lazy").setup(
               enable = true,
               set_jumps = false, -- you can change this if you want.
               goto_next_start = {
-                ["]b"] = { query = "@code_cell.inner", desc = "next code block" },
+                ["]c"] = { query = "@code_cell.inner", desc = "next cell" },
               },
               goto_previous_start = {
-                ["[b"] = { query = "@code_cell.inner", desc = "previous code block" },
+                ["[c"] = { query = "@code_cell.inner", desc = "previous cell" },
               },
             },
             select = {
               enable = true,
               lookahead = true, -- you can change this if you want
               keymaps = {
-                ["ib"] = { query = "@code_cell.inner", desc = "in block" },
-                ["ab"] = { query = "@code_cell.outer", desc = "around block" },
+                ["ic"] = { query = "@code_cell.inner", desc = "in cell" },
+                ["ac"] = { query = "@code_cell.outer", desc = "around cell" },
               },
             },
             swap = { -- Swap only works with code blocks that are under the same
               -- markdown header
               enable = true,
               swap_next = {
-                ["<leader>sbl"] = "@code_cell.outer",
+                ["<leader>psn"] = "@code_cell.outer",
               },
               swap_previous = {
-                ["<leader>sbh"] = "@code_cell.outer",
+                ["<leader>psp"] = "@code_cell.outer",
               },
             },
           },
@@ -1204,6 +1211,21 @@ require("lazy").setup(
             return recording ~= "" and "󰻃 " .. recording or ""
           end-- }}}
 
+
+          local function molten_init()
+            if not package.loaded["molten.status"] then
+              return "M:X"
+            end
+
+            local ok, molten_status = pcall(require, "molten.status")
+            if not ok or type(molten_status.initialized) ~= "function" then
+              return "M:X"
+            end
+
+            local success, status = pcall(molten_status.initialized)
+            return success and status == "Molten" and "M:A" or "M:X"
+          end
+
           require("lualine").setup({-- {{{
             options = {
               section_separators = "",
@@ -1223,7 +1245,14 @@ require("lazy").setup(
               -- lualine_y = { { python_env, icon = "" } },
               lualine_y = {
                 { python_env, icon = "" },
-                -- { molten_init, icon = "󰑙" }
+                {
+                  -- pre Molten, pozri [ molten ] a cast keys = {}
+                  function()
+                    return vim.g.lualine_status or ""
+                    -- return vim.g.lualine_status or (vim.tbl_contains({ "python", "quarto", "markdown" }, vim.bo.filetype) and "M:X" or "")
+                  end,
+                  icon = "󰑙"
+                }
               },
               lualine_z = {
                 { lsp_server_icon },
@@ -1463,9 +1492,9 @@ require("lazy").setup(
               { mode = "n", keys = "<Leader>on", desc = "+Notes" },
               { mode = "n", keys = "<Leader>ol", desc = "+Links" },
               { mode = "n", keys = "<Leader>p", desc = "+Python" },
-              { mode = "n", keys = "<Leader>pc", desc = "+Code cell" },
               { mode = "n", keys = "<Leader>pm", desc = "+Molten" },
-              { mode = "n", keys = "<Leader>r", desc = "+Run code" },
+              { mode = "n", keys = "<Leader>pr", desc = "+Run cell" },
+              { mode = "n", keys = "<Leader>ps", desc = "+Swap cell" },
               { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
               { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
               { mode = "n", keys = "<Leader>v", desc = "+Vim/Neovim" },
@@ -1477,7 +1506,6 @@ require("lazy").setup(
               { mode = "x", keys = "<Leader>o", desc = "+Obsidian" },
               { mode = "x", keys = "<Leader>ol", desc = "+Links" },
               { mode = "x", keys = "<Leader>p", desc = "+Python" },
-              -- { mode = "x", keys = "<Leader>pm", desc = "+Molten" },
               -- { mode = "x", keys = "<Leader>r", desc = "+REPL" },
               { mode = "x", keys = "<Leader>t", desc = "+Terminal" },
               { mode = "x", keys = "<Leader>v", desc = "+Vim/Neovim" },
@@ -1495,7 +1523,6 @@ require("lazy").setup(
         -- enabled = false,
         version = "*", -- recommended, use latest release instead of latest commit
         lazy = true,
-        ft = "markdown",
         dependencies = {-- {{{
           "nvim-lua/plenary.nvim",
         },-- }}}
@@ -1686,13 +1713,12 @@ require("lazy").setup(
           { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "help", noremap = true, silent = true },
 
           -- Quarto runner keymaps (code cell)
-          { "<leader>ra", mode = "n", MoltenInitialize, desc = "runner (molten) activate", noremap = true, silent = true },
-          { "<leader>rc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "run cell", noremap = true, silent = true },
+          { "<leader>prc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "run cell", noremap = true, silent = true },
+          { "<leader>prl", mode = "n", function() require("quarto.runner").run_line() end, desc = "run line", noremap = true, silent = true },
           -- { "<leader>pca", mode = "n", function() require("quarto.runner").run_above() end, desc = "run cell and above", noremap = true, silent = true },
-          { "<leader>rC", mode = "n", function() require("quarto.runner").run_all() end, desc = "run all cells", noremap = true, silent = true },
-          { "<leader>rl", mode = "n", function() require("quarto.runner").run_line() end, desc = "run line", noremap = true, silent = true },
-          -- { "<leader>pRA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "run all cells of all languages", noremap = true, silent = true },
-          { "<leader>rs", mode = "v", function() require("quarto.runner").run_range() end, desc = "run selection", noremap = true, silent = true },
+          { "<leader>pra", mode = "n", function() require("quarto.runner").run_all() end, desc = "run all cells", noremap = true, silent = true },
+          { "<leader>prA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "run all languages", noremap = true, silent = true },
+          { "<leader>pr", mode = "v", function() require("quarto.runner").run_range() end, desc = "run selection", noremap = true, silent = true },
         },-- }}}
       },-- }}}
 
@@ -1764,7 +1790,19 @@ require("lazy").setup(
 
         end,-- }}}
         keys = {-- {{{
-          { "<leader>pma", mode = "n", MoltenInitialize, desc = "activate", noremap = true, silent = true },
+          -- { "<leader>pma", mode = "n", MoltenInitialize, desc = "activate", noremap = true, silent = true },
+          { "<leader>pma", mode = "n", function()
+            MoltenInitialize()
+            vim.defer_fn(function()
+              -- suvisi s [ Lualine ] statusline
+              -- ak je molten activovany tak v lualine vypise "M:A"
+              if require('molten.status').initialized() == "Molten" then
+                vim.g.lualine_status = "M:A"  -- Store status in a global variable
+                -- Refresh lualine statusline to apply the changes
+                require("lualine").refresh({ place = { "statusline" } })
+              end
+            end, 200)
+          end, desc = "activate", noremap = true, silent = true },
           { "<leader>pmb", mode = "n", ":MoltenOpenInBrowser<cr>", desc = "open in browser (html only)", noremap = true, silent = true },
           -- { "<leader>pmo", mode = "n", ":MoltenEvaluateOperator<cr>", desc = "operator evaluate", noremap = true, silent = true },
           -- { "<leader>pml", mode = "n", ":MoltenEvaluateLine<cr>", desc = "line evaluate", noremap = true, silent = true },
@@ -1831,7 +1869,7 @@ require("lazy").setup(
 
       { "GCBallesteros/jupytext.nvim",-- {{{
         -- enabled = false,
-        ft = { "python", "quarto", "markdown", "*ipynb" },
+        -- ft = { "ipynb" },
         config = function()
           require("jupytext").setup({
             style = "markdown",
@@ -2055,31 +2093,31 @@ require("lazy").setup(
             ipython:toggle()
           end-- }}}
 
-          function _G.Ranger()-- {{{
-            local Path = require("plenary.path")
-            local path = vim.fn.tempname()
-            local ranger = Terminal:new({
-              direction = "float",
-              cmd = ('ranger --choosefiles "%s"'):format(path),
-              close_on_exit = true,
-              on_close = function()
-                Data = Path:new(path):read()
-                vim.schedule(function()
-                  vim.cmd("edit" .. Data)
-                end)
-              end,
-            })
-            ranger:toggle()
-          end-- }}}
+          -- function _G.Ranger()-- {{{
+          --   local Path = require("plenary.path")
+          --   local path = vim.fn.tempname()
+          --   local ranger = Terminal:new({
+          --     direction = "float",
+          --     cmd = ('ranger --choosefiles "%s"'):format(path),
+          --     close_on_exit = true,
+          --     on_close = function()
+          --       Data = Path:new(path):read()
+          --       vim.schedule(function()
+          --         vim.cmd("edit" .. Data)
+          --       end)
+          --     end,
+          --   })
+          --   ranger:toggle()
+          -- end-- }}}
 
-          function _G.Yazi()-- {{{
-            local yazi = Terminal:new({
-              direction = "horizontal",
-              cmd = 'yazi',
-              close_on_exit = true,
-            })
-            yazi:toggle()
-          end-- }}}
+          -- function _G.Yazi()-- {{{
+          --   local yazi = Terminal:new({
+          --     direction = "horizontal",
+          --     cmd = 'yazi',
+          --     close_on_exit = true,
+          --   })
+          --   yazi:toggle()
+          -- end-- }}}
 
           function _G.LiveServer()-- {{{
             local web = Terminal:new({
@@ -2105,13 +2143,13 @@ require("lazy").setup(
           { "<leader>tf", mode = { "n" }, "<cmd>ToggleTerm direction=float<cr>", desc = "terminal float", noremap = true, silent = true },
           { "<leader>tp", mode = { "n" }, "<cmd>lua PythonTerminal()<cr>", desc = "python terminal", noremap = true, silent = true },
           { "<leader>ti", mode = { "n" }, "<cmd>lua IpythonTerminal()<cr>", desc = "ipython terminal", noremap = true, silent = true },
-          { "<leader>tr", mode = { "n" }, "<cmd>lua Ranger()<cr>", desc = "ranger", noremap = true, silent = true },
-          { "<leader>ty", mode = { "n" }, "<cmd>lua Yazi()<cr>", desc = "yazi", noremap = true, silent = true },
+          -- { "<leader>tr", mode = { "n" }, "<cmd>lua Ranger()<cr>", desc = "ranger", noremap = true, silent = true },
+          -- { "<leader>ty", mode = { "n" }, "<cmd>lua Yazi()<cr>", desc = "yazi", noremap = true, silent = true },
           { "<leader>tw", mode = { "n" }, "<cmd>lua LiveServer()<cr>", desc = "web live server", noremap = true, silent = true },
           { "<leader>tg", mode = { "n" }, "<cmd>lua LazyGit()<cr>", desc = "lazygit", noremap = true, silent = true },
           { "<leader>tl", mode = { "n" }, "<cmd>ToggleTermSendCurrentLine<cr>", desc = "send line", noremap = true, silent = true },
           { "<leader>tl", mode = { "v" }, "<cmd>ToggleTermSendVisualLines<cr>", desc = "send lines", noremap = true, silent = true },
-          { "<leader>tP", mode = { "n" }, '<cmd>w<cr><cmd>TermExec cmd="' .. python_ver .. ' %" go_back=0<cr>', desc = "send python file", noremap = true, silent = true },
+          { "<leader>tP", mode = { "n" }, '<cmd>w<cr><cmd>TermExec cmd="' .. python_os .. ' %" go_back=0<cr>', desc = "send python file", noremap = true, silent = true },
         },-- }}}
       },-- }}}
 
