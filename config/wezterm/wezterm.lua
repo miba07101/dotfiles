@@ -25,18 +25,23 @@ local config = wezterm.config_builder()
 
 -- check if on windows
 if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
-  -- config.default_prog = { 'pwsh.exe', '-NoLogo' }
-  config.default_prog = { 'pwsh' }
+  config.default_prog = { 'pwsh.exe', '-NoLogo' }
+  -- config.default_prog = { 'pwsh' }
   config.color_scheme = "kanagawa-dark"
   config.font = wezterm.font { family = 'Hack Nerd Font', weight = 'Regular' }
+  config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
+  -- config.hide_tab_bar_if_only_one_tab = true
 else
   -- config.color_scheme = 'nord'
   -- config.color_scheme = 'iceberg-light'
   -- config.color_scheme = 'Kanagawa (Gogh)'
   -- config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
   -- config.color_scheme = is_night()
+  config.enable_wayland = false
   config.color_scheme = "kanagawa-dark"
   config.font = wezterm.font { family = 'Hack Nerd Font', weight = 'Regular' }
+  -- config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
+  config.hide_tab_bar_if_only_one_tab = true
 end
 
 -- fonts settings
@@ -51,10 +56,6 @@ config.audible_bell="Disabled"
 -- appearance
 -- config.max_fps = 144
 -- config.animation_fps = 1
-config.enable_wayland = false
--- config.window_decorations = "TITLE | RESIZE"
-config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
--- config.hide_tab_bar_if_only_one_tab = true
 config.window_close_confirmation = 'NeverPrompt'
 config.initial_rows = 32
 config.initial_cols = 96
