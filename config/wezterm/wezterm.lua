@@ -47,7 +47,7 @@ end
 -- fonts settings
 config.font_size = 11.2 -- je tam .2 kvoli lepsiemu renderovaniu
 config.warn_about_missing_glyphs=false
--- config.line_height = 1.1
+config.line_height = 1.05
 -- config.harfbuzz_features = { "calt=1", "clig=1", "liga=1" }
 
 -- sounds
@@ -63,7 +63,7 @@ config.window_padding = {
   left = "1cell",
   right = "1cell",
   top = "0.5cell",
-  bottom = "0.5cell",
+  bottom = "0cell",
 }
 
 -- cursor
@@ -81,5 +81,6 @@ config.keys = {
   { key = 'v', mods = 'CTRL', action = wezterm.action.PasteFrom 'Clipboard', },
   { key = 'v', mods = 'CTRL', action = wezterm.action.PasteFrom 'PrimarySelection', },
 }
+
 -- and finally, return the configuration to wezterm
 return config
