@@ -33,6 +33,7 @@ local os_username = os.getenv("USERNAME") or os.getenv("USER")
 local py_venvs_path = os.getenv("VENV_HOME")
 local onedrive_path = os.getenv("OneDrive_DIR")
 local python_os = os_type == "windows" and "python" or "python3"
+local debugpy_path = os_type == "windows" and py_venvs_path .. "\\base-venv\\Scripts\\python.exe" or py_venvs_path .. "/base-venv/bin/python"
 
 function _G.PythonInterpreter()-- {{{
   local venv_path = os.getenv("VIRTUAL_ENV") -- Get the path of the active virtual environment
@@ -1360,8 +1361,10 @@ require("lazy").setup(
       {
         "nvim-telescope/telescope.nvim",
         -- enabled = false,
+        dependencies = {
+          -- { "nvim-telescope/telescope-fzf-native.nvim", build = "make"},
+        },
         config = function()-- {{{
-          local actions = require("telescope.actions")
           require("telescope").setup({-- {{{
             pickers = {
               colorscheme = {
@@ -1378,13 +1381,14 @@ require("lazy").setup(
               extensions = {},
             },
           })-- }}}
+          -- require("telescope").load_extension("fzf")
           -- require("telescope").load_extension("file_browser")
         end,-- }}}
         keys = {-- {{{
           { "<leader>fx", mode = "n", "<cmd>Telescope<cr>", desc = "telescope", noremap = true, silent = true },
           { "<leader>fn", mode = "n", "<cmd>Telescope notify<cr>", desc = "notifications", noremap = true, silent = true },
-          { "<leader>ff", mode = "n", "<cmd>Telescope find_files<cr>", desc = "files cwd", noremap = true, silent = true },
-          { "<leader>fF", mode = "n", function()require('telescope.builtin').find_files({ search_dirs = { "~/" } })end, desc = "files home", noremap = true, silent = true },
+          { "<leader>ff", mode = "n", function()require('telescope.builtin').find_files({ hidden = true })end, desc = "files cwd", noremap = true, silent = true },
+          { "<leader>fF", mode = "n", function()require('telescope.builtin').find_files({ hidden = true, search_dirs = { "~/" } })end, desc = "files home", noremap = true, silent = true },
           { "<leader>fw", mode = "n", "<cmd>Telescope live_grep<cr>", desc = "words", noremap = true, silent = true },
           { "<leader>fo", mode = "n", "<cmd>Telescope oldfiles<cr>", desc = "recent files", noremap = true, silent = true },
           { "<leader>fb", mode = "n", "<cmd>Telescope buffers<cr>", desc = "buffers", noremap = true, silent = true },
@@ -1394,126 +1398,6 @@ require("lazy").setup(
           { "<leader>fk", mode = "n", "<cmd>Telescope keymaps<cr>", desc = "keymaps", noremap = true, silent = true },
           -- { "<leader>fe", mode = "n", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", desc = "file browser", noremap = true, silent = true },
         },-- }}}
-      },
-      -- }}}
-
-      -- {{{ [ Mini.nvim collection ]
-      {
-        "echasnovski/mini.nvim",
-        enabled = true,
-        config = function()
-          -- {{{ mini.comment
-          local mappings_config = (os_type == "linux")
-          and {
-            comment = "<C-/>",
-            comment_line = "<C-/>",
-            comment_visual = "<C-/>",
-            textobject = "<C-/>",
-          }
-          or {
-            comment = "<C-_>",
-            comment_line = "<C-_>",
-            comment_visual = "<C-_>",
-            textobject = "<C-_>",
-          }
-
-          require("mini.comment").setup({
-            mappings = mappings_config,
-          })
-          -- }}}
-
-          -- -- {{{ mini.notify
-          -- require("mini.notify").setup()
-          -- -- }}}
-
-          -- {{{ mini.surround
-          require("mini.surround").setup()
-          -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-          -- - sd'   - [S]urround [D]elete [']quotes
-          -- - sr)'  - [S]urround [R]eplace [)] [']
-          -- }}}
-
-          -- {{{ mini.pairs
-          require("mini.pairs").setup()
-          -- }}}
-
-          -- {{{ mini.ai
-          require('mini.ai').setup()
-          -- }}}
-
-          -- {{{ mini.clue
-          local miniclue = require("mini.clue")
-          miniclue.setup({
-            window = {-- {{{
-              config = {}, -- Floating window config
-              delay = 500, -- Delay before showing clue window
-              -- Keys to scroll inside the clue window
-              scroll_down = "<C-d>",
-              scroll_up = "<C-u>",
-            },-- }}}
-            triggers = {-- {{{
-              -- Leader triggers
-              { mode = "n", keys = "<Leader>" },
-              { mode = "x", keys = "<Leader>" },
-              -- Built-in completion
-              { mode = "i", keys = "<C-x>" },
-              -- `g` key
-              { mode = "n", keys = "g" },
-              { mode = "x", keys = "g" },
-              -- Marks
-              { mode = "n", keys = "'" },
-              { mode = "n", keys = "`" },
-              { mode = "x", keys = "'" },
-              { mode = "x", keys = "`" },
-              -- Registers
-              { mode = "n", keys = '"' },
-              { mode = "x", keys = '"' },
-              { mode = "i", keys = "<C-r>" },
-              { mode = "c", keys = "<C-r>" },
-              -- Window commands
-              -- { mode = 'n', keys = '<C-w>' },
-              -- `z` key
-              { mode = "n", keys = "z" },
-              { mode = "x", keys = "z" },
-            },-- }}}
-            clues = {-- {{{
-              -- Enhance this by adding descriptions for <Leader> mapping groups
-              miniclue.gen_clues.builtin_completion(),
-              miniclue.gen_clues.g(),
-              miniclue.gen_clues.marks(),
-              miniclue.gen_clues.registers(),
-              -- miniclue.gen_clues.windows(),
-              miniclue.gen_clues.z(),
-              -- moje skratky - normal mode
-              { mode = "n", keys = "<Leader>d", desc = "+Diagnostic" },
-              { mode = "n", keys = "<Leader>f", desc = "+Telescope" },
-              { mode = "n", keys = "<Leader>l", desc = "+Lsp" },
-              { mode = "n", keys = "<Leader>o", desc = "+Obsidian" },
-              { mode = "n", keys = "<Leader>on", desc = "+Notes" },
-              { mode = "n", keys = "<Leader>ol", desc = "+Links" },
-              { mode = "n", keys = "<Leader>p", desc = "+Python" },
-              { mode = "n", keys = "<Leader>pm", desc = "+Molten" },
-              { mode = "n", keys = "<Leader>pr", desc = "+Run cell" },
-              { mode = "n", keys = "<Leader>ps", desc = "+Swap cell" },
-              { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
-              { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
-              { mode = "n", keys = "<Leader>v", desc = "+Vim/Neovim" },
-              { mode = "n", keys = "<Leader>va", desc = "+Align" },
-              { mode = "n", keys = "<Leader>vc", desc = "+Conceal" },
-              { mode = "n", keys = "<Leader>w", desc = "+Window" },
-              { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
-              -- moje skratky - visual mode
-              { mode = "x", keys = "<Leader>o", desc = "+Obsidian" },
-              { mode = "x", keys = "<Leader>ol", desc = "+Links" },
-              { mode = "x", keys = "<Leader>p", desc = "+Python" },
-              -- { mode = "x", keys = "<Leader>r", desc = "+REPL" },
-              { mode = "x", keys = "<Leader>t", desc = "+Terminal" },
-              { mode = "x", keys = "<Leader>v", desc = "+Vim/Neovim" },
-              { mode = "x", keys = "<Leader>va", desc = "+Align" },
-            },-- }}}
-          })
-          -- }}}
-        end,
       },
       -- }}}
 
@@ -1651,7 +1535,7 @@ require("lazy").setup(
 
       -- }}}
 
-      -- {{{ [ Python, Quarto, Jupyterlab ]
+      -- {{{ [ Python ]
 
       { "AckslD/swenv.nvim",-- {{{
         -- enabled = false,
@@ -1668,6 +1552,10 @@ require("lazy").setup(
           { "<leader>pe", mode = { "n" }, "<cmd>lua require('swenv.api').pick_venv()<cr>", desc = "python venvs", noremap = true, silent = true },
         },
       },-- }}}
+
+      -- }}}
+
+      -- {{{ [ Quarto, Jupyterlab ]
 
       { "quarto-dev/quarto-nvim",-- {{{
         -- enabled = false,
@@ -1869,7 +1757,6 @@ require("lazy").setup(
 
       { "GCBallesteros/jupytext.nvim",-- {{{
         -- enabled = false,
-        -- ft = { "ipynb" },
         config = function()
           require("jupytext").setup({
             style = "markdown",
@@ -1994,68 +1881,108 @@ require("lazy").setup(
       },
       -- }}}
 
-      -- {{{ [ Mix ]
+      -- {{{ [ DAP debug ]
 
-      { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
-        -- enabled = false,
-        ft = { "jinja.html", "html" },
-      },-- }}}
-
-      { "brenoprata10/nvim-highlight-colors", -- show colors {{{
-        -- enabled = false,
-        opts = {},
-        keys = {-- {{{
-          { "<leader>vh", mode = "n", "<cmd>HighlightColors Toggle<cr>", desc = "highlight-colors toggle", noremap = true, silent = true },
-        },-- }}}
-      },-- }}}
-
-      { "uga-rosa/ccc.nvim", -- color picker (:CccPick){{{
-        -- enabled = false,
-        opts = {-- {{{
-          highlighter = {
-            auto_enable = true,
-            lsp = true,
-          },
-        },-- }}}
-        keys = {-- {{{
-          { "<leader>vp", mode = "n", "<cmd>CccPick<cr>", desc = "color picker", noremap = true, silent = true },
-        },-- }}}
-      },-- }}}
-
-      { "szw/vim-maximizer", -- maximize window {{{
-        -- enabled = false,
-        keys = {-- {{{
-          { "<leader>wm", mode = {"n"}, "<cmd>MaximizerToggle<cr>", desc = "maximize", noremap = true, silent = true },
-        },-- }}}
-      },-- }}}
-
-      { "godlygeek/tabular", -- align stuff (:Tabularize \|){{{
-        -- enabled = false,
-        keys = {-- {{{
-          { "<leader>va=", mode = {"n", "v"}, "<cmd>Tabularize /=<cr>", desc = "text by =", noremap = true, silent = true },
-          { "<leader>va|", mode = {"n", "v"}, "<cmd>Tabularize /|<cr>", desc = "text by |", noremap = true, silent = true },
-          { "<leader>va:", mode = {"n", "v"}, "<cmd>Tabularize /:<cr>", desc = "text by :", noremap = true, silent = true },
-          { "<leader>va<space>", mode = {"n", "v"}, "<cmd>Tabularize /<space><cr>", desc = "text by space", noremap = true, silent = true },
-          -- align table
-          -- https://heitorpb.github.io/bla/format-tables-in-vim/
-          { "<leader>vaT", mode = { "v" }, ":! tr -s ' ' | column -t -s '|' -o '|'<cr>", desc = "table only linux", noremap = true, silent = true },
-          -- https://lazybea.rs/posts/markdown-tables-and-neovim
-          { "<leader>vat", mode = { "v" }, ":!pandoc -t markdown-simple_tables<cr>", desc = "table using pandoc", noremap = true, silent = true },
-        },-- }}}
-      },-- }}}
-
-      { "2kabhishek/nerdy.nvim", -- nerd-fonts {{{
-        -- enabled = false,
+      { "mfussenegger/nvim-dap",
         dependencies = {-- {{{
-          'stevearc/dressing.nvim',
-          'nvim-telescope/telescope.nvim',
+          "rcarriga/nvim-dap-ui",
+          "nvim-neotest/nvim-nio",
+          "jay-babu/mason-nvim-dap.nvim",
+          -- Add debuggers here
+          "mfussenegger/nvim-dap-python",
         },-- }}}
-        -- cmd = 'Nerdy',
-        keys = {-- {{{
-          { "<leader>vf", mode = { "n" }, "<cmd>Nerdy<cr>", desc = "nerd fonts", noremap = true, silent = true },
-        },-- }}}
-      },-- }}}
+        keys = {
+          { "<leader>pdB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "breakpoint condition", noremap = true, silent = true },
+          { "<leader>pdb", function() require("dap").toggle_breakpoint() end, desc = "toggle breakpoint", noremap = true, silent = true },
+          { "<leader>pdc", function() require("dap").continue() end, desc = "run/continue", noremap = true, silent = true },
+          { "<leader>pda", function() require("dap").continue({ before = get_args }) end, desc = "run with args", noremap = true, silent = true },
+          { "<leader>pdC", function() require("dap").run_to_cursor() end, desc = "run to cursor", noremap = true, silent = true },
+          { "<leader>pdg", function() require("dap").goto_() end, desc = "go to line (no execute)", noremap = true, silent = true },
+          { "<leader>pdi", function() require("dap").step_into() end, desc = "step into", noremap = true, silent = true },
+          { "<leader>pdj", function() require("dap").down() end, desc = "down", noremap = true, silent = true },
+          { "<leader>pdk", function() require("dap").up() end, desc = "up", noremap = true, silent = true },
+          { "<leader>pdl", function() require("dap").run_last() end, desc = "run last", noremap = true, silent = true },
+          { "<leader>pdo", function() require("dap").step_out() end, desc = "step out", noremap = true, silent = true },
+          { "<leader>pdO", function() require("dap").step_over() end, desc = "step over", noremap = true, silent = true },
+          { "<leader>pdP", function() require("dap").pause() end, desc = "pause", noremap = true, silent = true },
+          { "<leader>pdr", function() require("dap").repl.toggle() end, desc = "toggle REPL", noremap = true, silent = true },
+          { "<leader>pds", function() require("dap").session() end, desc = "session", noremap = true, silent = true },
+          { "<leader>pdt", function() require("dap").terminate() end, desc = "terminate", noremap = true, silent = true },
+          { "<leader>pdw", function() require("dap.ui.widgets").hover() end, desc = "widgets", noremap = true, silent = true },
+          -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+          { "<leader>pdu", function() require("dapui").toggle() end, desc = "UI", noremap = true, silent = true },
+          { "<leader>pde", mode = {"n", "v"}, function() require("dapui").eval() end, desc = "eval", noremap = true, silent = true },
+        },
+        config = function()
+          local dap = require "dap"
+          local dapui = require "dapui"
 
+          require("mason-nvim-dap").setup {-- {{{
+            automatic_installation = true,
+            handlers = {},
+            ensure_installed = {
+              "debugpy",
+            },
+          }-- }}}
+
+          -- Dap UI setup
+          dapui.setup {-- {{{
+            icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
+            -- controls = {
+            --   icons = {
+            --     pause = "⏸",
+            --     play = "▶",
+            --     step_into = "⏎",
+            --     step_over = "⏭",
+            --     step_out = "⏮",
+            --     step_back = "b",
+            --     run_last = "▶▶",
+            --     terminate = "⏹",
+            --     disconnect = "⏏",
+            --   },
+            -- },
+          }-- }}}
+
+          -- Change breakpoint icons
+          -- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
+          -- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
+          -- local breakpoint_icons = vim.g.have_nerd_font
+          --     and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
+          --   or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
+          -- for type, icon in pairs(breakpoint_icons) do
+          --   local tp = 'Dap' .. type
+          --   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
+          --   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
+          -- end
+
+          dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+          dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+          dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
+          -- python specific config
+          -- require("dap-python").setup(debugpy_path)
+          -- require("dap-python").setup("~\\.py-venv\\base-venv\\Scripts\\python.exe")
+          -- local debug_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
+          -- dap_python.setup(debug_path)
+          -- require("dap-python").setup(debug_path)
+          -- require('dap-python').resolve_python = function()
+          --   return 'C:\\Users\\mech\\AppData\\Local\\nvim-data\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe'
+          -- end
+          local dap_python = require("dap-python")
+          local python_path = vim.fn.exepath("python")  -- Use the active Python interpreter
+
+          dap_python.setup(python_path)
+
+          table.insert(require("dap").configurations.python, {
+            type = "python",
+            request = "launch",
+            name = "Launch file (no frozen modules)",
+            program = "${file}",
+            pythonPath = python_path,
+            args = { "-Xfrozen_modules=off" },
+          })
+        end,
+      },
       -- }}}
 
       -- {{{ [ Terminal ]
@@ -2150,6 +2077,191 @@ require("lazy").setup(
           { "<leader>tl", mode = { "n" }, "<cmd>ToggleTermSendCurrentLine<cr>", desc = "send line", noremap = true, silent = true },
           { "<leader>tl", mode = { "v" }, "<cmd>ToggleTermSendVisualLines<cr>", desc = "send lines", noremap = true, silent = true },
           { "<leader>tP", mode = { "n" }, '<cmd>w<cr><cmd>TermExec cmd="' .. python_os .. ' %" go_back=0<cr>', desc = "send python file", noremap = true, silent = true },
+        },-- }}}
+      },-- }}}
+
+      -- }}}
+
+      -- {{{ [ Mini.nvim collection ]
+      {
+        "echasnovski/mini.nvim",
+        enabled = true,
+        config = function()
+          -- {{{ mini.comment
+          local mappings_config = (os_type == "linux")
+          and {
+            comment = "<C-/>",
+            comment_line = "<C-/>",
+            comment_visual = "<C-/>",
+            textobject = "<C-/>",
+          }
+          or {
+            comment = "<C-_>",
+            comment_line = "<C-_>",
+            comment_visual = "<C-_>",
+            textobject = "<C-_>",
+          }
+
+          require("mini.comment").setup({
+            mappings = mappings_config,
+          })
+          -- }}}
+
+          -- -- {{{ mini.notify
+          -- require("mini.notify").setup()
+          -- -- }}}
+
+          -- {{{ mini.surround
+          require("mini.surround").setup()
+          -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
+          -- - sd'   - [S]urround [D]elete [']quotes
+          -- - sr)'  - [S]urround [R]eplace [)] [']
+          -- }}}
+
+          -- {{{ mini.pairs
+          require("mini.pairs").setup()
+          -- }}}
+
+          -- {{{ mini.ai
+          require('mini.ai').setup()
+          -- }}}
+
+          -- {{{ mini.clue
+          local miniclue = require("mini.clue")
+          miniclue.setup({
+            window = {-- {{{
+              config = {}, -- Floating window config
+              delay = 500, -- Delay before showing clue window
+              -- Keys to scroll inside the clue window
+              scroll_down = "<C-d>",
+              scroll_up = "<C-u>",
+            },-- }}}
+            triggers = {-- {{{
+              -- Leader triggers
+              { mode = "n", keys = "<Leader>" },
+              { mode = "x", keys = "<Leader>" },
+              -- Built-in completion
+              { mode = "i", keys = "<C-x>" },
+              -- `g` key
+              { mode = "n", keys = "g" },
+              { mode = "x", keys = "g" },
+              -- Marks
+              { mode = "n", keys = "'" },
+              { mode = "n", keys = "`" },
+              { mode = "x", keys = "'" },
+              { mode = "x", keys = "`" },
+              -- Registers
+              { mode = "n", keys = '"' },
+              { mode = "x", keys = '"' },
+              { mode = "i", keys = "<C-r>" },
+              { mode = "c", keys = "<C-r>" },
+              -- Window commands
+              -- { mode = 'n', keys = '<C-w>' },
+              -- `z` key
+              { mode = "n", keys = "z" },
+              { mode = "x", keys = "z" },
+            },-- }}}
+            clues = {-- {{{
+              -- Enhance this by adding descriptions for <Leader> mapping groups
+              miniclue.gen_clues.builtin_completion(),
+              miniclue.gen_clues.g(),
+              miniclue.gen_clues.marks(),
+              miniclue.gen_clues.registers(),
+              -- miniclue.gen_clues.windows(),
+              miniclue.gen_clues.z(),
+              -- moje skratky - normal mode
+              { mode = "n", keys = "<Leader>d", desc = "+Diagnostic" },
+              { mode = "n", keys = "<Leader>f", desc = "+Telescope" },
+              { mode = "n", keys = "<Leader>l", desc = "+Lsp" },
+              { mode = "n", keys = "<Leader>o", desc = "+Obsidian" },
+              { mode = "n", keys = "<Leader>on", desc = "+Notes" },
+              { mode = "n", keys = "<Leader>ol", desc = "+Links" },
+              { mode = "n", keys = "<Leader>p", desc = "+Python" },
+              { mode = "n", keys = "<Leader>pd", desc = "+DAP" },
+              { mode = "n", keys = "<Leader>pm", desc = "+Molten" },
+              { mode = "n", keys = "<Leader>pr", desc = "+Run cell" },
+              { mode = "n", keys = "<Leader>ps", desc = "+Swap cell" },
+              { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
+              { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
+              { mode = "n", keys = "<Leader>v", desc = "+Vim/Neovim" },
+              { mode = "n", keys = "<Leader>va", desc = "+Align" },
+              { mode = "n", keys = "<Leader>vc", desc = "+Conceal" },
+              { mode = "n", keys = "<Leader>w", desc = "+Window" },
+              { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
+              -- moje skratky - visual mode
+              { mode = "x", keys = "<Leader>o", desc = "+Obsidian" },
+              { mode = "x", keys = "<Leader>ol", desc = "+Links" },
+              { mode = "x", keys = "<Leader>p", desc = "+Python" },
+              -- { mode = "x", keys = "<Leader>r", desc = "+REPL" },
+              { mode = "x", keys = "<Leader>t", desc = "+Terminal" },
+              { mode = "x", keys = "<Leader>v", desc = "+Vim/Neovim" },
+              { mode = "x", keys = "<Leader>va", desc = "+Align" },
+            },-- }}}
+          })
+          -- }}}
+        end,
+      },
+      -- }}}
+
+      -- {{{ [ Mix ]
+
+      { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
+        -- enabled = false,
+        ft = { "jinja.html", "html" },
+      },-- }}}
+
+      { "brenoprata10/nvim-highlight-colors", -- show colors {{{
+        -- enabled = false,
+        opts = {},
+        keys = {-- {{{
+          { "<leader>vh", mode = "n", "<cmd>HighlightColors Toggle<cr>", desc = "highlight-colors toggle", noremap = true, silent = true },
+        },-- }}}
+      },-- }}}
+
+      { "uga-rosa/ccc.nvim", -- color picker (:CccPick){{{
+        -- enabled = false,
+        opts = {-- {{{
+          highlighter = {
+            auto_enable = true,
+            lsp = true,
+          },
+        },-- }}}
+        keys = {-- {{{
+          { "<leader>vp", mode = "n", "<cmd>CccPick<cr>", desc = "color picker", noremap = true, silent = true },
+        },-- }}}
+      },-- }}}
+
+      { "szw/vim-maximizer", -- maximize window {{{
+        -- enabled = false,
+        keys = {-- {{{
+          { "<leader>wm", mode = {"n"}, "<cmd>MaximizerToggle<cr>", desc = "maximize", noremap = true, silent = true },
+        },-- }}}
+      },-- }}}
+
+      { "godlygeek/tabular", -- align stuff (:Tabularize \|){{{
+        -- enabled = false,
+        keys = {-- {{{
+          { "<leader>va=", mode = {"n", "v"}, "<cmd>Tabularize /=<cr>", desc = "text by =", noremap = true, silent = true },
+          { "<leader>va|", mode = {"n", "v"}, "<cmd>Tabularize /|<cr>", desc = "text by |", noremap = true, silent = true },
+          { "<leader>va:", mode = {"n", "v"}, "<cmd>Tabularize /:<cr>", desc = "text by :", noremap = true, silent = true },
+          { "<leader>va<space>", mode = {"n", "v"}, "<cmd>Tabularize /<space><cr>", desc = "text by space", noremap = true, silent = true },
+          -- align table
+          -- https://heitorpb.github.io/bla/format-tables-in-vim/
+          { "<leader>vaT", mode = { "v" }, ":! tr -s ' ' | column -t -s '|' -o '|'<cr>", desc = "table only linux", noremap = true, silent = true },
+          -- https://lazybea.rs/posts/markdown-tables-and-neovim
+          { "<leader>vat", mode = { "v" }, ":!pandoc -t markdown-simple_tables<cr>", desc = "table using pandoc", noremap = true, silent = true },
+        },-- }}}
+      },-- }}}
+
+      { "2kabhishek/nerdy.nvim", -- nerd-fonts {{{
+        -- enabled = false,
+        dependencies = {-- {{{
+          'stevearc/dressing.nvim',
+          'nvim-telescope/telescope.nvim',
+        },-- }}}
+        -- cmd = 'Nerdy',
+        keys = {-- {{{
+          { "<leader>vf", mode = { "n" }, "<cmd>Nerdy<cr>", desc = "nerd fonts", noremap = true, silent = true },
         },-- }}}
       },-- }}}
 
