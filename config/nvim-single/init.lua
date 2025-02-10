@@ -33,7 +33,7 @@ local os_username = os.getenv("USERNAME") or os.getenv("USER")
 local py_venvs_path = os.getenv("VENV_HOME")
 local onedrive_path = os.getenv("OneDrive_DIR")
 local python_os = os_type == "windows" and "python" or "python3"
-local debugpy_path = os_type == "windows" and py_venvs_path .. "\\base-venv\\Scripts\\python.exe" or py_venvs_path .. "/base-venv/bin/python"
+local debugpy_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
 
 function _G.PythonInterpreter()-- {{{
   local venv_path = os.getenv("VIRTUAL_ENV") -- Get the path of the active virtual environment
@@ -1891,31 +1891,10 @@ require("lazy").setup(
           -- Add debuggers here
           "mfussenegger/nvim-dap-python",
         },-- }}}
-        keys = {
-          { "<leader>pdB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "breakpoint condition", noremap = true, silent = true },
-          { "<leader>pdb", function() require("dap").toggle_breakpoint() end, desc = "toggle breakpoint", noremap = true, silent = true },
-          { "<leader>pdc", function() require("dap").continue() end, desc = "run/continue", noremap = true, silent = true },
-          { "<leader>pda", function() require("dap").continue({ before = get_args }) end, desc = "run with args", noremap = true, silent = true },
-          { "<leader>pdC", function() require("dap").run_to_cursor() end, desc = "run to cursor", noremap = true, silent = true },
-          { "<leader>pdg", function() require("dap").goto_() end, desc = "go to line (no execute)", noremap = true, silent = true },
-          { "<leader>pdi", function() require("dap").step_into() end, desc = "step into", noremap = true, silent = true },
-          { "<leader>pdj", function() require("dap").down() end, desc = "down", noremap = true, silent = true },
-          { "<leader>pdk", function() require("dap").up() end, desc = "up", noremap = true, silent = true },
-          { "<leader>pdl", function() require("dap").run_last() end, desc = "run last", noremap = true, silent = true },
-          { "<leader>pdo", function() require("dap").step_out() end, desc = "step out", noremap = true, silent = true },
-          { "<leader>pdO", function() require("dap").step_over() end, desc = "step over", noremap = true, silent = true },
-          { "<leader>pdP", function() require("dap").pause() end, desc = "pause", noremap = true, silent = true },
-          { "<leader>pdr", function() require("dap").repl.toggle() end, desc = "toggle REPL", noremap = true, silent = true },
-          { "<leader>pds", function() require("dap").session() end, desc = "session", noremap = true, silent = true },
-          { "<leader>pdt", function() require("dap").terminate() end, desc = "terminate", noremap = true, silent = true },
-          { "<leader>pdw", function() require("dap.ui.widgets").hover() end, desc = "widgets", noremap = true, silent = true },
-          -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-          { "<leader>pdu", function() require("dapui").toggle() end, desc = "UI", noremap = true, silent = true },
-          { "<leader>pde", mode = {"n", "v"}, function() require("dapui").eval() end, desc = "eval", noremap = true, silent = true },
-        },
         config = function()
-          local dap = require "dap"
-          local dapui = require "dapui"
+          local dap = require("dap")
+          local dapui = require("dapui")
+          local dap_python = require("dap-python")
 
           require("mason-nvim-dap").setup {-- {{{
             automatic_installation = true,
@@ -1926,8 +1905,8 @@ require("lazy").setup(
           }-- }}}
 
           -- Dap UI setup
-          dapui.setup {-- {{{
-            icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
+          dapui.setup({-- {{{
+            -- icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
             -- controls = {
             --   icons = {
             --     pause = "⏸",
@@ -1941,9 +1920,9 @@ require("lazy").setup(
             --     disconnect = "⏏",
             --   },
             -- },
-          }-- }}}
+          })-- }}}
 
-          -- Change breakpoint icons
+          -- -- Change breakpoint icons
           -- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
           -- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
           -- local breakpoint_icons = vim.g.have_nerd_font
@@ -1955,33 +1934,64 @@ require("lazy").setup(
           --   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
           -- end
 
-          dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-          dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-          dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
+          vim.fn.sign_define("DapBreakpoint", {
+            text = "",
+            texthl = "DiagnosticSignError",
+            linehl = "",
+            numhl = "",
+          })
+
+          vim.fn.sign_define("DapBreakpointRejected", {
+            text = "", -- or "❌"
+            texthl = "DiagnosticSignError",
+            linehl = "",
+            numhl = "",
+          })
+
+          vim.fn.sign_define("DapStopped", {
+            text = "", -- or "→"
+            texthl = "DiagnosticSignWarn",
+            linehl = "Visual",
+            numhl = "DiagnosticSignWarn",
+          })
+
+          -- Automatically open/close DAP UI
+          dap.listeners.after.event_initialized["dapui_config"] = function()
+            dapui.open()
+          end
+
+          -- dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+          -- dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+          -- dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
           -- python specific config
-          -- require("dap-python").setup(debugpy_path)
-          -- require("dap-python").setup("~\\.py-venv\\base-venv\\Scripts\\python.exe")
-          -- local debug_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
-          -- dap_python.setup(debug_path)
-          -- require("dap-python").setup(debug_path)
-          -- require('dap-python').resolve_python = function()
-          --   return 'C:\\Users\\mech\\AppData\\Local\\nvim-data\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe'
-          -- end
-          local dap_python = require("dap-python")
-          local python_path = vim.fn.exepath("python")  -- Use the active Python interpreter
+          dap_python.setup(debugpy_path)
+          -- dap_python.setup("python")
 
-          dap_python.setup(python_path)
-
-          table.insert(require("dap").configurations.python, {
-            type = "python",
-            request = "launch",
-            name = "Launch file (no frozen modules)",
-            program = "${file}",
-            pythonPath = python_path,
-            args = { "-Xfrozen_modules=off" },
-          })
         end,
+        keys = {-- {{{
+          -- { "<leader>pdB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "breakpoint condition", noremap = true, silent = true },
+          { "<leader>pdb", function() require("dap").toggle_breakpoint() end, desc = "toggle breakpoint", noremap = true, silent = true },
+          { "<leader>pdc", function() require("dap").continue() end, desc = "run/continue", noremap = true, silent = true },
+          -- { "<leader>pda", function() require("dap").continue({ before = get_args }) end, desc = "run with args", noremap = true, silent = true },
+          -- { "<leader>pdC", function() require("dap").run_to_cursor() end, desc = "run to cursor", noremap = true, silent = true },
+          -- { "<leader>pdg", function() require("dap").goto_() end, desc = "go to line (no execute)", noremap = true, silent = true },
+          { "<leader>pdi", function() require("dap").step_into() end, desc = "step into", noremap = true, silent = true },
+          -- { "<leader>pdj", function() require("dap").down() end, desc = "down", noremap = true, silent = true },
+          -- { "<leader>pdk", function() require("dap").up() end, desc = "up", noremap = true, silent = true },
+          -- { "<leader>pdl", function() require("dap").run_last() end, desc = "run last", noremap = true, silent = true },
+          { "<leader>pdo", function() require("dap").step_out() end, desc = "step out", noremap = true, silent = true },
+          { "<leader>pdO", function() require("dap").step_over() end, desc = "step over", noremap = true, silent = true },
+          -- { "<leader>pdP", function() require("dap").pause() end, desc = "pause", noremap = true, silent = true },
+          -- { "<leader>pdr", function() require("dap").repl.toggle() end, desc = "toggle REPL", noremap = true, silent = true },
+          -- { "<leader>pds", function() require("dap").session() end, desc = "session", noremap = true, silent = true },
+          { "<leader>pdq", function() require("dap").terminate() end, desc = "terminate", noremap = true, silent = true },
+          { "<leader>pdw", function() require("dap.ui.widgets").hover() end, desc = "widgets", noremap = true, silent = true },
+          -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+          { "<leader>pdu", function() require("dapui").toggle() end, desc = "UI", noremap = true, silent = true },
+          -- { "<leader>pde", mode = {"n", "v"}, function() require("dapui").eval() end, desc = "eval", noremap = true, silent = true },
+        },-- }}}
       },
       -- }}}
 
@@ -2123,7 +2133,25 @@ require("lazy").setup(
           -- }}}
 
           -- {{{ mini.ai
-          require('mini.ai').setup()
+          require('mini.ai').setup({
+            -- n_lines = 500,
+            custom_textobjects = {
+              b = require("mini.ai").gen_spec.treesitter({ -- code block
+                a = { "@code_cell.outer", "@block.outer", "@conditional.outer", "@loop.outer" },
+                i = { "@code_cell.inner", "@block.inner", "@conditional.inner", "@loop.inner" },
+              }),
+              f = require("mini.ai").gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }), -- function
+              c = require("mini.ai").gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }), -- class
+              t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" }, -- tags
+              d = { "%f[%d]%d+" }, -- digits
+              e = { -- Word with case
+                { "%u[%l%d]+%f[^%l%d]", "%f[%S][%l%d]+%f[^%l%d]", "%f[%P][%l%d]+%f[^%l%d]", "^[%l%d]+%f[^%l%d]" },
+                "^().*()$",
+              },
+              u = require("mini.ai").gen_spec.function_call(), -- u for "Usage"
+              U = require("mini.ai").gen_spec.function_call({ name_pattern = "[%w_]" }), -- without dot in function name
+            },
+          })
           -- }}}
 
           -- {{{ mini.clue
