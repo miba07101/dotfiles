@@ -635,6 +635,8 @@ require("lazy").setup(
             "css",
             "scss",
             "htmldjango",
+            "jinja",
+            "jinja_inline",
             "markdown",
             "markdown_inline",
             "query",
@@ -2299,7 +2301,7 @@ require("lazy").setup(
 
       { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
         -- enabled = false,
-        ft = { "jinja.html", "html" },
+        -- ft = { "jinja.html", "html" },
       },-- }}}
 
       { "brenoprata10/nvim-highlight-colors", -- show colors {{{
