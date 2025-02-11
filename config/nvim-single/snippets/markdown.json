@@ -1,31 +1,43 @@
 {
   "eq": {
     "prefix": ["eq"],
-    "body": ["\\$\\$", "$1", "\\$\\$ {#eq-${2: label}}"]
+    "body": ["\\$\\$", "$1", "\\$\\$ {#eq-${2: label}}"],
+    "description": "Equation"
   },
   "Insert Block Equation": {
     "prefix": "$$",
-    "body": ["\\$$", "${0}", "\\$$"]
+    "body": ["\\$$", "${0}", "\\$$"],
+    "description": "Equation block"
   },
   "img": {
     "prefix": ["img"],
-    "body": ["![](./img/$1)"]
+    "body": ["![](./img/$1)"],
+    "description": "Image link"
+  },
+  "url": {
+    "prefix": ["url-link"],
+    "body": ["[$1]($2)"],
+    "description": "URL link"
   },
   "br": {
     "prefix": ["br"],
-    "body": ["<br/>"]
+    "body": ["<br/>"],
+    "description": "Break"
   },
   "py-code": {
     "prefix": ["pyc"],
-    "body": ["```python ", "$1", "```"]
+    "body": ["```python ", "$1", "```"],
+    "description": "Python code"
   },
   "bash-code": {
     "prefix": ["bac"],
-    "body": ["```bash ", "$1", "```"]
+    "body": ["```bash ", "$1", "```"],
+    "description": "Bash code"
   },
   "todo": {
     "prefix": ["todo"],
-    "body": ["* [ ] ${1:task} -- due:${2:today} ${3: project:}"]
+    "body": ["* [ ] ${1:task} -- due:${2:today} ${3: project:}"],
+    "description": "TODO"
   },
   "callout-note": {
     "prefix": ["call-note"],

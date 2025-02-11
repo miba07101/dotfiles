@@ -59,7 +59,7 @@ function _G.MoltenInitialize()-- {{{
   local venv_path = os.getenv("VIRTUAL_ENV") -- musi byt priamo v tejto funkcii, aby ked zmenim "venv", tak to vedelo inicializovat molten kernel
   if venv_path then
     -- Extract venv name (e.g., from "C:\\Users\\mech\\.py-venv\\myenv" -> "myenv")
-    local venv_name = venv_path:match("[^/\\]+$") or "python3"
+local venv_name = venv_path:match("[^/\\]+$") or "python3"
     -- Initialize Molten with extracted venv name
     vim.cmd(("MoltenInit %s"):format(venv_name))
   else
@@ -97,51 +97,51 @@ end-- }}}
 
 -- {{{ [[ OPTIONS ]]
 local opt = vim.opt
-local g = vim.g
+local g   = vim.g
 
 -- {{{ File
-opt.backup = false -- create a backup file
-opt.clipboard = "unnamedplus" -- system clipboard
+opt.backup           = false -- create a backup file
+opt.clipboard        = "unnamedplus" -- system clipboard
 -- opt.concealcursor = "" -- conceal cursor disable
--- opt.conceallevel = 1 -- conceal level disable
-opt.fileencoding = "utf-8" -- character encoding
-opt.filetype = "plugin" -- plugin loading of file types
-opt.hidden = true -- switching from unsaved buffers
-opt.inccommand = "split" -- preview substitutions live, as you type
+-- opt.conceallevel  = 1 -- conceal level disable
+opt.fileencoding     = "utf-8" -- character encoding
+opt.filetype         = "plugin" -- plugin loading of file types
+opt.hidden           = true -- switching from unsaved buffers
+opt.inccommand       = "split" -- preview substitutions live, as you type
 opt.iskeyword:remove("_") -- oddeli slova pri mazani, nebude brat ako jedno slovo
-opt.matchtime = 2 -- duration of showmatch, default 5
-opt.matchpairs = { "(:)", "{:}", "[:]", "<:>" }
-opt.mouse = "a" -- mouse
-opt.scrolloff = 5 -- how many lines are displayed on the upper and lower sides of the cursor
-opt.showmode = true -- display the current vim mode (no need)
-opt.sidescrolloff = 8 -- number of columns to keep at the sides of the cursor
-opt.splitbelow = true -- splitting window below
-opt.splitright = true -- splitting window right
-opt.swapfile = false -- create a swap file
-opt.syntax = "on"
-opt.termguicolors = true -- terminal supports more colors
-opt.timeoutlen = 400 -- time to wait for a mapped sequence to complete, default 1000
-opt.updatetime = 100 -- speed up response time
+opt.matchtime        = 2 -- duration of showmatch, default 5
+opt.matchpairs       = { "(:)", "{:}", "[:]", "<:>" }
+opt.mouse            = "a" -- mouse
+opt.scrolloff        = 5 -- how many lines are displayed on the upper and lower sides of the cursor
+opt.showmode         = true -- display the current vim mode (no need)
+opt.sidescrolloff    = 8 -- number of columns to keep at the sides of the cursor
+opt.splitbelow       = true -- splitting window below
+opt.splitright       = true -- splitting window right
+opt.swapfile         = false -- create a swap file
+opt.syntax           = "on"
+opt.termguicolors    = true -- terminal supports more colors
+opt.timeoutlen       = 400 -- time to wait for a mapped sequence to complete, default 1000
+opt.updatetime       = 100 -- speed up response time
 -- opt.whichwrap:append("<,>,[,]") -- keys allowed to move to the previous/next line when the beginning/end of line is reached
 opt.whichwrap:remove("l,h,<Left>,<Right>") -- keys removed to move to the previous/next line when the beginning/end of line is reached
-opt.wrap = false -- disable wrapping of lines longer than the width of window
-opt.writebackup = false -- create backups when writing files
-opt.modifiable = true
+opt.wrap             = false -- disable wrapping of lines longer than the width of window
+opt.writebackup      = false -- create backups when writing files
+opt.modifiable       = true
 -- End File }}}
 
 -- {{{ Completition
 opt.completeopt = { "menuone", "noselect" } -- completion options
-opt.pumheight = 10 -- completion menu height
-opt.wildmenu = true -- make tab completion for files/buffers act like bash
+opt.pumheight   = 10 -- completion menu height
+opt.wildmenu    = true -- make tab completion for files/buffers act like bash
 -- End Completition }}}
 
 -- {{{ Fold
 opt.foldenable = true -- folding allowed
-opt.foldlevel = 1 -- folding from lvl 1
+opt.foldlevel  = 1 -- folding from lvl 1
 opt.foldmethod = "expr" -- folding method
-opt.foldexpr = "nvim_treesitter#foldexpr()" -- folding method use treesitter
+opt.foldexpr   = "nvim_treesitter#foldexpr()" -- folding method use treesitter
 opt.foldcolumn = "1" -- folding column show
---opt.foldtext=[[getline(v:foldstart)]] -- folding - disable all chunk when folded
+--opt.foldtext = [[getline(v:foldstart)]] -- folding - disable all chunk when folded
 opt.fillchars:append({
   eob = " ",
   fold = " ",
@@ -152,42 +152,42 @@ opt.fillchars:append({
 -- End Fold }}}
 
 -- {{{ Indention
-local indent = 2
-opt.autoindent = true -- auto indentation
-opt.expandtab = true -- convert tabs to spaces (prefered for python)
-opt.shiftround = true -- use multiple of shiftwidth when indenting with "<" and ">"
-opt.shiftwidth = indent -- spaces inserted for each indentation
+local indent    = 2
+opt.autoindent  = true -- auto indentation
+opt.expandtab   = true -- convert tabs to spaces (prefered for python)
+opt.shiftround  = true -- use multiple of shiftwidth when indenting with "<" and ">"
+opt.shiftwidth  = indent -- spaces inserted for each indentation
 opt.smartindent = true -- make indenting smarter
 opt.softtabstop = indent -- when hitting <BS>, pretend like a tab is removed, even if spaces
-opt.tabstop = indent -- insert spaces for a tab
+opt.tabstop     = indent -- insert spaces for a tab
 -- End Indention }}}
 
 -- {{{ Search
-opt.hlsearch = true -- search highlighting
+opt.hlsearch   = true -- search highlighting
 opt.ignorecase = true -- ignore case when searching
-opt.incsearch = true -- highlight while searching
-opt.smartcase = true -- intelligent case sensitivity when searching (if there is upper case, turn off case ignoring)
+opt.incsearch  = true -- highlight while searching
+opt.smartcase  = true -- intelligent case sensitivity when searching (if there is upper case, turn off case ignoring)
 opt.wildignore = opt.wildignore + { "*/node_modules/*", "*/.git/*", "*/vendor/*" }
-opt.wrapscan = true -- search the entire file repeatedly
+opt.wrapscan   = true -- search the entire file repeatedly
 -- End Search }}}
 
 -- {{{ UI
-opt.cmdheight = 0 -- command line height
-opt.cursorline = true -- highlight the current line
-opt.laststatus = 3 -- global status bar (sposobuje nefunkcnost resource lua.init)
-opt.number = true -- absolute line numbers
+opt.cmdheight        = 0 -- command line height
+opt.cursorline       = true -- highlight the current line
+opt.laststatus       = 3 -- global status bar (sposobuje nefunkcnost resource lua.init)
+opt.number           = true -- absolute line numbers
 --opt.relativenumber = true -- relative line numbers
-opt.signcolumn = "yes" -- symbol column width
-opt.list = true -- show some invisible characters (tabs...
-opt.listchars = { eol = "¬", tab = "› ", trail = "·", nbsp = "␣" } -- list characters
+opt.signcolumn       = "yes" -- symbol column width
+opt.list             = true -- show some invisible characters (tabs...
+opt.listchars        = { eol = "¬", tab = "› ", trail = "·", nbsp = "␣" } -- list characters
 -- opt.background = "light"
 -- End UI }}}
 
 -- {{{ Netrw File Manager
---g.netrw_banner = 0 -- disable the banner at the top
+--g.netrw_banner    = 0 -- disable the banner at the top
 --g.netrw_liststyle = 0 -- use a tree view for directories
---g.netrw_winsize = 30 -- set the width of the netrw window (in percent)
---g.netrw_sort_by = "name" -- sort files by name; can be 'name', 'time', 'size', etc.
+--g.netrw_winsize   = 30 -- set the width of the netrw window (in percent)
+--g.netrw_sort_by   = "name" -- sort files by name; can be 'name', 'time', 'size', etc.
 -- End Netrw File Manager }}}
 
 -- {{{ OS Cursor, Shell
@@ -201,14 +201,14 @@ elseif os_type == "windows" then
   -- opt.shellcmdflag = "-NoLogo"
   -- opt.shellquote = ""
   -- opt.shellxquote = ""
-  opt.shell = "pwsh.exe"
-  opt.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
-  opt.shellredir = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
-  opt.shellpipe = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
-  opt.shellquote = ""
-  opt.shellxquote = ""
+  opt.shell        = "pwsh.exe"
+  opt.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding = [Console]::OutputEncoding = [System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
+  opt.shellredir   = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+  opt.shellpipe    = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+  opt.shellquote   = ""
+  opt.shellxquote  = ""
 else
-  opt.shell = "/bin/zsh"
+  opt.shell        = "/bin/zsh"
 end
 -- End OS Cursor, Shell }}}
 
@@ -2095,6 +2095,7 @@ require("lazy").setup(
       -- {{{ [ Mini.nvim collection ]
       {
         "echasnovski/mini.nvim",
+        event = "VeryLazy",
         enabled = true,
         config = function()
           -- {{{ mini.comment
@@ -2113,29 +2114,80 @@ require("lazy").setup(
           }
 
           require("mini.comment").setup({
+            options = {
+            },
             mappings = mappings_config,
           })
           -- }}}
 
-          -- -- {{{ mini.notify
-          -- require("mini.notify").setup()
-          -- -- }}}
+          -- {{{ mini.align
+          require("mini.align").setup()
+          -- }}}
+
+          -- {{{ mini.splitjoin
+          require("mini.splitjoin").setup({
+            mappings = {
+              toggle = 'gS',
+              split = 'gk',
+              join = 'gj',
+            },
+          })
+          -- }}}
 
           -- {{{ mini.surround
-          require("mini.surround").setup()
-          -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-          -- - sd'   - [S]urround [D]elete [']quotes
-          -- - sr)'  - [S]urround [R]eplace [)] [']
+          require("mini.surround").setup({
+            -- - gsaiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
+            -- - gsd'   - [S]urround [D]elete [']quotes
+            -- - gsr)'  - [S]urround [R]eplace [)] [']
+            mappings = {
+              add = "gsa", -- Add surrounding in Normal and Visual modes
+              delete = "gsd", -- Delete surrounding
+              find = "gsf", -- Find surrounding (to the right)
+              find_left = "gsF", -- Find surrounding (to the left)
+              highlight = "gsh", -- Highlight surrounding
+              replace = "gsr", -- Replace surrounding
+              update_n_lines = "gsn", -- Update `n_lines`
+            },
+          })
           -- }}}
 
           -- {{{ mini.pairs
-          require("mini.pairs").setup()
+          require("mini.pairs").setup({
+           mappings = {
+                    ['<'] = { action = 'open', pair = '<>', neigh_pattern = '[^\\].',   register = { cr = false } },
+                    ['>'] = { action = 'close', pair = '<>', neigh_pattern = '[^\\].',   register = { cr = false } },
+            }
+          })
           -- }}}
 
           -- {{{ mini.ai
           require('mini.ai').setup({
-            -- n_lines = 500,
+            n_lines = 500,
             custom_textobjects = {
+              -- Brackets and quotes
+              ['('] = { '%b()', '^.().*().$' },
+              ['['] = { '%b[]', '^.().*().$' },
+              ['{'] = { '%b{}', '^.().*().$' },
+              ['"'] = { '%b""', '^.().*().$' },
+              ["'"] = { "%b''", '^.().*().$' },
+              ['`'] = { '%b``', '^.().*().$' },
+
+              -- Common programming patterns
+              -- o = { -- Around function calls
+              --   { '%b()', '^.-%s*().*()$' },
+              -- },
+              -- f = { -- Around function definitions
+              --   { '^%s*function%s*[^%s(]+%s*%b()%s*{',         '}' },
+              --   { '^%s*local%s+function%s*[^%s(]+%s*%b()%s*{', '}' },
+              --   { '^%s*[^%s(]+%s*=%s*function%s*%b()%s*{',     '}' }, -- For variable functions
+              -- },
+              -- c = {                                                   -- Around class/module definitions
+              --   { '^%s*class%s+[^%s{]+%s*{',  '}' },
+              --   { '^%s*module%s+[^%s{]+%s*{', '}' },
+              -- },
+              -- m = { -- Around methods
+              --   { '^%s*[^%s(]+%s*%b()%s*{', '}' },
+              -- },
               b = require("mini.ai").gen_spec.treesitter({ -- code block
                 a = { "@code_cell.outer", "@block.outer", "@conditional.outer", "@loop.outer" },
                 i = { "@code_cell.inner", "@block.inner", "@conditional.inner", "@loop.inner" },
@@ -2228,6 +2280,18 @@ require("lazy").setup(
           })
           -- }}}
         end,
+      },
+      -- }}}
+
+      -- {{{ [ Snack.nvim collection ]
+      {
+        "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
+        -- enabled = false,
+        opts = {
+          statuscolumn = { enabled = true },
+        },
       },
       -- }}}
 
