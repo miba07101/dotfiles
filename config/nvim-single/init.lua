@@ -635,8 +635,8 @@ require("lazy").setup(
             "css",
             "scss",
             "htmldjango",
-            "jinja",
-            "jinja_inline",
+            -- "jinja",
+            -- "jinja_inline",
             "markdown",
             "markdown_inline",
             "query",
@@ -1238,7 +1238,7 @@ require("lazy").setup(
             },
             sections = {
               lualine_a = {
-                { "filetype", colored = false, icon_only = true },
+                { "filetype", colored = false, icon_only = false },
                 { "filename", path = 4, symbols = { modified = "[+]", readonly = "[-]" } },
                 { buffer_counts },
               },
@@ -2300,7 +2300,7 @@ require("lazy").setup(
       -- {{{ [ Mix ]
 
       { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
-        -- enabled = false,
+        enabled = false,
         -- ft = { "jinja.html", "html" },
       },-- }}}
 

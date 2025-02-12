@@ -46,6 +46,9 @@
     }
   },
   "notebook.defaultFormatter": "charliermarsh.ruff",
+  "files.associations": {
+    "*.html": "jinja-html"
+  },
   // -----------------------------------------------------------------------
   // Git
   // -----------------------------------------------------------------------
@@ -296,6 +299,6 @@
   //-------------------------------------------------------------------
   // OTHERS
   //-------------------------------------------------------------------
-  "workbench.colorTheme": "Kanagawa Lotus",
+  "workbench.colorTheme": "Kanagawa Wave",
   "python.defaultInterpreterPath": "C:\\Users\\mech\\scoop\\apps\\python\\current\\python.exe"
 }
