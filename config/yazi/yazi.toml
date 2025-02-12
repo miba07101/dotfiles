@@ -1,13 +1,6 @@
 [manager]
 show_hidden = true
 
-[[plugin.prepend_fetchers]]
-id   = "mime"
-if   = "!(mime|dummy)"
-name = "*"
-run  = "mime-ext"
-prio = "high"
-
 [opener]
 edit = [
   { run = '$EDITOR "$@"', block = true, for = "unix" },
@@ -20,9 +13,31 @@ play = [
 ]
 
 [open]
-rules = [
-  { mime = "text/*", use = "edit" },
+prepend_rules = [
   { name = "*.qmd", use = "edit" },
-  { name = "*.json", use = "edit" },
   { name = "*.ps1", use = "edit" },
+	{ name = "*.json", use = "edit" },
+	{ name = "*.sh", use = "edit" },
+	{ name = "*.toml", use = "edit" },
+	{ name = "*.y*ml", use = "edit" },
+	{ name = "*config", use = "edit" },
+	{ name = "*.cfg", use = "edit" },
+	{ name = "*env", use = "edit" },
+	{ name = "*.d", use = "edit" },
+	{ name = "*.md", use = "edit" },
+	{ name = "*.txt", use = "edit" },
+	{ name = ".zsh*", use = "edit" },
+	{ name = "*.ini", use = "edit" },
+	{ name = "*.lua", use = "edit" },
+	{ name = "*.xml", use = "edit" },
+	{ name = "*.log", use = "edit" },
+# open with normal / gnome / kde
+	{ name = "*.ods", use = "open" },
+	{ name = "*.pdf", use = "open" },
+# open with multimedia player
+	{ name = "*.mp3", use = "play" },
+
+]
+append_rules = [
+	{ name = "*", use = "edit" },
 ]
