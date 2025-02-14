@@ -800,15 +800,15 @@ require("lazy").setup(
                 "typst",
               },
             },-- }}}
-            -- jinja_lsp = {-- {{{
-            --   cmd = { 'jinja-lsp' },
-            --   filetypes = { "htmldjango", "jinja", },
-            --   name = "jinja_lsp",
-            --   root_dir = function(fname)
-            --     return vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
-            --   end,
-            --   single_file_support = true,
-            -- },-- }}}
+            jinja_lsp = {-- {{{
+              cmd = { 'jinja-lsp' },
+              filetypes = { "htmldjango", "jinja", },
+              name = "jinja_lsp",
+              root_dir = function(fname)
+                return vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
+              end,
+              single_file_support = true,
+            },-- }}}
           }
 
           -- Auto install servers
