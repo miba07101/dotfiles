@@ -45,7 +45,8 @@ else
 end
 
 -- fonts settings
-config.font_size = 11.2 -- je tam .2 kvoli lepsiemu renderovaniu
+-- config.font_size = 11.2 -- je tam .2 kvoli lepsiemu renderovaniu
+config.font_size = 11
 config.warn_about_missing_glyphs=false
 config.line_height = 1.05
 -- config.harfbuzz_features = { "calt=1", "clig=1", "liga=1" }

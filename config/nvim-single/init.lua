@@ -2302,6 +2302,30 @@ require("lazy").setup(
         -- enabled = false,
         opts = {
           statuscolumn = { enabled = true },
+          image = {
+            enabled = true,
+            formats = {
+              "png",
+              "jpg",
+              "jpeg",
+              "gif",
+              "bmp",
+              "webp",
+              "tiff",
+              "heic",
+              "avif",
+              "mp4",
+              "mov",
+              "avi",
+              "mkv",
+              "webm",
+              "pdf",
+            },
+          },
+        },
+        keys = {
+    -- Top Pickers & Explorer
+    { "<leader><space>", function() Snacks.image.hover() end, desc = "image preview" },
         },
       },
       -- }}}

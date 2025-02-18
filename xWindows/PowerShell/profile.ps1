@@ -95,6 +95,10 @@ function vv {
 function base {
   . "C:\Users\$env:USERNAME\.py-venv\base-venv\Scripts\Activate.ps1"
 }
+
+function io {
+  . "C:\Users\$env:USERNAME\.py-venv\io-venv\Scripts\Activate.ps1"
+}
 Set-Alias dea deactivate
 
 # lazygit
