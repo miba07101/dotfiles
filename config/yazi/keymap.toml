@@ -4,4 +4,5 @@ prepend_keymap = [
 	{ on = [ "g", ".", "r" ], run = "cd ~/git-repos/", desc = "go git-repos" },
 	{ on = [ "g", ".", "d" ], run = "cd ~/git-repos/dotfiles/", desc = "go dotfiles" },
 	{ on = [ "g", "o", "d" ], run = "cd ~/OneDrive", desc = "go Onedrive" },
+	{ on = [ "g", "w" ], run = "cd \\\\wsl.localhost\\openSUSE-Tumbleweed\\home\\vimi", desc = "go WSL" },
 ]

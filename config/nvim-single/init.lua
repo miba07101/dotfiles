@@ -2325,7 +2325,7 @@ require("lazy").setup(
         },
         keys = {
     -- Top Pickers & Explorer
-    { "<leader><space>", function() Snacks.image.hover() end, desc = "image preview" },
+    { "<leader><space>", function() require('snacks').image.hover() end, desc = "image preview" },
         },
       },
       -- }}}
