@@ -38,6 +38,16 @@ function push {
   CopyGitRepoReverse
 }
 
+function pushall {
+  . "$scriptPath\git-auto-all.ps1"
+    PushAllGitRepos
+}
+
+function pullall {
+  . "$scriptPath\git-auto-all.ps1"
+    PullAllGitRepos
+}
+
 function on {
 param (
     [Parameter(Mandatory = $true)]
@@ -108,6 +118,22 @@ function lg {
 function lazy {
   lazygit
 }
+
+# which/where
+function which {
+  param (
+    [string]$command
+  )
+  Get-Command $command | Select-Object -ExpandProperty Path
+}
+
+function whereis {
+    param (
+        [string[]]$commands
+    )
+    & where.exe $commands
+}
+
 
 # recording stream video
 # uz velmi nefunguje

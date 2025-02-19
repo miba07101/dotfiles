@@ -9,6 +9,7 @@ param (
     "C:\Users\mech\git-repos\dotfiles\xWindows\PowerShell\vuz-copy-git-repo.ps1" = "C:\Users\mech\Documents\PowerShell\vuz-copy-git-repo.ps1"
     "C:\Users\mech\git-repos\dotfiles\xWindows\PowerShell\obsidian-create-note.ps1" = "C:\Users\mech\Documents\PowerShell\obsidian-create-note.ps1"
     "C:\Users\mech\git-repos\dotfiles\xWindows\PowerShell\obsidian-categorize-notes.ps1" = "C:\Users\mech\Documents\PowerShell\obsidian-categorize-notes.ps1"
+    "C:\Users\mech\git-repos\dotfiles\xWindows\PowerShell\git-auto-all.ps1" = "C:\Users\mech\Documents\PowerShell\git-auto-all.ps1"
     "C:\Users\mech\git-repos\dotfiles\config\starship.toml" = "C:\Users\mech\Documents\PowerShell\starship.toml"
     "C:\Users\mech\git-repos\dotfiles\config\wezterm" = "C:\Users\mech\.config\wezterm"
     "C:\Users\mech\git-repos\dotfiles\config\nvim-single\init.lua" = "C:\Users\mech\AppData\Local\nvim\init.lua"
