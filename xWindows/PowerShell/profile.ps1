@@ -39,6 +39,8 @@ function push {
 }
 
 function pushall {
+  . "$scriptPath\vuz-copy-dotfiles.ps1"
+  CopyGitRepoReverse
   . "$scriptPath\git-auto-all.ps1"
     PushAllGitRepos
 }
@@ -46,6 +48,8 @@ function pushall {
 function pullall {
   . "$scriptPath\git-auto-all.ps1"
     PullAllGitRepos
+  . "$scriptPath\vuz-copy-dotfiles.ps1"
+  CopyGitRepo
 }
 
 function on {
