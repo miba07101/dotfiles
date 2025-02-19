@@ -26,30 +26,30 @@ function lsi {
 
 $scriptPath = "C:\Users\$env:UserName\Documents\PowerShell"
 
-function pull {
-  # dot-source the script
-  . "$scriptPath\vuz-copy-git-repo.ps1"
-  # call function
-  CopyGitRepo
-}
+# function pull {
+#   # dot-source the script
+#   . "$scriptPath\vuz-copy-git-repo.ps1"
+#   # call function
+#   CopyGitRepo
+# }
+#
+# function push {
+#   . "$scriptPath\vuz-copy-git-repo.ps1"
+#   CopyGitRepoReverse
+# }
 
 function push {
-  . "$scriptPath\vuz-copy-git-repo.ps1"
-  CopyGitRepoReverse
-}
-
-function pushall {
   . "$scriptPath\vuz-copy-dotfiles.ps1"
-  CopyGitRepoReverse
-  . "$scriptPath\git-auto-all.ps1"
+    CopyGitRepoReverse
+    . "$scriptPath\git-auto-all.ps1"
     PushAllGitRepos
 }
 
-function pullall {
+function pull {
   . "$scriptPath\git-auto-all.ps1"
     PullAllGitRepos
-  . "$scriptPath\vuz-copy-dotfiles.ps1"
-  CopyGitRepo
+    . "$scriptPath\vuz-copy-dotfiles.ps1"
+    CopyGitRepo
 }
 
 function on {
