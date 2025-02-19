@@ -41,12 +41,12 @@ $scriptPath = "C:\Users\$env:UserName\Documents\PowerShell"
 function push {
   . "$scriptPath\vuz-copy-dotfiles.ps1"
     CopyGitRepoReverse
-    . "$scriptPath\git-auto-all.ps1"
+    . "$scriptPath\vuz-git-auto-all.ps1"
     PushAllGitRepos
 }
 
 function pull {
-  . "$scriptPath\git-auto-all.ps1"
+  . "$scriptPath\vuz-git-auto-all.ps1"
     PullAllGitRepos
     . "$scriptPath\vuz-copy-dotfiles.ps1"
     CopyGitRepo
