@@ -108,6 +108,115 @@ function y() {
 	rm -f -- "$tmp"
 }
 
+# git auto push/pull
+function push() {
+    local base_dirs=("$HOME/git-repos")  # Default path, change if needed
+    local single_repos=("$HOME/.dotfiles")  # Single repository paths
+
+    for base_dir in "${base_dirs[@]}"; do
+        # Ensure the directory exists
+        if [[ ! -d "$base_dir" ]]; then
+            echo -e "\e[31mError: Directory '$base_dir' not found!\e[0m"
+            continue
+        fi
+
+        # Iterate over all subdirectories (assuming each is a Git repo)
+        for repo in "$base_dir"/*/; do
+            [[ -d "$repo/.git" ]] || { echo -e "\e[33mSkipping: Not a Git repository ($repo)\e[0m"; continue; }
+
+            echo -e "\n\e[36mProcessing repository: $repo\e[0m"
+            cd "$repo" || continue
+
+            # Check for changes
+            if git status --porcelain | grep -q .; then
+                changes=$(git diff --name-only)
+                echo -n "Enter a commit message for $repo (or press Enter for default): "
+                read -r commit_message
+                commit_message=${commit_message:-"up $(hostname) $changes $(date '+%Y-%m-%d %H:%M')"}
+
+                # Perform Git operations
+                git add .
+                if git commit -m "$commit_message"; then
+                    echo -e "\e[32mCommitted changes in $repo\e[0m"
+                    git push && echo -e "\e[32mPushed changes for $repo\e[0m" || echo -e "\e[31mPush failed in $repo\e[0m"
+                else
+                    echo -e "\e[31mCommit failed in $repo\e[0m"
+                fi
+            else
+                echo -e "\e[32mNo changes to commit in $repo\e[0m"
+            fi
+        done
+    done
+
+    # Handle single repositories
+    for repo in "${single_repos[@]}"; do
+        [[ -d "$repo/.git" ]] || { echo -e "\e[33mSkipping: Not a Git repository ($repo)\e[0m"; continue; }
+
+        echo -e "\n\e[36mProcessing repository: $repo\e[0m"
+        cd "$repo" || continue
+
+        # Check for changes
+        if git status --porcelain | grep -q .; then
+            changes=$(git diff --name-only)
+            echo -n "Enter a commit message for $repo (or press Enter for default): "
+            read -r commit_message
+            commit_message=${commit_message:-"up $(hostname) $changes $(date '+%Y-%m-%d %H:%M')"}
+
+            # Perform Git operations
+            git add .
+            if git commit -m "$commit_message"; then
+                echo -e "\e[32mCommitted changes in $repo\e[0m"
+                git push && echo -e "\e[32mPushed changes for $repo\e[0m" || echo -e "\e[31mPush failed in $repo\e[0m"
+            else
+                echo -e "\e[31mCommit failed in $repo\e[0m"
+            fi
+        else
+            echo -e "\e[32mNo changes to commit in $repo\e[0m"
+        fi
+    done
+}
+
+function pull() {
+    local base_dirs=("$HOME/git-repos")  # Default path, change if needed
+    local single_repos=("$HOME/.dotfiles")  # Single repository paths
+
+    for base_dir in "${base_dirs[@]}"; do
+        # Ensure the directory exists
+        if [[ ! -d "$base_dir" ]]; then
+            echo -e "\e[31mError: Directory '$base_dir' not found!\e[0m"
+            continue
+        fi
+
+        # Iterate over all subdirectories (assuming each is a Git repo)
+        for repo in "$base_dir"/*/; do
+            [[ -d "$repo/.git" ]] || { echo -e "\e[33mSkipping: Not a Git repository ($repo)\e[0m"; continue; }
+
+            echo -e "\n\e[36mProcessing repository: $repo\e[0m"
+            cd "$repo" || continue
+            echo -e "\e[34mPulling latest changes for $repo...\e[0m"
+            if git pull; then
+                echo -e "\e[32mSuccessfully pulled changes for $repo\e[0m"
+            else
+                echo -e "\e[31mPull failed in $repo\e[0m"
+            fi
+        done
+    done
+
+    # Handle single repositories
+    for repo in "${single_repos[@]}"; do
+        [[ -d "$repo/.git" ]] || { echo -e "\e[33mSkipping: Not a Git repository ($repo)\e[0m"; continue; }
+
+        echo -e "\n\e[36mProcessing repository: $repo\e[0m"
+        cd "$repo" || continue
+        echo -e "\e[34mPulling latest changes for $repo...\e[0m"
+        if git pull; then
+            echo -e "\e[32mSuccessfully pulled changes for $repo\e[0m"
+        else
+            echo -e "\e[31mPull failed in $repo\e[0m"
+        fi
+    done
+}
+
 #############
 # Environment variables
 #############
