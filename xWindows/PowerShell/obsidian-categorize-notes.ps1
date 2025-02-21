@@ -14,22 +14,25 @@ function Obsidian-KategorizeNotes {
     $File = $_.FullName
     Write-Host "Processing $File"
 
-    # Extract the hub from the file (assumes the hub is on the line after "hubs:")
+    # Extract and clean the hub name
     $Keyword = Select-String -Path $File -Pattern "hubs:" -Context 0,1 |
     ForEach-Object { $_.Context.PostContext -replace '^ *- *\[\[', '' -replace '\]\]$', '' -replace '^ *', '' -replace ' *$', '' }
 
-    if ($Keyword) {
-      Write-Host "Found hub/tag: $Keyword"
+    # Sanitize filename: remove invalid characters for Windows filenames
+    $SanitizedKeyword = $Keyword -replace '[<>:"/\\|?*\[\]]', '' -replace '^\s*-*\s*', '' -replace '\s+$', ''
+
+    if ($SanitizedKeyword) {
+      Write-Host "Found hub/tag: $SanitizedKeyword"
 
       # Ensure the hub file exists in the hubs directory
-      $HubFile = Join-Path $HubsDir "$Keyword.md"
+      $HubFile = Join-Path $HubsDir "$SanitizedKeyword.md"
       if (-not (Test-Path -Path $HubFile)) {
         New-Item -ItemType File -Path $HubFile -Force | Out-Null
-        Write-Host "Created file $Keyword.md in $HubsDir"
+        Write-Host "Created file $SanitizedKeyword.md in $HubsDir"
       }
 
-      # Create the target directory if it doesn't exist
-      $TargetDir = Join-Path $DestDir $Keyword
+      # Create the target directory if it doesn't exist, using the sanitized keyword
+      $TargetDir = Join-Path $DestDir $SanitizedKeyword
       if (-not (Test-Path -Path $TargetDir)) {
         New-Item -ItemType Directory -Path $TargetDir -Force | Out-Null
         Write-Host "Created directory: $TargetDir"
