@@ -63,12 +63,17 @@ param (
   New-ObsidianNote -NoteTitle $NoteTitle
 }
 
-#TODO este otestovat
 function okn {
   . "$scriptPath\obsidian-categorize-notes.ps1"
   Obsidian-KategorizeNotes
 }
 
+# download youtube videos
+# yt-dlp must be installed
+function ytd {
+  . "$scriptPath\youtube-download.ps1"
+    YoutubeDownload
+}
 # -----------------------------------------------------------------------------
 # environment variables
 # -----------------------------------------------------------------------------

@@ -217,6 +217,27 @@ function pull() {
     done
 }
 
+# auto youtube download
+function ytd() {
+    # Get the YouTube link from clipboard
+    # link=$(xclip -o -selection clipboard)
+    link=$(powershell.exe Get-Clipboard | tr -d '\r')
+
+    # Check if the link looks like a YouTube URL
+    if [[ $link =~ ^(https?://)?(www\.)?(youtube\.com|youtu\.be)/ ]]; then
+        # Change directory to Downloads folder
+        cd "$HOME/Downloads" || exit
+
+        echo -e "\e[32mDownload started for: $link\e[0m"
+
+        # Download the video using yt-dlp
+        yt-dlp "$link"
+
+    else
+        echo -e "\e[31mNo valid YouTube link found in clipboard.\e[0m"
+    fi
+}
+
 #############
 # Environment variables
 #############
