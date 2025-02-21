@@ -81,6 +81,7 @@ function colormap() {
     for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
 }
 
+# Firefox backup
 function fire_backup(){
 # ak je iba 1x '>' tak prepise cely dokument, ak su 2x '>>' tak vlozi novy riadok
 grep 'browser.compactmode.show' ${HOME}/.mozilla/firefox/*.default-release/prefs.js > ${HOME}/.mozilla/firefox/*.default-release/user.js
@@ -108,7 +109,7 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-# git auto push/pull
+# Git auto push/pull
 function push() {
     local base_dirs=("$HOME/git-repos")  # Default path, change if needed
     local single_repos=("$HOME/.dotfiles")  # Single repository paths
@@ -217,11 +218,14 @@ function pull() {
     done
 }
 
-# auto youtube download
+# Auto youtube download
 function ytd() {
     # Get the YouTube link from clipboard
-    # link=$(xclip -o -selection clipboard)
-    link=$(powershell.exe Get-Clipboard | tr -d '\r')
+    if [[ $isWSL == 1 ]]; then
+      link=$(powershell.exe Get-Clipboard | tr -d '\r')
+    else
+      link=$(xclip -o -selection clipboard)
+    fi
 
     # Check if the link looks like a YouTube URL
     if [[ $link =~ ^(https?://)?(www\.)?(youtube\.com|youtu\.be)/ ]]; then

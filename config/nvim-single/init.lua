@@ -137,7 +137,7 @@ opt.wildmenu    = true -- make tab completion for files/buffers act like bash
 
 -- {{{ Fold
 opt.foldenable = true -- folding allowed
-opt.foldlevel  = 1 -- folding from lvl 1
+opt.foldlevel  = 0 -- folding from lvl 1
 opt.foldmethod = "expr" -- folding method
 opt.foldexpr   = "nvim_treesitter#foldexpr()" -- folding method use treesitter
 opt.foldcolumn = "1" -- folding column show
@@ -241,6 +241,19 @@ for i = 1, #disable_builtin_plugins do
   vim.g["loaded_" .. disable_builtin_plugins[i]] = true
 end
 -- End Disable Built-in Plugins }}}
+
+-- {{{ Filetypes adding/changing
+vim.filetype.add {
+  extension = {
+    zsh = "sh",
+    sh = "sh", -- force sh-files with zsh-shebang to still get sh as filetype
+  },
+  filename = {
+    [".zshrc"] = "sh",
+    [".zshenv"] = "sh",
+  },
+}
+-- }}}
 
 -- }}}
 
