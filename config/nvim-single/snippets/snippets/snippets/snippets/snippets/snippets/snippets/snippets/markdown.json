@@ -34,11 +34,6 @@
     "body": ["```bash ", "$1", "```"],
     "description": "Bash code"
   },
-  "powershell-code": {
-    "prefix": ["pwc"],
-    "body": ["```powershell ", "$1", "```"],
-    "description": "Powershell code"
-  },
   "todo": {
     "prefix": ["todo"],
     "body": ["* [ ] ${1:task} -- due:${2:today} ${3: project:}"],
