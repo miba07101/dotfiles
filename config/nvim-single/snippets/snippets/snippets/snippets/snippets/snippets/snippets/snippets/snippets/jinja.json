@@ -1,0 +1,342 @@
+{
+  "autoescape": {
+    "prefix": "autoescape",
+    "description": "autoescape tag jinja template",
+    "body": [
+      "{% autoescape ${off} %}",
+      "$2",
+      "{% autoescape %}"
+    ]
+  },
+  "block": {
+    "prefix": "block",
+    "description": "block tag jinja template",
+    "body": [
+      "{% block ${blockname} %}",
+      "$2",
+      "{% endblock ${blockname} %}"
+    ]
+  },
+  "comment": {
+    "prefix": "comment",
+    "description": "Comment tag jinja template",
+    "body": [
+      "{% comment %}",
+      "  $1",
+      "{% endcomment %}"
+    ]
+  },
+  "csrf": {
+    "prefix": "csrf",
+    "description": "csrf token jinja template",
+    "body": [
+      "{% csrf_token %}"
+    ]
+  },
+  "cycle": {
+    "prefix": "cycle",
+    "description": "cycle tag jinja template",
+    "body": [
+      "{% cycle %}"
+    ]
+  },
+  "debug": {
+    "prefix": "debug",
+    "description": "debug tag jinja template",
+    "body": [
+      "{% debug %}"
+    ]
+  },
+  "ext": {
+    "prefix": "ext",
+    "description": "extends tag jinja template",
+    "body": [
+      "{% extends \"$1\" %}"
+    ]
+  },
+  "extends": {
+    "prefix": "extends",
+    "description": "extends tag jinja template",
+    "body": [
+      "{% extends \"$1\" %}"
+    ]
+  },
+  "filter": {
+    "prefix": "filter",
+    "description": "filter tag jinja template",
+    "body": [
+      "{% filter $1 %}",
+      "$2",
+      "{% endfilter %}"
+    ]
+  },
+  "firstof": {
+    "prefix": "firstof",
+    "description": "firstof tag jinja template",
+    "body": [
+      "{% firstof %}"
+    ]
+  },
+  "for": {
+    "prefix": "for",
+    "description": "for tag jinja template",
+    "body": [
+      "{% for $1 in $2 %}",
+      "$3",
+      "{% endfor %}"
+    ]
+  },
+  "fore": {
+    "prefix": "fore",
+    "description": "foreach with empty tag jinja template",
+    "body": [
+      "{% for $1 in $2 %}",
+      "$3",
+      "{% empty %}",
+      "$4",
+      "{% endfor %}"
+    ]
+  },
+  "if": {
+    "prefix": "if",
+    "description": "if tag jinja template",
+    "body": [
+      "{% if $1 %}",
+      "$2",
+      "{% endif %}"
+    ]
+  },
+  "ifchanged": {
+    "prefix": "ifchanged",
+    "description": "ifchanged tag jinja template",
+    "body": [
+      "{% ifchanged $1 %}",
+      "$2",
+      "{% endifchanged %}"
+    ]
+  },
+  "ife": {
+    "prefix": "ife",
+    "description": "if else tag jinja template",
+    "body": [
+      "{% if $1 %}",
+      "$2",
+      "{% else %}",
+      "$3",
+      "{% endif %}",
+      ""
+    ]
+  },
+  "ifelse": {
+    "prefix": "ifelse",
+    "description": "if else tag jinja template",
+    "body": [
+      "{% if $1 %}",
+      "$2",
+      "{% else %}",
+      "$3",
+      "{% endif %}",
+      ""
+    ]
+  },
+  "ifeq": {
+    "prefix": "ifeq",
+    "description": "ifequal tag jinja template",
+    "body": [
+      "{% ifequal $1 %}",
+      "$2",
+      "{% endifequal %}"
+    ]
+  },
+  "ifequal": {
+    "prefix": "ifeq",
+    "description": "ifequal tag jinja template",
+    "body": [
+      "{% ifequal $1 %}",
+      "$2",
+      "{% endifequal %}"
+    ]
+  },
+  "ifnotequal": {
+    "prefix": "ifnotequal",
+    "description": "ifnotequal tag jinja template",
+    "body": [
+      "{% ifnotequal $1 %}",
+      "$2",
+      "{% ifnotequal %}"
+    ]
+  },
+  "inc": {
+    "prefix": "inc",
+    "description": "include tag jinja template",
+    "body": [
+      "{% include \"$1\" %}"
+    ]
+  },
+  "include": {
+    "prefix": "include",
+    "description": "include tag jinja template",
+    "body": [
+      "{% include \"$1\" %}"
+    ]
+  },
+  "load": {
+    "prefix": "load",
+    "description": "load tag jinja template",
+    "body": [
+      "{% load $1 %}"
+    ]
+  },
+  "now": {
+    "prefix": "now",
+    "description": "now tag jinja template",
+    "body": [
+      "{% now \"$1\" %}"
+    ]
+  },
+  "regroup": {
+    "prefix": "regroup",
+    "description": "regroup tag jinja template",
+    "body": [
+      "{% regroup $1 by $2 as $3 %}"
+    ]
+  },
+  "spaceless": {
+    "prefix": "spaceless",
+    "description": "spaceless tag jinja template",
+    "body": [
+      "{% spaceless %}",
+      "  $1",
+      "{% endspaceless %}"
+    ]
+  },
+  "ssi": {
+    "prefix": "ssi",
+    "description": "ssi tag jinja template",
+    "body": [
+      "{% ssi $1 parsed %}"
+    ]
+  },
+  "static": {
+    "prefix": "static",
+    "description": "static tag jinja template",
+    "body": [
+      "{% static \"$1\" %}"
+    ]
+  },
+  "templatetag": {
+    "prefix": "templatetag",
+    "description": "templatetag tag jinja template",
+    "body": [
+      "{% templatetag $1 %}"
+    ]
+  },
+  "url": {
+    "prefix": "url",
+    "description": "url tag jinja template",
+    "body": [
+      "{% url $1 %}"
+    ]
+  },
+  "verbatim": {
+    "prefix": "verbatim",
+    "description": "verbatim tag jinja template",
+    "body": [
+      "{% verbatim %}",
+      "  $1",
+      "{% endverbatim %}"
+    ]
+  },
+  "widthratio": {
+    "prefix": "widthratio",
+    "description": "widthratio tag jinja template",
+    "body": [
+      "{% widthratio ${this_value} max_value 100 %}"
+    ]
+  },
+  "with": {
+    "prefix": "with",
+    "description": "with tag jinja template",
+    "body": [
+      "{% with $1 as $2 %}",
+      "$3",
+      "{% endwith %}"
+    ]
+  },
+  "trans": {
+    "prefix": "trans",
+    "description": "trans tag jinja template",
+    "body": [
+      "{% trans \"$1\" %}"
+    ]
+  },
+  "blocktrans": {
+    "prefix": "blocktrans",
+    "description": "blocktrans tag jinja template",
+    "body": [
+      "{% blocktrans %}",
+      "  $1",
+      "{% endblocktrans %}"
+    ]
+  },
+  "blocktransinline": {
+    "prefix": "blocktransinline",
+    "description": "blocktrans tag jinja template (single line)",
+    "body": [
+      "{% blocktrans %}$1{% endblocktrans %}"
+    ]
+  },
+  "super": {
+    "prefix": "super",
+    "description": "Block super",
+    "body": [
+      "{{ block.super }}"
+    ]
+  },
+  "extrahead": {
+    "prefix": "extrahead",
+    "description": "Extrahead no oficial tag",
+    "body": [
+      "{% block extrahead %}",
+      "    $1",
+      "{% endblock extrahead %}"
+    ]
+  },
+  "extrastyle": {
+    "prefix": "extrastyle",
+    "description": "Extrastyle no oficial Tag",
+    "body": [
+      "{% block extrahead %}",
+      "    $1",
+      "{% endblock extrahead %}"
+    ]
+  },
+  "var": {
+    "prefix": "var",
+    "description": "Variable autocomplete",
+    "body": [
+      "{{ $1 }}"
+    ]
+  },
+  "tag": {
+    "prefix": "tag",
+    "description": "tag autocomplete no oficial",
+    "body": [
+      "{% $1 %}"
+    ]
+  },
+  "staticurl": {
+    "prefix": "staticurl",
+    "description": "STATIC_URL no oficial var",
+    "body": [
+      "{{ STATIC_URL }}"
+    ]
+  },
+  "mediaurl": {
+    "prefix": "mediaurl",
+    "description": "",
+    "body": [
+      "{{ MEDIA_URL }}"
+    ]
+  }
+}
