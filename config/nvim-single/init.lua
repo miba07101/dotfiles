@@ -1584,7 +1584,6 @@ require("lazy").setup(
       { "quarto-dev/quarto-nvim",-- {{{
         -- enabled = false,
         -- ft = { "quarto", "markdown" },
-        ft = { "quarto" },
         dev = false,
         dependencies = {-- {{{
           {
@@ -1639,7 +1638,6 @@ require("lazy").setup(
         -- enabled = false,
         -- build = ":UpdateRemotePlugins",
         -- ft = { "python", "quarto", "markdown" },
-        ft = { "python", "quarto" },
         dependencies = os_type == "linux"-- {{{
           and { "3rd/image.nvim" }
           or { "willothy/wezterm.nvim", config = true },-- }}}
