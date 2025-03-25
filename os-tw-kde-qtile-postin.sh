@@ -123,7 +123,7 @@ EOF
     # 3) permanentne prihlasovanie disku
     # cat >> - znamena ze prida na koniec, cat > - znamena ze prepise cely subor
     sudo -S <<< ${mypassword} sh -c 'cat >> /etc/fstab' <<EOF
-    //192.168.0.91/d /home/vimi/Windows cifs credentials=/home/vimi/.wincredentials 0 0
+    //192.168.0.91/d /home/vimi/Windows cifs uid=1000,gid=1000,credentials=/home/vimi/.wincredentials 0 0
 EOF
 
     # 4) aby som schoval windows systemove subory
@@ -1353,14 +1353,14 @@ which_distro(){
             packman_packages
             appman_apps
             other_apps
-            python
-            fonts
-            cursors
-            icons
-            gnome_kde_dotfiles
-            git_repos
+            #python
+            #fonts
+            #cursors
+            #icons
+            #gnome_kde_dotfiles
+            #git_repos
             npm_servers
-            kde_setup
+            #kde_setup
             ;;
         q )
             root
