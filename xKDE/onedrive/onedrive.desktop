@@ -1,0 +1,18 @@
+[Desktop Entry]
+Comment[en_US]=Start OneDrive and notify
+Comment=Start OneDrive and notify
+Exec=sh -c 'notify-send '\\''Onedrive initialize'\\'' '\\''Monitoring run'\\'' --icon=Onedrive-info; /usr/bin/onedrive --monitor'
+GenericName[en_US]=
+GenericName=
+Icon=
+MimeType=
+Name[en_US]=OneDrive Startup
+Name=OneDrive Startup
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+Version=1.0
+X-KDE-SubstituteUID=false
+X-KDE-Username=
