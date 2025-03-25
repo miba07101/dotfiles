@@ -29,6 +29,7 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   -- config.default_prog = { 'pwsh' }
   config.color_scheme = "kanagawa-dark"
   config.font = wezterm.font { family = 'Hack Nerd Font', weight = 'Regular' }
+  config.font_size = 11
   config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
   -- config.hide_tab_bar_if_only_one_tab = true
 else
@@ -39,16 +40,21 @@ else
   -- config.color_scheme = is_night()
   config.enable_wayland = false
   config.color_scheme = "kanagawa-dark"
-  config.font = wezterm.font { family = 'Hack Nerd Font', weight = 'Regular' }
+--   config.font = wezterm.font { family = 'Hack Nerd Font', weight = 'Regular' }
+  config.font = wezterm.font_with_fallback {
+    { family = 'UbuntuSansMono Nerd Font', weight = 'Regular' },
+    { family = 'Hack Nerd Font', weight = 'Regular' },
+  }
+  config.font_size = 14
   -- config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
   config.hide_tab_bar_if_only_one_tab = true
 end
 
 -- fonts settings
 -- config.font_size = 11.2 -- je tam .2 kvoli lepsiemu renderovaniu
-config.font_size = 11
+-- config.font_size = 11
 config.warn_about_missing_glyphs=false
-config.line_height = 1.05
+config.line_height = 1.0
 -- config.harfbuzz_features = { "calt=1", "clig=1", "liga=1" }
 
 -- sounds
