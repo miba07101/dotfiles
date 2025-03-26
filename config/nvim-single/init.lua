@@ -172,7 +172,7 @@ opt.wrapscan   = true -- search the entire file repeatedly
 -- End Search }}}
 
 -- {{{ UI
-opt.cmdheight        = 0 -- command line height
+-- opt.cmdheight        = 0 -- command line height
 opt.cursorline       = true -- highlight the current line
 opt.laststatus       = 3 -- global status bar (sposobuje nefunkcnost resource lua.init)
 opt.number           = true -- absolute line numbers
@@ -1727,57 +1727,57 @@ require("lazy").setup(
         },-- }}}
       },-- }}}
 
-      -- {{{ Image.nvim
-      (function()
-        if os_type == "linux" then
-          return {-- {{{
-            "3rd/image.nvim",
-            -- enabled = false,
-            dev = false,
-            ft = { "markdown", "quarto", "vimwiki" },
-            dependencies = {-- {{{
-              {
-                "vhyrro/luarocks.nvim",
-                priority = 1001, -- this plugin needs to run before anything else
-                opts = {
-                  rocks = { "magick" },
-                },
-              },
-            },-- }}}
-            config = function()-- {{{
-              local image = require("image")
-              -- Requirements
-              -- https://github.com/3rd/image.nvim?tab=readme-ov-file#requirements
-              -- check for dependencies with `:checkhealth kickstart`
-              -- needs:
-              -- sudo apt install imagemagick
-              -- sudo apt install libmagickwand-dev
-              -- sudo apt install liblua5.1-0-dev
-              -- sudo apt installl luajit
-              image.setup({-- {{{
-                backend = "kitty",
-                integrations = {
-                  markdown = {
-                    enabled = true,
-                    only_render_image_at_cursor = true,
-                    filetypes = { "markdown", "vimwiki", "quarto" },
-                  },
-                },
-                editor_only_render_when_focused = false,
-                window_overlap_clear_enabled = true,
-                window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "scrollview" },
-                max_width = 100, --nil,
-                max_height = 12, --nil,
-                max_height_window_percentage = math.huge, --30,
-                max_width_window_percentage = math.huge, --nil,
-                kitty_method = "normal",
-              })-- }}}
-            end,-- }}}
-          }-- }}}
-        end
-        return nil
-      end)(),
-      -- }}}
+      -- -- {{{ Image.nvim
+      -- (function()
+      --   if os_type == "linux" then
+      --     return {-- {{{
+      --       "3rd/image.nvim",
+      --       -- enabled = false,
+      --       dev = false,
+      --       ft = { "markdown", "quarto", "vimwiki" },
+      --       dependencies = {-- {{{
+      --         {
+      --           "vhyrro/luarocks.nvim",
+      --           priority = 1001, -- this plugin needs to run before anything else
+      --           opts = {
+      --             rocks = { "magick" },
+      --           },
+      --         },
+      --       },-- }}}
+      --       config = function()-- {{{
+      --         local image = require("image")
+      --         -- Requirements
+      --         -- https://github.com/3rd/image.nvim?tab=readme-ov-file#requirements
+      --         -- check for dependencies with `:checkhealth kickstart`
+      --         -- needs:
+      --         -- sudo apt install imagemagick
+      --         -- sudo apt install libmagickwand-dev
+      --         -- sudo apt install liblua5.1-0-dev
+      --         -- sudo apt installl luajit
+      --         image.setup({-- {{{
+      --           backend = "kitty",
+      --           integrations = {
+      --             markdown = {
+      --               enabled = true,
+      --               only_render_image_at_cursor = true,
+      --               filetypes = { "markdown", "vimwiki", "quarto" },
+      --             },
+      --           },
+      --           editor_only_render_when_focused = false,
+      --           window_overlap_clear_enabled = true,
+      --           window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "scrollview" },
+      --           max_width = 100, --nil,
+      --           max_height = 12, --nil,
+      --           max_height_window_percentage = math.huge, --30,
+      --           max_width_window_percentage = math.huge, --nil,
+      --           kitty_method = "normal",
+      --         })-- }}}
+      --       end,-- }}}
+      --     }-- }}}
+      --   end
+      --   return nil
+      -- end)(),
+      -- -- }}}
 
       { "GCBallesteros/jupytext.nvim",-- {{{
         -- enabled = false,
@@ -2334,6 +2334,7 @@ require("lazy").setup(
               "webm",
               "pdf",
             },
+            force = true,
           },
         },
         keys = {
