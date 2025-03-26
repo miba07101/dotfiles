@@ -351,7 +351,7 @@ local function close_floating_and_clear_search()
   end
 
   -- Dismiss nvim-notify notifications
-  require("notify").dismiss({ silent = true, pending = true })
+  -- require("notify").dismiss({ silent = true, pending = true })
 
   -- Clear search highlights
   vim.cmd("nohlsearch")
@@ -484,7 +484,7 @@ require("lazy").setup(
       },-- }}}
 
       { "rcarriga/nvim-notify",-- {{{
-        enabled = true,
+        enabled = false,
       },-- }}}
 
       { "folke/noice.nvim",-- {{{
@@ -1319,7 +1319,7 @@ require("lazy").setup(
       -- {{{ [ File Manager ]
 
       { "nvim-neo-tree/neo-tree.nvim",-- {{{
-        -- enabled = false,
+        enabled = false,
         dependencies = {-- {{{
           "nvim-lua/plenary.nvim",
           "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
@@ -2314,8 +2314,8 @@ require("lazy").setup(
         lazy = false,
         -- enabled = false,
         opts = {
-          statuscolumn = { enabled = true },
-          image = {
+          explorer = { enabled = true },
+          image = {-- {{{
             enabled = true,
             formats = {
               "png",
@@ -2335,11 +2335,74 @@ require("lazy").setup(
               "pdf",
             },
             force = true,
-          },
+          },-- }}}
+          input = { enabled = true },
+          lazygit = { enabled = true },
+          notifier = { enabled = true },
+          picker = { enabled = true },
+          statuscolumn = { enabled = true },
         },
         keys = {
-    -- Top Pickers & Explorer
-    { "<leader><space>", function() require('snacks').image.hover() end, desc = "image preview" },
+          { "<leader>e", mode = {"n", "v" }, function() require('snacks').explorer() end, desc = "File Explorer", noremap = true, silent = true },
+          { "<leader>si", function() require('snacks').image.hover() end, desc = "image preview" },
+          { "<leader>sn",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
+          -- Top Pickers & Explorer
+          { "<leader>sps", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
+          { "<leader>spb", function() Snacks.picker.buffers() end, desc = "Buffers" },
+          { "<leader>spg", function() Snacks.picker.grep() end, desc = "Grep" },
+          { "<leader>sph", function() Snacks.picker.command_history() end, desc = "Command History" },
+          { "<leader>spn", function() Snacks.picker.notifications() end, desc = "Notification History" },
+          -- find
+          -- { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
+          { "<leader>sfc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
+          { "<leader>sff", function() Snacks.picker.files() end, desc = "Find Files" },
+          { "<leader>sfg", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
+          { "<leader>sfp", function() Snacks.picker.projects() end, desc = "Projects" },
+          { "<leader>sfr", function() Snacks.picker.recent() end, desc = "Recent" },
+          -- git
+          { "<leader>sgg", function() require('snacks').lazygit() end, desc = "Lazygit" },
+          { "<leader>sgb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
+          { "<leader>sgl", function() Snacks.picker.git_log() end, desc = "Git Log" },
+          { "<leader>sgL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line" },
+          { "<leader>sgs", function() Snacks.picker.git_status() end, desc = "Git Status" },
+          { "<leader>sgS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
+          { "<leader>sgd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)" },
+          { "<leader>sgf", function() Snacks.picker.git_log_file() end, desc = "Git Log File" },
+          -- Grep
+          { "<leader>srb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
+          { "<leader>srB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
+          -- { "<leader>ssg", function() Snacks.picker.grep() end, desc = "Grep" },
+          { "<leader>srw", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
+          -- search
+          { '<leader>ss"', function() Snacks.picker.registers() end, desc = "Registers" },
+          { '<leader>ss/', function() Snacks.picker.search_history() end, desc = "Search History" },
+          { "<leader>ssa", function() Snacks.picker.autocmds() end, desc = "Autocmds" },
+          { "<leader>ssb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
+          { "<leader>ssc", function() Snacks.picker.command_history() end, desc = "Command History" },
+          { "<leader>ssC", function() Snacks.picker.commands() end, desc = "Commands" },
+          { "<leader>ssd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
+          { "<leader>ssD", function() Snacks.picker.diagnostics_buffer() end, desc = "Buffer Diagnostics" },
+          { "<leader>ssh", function() Snacks.picker.help() end, desc = "Help Pages" },
+          { "<leader>ssH", function() Snacks.picker.highlights() end, desc = "Highlights" },
+          { "<leader>ssi", function() Snacks.picker.icons() end, desc = "Icons" },
+          { "<leader>ssj", function() Snacks.picker.jumps() end, desc = "Jumps" },
+          { "<leader>ssk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
+          { "<leader>ssl", function() Snacks.picker.loclist() end, desc = "Location List" },
+          { "<leader>ssm", function() Snacks.picker.marks() end, desc = "Marks" },
+          { "<leader>ssM", function() Snacks.picker.man() end, desc = "Man Pages" },
+          { "<leader>ssp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec" },
+          { "<leader>ssq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
+          { "<leader>ssR", function() Snacks.picker.resume() end, desc = "Resume" },
+          { "<leader>ssu", function() Snacks.picker.undo() end, desc = "Undo History" },
+          { "<leader>suC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
+          -- LSP
+          { "gd", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition" },
+          { "gD", function() Snacks.picker.lsp_declarations() end, desc = "Goto Declaration" },
+          { "gr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
+          { "gI", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
+          { "gy", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
+          { "<leader>sss", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
+          { "<leader>ssS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
         },
       },
       -- }}}
@@ -2415,6 +2478,22 @@ require("lazy").setup(
 -- {{{ [[ AUTOCOMANDS ]]
 
 local mygroup = vim.api.nvim_create_augroup("vimrc", { clear = true })
+
+-- for snacls.nvim notifier
+-- vim.api.nvim_create_autocmd("LspProgress", {
+--   ---@param ev {data: {client_id: integer, params: lsp.ProgressParams}}
+--   callback = function(ev)
+--     local spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+--     vim.notify(vim.lsp.status(), "info", {
+--       id = "lsp_progress",
+--       title = "LSP Progress",
+--       opts = function(notif)
+--         notif.icon = ev.data.params.value.kind == "end" and " "
+--           or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
+--       end,
+--     })
+--   end,
+-- })
 
 -- {{{ highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
