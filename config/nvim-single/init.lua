@@ -361,11 +361,11 @@ map("n", "<Esc>", close_floating_and_clear_search, { desc = "close floating wind
 -- }}}
 
 -- {{{ Terminal
-map("t", "<Esc>", "<C-\\><C-n>", { desc = "exit terminal" })
-map("t", "<C-Up>", "<cmd>wincmd k<cr>", { desc = "up from terminal" })
-map("t", "<C-Down>", "<cmd>wincmd j<cr>", { desc = "down from terminal" })
-map("t", "<C-Left>", "<cmd>wincmd h<cr>", { desc = "left from terminal" })
-map("t", "<C-Right>", "<cmd>wincmd l<cr>", { desc = "right from terminal" })
+-- map("t", "<Esc>", "<C-\\><C-n>", { desc = "exit terminal" })
+-- map("t", "<C-Up>", "<cmd>wincmd k<cr>", { desc = "up from terminal" })
+-- map("t", "<C-Down>", "<cmd>wincmd j<cr>", { desc = "down from terminal" })
+-- map("t", "<C-Left>", "<cmd>wincmd h<cr>", { desc = "left from terminal" })
+-- map("t", "<C-Right>", "<cmd>wincmd l<cr>", { desc = "right from terminal" })
 -- }}}
 
 -- {{{ Mix
@@ -2177,9 +2177,19 @@ require("lazy").setup(
 
           -- {{{ mini.pairs
           require("mini.pairs").setup({
-           mappings = {
-                    ['<'] = { action = 'open', pair = '<>', neigh_pattern = '[^\\].',   register = { cr = false } },
-                    ['>'] = { action = 'close', pair = '<>', neigh_pattern = '[^\\].',   register = { cr = false } },
+            modes = { insert = true, command = true, terminal = false },
+            -- skip autopair when next character is one of these
+            skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
+            -- skip autopair when the cursor is inside these treesitter nodes
+            skip_ts = { "string" },
+            -- skip autopair when next character is closing pair
+            -- and there are more closing pairs than opening pairs
+            skip_unbalanced = true,
+            -- better deal with markdown code blocks
+            markdown = true,
+            mappings = {
+              ['<'] = { action = 'open', pair = '<>', neigh_pattern = '[^\\].',   register = { cr = false } },
+              ['>'] = { action = 'close', pair = '<>', neigh_pattern = '[^\\].',   register = { cr = false } },
             }
           })
           -- }}}
@@ -2360,7 +2370,17 @@ require("lazy").setup(
           scope = { enabled = false }, -- Scope detection based on treesitter or indent (alternative mini.indentscope)
           scroll = { enabled = false }, -- Smooth scrolling for Neovim. Properly handles scrolloff and mouse scrolling (alt mini.animate)
           statuscolumn = { enabled = true },
-          terminal = { enabled = true },
+          terminal = {
+            enabled = true,
+            win = {
+              keys = {
+                nav_h = { "<C-Left>", "<cmd>wincmd h<cr>", desc = "Go to Left Window", expr = true, mode = "t" },
+                nav_j = { "<C-Down>", "<cmd>wincmd j<cr>", desc = "Go to Lower Window", expr = true, mode = "t" },
+                nav_k = { "<C-Up>", "<cmd>wincmd k<cr>", desc = "Go to Upper Window", expr = true, mode = "t" },
+                nav_l = { "<C-Right>", "<cmd>wincmd l<cr>", desc = "Go to Right Window", expr = true, mode = "t" },
+              },
+            },
+          },
           words = { enabled = true },
         },
         keys = {
