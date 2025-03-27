@@ -1364,7 +1364,7 @@ require("lazy").setup(
       },-- }}}
 
       { "mikavilpas/yazi.nvim",-- {{{
-        -- enabled = false,
+        enabled = false,
         -- event = "VeryLazy",
         opts = {-- {{{
           open_for_directories = false,
@@ -2022,7 +2022,7 @@ require("lazy").setup(
       -- {{{ [ Terminal ]
 
       { "akinsho/toggleterm.nvim",-- {{{
-        -- enabled = false,
+        enabled = false,
         opts = {-- {{{
           size = function(term)
             if term.direction == "horizontal" then
@@ -2314,7 +2314,6 @@ require("lazy").setup(
         lazy = false,
         -- enabled = false,
         opts = {
-          explorer = { enabled = true },
           image = {-- {{{
             enabled = true,
             formats = {
@@ -2339,13 +2338,40 @@ require("lazy").setup(
           input = { enabled = true },
           lazygit = { enabled = true },
           notifier = { enabled = true },
-          picker = { enabled = true },
+          picker = { enabled = true,-- {{{
+            sources = {
+              explorer = {
+                -- your explorer picker configuration comes here
+                auto_close = false,
+                win = {
+                  list = {
+                    keys = {
+                      ["<c-h>"] = "toggle_hidden",
+                      ["<RIGHT>"] = "confirm",
+                      ["<LEFT>"] = "explorer_close", -- close directory
+                    },
+                  },
+                },
+              }
+            }
+          },-- }}}
+          quickfile = { enabled = true }, -- When doing nvim somefile.txt, it will render the file as quickly as possible, before loading your plugins
+          rename = { enabled = true },
+          scope = { enabled = false }, -- Scope detection based on treesitter or indent (alternative mini.indentscope)
+          scroll = { enabled = false }, -- Smooth scrolling for Neovim. Properly handles scrolloff and mouse scrolling (alt mini.animate)
           statuscolumn = { enabled = true },
+          terminal = { enabled = true },
+          words = { enabled = true },
         },
         keys = {
           { "<leader>e", mode = {"n", "v" }, function() require('snacks').explorer() end, desc = "File Explorer", noremap = true, silent = true },
+          { "<leader>E", mode = {"n", "v" }, function() vim.cmd("lcd D:\\") require('snacks').explorer.open() end, desc = "File Explorer D drive", noremap = true, silent = true },
           { "<leader>si", function() require('snacks').image.hover() end, desc = "image preview" },
           { "<leader>sn",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
+          { "<leader>sR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
+          { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
+          { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
+          { "<c-\\>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
           -- Top Pickers & Explorer
           { "<leader>sps", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
           { "<leader>spb", function() Snacks.picker.buffers() end, desc = "Buffers" },
