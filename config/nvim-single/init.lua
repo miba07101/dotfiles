@@ -2324,6 +2324,18 @@ require("lazy").setup(
         lazy = false,
         -- enabled = false,
         opts = {
+          -- styles = {-- {{{
+          --   terminal = {
+          --     keys = {
+          --       term_normal = {
+          --         "<Esc>", "<C-\\><C-n>",
+          --         mode = "t",
+          --         expr = true,
+          --         desc = "escape to normal mode",
+          --       },
+          --     },
+          --   },
+          -- },-- }}}
           image = {-- {{{
             enabled = true,
             formats = {
@@ -2374,10 +2386,15 @@ require("lazy").setup(
             enabled = true,
             win = {
               keys = {
+                term_normal = { "<ESC>", "<C-\\><C-n>", desc = "Exit terminal", expr = true, mode = "t" },
                 nav_h = { "<C-Left>", "<cmd>wincmd h<cr>", desc = "Go to Left Window", expr = true, mode = "t" },
                 nav_j = { "<C-Down>", "<cmd>wincmd j<cr>", desc = "Go to Lower Window", expr = true, mode = "t" },
                 nav_k = { "<C-Up>", "<cmd>wincmd k<cr>", desc = "Go to Upper Window", expr = true, mode = "t" },
                 nav_l = { "<C-Right>", "<cmd>wincmd l<cr>", desc = "Go to Right Window", expr = true, mode = "t" },
+                { "<c-\\>", mode = "t",  function()
+                  vim.cmd("stopinsert")  -- Exits terminal mode safely
+                  require("snacks").terminal()
+                end, desc = "Toggle Terminal" },
               },
             },
           },
