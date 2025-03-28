@@ -6,6 +6,7 @@ function CopyGitRepo {
 # Define source-to-destination mappings
     $PathMappings = @{
       "C:\Users\mech\git-repos\dotfiles\config\nvim-single\init.lua" = "C:\Users\mech\AppData\Local\nvim\init.lua"
+      "C:\Users\mech\git-repos\dotfiles\config\nvim-single\init-backup.lua" = "C:\Users\mech\AppData\Local\nvim\init-backup.lua"
       "C:\Users\mech\git-repos\dotfiles\config\nvim-single\snippets" = "C:\Users\mech\AppData\Local\nvim\snippets"
       "C:\Users\mech\git-repos\dotfiles\config\nvim-single\after" = "C:\Users\mech\AppData\Local\nvim\after"  
     }
