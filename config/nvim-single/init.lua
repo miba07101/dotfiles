@@ -2391,10 +2391,6 @@ require("lazy").setup(
                 nav_j = { "<C-Down>", "<cmd>wincmd j<cr>", desc = "Go to Lower Window", expr = true, mode = "t" },
                 nav_k = { "<C-Up>", "<cmd>wincmd k<cr>", desc = "Go to Upper Window", expr = true, mode = "t" },
                 nav_l = { "<C-Right>", "<cmd>wincmd l<cr>", desc = "Go to Right Window", expr = true, mode = "t" },
-                { "<c-\\>", mode = "t",  function()
-                  vim.cmd("stopinsert")  -- Exits terminal mode safely
-                  require("snacks").terminal()
-                end, desc = "Toggle Terminal" },
               },
             },
           },
@@ -2408,7 +2404,36 @@ require("lazy").setup(
           { "<leader>sR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
           { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
           { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
-          { "<c-\\>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
+          -- Terminal
+          { "<leader>tt", mode = { "n", "v" }, function() Snacks.terminal() end, desc = "new terminal", noremap = true, silent = true },
+          { "<leader>tp", mode = { "n", "v" }, function() Snacks.terminal(PythonInterpreter(), { win = { position = "bottom" } }) end, desc = "python terminal", noremap = true, silent = true, },
+          { "<leader>ti", mode = { "n", "v" }, function() Snacks.terminal("ipython --no-autoindent", { win = { position = "bottom" } }) end, desc = "ipython terminal", noremap = true, silent = true, },
+          { "<leader>tw", mode = { "n", "v" }, function() Snacks.terminal("live-server .", { win = { position = "bottom" } }) end, desc = "web live server terminal", noremap = true, silent = true, },
+          {
+            "<leader>tP",
+            mode = { "n" },
+            function()
+              vim.cmd("w") -- Save the file
+              local filename = vim.fn.expand("%") -- Get current file path
+              require("snacks").terminal(python_os .. " " .. filename .. " && pause", {
+      win = { style = "split", position = "bottom", size = 10 }
+    })
+            end,
+            desc = "Run Python file in Snacks terminal",
+            noremap = true,
+            silent = true,
+          },
+          {
+            "<leader>tc", mode = "t", function()
+            vim.cmd("stopinsert") -- Exit terminal mode safely
+            local terminals = Snacks.terminal.list() -- Get a list of all open terminals
+
+            for _, term in ipairs(terminals) do
+              term:hide() -- Hide (close) each terminal
+            end
+          end,
+            desc = "terminal close", noremap = true, silent = true
+          },
           -- Top Pickers & Explorer
           { "<leader>sps", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
           { "<leader>spb", function() Snacks.picker.buffers() end, desc = "Buffers" },
