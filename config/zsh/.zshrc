@@ -109,9 +109,8 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-# Git auto push/pull
-function push() {
-
+# Firefox update - updatne prefs.js s usre.js a naopak - kvoli zaloskam serialov
+function fireup() {
     local firefox_dir
     firefox_dir=$(find "${HOME}/.mozilla/firefox/" -maxdepth 1 -type d -name "*default-release*" | head -n 1)
     if [ -z "$firefox_dir" ]; then
@@ -122,6 +121,11 @@ function push() {
     # Dereference the symbolic link and apply sed to the target file
     sed -i "/browser\.newtabpage\.pinned/d" "$(readlink -f "$firefox_dir/user.js")"
     grep browser.newtabpage.pinned "${firefox_dir}/prefs.js" >> "${firefox_dir}/user.js"
+    echo "Firefox prefs.js and user.js updated"
+}
+
+# Git auto push/pull
+function push() {
 
     local base_dirs=("$HOME/git-repos")  # Default path, change if needed
     local single_repos=("$HOME/.dotfiles")  # Single repository paths
