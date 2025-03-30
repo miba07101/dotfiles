@@ -119,7 +119,8 @@ function push() {
         exit 1
     fi
     echo "Full firefox path: $firefox_dir"
-    sed -i "/browser\.newtabpage\.pinned/d" "${firefox_dir}/user.js"
+    # Dereference the symbolic link and apply sed to the target file
+    sed -i "/browser\.newtabpage\.pinned/d" "$(readlink -f "$firefox_dir/user.js")"
     grep browser.newtabpage.pinned "${firefox_dir}/prefs.js" >> "${firefox_dir}/user.js"
 
     local base_dirs=("$HOME/git-repos")  # Default path, change if needed
