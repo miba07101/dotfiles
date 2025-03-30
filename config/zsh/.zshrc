@@ -112,7 +112,13 @@ function y() {
 # Git auto push/pull
 function push() {
 
-    local firefox_dir=$(find /home/vimi/.mozilla/firefox/ -maxdepth 1 -type d -name "*default-release*" | head -n 1) && { [ -z "$firefox_dir" ] && echo "Firefox profile directory not found." && exit 1; } && echo "Full firefox path: $firefox_dir" && ls "$firefox_dir"
+    local firefox_dir
+    firefox_dir=$(find "${HOME}/.mozilla/firefox/" -maxdepth 1 -type d -name "*default-release*" | head -n 1)
+    if [ -z "$firefox_dir" ]; then
+        echo "Firefox profile directory not found."
+        exit 1
+    fi
+    echo "Full firefox path: $firefox_dir"
     sed -i "/browser\.newtabpage\.pinned/d" "${firefox_dir}/user.js"
     grep browser.newtabpage.pinned "${firefox_dir}/prefs.js" >> "${firefox_dir}/user.js"
 
