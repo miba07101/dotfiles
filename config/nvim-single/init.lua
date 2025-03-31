@@ -13,7 +13,7 @@ local g   = vim.g
 
 -- File
 -- opt.backup           = false -- create a backup file
--- opt.clipboard        = "unnamedplus" -- system clipboard
+opt.clipboard        = "unnamedplus" -- system clipboard
 -- opt.hidden           = true -- switching from unsaved buffers
 opt.iskeyword:remove("_") -- oddeli slova pri mazani, nebude brat ako jedno slovo
 -- opt.scrolloff        = 5 -- how many lines are displayed on the upper and lower sides of the cursor
@@ -190,9 +190,6 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"-- {{{
       { "echasnovski/mini.nvim",
       event = "VeryLazy",
       enabled = true,
-      keys = {
-          { "<leader>e", mode = {"n", "v" }, function() MiniPick.start({ source = { items = vim.fn.readdir('.') } })  end, desc = "File Explorer", noremap = true, silent = true },
-      },
       config = function()
 
         require("mini.basics").setup({-- {{{
@@ -261,115 +258,120 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"-- {{{
                   },
                 })-- }}}
 
-        require("mini.align").setup()
+                require("mini.align").setup()
 
-        -- {{{ mini.comments
-        local os_name = vim.loop.os_uname().sysname
-        local mappings = (os_name == "Linux")
-          and {
-            comment = "<C-/>",
-            comment_line = "<C-/>",
-            comment_visual = "<C-/>",
-            textobject = "<C-/>",
-          }
-          or {
-            comment = "<C-_>",
-            comment_line = "<C-_>",
-            comment_visual = "<C-_>",
-            textobject = "<C-_>",
-          }
+                -- {{{ mini.comments
+                local os_name = vim.loop.os_uname().sysname
+                local mappings = (os_name == "Linux")
+                and {
+                  comment = "<C-/>",
+                  comment_line = "<C-/>",
+                  comment_visual = "<C-/>",
+                  textobject = "<C-/>",
+                }
+                or {
+                  comment = "<C-_>",
+                  comment_line = "<C-_>",
+                  comment_visual = "<C-_>",
+                  textobject = "<C-_>",
+                }
 
-        require("mini.comment").setup({
-          options = {},
-          mappings = mappings,
-        })-- }}}
+                require("mini.comment").setup({
+                  options = {},
+                  mappings = mappings,
+                })-- }}}
 
-        require("mini.pairs").setup({-- {{{
-          modes = { insert = true, command = true, terminal = false },
-          -- skip autopair when next character is one of these
-          skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
-          -- skip autopair when the cursor is inside these treesitter nodes
-          skip_ts = { "string" },
-          -- skip autopair when next character is closing pair
-          -- and there are more closing pairs than opening pairs
-          skip_unbalanced = true,
-          -- better deal with markdown code blocks
-          markdown = true,
-          mappings = {
-            ['<'] = { action = 'open', pair = '<>', neigh_pattern = '[^\\].',   register = { cr = false } },
-            ['>'] = { action = 'close', pair = '<>', neigh_pattern = '[^\\].',   register = { cr = false } },
-          }
-        })-- }}}
+                require("mini.pairs").setup({-- {{{
+                  modes = { insert = true, command = true, terminal = false },
+                  -- skip autopair when next character is one of these
+                  skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
+                  -- skip autopair when the cursor is inside these treesitter nodes
+                  skip_ts = { "string" },
+                  -- skip autopair when next character is closing pair
+                  -- and there are more closing pairs than opening pairs
+                  skip_unbalanced = true,
+                  -- better deal with markdown code blocks
+                  markdown = true,
+                  mappings = {
+                    ['<'] = { action = 'open', pair = '<>', neigh_pattern = '[^\\].',   register = { cr = false } },
+                    ['>'] = { action = 'close', pair = '<>', neigh_pattern = '[^\\].',   register = { cr = false } },
+                  }
+                })-- }}}
 
-        require("mini.splitjoin").setup({-- {{{
-          mappings = {
-            toggle = 'gS',
-            split = 'gk',
-            join = 'gj',
-          },
-        })-- }}}
+                require("mini.splitjoin").setup({-- {{{
+                  mappings = {
+                    toggle = 'gS',
+                    split = 'gk',
+                    join = 'gj',
+                  },
+                })-- }}}
 
-        require("mini.surround").setup({-- {{{
-          -- - gsaiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-          -- - gsd'   - [S]urround [D]elete [']quotes
-          -- - gsr)'  - [S]urround [R]eplace [)] [']
-          mappings = {
-            add = "gsa", -- Add surrounding in Normal and Visual modes
-            delete = "gsd", -- Delete surrounding
-            find = "gsf", -- Find surrounding (to the right)
-            find_left = "gsF", -- Find surrounding (to the left)
-            highlight = "gsh", -- Highlight surrounding
-            replace = "gsr", -- Replace surrounding
-            update_n_lines = "gsn", -- Update `n_lines`
-          },
-        })-- }}}
+                require("mini.surround").setup({-- {{{
+                  -- - gsaiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
+                  -- - gsd'   - [S]urround [D]elete [']quotes
+                  -- - gsr)'  - [S]urround [R]eplace [)] [']
+                  mappings = {
+                    add = "gsa", -- Add surrounding in Normal and Visual modes
+                    delete = "gsd", -- Delete surrounding
+                    find = "gsf", -- Find surrounding (to the right)
+                    find_left = "gsF", -- Find surrounding (to the left)
+                    highlight = "gsh", -- Highlight surrounding
+                    replace = "gsr", -- Replace surrounding
+                    update_n_lines = "gsn", -- Update `n_lines`
+                  },
+                })-- }}}
 
-require('mini.pick').setup()
+                require('mini.pick').setup()
 
-        local miniclue = require("mini.clue")-- {{{
-          miniclue.setup({
-            triggers = {
-              -- Leader triggers
-              { mode = "n", keys = "<Leader>" },
-              { mode = "x", keys = "<Leader>" },
-              -- Built-in completion
-              { mode = "i", keys = "<C-x>" },
-              -- `g` key
-              { mode = "n", keys = "g" },
-              { mode = "x", keys = "g" },
-              -- Marks
-              { mode = "n", keys = "'" },
-              { mode = "n", keys = "`" },
-              { mode = "x", keys = "'" },
-              { mode = "x", keys = "`" },
-              -- Registers
-              { mode = "n", keys = '"' },
-              { mode = "x", keys = '"' },
-              { mode = "i", keys = "<C-r>" },
-              { mode = "c", keys = "<C-r>" },
-              -- Window commands
-              -- { mode = 'n', keys = '<C-w>' },
-              -- `z` key
-              { mode = "n", keys = "z" },
-              { mode = "x", keys = "z" },
-              -- `\` toggle key
-              { mode = "n", keys = "\\" },
-              { mode = "x", keys = "\\" },
-            },
-            clues = {
-              -- Enhance this by adding descriptions for <Leader> mapping groups
-              miniclue.gen_clues.builtin_completion(),
-              miniclue.gen_clues.g(),
-              miniclue.gen_clues.marks(),
-              miniclue.gen_clues.registers(),
-              -- miniclue.gen_clues.windows(),
-              miniclue.gen_clues.z(),
-            }
-          })-- }}}
+                local miniclue = require("mini.clue")-- {{{
+                  miniclue.setup({
+                    triggers = {
+                      -- Leader triggers
+                      { mode = "n", keys = "<Leader>" },
+                      { mode = "x", keys = "<Leader>" },
+                      -- Built-in completion
+                      { mode = "i", keys = "<C-x>" },
+                      -- `g` key
+                      { mode = "n", keys = "g" },
+                      { mode = "x", keys = "g" },
+                      -- Marks
+                      { mode = "n", keys = "'" },
+                      { mode = "n", keys = "`" },
+                      { mode = "x", keys = "'" },
+                      { mode = "x", keys = "`" },
+                      -- Registers
+                      { mode = "n", keys = '"' },
+                      { mode = "x", keys = '"' },
+                      { mode = "i", keys = "<C-r>" },
+                      { mode = "c", keys = "<C-r>" },
+                      -- Window commands
+                      -- { mode = 'n', keys = '<C-w>' },
+                      -- `z` key
+                      { mode = "n", keys = "z" },
+                      { mode = "x", keys = "z" },
+                      -- `\` toggle key
+                      { mode = "n", keys = "\\" },
+                      { mode = "x", keys = "\\" },
+                    },
+                    clues = {
+                      -- Enhance this by adding descriptions for <Leader> mapping groups
+                      miniclue.gen_clues.builtin_completion(),
+                      miniclue.gen_clues.g(),
+                      miniclue.gen_clues.marks(),
+                      miniclue.gen_clues.registers(),
+                      -- miniclue.gen_clues.windows(),
+                      miniclue.gen_clues.z(),
+                    }
+                  })-- }}}
 
-        end,
-      },
-      -- }}}
+                end,
+                keys = {
+                  -- { "<leader>ff", mode = {"n", "v" }, function() MiniPick.builtin.files({ source = {items = vim.fn.readdir(".")} })  end, desc = "Find file in cwd", noremap = true, silent = true },
+                  { "<leader>ff", mode = {"n", "v" }, function() MiniPick.start({ source = {items = vim.fn.readdir(vim.fn.expand("%:p:h"))} })  end, desc = "Find file in cwd", noremap = true, silent = true },
+                  { "<leader>e", mode = {"n", "v" }, function() MiniExtra.pickers.explorer()  end, desc = "File Explorer", noremap = true, silent = true },
+                },
+              },
+              -- }}}
 
     },-- }}}
 
