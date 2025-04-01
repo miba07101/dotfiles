@@ -803,153 +803,138 @@ require("lazy").setup({
         }) -- }}}
 
 
-local statusline = require("mini.statusline")
 
-    -- Define VS Code-like colors
-    local colors = {
-      red     = "#e74d23",
-      orange  = "#FF8800",
-      yellow  = "#ffc233",
-      green   = "#427b00",
-      blue    = "#007ACD",
-      purple  = "#67217A",
-      black   = "#16161D",
-      white   = "#FFFFFF",
-      grey    = "#727169",
-    }
+        -- Custom statusline setup
+        local H = {}
+        require("mini.statusline").setup({
+          use_icons = true,
+          content = {
+            inactive = function()
+              local pathname = H.section_pathname({ trunc_width = 120 })
+              return MiniStatusline.combine_groups({
+                { hl = "MiniStatuslineInactive", strings = { pathname } },
+              })
+            end,
 
-    -- Apply mode colors for both left and right parts
-    local function set_mode_colors()
-      local mode_color_map = {
-        Normal  = { fg = colors.white, bg = colors.purple },
-        Insert  = { fg = colors.white, bg = colors.blue },
-        Visual  = { fg = colors.white, bg = colors.green },
-        Replace = { fg = colors.white, bg = colors.orange },
-        Command = { fg = colors.white, bg = colors.red },
-        Inactive = { fg = colors.grey, bg = colors.black },
-      }
+            active = function()
+              -- stylua: ignore start
+              local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 120 })
+              local git           = MiniStatusline.section_git({ trunc_width = 40 })
+              local diff          = MiniStatusline.section_diff({ trunc_width = 60 })
+              local diagnostics   = MiniStatusline.section_diagnostics({ trunc_width = 60 })
+              local lsp           = MiniStatusline.section_lsp({ trunc_width = 40 })
+              local filetype      = H.section_filetype({ trunc_width = 70 })
+              local location      = H.section_location({ trunc_width = 120 })
+              local pathname      = H.section_pathname({trunc_width = 100, filename_hl = "MiniStatuslineFilename",modified_hl = "MiniStatuslineFilenameModified" })
 
-      -- Apply highlight groups dynamically
-      for mode, hl in pairs(mode_color_map) do
-        vim.api.nvim_set_hl(0, "MiniStatuslineMode" .. mode, { fg = hl.fg, bg = hl.bg })
+              -- Usage of `MiniStatusline.combine_groups()` ensures highlighting and
+              -- correct padding with spaces between groups (accounts for 'missing'
+              -- sections, etc.)
+              return MiniStatusline.combine_groups({
+                { hl = mode_hl,                   strings = { mode:upper() } },
+                -- { hl = 'MiniStatuslineDevinfo',   strings = { git, diff } },
+                { hl = mode_hl,   strings = { git, diff } },
+                '%<', -- Mark general truncate point
+                -- { hl = 'MiniStatuslineDirectory', strings = { pathname } },
+                -- { hl = mode_hl, strings = { pathname } },
+                '%=', -- End left alignment
+                -- { hl = 'MiniStatuslineFileinfo',  strings = { filetype, diagnostics, lsp } },
+                { hl = mode_hl,  strings = { filetype, diagnostics, lsp } },
+                { hl = mode_hl,                   strings = { location } },
+              })
+              -- stylua: ignore end
+            end,
 
-      -- Diagnostics color (for right part)
-      vim.api.nvim_set_hl(0, "MiniStatuslineDiagnosticError" .. mode, { fg = hl.fg, bg = hl.bg })
-      vim.api.nvim_set_hl(0, "MiniStatuslineDiagnosticWarn" .. mode,  { fg = hl.fg, bg = hl.bg })
-      vim.api.nvim_set_hl(0, "MiniStatuslineDiagnosticInfo" .. mode,  { fg = hl.fg, bg = hl.bg })
-      vim.api.nvim_set_hl(0, "MiniStatuslineDiagnosticHint" .. mode,  { fg = hl.fg, bg = hl.bg })
-      end
-    end
+          }
+        })
 
-    set_mode_colors() -- Initialize colors
-
-    -- Function to get the correct highlight group for the current mode
-    local function mode_highlight()
-      local mode = vim.fn.mode()
-      local mode_map = {
-        ["n"]  = "Normal",
-        ["i"]  = "Insert",
-        ["v"]  = "Visual",
-        ["V"]  = "Visual",
-        [""] = "Visual",
-        ["R"]  = "Replace",
-        ["c"]  = "Command",
-        ["t"]  = "Command",
-      }
-      return "%#" .. (mode_map[mode] and "MiniStatuslineMode" .. mode_map[mode] or "MiniStatuslineModeNormal") .. "#"
-    end
-
-    -- Function to get LSP server icon
-    local function lsp_server_icon()
-      local buf_ft = vim.bo.filetype
-      for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
-        if client.supports_method("textDocument/documentSymbol") then
-          local supported_filetypes = client.config.filetypes or {}
-          if vim.tbl_contains(supported_filetypes, buf_ft) then
-            return ""
-          end
+        -- Utility from mini.statusline
+        H.isnt_normal_buffer = function()
+          return vim.bo.buftype ~= ""
         end
-      end
-      return ""
-    end
 
-    -- Function to show active Python environment
-    local function python_env()
-      local venv = require("swenv.api").get_current_venv()
-      if venv and venv.name then
-        return " " .. (venv.name:match("([^/]+)$") or "")
-      end
-      return ""
-    end
+        H.has_no_lsp_attached = function()
+          return #vim.lsp.get_clients() == 0
+        end
 
-    -- Function to count buffers
-    local function buffer_counts()
-      local loaded_buffers = #vim.tbl_filter(function(buf)
-        return vim.fn.buflisted(buf) ~= 0
-      end, vim.api.nvim_list_bufs())
-      local modified_buffers = #vim.tbl_filter(function(buf)
-        return vim.bo[buf].modified
-      end, vim.api.nvim_list_bufs())
-      return string.format("󰈔 [%d:%d+]", loaded_buffers, modified_buffers)
-    end
+        H.get_filetype_icon = function()
+          -- Have this `require()` here to not depend on plugin initialization order
+          local has_devicons, devicons = pcall(require, "nvim-web-devicons")
+          if not has_devicons then
+            return ""
+          end
 
-    -- Macro recording indicator
-    local function macro_recording()
-      local recording = vim.fn.reg_recording()
-      return recording ~= "" and "󰻃 " .. recording or ""
-    end
+          local file_name, file_ext = vim.fn.expand("%:t"), vim.fn.expand("%:e")
+          return devicons.get_icon(file_name, file_ext, { default = true })
+        end
 
-    -- Molten initialization status
-    local function molten_init()
-      if not package.loaded["molten.status"] then
-        return "M:X"
-      end
-      local ok, molten_status = pcall(require, "molten.status")
-      if not ok or type(molten_status.initialized) ~= "function" then
-        return "M:X"
-      end
-      local success, status = pcall(molten_status.initialized)
-      return success and status == "Molten" and "M:A" or "M:X"
-    end
+        H.section_location = function(args)
+          -- Use virtual column number to allow update when past last column
+          if MiniStatusline.is_truncated(args.trunc_width) then
+            return "%-2l│%-2v"
+          end
 
-    -- Custom statusline setup
-    statusline.setup({
-      content = {
-        active = function()
-          local mode_color = mode_highlight()
-          return table.concat({
-            mode_color, -- Apply mode-based color to left section
-            " %f ", -- Filename
-            buffer_counts(),
-            " ", macro_recording(),
+          return "󰉸 %-2l│󱥖 %-2v"
+        end
 
-            -- Center: LSP status & Python environment
-            "%=",
-            lsp_server_icon(), " ",
-            -- python_env(),
+        H.section_filetype = function(args)
+          if MiniStatusline.is_truncated(args.trunc_width) then
+            return ""
+          end
 
-            -- Right: Diagnostics, molten, and position (with mode-based color)
-            "%=",
-            molten_init(), " ",
+          local filetype = vim.bo.filetype
+          if (filetype == "") or H.isnt_normal_buffer() then
+            return ""
+          end
 
-            -- Diagnostics with mode-based background color
-            "%#MiniStatuslineDiagnosticError# %E ",
-            "%#MiniStatuslineDiagnosticWarn# %W ",
-            "%#MiniStatuslineDiagnosticInfo# %I ",
-            "%#MiniStatuslineDiagnosticHint#󰌵 %H ",
+          local icon = H.get_filetype_icon()
+          if icon ~= "" then
+            filetype = string.format("%s %s", icon, filetype)
+          end
 
-            mode_color, -- Apply mode-based color to right section too
-            " %l:%c %p%%/%L", -- Line & column position
-          })
-        end,
-        inactive = function()
-          return "%#MiniStatuslineModeInactive# %f %l:%c"
-        end,
-      },
-      use_icons = true,
-    })
+          return filetype
+        end
 
+        H.section_pathname = function(args)
+          args = vim.tbl_extend("force", {
+            modified_hl = nil,
+            filename_hl = nil,
+            trunc_width = 80,
+          }, args or {})
 
+          if vim.bo.buftype == "terminal" then
+            return "%t"
+          end
+
+          local path = vim.fn.expand("%:p")
+          local cwd = vim.uv.cwd() or ""
+          cwd = vim.uv.fs_realpath(cwd) or ""
+
+          if path:find(cwd, 1, true) == 1 then
+            path = path:sub(#cwd + 2)
+          end
+
+          local sep = package.config:sub(1, 1)
+          local parts = vim.split(path, sep)
+          if require("mini.statusline").is_truncated(args.trunc_width) and #parts > 3 then
+            parts = { parts[1], "…", parts[#parts - 1], parts[#parts] }
+          end
+
+          local dir = ""
+          if #parts > 1 then
+            dir = table.concat({ unpack(parts, 1, #parts - 1) }, sep) .. sep
+          end
+
+          local file = parts[#parts]
+          local file_hl = ""
+          if vim.bo.modified and args.modified_hl then
+            file_hl = "%#" .. args.modified_hl .. "#"
+          elseif args.filename_hl then
+            file_hl = "%#" .. args.filename_hl .. "#"
+          end
+          local modified = vim.bo.modified and " [+]" or ""
+          return dir .. file_hl .. file .. modified
+        end
 
 
 
