@@ -141,6 +141,229 @@ map("n", "<A-->", "<C-x>", { desc = "Decrement number" })
 -- map("n", "<leader>r", "*``cgn", { desc = "replace word under cursor" })
 -- }}}
 
+-- {{{ [[ AUTOCOMANDS ]]
+local mygroup = vim.api.nvim_create_augroup("vimi", { clear = true })
+
+-- {{{ restore cursor position
+vim.api.nvim_create_autocmd("BufReadPost", {
+  callback = function()
+    if vim.fn.line("'\"") >= 1 and vim.fn.line("'\"") <= vim.fn.line("$") and vim.fn.expand("&ft") ~= "commit" then
+      vim.cmd('normal! g`"')
+    end
+  end,
+  group = mygroup,
+  desc = "restore cursor position",
+})
+-- }}}
+
+-- {{{ show cursor line only in active window
+vim.api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
+  pattern = "*",
+  command = "set cursorline",
+  group = mygroup,
+  desc = "show cursorline in active window",
+})
+vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
+  pattern = "*",
+  command = "set nocursorline",
+  group = mygroup,
+  desc = "hide cursorline in inactive window",
+})
+-- }}}
+
+-- {{{ don't auto comment new line
+vim.api.nvim_create_autocmd("BufEnter", {
+  command = [[set formatoptions-=cro]],
+  group = mygroup,
+  desc = "don't auto comment new line",
+})
+-- }}}
+
+-- {{{ set fold markers for init.lua
+vim.api.nvim_create_autocmd("BufReadPost", {
+  pattern = "init.lua",
+  callback = function()
+    vim.opt_local.foldmethod = "marker" -- use markers for init.lua
+    vim.opt_local.foldexpr = "" -- disable foldexpr
+    vim.opt_local.foldlevel = 0 -- start with all folds closed
+  end,
+  group = mygroup,
+  desc = "init.lua folding",
+})
+-- }}}
+
+-- {{{ unfold at open
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  pattern = { "*.py", "*.ipynb", "*.css", "*.scss", "*.html", "*.qmd", "*.md" },
+  command = [[:normal! zR]], -- zR-open, zM-close folds
+  group = mygroup,
+  desc = "unfold",
+})
+-- }}}
+
+-- {{{ conceal level = 1
+vim.api.nvim_create_autocmd("BufRead", {
+  pattern = "*.md",
+  command = [[:setlocal conceallevel=1]],
+  group = mygroup,
+  desc = "conceal level",
+})
+-- }}}
+
+-- -- {{{ autoformat code on save
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   pattern = { "*.py", "*.json", "*.css", "*.scss" },
+--   callback = function(args)
+--     require("conform").format({ bufnr = args.buf })
+--   end,
+--   group = mygroup,
+--   desc = "autoformat code on save",
+-- })
+-- -- }}}
+
+-- -- {{{ auto linting
+-- vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+--   pattern = { "*" },
+--   callback = function()
+--     require("lint").try_lint()
+--   end,
+-- })
+-- -- }}}
+
+-- {{{ sass compilation on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = { "*.sass", "*.scss" },
+  command = [[:silent exec "!sass --no-source-map %:p %:r.css"]],
+  group = mygroup,
+  desc = "sass compilation on save",
+})
+-- }}}
+
+-- {{{ windows to close with "q"
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "toggleterm", "help", "startuptime", "qf", "lspinfo", "man" },
+  command = [[nnoremap <buffer><silent> q :close<cr>]],
+  group = mygroup,
+  desc = "close windows with q",
+})
+
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = "man",
+--   command = [[nnoremap <buffer><silent> q :quit<cr>]],
+--   group = mygroup,
+--   desc = "close man pages with q",
+-- })
+-- }}}
+
+-- {{{ open terminal at same location as opened file
+vim.api.nvim_create_autocmd("BufEnter", {
+  command = [[silent! lcd %:p:h]],
+  group = mygroup,
+  desc = "open terminal in same location as opened file",
+})
+-- }}}
+
+-- {{{ htmldjango - v treesitter instalovat jinja a jinja_inline (htmldjango netreba nepaci sa mi syntax highlight)
+-- Function to select the filetype for HTML-based templates with Jinja
+local function select_html_filetype()
+    local n = 1
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    while n <= #lines and n < 100 do
+        -- Check for Jinja tags like {{ ... }} or {% ... %}
+        if lines[n]:match("{{.*}}") or lines[n]:match("{%%?%s*(end.*|extends|block|macro|set|if|for|include|trans)>") then
+            vim.bo.filetype = "htmldjango"  -- Set filetype to htmldjango for Jinja content
+            return
+        end
+        n = n + 1
+    end
+end
+
+-- Autocommands to handle .html and related files
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+    pattern = { "*.html", "*.htm" },  -- Only for HTML files
+    callback = select_html_filetype,   -- Check if it contains Jinja tags and assign the filetype
+})
+-- }}}
+
+-- create a new Python notebook (Jupyter notebook){{{
+-- https://github.com/benlubas/molten-nvim/blob/main/docs/Notebook-Setup.md
+-- note: the metadata is needed for Jupytext to understand how to parse the notebook.
+-- if you use another language than Python, you should change it in the template.
+
+-- JSON template{{{
+local default_notebook = [[
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [""]
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython"
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
+]]
+--}}}
+
+local function new_notebook(filename)-- {{{
+  -- upravena povodna funkcia pomocou AI
+  local path = filename .. ".ipynb"
+  local file, err = io.open(path, "wb")  -- Use "wb" to ensure binary mode (no BOM)
+
+  if not file then
+    vim.api.nvim_err_writeln("Error: Could not open " .. path .. " for writing: " .. err)
+    return
+  end
+
+  -- Ensure UTF-8 without BOM encoding
+  file:write(default_notebook)
+  file:close()
+
+  -- Delay opening slightly to ensure Jupytext reads a valid file
+  vim.defer_fn(function()
+    vim.cmd("edit " .. path)
+  end, 100)  -- 100ms delay
+end-- }}}
+
+vim.api.nvim_create_user_command('NewNotebook', function(opts)-- {{{
+  new_notebook(opts.args)
+end, {
+  nargs = 1,
+  complete = 'file'
+})-- }}}
+
+-- keymap for new Jupyter notebook creation
+map("n", "<leader>pj", function() local file_name=vim.fn.input("Notebook name: ") if file_name ~= "" then vim.cmd("NewNotebook " .. file_name) end end, { desc = "jupyter notebook" })
+--}}}
+
+-- {{{ set typst filetype - quarto specific
+vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
+  pattern = "*.typ",
+  command = "set filetype=typst",
+  desc = "set filetype for typst files",
+})
+-- }}}
+
+-- }}}
+
  -- {{{ [[ LAZY MANAGER ]]
   local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"-- {{{
     if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -273,6 +496,9 @@ map("n", "<A-->", "<C-x>", { desc = "Decrement number" })
                 -- `\` toggle key
                 { mode = "n", keys = "\\" },
                 { mode = "x", keys = "\\" },
+                -- Bracketed
+                { mode = 'n', keys = '[' },
+                { mode = 'n', keys = ']' },
               },
               clues = {
                 -- Enhance this by adding descriptions for <Leader> mapping groups
@@ -282,6 +508,13 @@ map("n", "<A-->", "<C-x>", { desc = "Decrement number" })
                 miniclue.gen_clues.registers(),
                 -- miniclue.gen_clues.windows(),
                 miniclue.gen_clues.z(),
+                -- moje skratky - normal mode
+                { mode = "n", keys = "<Leader>f", desc = "+Files" },
+                { mode = "n", keys = "<Leader>s", desc = "+Search" },
+                { mode = "n", keys = "<Leader>g", desc = "+Git" },
+                { mode = "n", keys = "<Leader>w", desc = "+Window" },
+                { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
+                { mode = "n", keys = "<Leader>/", desc = "+Grep" },
               }
             })-- }}}
 
@@ -306,12 +539,7 @@ map("n", "<A-->", "<C-x>", { desc = "Decrement number" })
               mappings = mappings,
             })-- }}}
 
-            -- require('mini.extra').setup()
-
             require('mini.icons').setup()
-
-            -- vim.notify = require('mini.notify').make_notify()
-            -- require('mini.notify').setup()
 
             require("mini.pairs").setup({-- {{{
               modes = { insert = true, command = true, terminal = false },
@@ -329,8 +557,6 @@ map("n", "<A-->", "<C-x>", { desc = "Decrement number" })
                 ['>'] = { action = 'close', pair = '<>', neigh_pattern = '[^\\].',   register = { cr = false } },
               }
             })-- }}}
-
-            -- require('mini.pick').setup()
 
             require("mini.splitjoin").setup({-- {{{
               mappings = {
@@ -353,14 +579,12 @@ map("n", "<A-->", "<C-x>", { desc = "Decrement number" })
                 replace = "gsr", -- Replace surrounding
                 update_n_lines = "gsn", -- Update `n_lines`
               },
+              custom_surroundings = {
+                ['l'] = { output = { left = '[', right = ']()'}}
+              }
             })-- }}}
 
           end,
-          keys = {
-            -- { "<leader>ff", mode = {"n", "v" }, function() MiniPick.builtin.files({ source = {items = vim.fn.readdir(".")} })  end, desc = "Find file in cwd", noremap = true, silent = true },
-            -- { "<leader>ff", mode = {"n", "v" }, function() MiniPick.start({ source = {items = vim.fn.readdir(vim.fn.expand("%:p:h"))} })  end, desc = "Find file in cwd", noremap = true, silent = true },
-            -- { "<leader>e", mode = {"n", "v" }, function() MiniExtra.pickers.explorer()  end, desc = "File Explorer", noremap = true, silent = true },
-          },
         },
         -- }}}
 
@@ -413,13 +637,13 @@ map("n", "<A-->", "<C-x>", { desc = "Decrement number" })
                   },
                 },
               },
-              layout = { preset = "vscode" },
+              layout = { preset = "vscode", layout = { position = "bottom" } },
             },-- }}}
             quickfile = { enabled = true }, -- When doing nvim somefile.txt, it will render the file as quickly as possible, before loading your plugins
             rename = { enabled = true },
             scope = { enabled = false }, -- Scope detection based on treesitter or indent (alternative mini.indentscope)
             scroll = { enabled = false }, -- Smooth scrolling for Neovim. Properly handles scrolloff and mouse scrolling (alt mini.animate)
-            -- statuscolumn = { enabled = true },
+            statuscolumn = { enabled = false },
             terminal = {-- {{{
               enabled = true,
               win = {
@@ -439,71 +663,67 @@ map("n", "<A-->", "<C-x>", { desc = "Decrement number" })
             words = { enabled = true },
           },
           keys = {
-            { "<leader>e", mode = {"n", "v" }, function() require('snacks').explorer() end, desc = "File Explorer", noremap = true, silent = true },
-            { "<leader>E", mode = {"n", "v" }, function() vim.cmd("lcd D:\\") require('snacks').explorer.open() end, desc = "File Explorer D drive", noremap = true, silent = true },
-            { "<leader>si", function() require('snacks').image.hover() end, desc = "image preview" },
-            { "<leader>sn",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
-            { "<leader>sR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
-            { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
-            { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
+            { "<leader>si", function() require('snacks').image.hover() end, desc = "Image Preview" },
+            { "]]", mode = { "n", "t" }, function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference" },
+            { "[[", mode = { "n", "t" }, function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference" },
             { "<c-\\>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
             -- Top Pickers & Explorer
-            { "<leader>sps", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
-            { "<leader>spb", function() Snacks.picker.buffers() end, desc = "Buffers" },
-            { "<leader>spg", function() Snacks.picker.grep() end, desc = "Grep" },
-            { "<leader>sph", function() Snacks.picker.command_history() end, desc = "Command History" },
-            { "<leader>spn", function() Snacks.picker.notifications() end, desc = "Notification History" },
+            { "<leader>e", function() Snacks.explorer({ layout = { preset = "sidebar", layout = { position = "left" } } }) end, desc = "File Explorer" },
+            { "<leader>E", function() vim.cmd("lcd D:\\") Snacks.explorer.open({ layout = { preset = "sidebar", layout = { position = "left" } } }) end, desc = "File Explorer D drive" },
+            { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
+            { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
             -- find
-            -- { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
-            { "<leader>sfc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
-            { "<leader>sff", function() Snacks.picker.files() end, desc = "Find Files" },
-            { "<leader>sfg", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
-            { "<leader>sfp", function() Snacks.picker.projects() end, desc = "Projects" },
-            { "<leader>sfr", function() Snacks.picker.recent() end, desc = "Recent" },
+            { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
+            { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
+            { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
+            { "<leader>fp", function() Snacks.picker.projects() end, desc = "Find Projects" },
+            { "<leader>fo", function() Snacks.picker.recent() end, desc = "Find Old/Recent" },
+            { "<leader>fR", function() Snacks.rename.rename_file() end, desc = "File Rename" },
             -- git
-            { "<leader>sgg", function() require('snacks').lazygit() end, desc = "Lazygit" },
-            { "<leader>sgb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
-            { "<leader>sgl", function() Snacks.picker.git_log() end, desc = "Git Log" },
-            { "<leader>sgL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line" },
-            { "<leader>sgs", function() Snacks.picker.git_status() end, desc = "Git Status" },
-            { "<leader>sgS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
-            { "<leader>sgd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)" },
-            { "<leader>sgf", function() Snacks.picker.git_log_file() end, desc = "Git Log File" },
+            { "<leader>gl", function() Snacks.lazygit() end, desc = "Lazygit" },
+            { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
+            { "<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log" },
+            { "<leader>gL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line" },
+            { "<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status" },
+            { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
+            { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)" },
+            { "<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Git Log File" },
             -- Grep
-            { "<leader>srb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
-            { "<leader>srB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
-            -- { "<leader>ssg", function() Snacks.picker.grep() end, desc = "Grep" },
-            { "<leader>srw", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
+            { "<leader>//", function() Snacks.picker.grep() end, desc = "Grep" },
+            { "<leader>/l", function() Snacks.picker.lines() end, desc = "Grep Buffer Lines" },
+            { "<leader>/b", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
+            { "<leader>/w", function() Snacks.picker.grep_word() end, desc = "Grep Word or Selection", mode = { "n", "x" } },
             -- search
-            { '<leader>ss"', function() Snacks.picker.registers() end, desc = "Registers" },
-            { '<leader>ss/', function() Snacks.picker.search_history() end, desc = "Search History" },
-            { "<leader>ssa", function() Snacks.picker.autocmds() end, desc = "Autocmds" },
-            { "<leader>ssb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
-            { "<leader>ssc", function() Snacks.picker.command_history() end, desc = "Command History" },
-            { "<leader>ssC", function() Snacks.picker.commands() end, desc = "Commands" },
-            { "<leader>ssd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
-            { "<leader>ssD", function() Snacks.picker.diagnostics_buffer() end, desc = "Buffer Diagnostics" },
-            { "<leader>ssh", function() Snacks.picker.help() end, desc = "Help Pages" },
-            { "<leader>ssH", function() Snacks.picker.highlights() end, desc = "Highlights" },
-            { "<leader>ssi", function() Snacks.picker.icons() end, desc = "Icons" },
-            { "<leader>ssj", function() Snacks.picker.jumps() end, desc = "Jumps" },
-            { "<leader>ssk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
-            { "<leader>ssl", function() Snacks.picker.loclist() end, desc = "Location List" },
-            { "<leader>ssm", function() Snacks.picker.marks() end, desc = "Marks" },
-            { "<leader>ssM", function() Snacks.picker.man() end, desc = "Man Pages" },
-            { "<leader>ssp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec" },
-            { "<leader>ssq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
-            { "<leader>ssR", function() Snacks.picker.resume() end, desc = "Resume" },
-            { "<leader>ssu", function() Snacks.picker.undo() end, desc = "Undo History" },
-            { "<leader>suC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
+            { '<leader>s"', function() Snacks.picker.registers() end, desc = "Search Registers" },
+            { '<leader>s/', function() Snacks.picker.search_history() end, desc = "Search History" },
+            { "<leader>sa", function() Snacks.picker.autocmds() end, desc = "Search Autocmds" },
+            { "<leader>s:", function() Snacks.picker.commands() end, desc = "Search Commands" },
+            { "<leader>sC", function() Snacks.picker.command_history() end, desc = "Command History" },
+            { "<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Search Diagnostics" },
+            { "<leader>sD", function() Snacks.picker.diagnostics_buffer() end, desc = "Search Buffer Diagnostics" },
+            { "<leader>sh", function() Snacks.picker.help() end, desc = "Search Help Pages" },
+            { "<leader>sH", function() Snacks.picker.highlights() end, desc = "Search Highlights" },
+            { "<leader>si", function() Snacks.picker.icons() end, desc = "Search Icons" },
+            { "<leader>sj", function() Snacks.picker.jumps() end, desc = "Search Jumps" },
+            { "<leader>sk", function() Snacks.picker.keymaps() end, desc = "Search Keymaps" },
+            { "<leader>sl", function() Snacks.picker.loclist() end, desc = "Search Location List" },
+            { "<leader>sm", function() Snacks.picker.marks() end, desc = "Search Marks" },
+            { "<leader>sM", function() Snacks.picker.man() end, desc = "Search Man Pages" },
+            { "<leader>sp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec" },
+            { "<leader>sq", function() Snacks.picker.qflist() end, desc = "Search Quickfix List" },
+            { "<leader>sR", function() Snacks.picker.resume() end, desc = "Search Resume" },
+            { "<leader>su", function() Snacks.picker.undo() end, desc = "Search Undo History" },
+            { "<leader>sc", function() Snacks.picker.colorschemes() end, desc = "Search Colorschemes" },
+            { "<leader>st", function() Snacks.picker.treesitter() end, desc = "Search Treesitter" },
+            { "<leader>sN", function() Snacks.picker.notifications() end, desc = "Notification History" },
             -- LSP
-            { "gd", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition" },
-            { "gD", function() Snacks.picker.lsp_declarations() end, desc = "Goto Declaration" },
-            { "gr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
-            { "gI", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
-            { "gy", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
-            { "<leader>sss", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
-            { "<leader>ssS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
+            -- { "gd", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition" },
+            -- { "gD", function() Snacks.picker.lsp_declarations() end, desc = "Goto Declaration" },
+            -- { "gr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
+            -- { "gI", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
+            -- { "gy", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
+            -- { "<leader>sss", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
+            -- { "<leader>ssS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
           },
         },
         -- }}}
