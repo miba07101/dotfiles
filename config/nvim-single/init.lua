@@ -7,6 +7,101 @@
 -- ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
 --
 
+-- {{{ [[ DETECT OS ]]
+function _G.DetectOsType()-- {{{
+  local os_name = vim.loop.os_uname().sysname
+  local os_type
+
+  if os_name == "Windows_NT" then
+    os_type = "windows"
+  elseif os_name == "Linux" then
+    local is_wsl = vim.fn.has("wsl") == 1 -- Check if it's WSL
+    if is_wsl then
+      os_type = "wsl"
+    else
+      os_type = "linux"
+    end
+  else
+    os_type = os_name
+  end
+
+  return os_type
+end-- }}}
+
+local os_type = DetectOsType()
+local os_username = os.getenv("USERNAME") or os.getenv("USER")
+local py_venvs_path = os.getenv("VENV_HOME")
+local onedrive_path = os.getenv("OneDrive_DIR")
+local python_os = os_type == "windows" and "python" or "python3"
+local debugpy_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
+
+function _G.PythonInterpreter()-- {{{
+  local venv_path = os.getenv("VIRTUAL_ENV") -- Get the path of the active virtual environment
+    -- Get the current venv from swenv.nvim or fallback to default Python
+    -- local venv = require("swenv.api").get_current_venv()
+    -- print(vim.inspect(venv.path))
+  if venv_path then
+    if os_type == "windows" then
+      return venv_path .. "\\Scripts\\python.exe" -- For Windows
+    else
+      return venv_path .. "/bin/python" -- For Linux/macOS
+    end
+  else
+    if os_type == "windows" then
+      return "python" -- For Windows
+    else
+      return "python3" -- For Linux/macOS
+    end
+  end
+end-- }}}
+
+function _G.MoltenInitialize()-- {{{
+  local venv_path = os.getenv("VIRTUAL_ENV") -- musi byt priamo v tejto funkcii, aby ked zmenim "venv", tak to vedelo inicializovat molten kernel
+  if venv_path then
+    -- Extract venv name (e.g., from "C:\\Users\\mech\\.py-venv\\myenv" -> "myenv")
+local venv_name = venv_path:match("[^/\\]+$") or "python3"
+    -- Initialize Molten with extracted venv name
+    vim.cmd(("MoltenInit %s"):format(venv_name))
+  else
+    vim.notify("No virtual environment. Please activate one.", vim.log.levels.INFO)
+  end
+end-- }}}
+
+function _G.ObsidianPath()-- {{{
+  return os_username == "mech" and "~\\Sync\\Obsidian/"
+    or vim.fn.expand(onedrive_path .. "Dokumenty/zPoznamky/Obsidian/")
+end-- }}}
+
+function _G.ObsidianNewNote(use_template, template, folder)-- {{{
+  local obsidian_path = ObsidianPath()
+  local note_name = vim.fn.input("Enter note name without .md: ")
+  if note_name == "" then return print("Note name cannot be empty!") end
+
+  local new_note_path = string.format("%s%s/%s.md", obsidian_path, folder or "inbox", note_name)
+  vim.cmd("edit " .. new_note_path)
+
+  if use_template then
+    local templates = { basic = "t-nvim-note.md", person = "t-person.md" }
+    vim.cmd(templates[template] and "ObsidianTemplate " .. templates[template] or "echo 'Invalid template name'")
+  end
+end-- }}}
+
+
+vim.filetype.add {-- {{{
+  extension = {
+    zsh = "sh",
+    sh = "sh", -- force sh-files with zsh-shebang to still get sh as filetype
+    ipynb = "ipynb",
+  },
+  filename = {
+    [".zshrc"] = "sh",
+    [".zshenv"] = "sh",
+    [".ipynb"] = "ipynb",  -- associate .ipynb extension with the 'ipynb' filetype
+  },
+}-- }}}
+
+-- }}}
+
 -- {{{ [[ OPTIONS ]]
 local opt = vim.opt
 local g = vim.g
@@ -21,6 +116,7 @@ opt.iskeyword:remove("_") -- oddeli slova pri mazani, nebude brat ako jedno slov
 -- opt.sidescrolloff    = 8 -- number of columns to keep at the sides of the cursor
 -- opt.splitbelow       = true -- splitting window below
 -- opt.splitright       = true -- splitting window right
+opt.termguicolors    = true -- terminal supports more colors
 opt.timeoutlen = 400 -- time to wait for a mapped sequence to complete, default 1000
 -- opt.updatetime       = 100 -- speed up response time
 -- opt.wrap = false -- disable wrapping of lines longer than the width of window
@@ -347,9 +443,9 @@ end -- }}}
 vim.api.nvim_create_user_command("NewNotebook", function(opts) -- {{{
   new_notebook(opts.args)
 end, {
-  nargs = 1,
-  complete = "file",
-}) -- }}}
+    nargs = 1,
+    complete = "file",
+  }) -- }}}
 
 -- keymap for new Jupyter notebook creation
 map("n", "<leader>pj", function()
@@ -408,26 +504,85 @@ require("lazy").setup({
   spec = { -- {{{
 
     -- {{{ [ Colorscheme ]
-    {
-      "rebelot/kanagawa.nvim", -- {{{
+    { "rebelot/kanagawa.nvim", -- {{{
       -- enabled = false,
       priority = 1000,
       config = function()
+        require("kanagawa").setup({-- {{{
+          colors = {-- {{{
+            palette = {
+              fujiWhite = "#FEFEFA",
+              -- https://coolors.co/gradient-palette/fefefa-edebda?number=3
+              lotusWhite0 = "#EDEBDA",
+              lotusWhite1 = "#EDEBDA",
+              lotusWhite2 = "#EDEBDA",
+              lotusWhite3 = "#FEFEFA", -- baby powder white shade
+              lotusWhite4 = "#F6F5EA",
+              lotusWhite5 = "#F6F5EA",
+            },
+            theme = {
+              all = {
+                ui = {
+                  bg_gutter = "none",
+                },
+              },
+            },
+          },-- }}}
+          overrides = function(colors)-- {{{
+            local theme = colors.theme
+            return {
+              -- change cmd popup menu colors
+              Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_m1 },
+              -- -- PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2, italic = true },
+              PmenuSel = { fg = colors.palette.surimiOrange, bg = theme.ui.bg_p2 },
+              PmenuSbar = { bg = theme.ui.bg_m1 },
+              PmenuThumb = { bg = theme.ui.bg_p2 },
+              -- -- FloatBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+              -- change cmp items colors
+              CmpItemKindVariable = { fg = colors.palette.crystalBlue, bg = "NONE" },
+              CmpItemKindInterface = { fg = colors.palette.crystalBlue, bg = "NONE" },
+              CmpItemKindFunction = { fg = colors.palette.oniViolet, bg = "NONE" },
+              CmpItemKindMethod = { fg = colors.palette.oniViolet, bg = "NONE" },
+              -- render-markdown headings
+              RenderMarkdownH1Bg = { bg = theme.ui.bg_m1, fg = colors.palette.autumnRed },
+              RenderMarkdownH2Bg = { bg = theme.ui.bg_m1, fg = colors.palette.autumnYellow },
+              RenderMarkdownH3Bg = { bg = theme.ui.bg_m1, fg = colors.palette.autumnGreen  },
+              RenderMarkdownH4Bg = { bg = theme.ui.bg_m1, fg = colors.palette.oniViolet },
+              RenderMarkdownH5Bg = { bg = theme.ui.bg_m1, fg = colors.palette.dragonBlue },
+              RenderMarkdownH6Bg = { bg = theme.ui.bg_m1, fg = "#717C7C" },
+              RenderMarkdownH1 = { fg = colors.palette.autumnRed },
+              RenderMarkdownH2 = { fg = colors.palette.autumnYellow },
+              RenderMarkdownH3 = { fg = colors.palette.autumnGreen  },
+              RenderMarkdownH4 = { fg = colors.palette.oniViolet },
+              RenderMarkdownH5 = { fg = colors.palette.dragonBlue },
+              RenderMarkdownH6 = { fg = "#717C7C" },
+              -- mini.tabline
+              MiniTablineCurrent = { bg = theme.ui.bg_m1, fg = colors.palette.surimiOrange }, -- buffer is current (has cursor in it).
+              MiniTablineVisible = { bg = theme.ui.bg_m1, fg = "#717C7C" }, -- buffer is visible (displayed in some window).
+              MiniTablineHidden = { bg = theme.ui.bg_m1, fg = "#717C7C" }, -- buffer is hidden (not displayed).
+              MiniTablineModifiedCurrent = { bg = theme.ui.bg_p2, fg = colors.palette.surimiOrange }, -- buffer is modified and current.
+              MiniTablineModifiedVisible = { bg = theme.ui.bg_p2, fg = "#717C7C" }, -- buffer is modified and visible.
+              MiniTablineModifiedHidden = { bg = theme.ui.bg_p2, fg = "#717C7C" }, -- buffer is modified and hidden.
+              -- MiniTablineFill = { bg = theme.ui.bg_m1, fg = colors.palette.surimiOrange }, -- unused right space of tabline.
+              -- MiniTablineTabpagesection = { bg = theme.ui.bg_m1, fg = colors.palette.surimiOrange }, -- section with tabpage information.
+              -- MiniTablineTrunc = { bg = theme.ui.bg_m1, fg = colors.palette.surimiOrange }, -- truncation symbols indicating more left/right tabs.
+            }
+          end,-- }}}
+        })-- }}}
         vim.cmd.colorscheme("kanagawa")
       end,
     }, -- }}}
     -- }}}
 
     -- {{{ [ Treesitter ]
-    {
-      "nvim-treesitter/nvim-treesitter",
+    { "nvim-treesitter/nvim-treesitter",
       -- enabled = false,
       version = false,
       build = ":TSUpdate",
       lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
       dependencies = { -- {{{
         -- "windwp/nvim-ts-autotag",
-        "nvim-treesitter/nvim-treesitter-textobjects",
+        -- "nvim-treesitter/nvim-treesitter-textobjects",
       }, -- }}}
       main = "nvim-treesitter.configs",
       opts = { -- {{{
@@ -455,43 +610,42 @@ require("lazy").setup({
         highlight = { enable = true },
         indent = { enable = true },
         -- autotag = { enable = true },
-        textobjects = {
-          move = {
-            enable = true,
-            set_jumps = false, -- you can change this if you want.
-            goto_next_start = {
-              ["]c"] = { query = "@code_cell.inner", desc = "next cell" },
-            },
-            goto_previous_start = {
-              ["[c"] = { query = "@code_cell.inner", desc = "previous cell" },
-            },
-          },
-          select = {
-            enable = true,
-            lookahead = true, -- you can change this if you want
-            keymaps = {
-              ["ic"] = { query = "@code_cell.inner", desc = "in cell" },
-              ["ac"] = { query = "@code_cell.outer", desc = "around cell" },
-            },
-          },
-          swap = { -- Swap only works with code blocks that are under the same
-            -- markdown header
-            enable = true,
-            swap_next = {
-              ["<leader>psn"] = "@code_cell.outer",
-            },
-            swap_previous = {
-              ["<leader>psp"] = "@code_cell.outer",
-            },
-          },
-        },
+        -- textobjects = {
+        --   move = {
+        --     enable = true,
+        --     set_jumps = false, -- you can change this if you want.
+        --     goto_next_start = {
+        --       ["]c"] = { query = "@code_cell.inner", desc = "next cell" },
+        --     },
+        --     goto_previous_start = {
+        --       ["[c"] = { query = "@code_cell.inner", desc = "previous cell" },
+        --     },
+        --   },
+        --   select = {
+        --     enable = true,
+        --     lookahead = true, -- you can change this if you want
+        --     keymaps = {
+        --       ["ic"] = { query = "@code_cell.inner", desc = "in cell" },
+        --       ["ac"] = { query = "@code_cell.outer", desc = "around cell" },
+        --     },
+        --   },
+        --   swap = { -- Swap only works with code blocks that are under the same
+        --     -- markdown header
+        --     enable = true,
+        --     swap_next = {
+        --       ["<leader>psn"] = "@code_cell.outer",
+        --     },
+        --     swap_previous = {
+        --       ["<leader>psp"] = "@code_cell.outer",
+        --     },
+        --   },
+        -- },
       }, -- }}}
     },
     -- }}}
 
     -- {{{ [ LSP ]
-    {
-      "neovim/nvim-lspconfig",
+    { "neovim/nvim-lspconfig",
       dependencies = { -- {{{
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
@@ -628,6 +782,47 @@ require("lazy").setup({
     },
     -- }}}
 
+    -- {{{ [ Autocompletition ]
+    { "saghen/blink.cmp",-- {{{
+      enabled = true,
+      dependencies = "rafamadriz/friendly-snippets",
+      version = "v0.*",
+      opts = {-- {{{
+        keymap = {-- {{{
+          preset = "super-tab",
+          ["<CR>"] = { "accept", "fallback" },
+        },-- }}}
+        appearance = {-- {{{
+          use_nvim_cmp_as_default = false,
+          nerd_font_variant = "normal",
+        },-- }}}
+        completion = {-- {{{
+          menu = {
+            draw = {
+              columns = {
+                { "kind_icon" },
+                { "label", "label_description", gap = 1 },
+                { "source_name", "kind", gap = 1 },
+              },
+            },
+          },
+        },-- }}}
+        signature = { enabled = true },
+        sources = {-- {{{
+          default = { "lsp", "path", "snippets", "buffer" },
+          providers = {
+            markdown = {
+              name = 'RenderMarkdown',
+              module = 'render-markdown.integ.blink',
+              fallbacks = { 'lsp' },
+            },
+          },
+        },-- }}}
+      },-- }}}
+      opts_extend = { "sources.default" },
+    },-- }}}
+    -- }}}
+
     -- {{{ [ Mini.nvim collection ]
     {
       "echasnovski/mini.nvim",
@@ -736,21 +931,21 @@ require("lazy").setup({
           },
         }) -- }}}
 
-        -- {{{ mini.comments
+        -- {{{ mini.comment
         local os_name = vim.loop.os_uname().sysname
         local mappings = (os_name == "Linux")
-            and {
-              comment = "<C-/>",
-              comment_line = "<C-/>",
-              comment_visual = "<C-/>",
-              textobject = "<C-/>",
-            }
-          or {
-            comment = "<C-_>",
-            comment_line = "<C-_>",
-            comment_visual = "<C-_>",
-            textobject = "<C-_>",
-          }
+        and {
+          comment = "<C-/>",
+          comment_line = "<C-/>",
+          comment_visual = "<C-/>",
+          textobject = "<C-/>",
+        }
+        or {
+          comment = "<C-_>",
+          comment_line = "<C-_>",
+          comment_visual = "<C-_>",
+          textobject = "<C-_>",
+        }
 
         require("mini.comment").setup({
           options = {},
@@ -802,105 +997,132 @@ require("lazy").setup({
           },
         }) -- }}}
 
-require("mini.statusline").setup()
+        local statusline = require("mini.statusline")-- {{{
 
-        -- -- Custom statusline setup
-        -- local statusline = require("mini.statusline")
-        --
-        -- -- Define VS Code-like colors
-        -- local colors = {
-        --   red    = "#e74d23",
-        --   orange = "#FF8800",
-        --   yellow = "#ffc233",
-        --   green  = "#427b00",
-        --   blue   = "#007ACD",
-        --   purple = "#67217A",
-        --   black  = "#16161D",
-        --   white  = "#FFFFFF",
-        --   grey   = "#727169",
-        -- }
-        --
-        -- -- Mode-based colors
-        -- local mode_colors = {
-        --   n = { fg = colors.white, bg = colors.purple },
-        --   i = { fg = colors.white, bg = colors.blue },
-        --   v = { fg = colors.white, bg = colors.green },
-        --   V = { fg = colors.white, bg = colors.green },
-        --   [""] = { fg = colors.white, bg = colors.green },
-        --   R = { fg = colors.white, bg = colors.orange },
-        --   c = { fg = colors.white, bg = colors.red },
-        --   t = { fg = colors.white, bg = colors.red },
-        -- }
-        --
-        -- -- Apply highlight groups dynamically
-        -- local function set_mode_colors()
-        --   for mode, hl in pairs(mode_colors) do
-        --     vim.api.nvim_set_hl(0, "MiniStatuslineMode" .. mode, { fg = hl.fg, bg = hl.bg })
-        --   end
-        -- end
-        -- set_mode_colors()
-        --
-        -- -- Function to get the current mode's highlight group
-        -- local function get_mode_hl()
-        --   local mode = vim.fn.mode()
-        --   return "MiniStatuslineMode" .. (mode_colors[mode] and mode or "n") -- Default to Normal mode color
-        -- end
-        --
-        -- -- Function to get simplified pathname (fixed `cwd` issue)
-        -- local function section_pathname(args)
-        --   args = vim.tbl_extend("force", { trunc_width = 80 }, args or {})
-        --
-        --   if vim.bo.buftype == "terminal" then
-        --     return "%t"
-        --   end
-        --
-        --   local path = vim.fn.expand("%:p") -- Full file path
-        --   local cwd = vim.fn.getcwd()  -- Corrected cwd handling
-        --
-        --
-        --   if path:find(cwd, 1, true) == 1 then
-        --     path = path:sub(#cwd + 2)
-        --   end
-        --
-        --   local sep = package.config:sub(1, 1)
-        --   local parts = vim.split(path, sep)
-        --
-        --   -- Extract directory and filename separately
-        --   local dir = (#parts > 1) and table.concat(parts, sep, 1, #parts - 1) .. sep or ""
-        --   local file = parts[#parts] or ""
-        --
-        --   local modified = vim.bo.modified and " [+]" or ""
-        --
-        --   -- return table.concat(parts, sep) .. modified
-        --   return dir .. file .. modified
-        -- end
-        --
-        -- -- Custom statusline setup
-        -- statusline.setup({
-        --   use_icons = true,
-        --   content = {
-        --     inactive = function()
-        --       return statusline.combine_groups({
-        --         { hl = "MiniStatuslineInactive", strings = { section_pathname({ trunc_width = 120 }) } },
-        --       })
-        --     end,
-        --
-        --     active = function()
-        --       local mode_hl = get_mode_hl()
-        --       return statusline.combine_groups({
-        --         { hl = mode_hl, strings = { vim.fn.mode():upper() } },
-        --         { hl = mode_hl, strings = { statusline.section_git({ trunc_width = 40 }) } },
-        --         { hl = mode_hl, strings = { statusline.section_diff({ trunc_width = 60 }) } },
-        --         '%<', -- Truncate point
-        --         { hl = mode_hl, strings = { section_pathname({ trunc_width = 100 }) } }, -- ✅ Now displays full path correctly
-        --         '%=', -- Right-align start
-        --         { hl = mode_hl, strings = { statusline.section_diagnostics({ trunc_width = 60 }) } },
-        --         { hl = mode_hl, strings = { statusline.section_lsp({ trunc_width = 40 }) } },
-        --         { hl = mode_hl, strings = { statusline.section_location({ trunc_width = 120 }) } },
-        --       })
-        --     end,
-        --   },
-        -- })
+        -- VS Code-like theme {{{
+        local colors = {
+          red    = "#e74d23",
+          orange = "#FF8800",
+          yellow = "#ffc233",
+          green  = "#427b00",
+          blue   = "#007ACD",
+          purple = "#67217A",
+          black  = "#16161D",
+          white  = "#FFFFFF",
+          grey   = "#727169",
+        }
+
+        -- Set highlights for different modes
+        local function set_statusline_highlights()
+          local hl_groups = {
+            MiniStatuslineModeNormal  = { fg = colors.white, bg = colors.purple, style = "normal" },
+            MiniStatuslineModeInsert  = { fg = colors.white, bg = colors.blue, style = "normal" },
+            MiniStatuslineModeVisual  = { fg = colors.white, bg = colors.green, style = "normal" },
+            MiniStatuslineModeReplace = { fg = colors.white, bg = colors.orange, style = "normal" },
+            MiniStatuslineModeCommand = { fg = colors.white, bg = colors.red, style = "normal" },
+            MiniStatuslineModeOther   = { fg = colors.white, bg = colors.grey, style = "normal" },
+            MiniStatuslineInactive    = { fg = colors.grey, bg = colors.black },
+            -- MiniStatuslineDevinfo     = { fg = colors.white, bg = colors.grey },
+            -- MiniStatuslineFilename    = { fg = colors.white, bg = colors.grey, style = "normal" },
+            -- MiniStatuslineFileinfo    = { fg = colors.white, bg = colors.grey },
+          }
+
+          for group, opts in pairs(hl_groups) do
+            vim.api.nvim_set_hl(0, group, { fg = opts.fg, bg = opts.bg, bold = opts.style == "bold" })
+          end
+        end
+
+        -- Apply colors initially
+        set_statusline_highlights()
+
+        -- Ensure colors stay the same after switching themes
+        vim.api.nvim_create_autocmd("ColorScheme", {
+          pattern = "*",
+          callback = set_statusline_highlights,
+        })-- }}}
+
+        -- Function to show macro recording status{{{
+        local function macro_recording()
+          local reg = vim.fn.reg_recording()
+          if reg == "" then return "" end -- Return empty string if no macro is being recorded
+          return string.format("󰑋 @%s", reg)
+        end-- }}}
+
+        -- Function to show the active Python virtual environment{{{
+        local function python_venv()
+          local venv = os.getenv("VIRTUAL_ENV") -- Get virtual environment path
+          if not venv or venv == "" then return "" end -- Return empty string if no venv
+
+          local venv_name = vim.fn.fnamemodify(venv, ":t") -- Extract only the folder name
+          return string.format("󰌠 %s", venv_name)
+        end-- }}}
+
+        -- Function to show the active Molten status{{{
+        local function molten_init()
+          if not package.loaded["molten.status"] then
+            return "M:X"
+          end
+
+          local ok, molten_status = pcall(require, "molten.status")
+          if not ok or type(molten_status.initialized) ~= "function" then
+            return "M:X"
+          end
+
+          local success, status = pcall(molten_status.initialized)
+          return success and status == "Molten" and "M:A" or "M:X"
+        end-- }}}
+
+        -- Function to show buffer counts{{{
+        local function buffer_counts()
+          local loaded_buffers = #vim.tbl_filter(function(buf)
+            return vim.fn.buflisted(buf) ~= 0
+          end, vim.api.nvim_list_bufs())
+          local modified_buffers = #vim.tbl_filter(function(buf)
+            return vim.bo[buf].modified
+          end, vim.api.nvim_list_bufs())
+          return string.format("󰈔 [%d:%d+]", loaded_buffers, modified_buffers)
+        end-- }}}
+
+        statusline.setup({-- {{{
+          use_icons = true,
+          content = {
+            inactive = function()
+              return MiniStatusline.combine_groups({
+                { hl = "MiniStatuslineInactive", strings = { MiniStatusline.section_filename({ trunc_width = 140 }) } },
+              })
+            end,
+
+            active = function()
+              local mode, mode_hl   = MiniStatusline.section_mode({ trunc_width        = 120 })
+              local git             = MiniStatusline.section_git({ trunc_width         = 40 })
+              local diff            = MiniStatusline.section_diff({ trunc_width        = 75 })
+              local diagnostics     = MiniStatusline.section_diagnostics({ trunc_width = 75, icon = "", signs = { ERROR = " ", WARN = " ", INFO = " ", HINT = "󰌵 " } })
+              local lsp             = MiniStatusline.section_lsp({ trunc_width         = 75, icon = "" })
+              local filename        = MiniStatusline.section_filename({ trunc_width    = 140 })
+              local fileinfo        = MiniStatusline.section_fileinfo({ trunc_width    = 1000 })
+              local location        = MiniStatusline.section_location({ trunc_width    = 75 })
+              local search          = MiniStatusline.section_searchcount({ trunc_width = 75 })
+              local buffer_counts   = buffer_counts()
+              local macro_recording = macro_recording()
+              local molten_init     = molten_init()
+              local python_venv     = python_venv()
+
+              return MiniStatusline.combine_groups({
+                { hl    =   mode_hl,                   strings = { fileinfo } },
+                '%<', -- Mark general truncate point
+                { hl    =   mode_hl,                   strings = { filename, buffer_counts, macro_recording } },
+                '%= ', -- End left alignment
+                -- { hl =   'MiniStatuslineFileinfo', strings  = { fileinfo } },
+                -- { hl    =   mode_hl,                   strings = { python_venv, molten_init, lsp } },
+                { hl    =   mode_hl,                   strings = { python_venv, lsp, molten_init, git, diff, diagnostics, location } },
+              })
+            end
+          },
+        })-- }}}
+        -- }}}
+
+        require('mini.tabline').setup()
+
 
 
 
@@ -1064,150 +1286,6 @@ require("mini.statusline").setup()
       },
     },
     -- }}}
-
-      -- {{{ [ Statusline ]
-      {
-        "nvim-lualine/lualine.nvim",
-        enabled = false,
-        event = "VeryLazy",
-        config = function()
-          local function vscode_theme()-- {{{
-            local colors = {
-              red = "#e74d23",
-              orange = "#FF8800",
-              yellow = "#ffc233",
-              green = "#427b00",
-              blue = "#007ACD",
-              purple = "#67217A",
-              black = "#16161D",
-              white = "#FFFFFF",
-              grey = "#727169",
-            }
-            return {
-              normal = { a = { bg = colors.purple, fg = colors.white } },
-              insert = { a = { bg = colors.blue, fg = colors.white } },
-              visual = { a = { bg = colors.green, fg = colors.white } },
-              replace = { a = { bg = colors.orange, fg = colors.white } },
-              command = { a = { bg = colors.red, fg = colors.white } },
-              inactive = { a = { bg = colors.black, fg = colors.grey } },
-            }
-          end-- }}}
-
-          local function lsp_server_icon()-- {{{
-            local buf_ft = vim.bo.filetype
-            for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
-              if client.supports_method("textDocument/documentSymbol") then
-                local supported_filetypes = client.config.filetypes or {}
-                if vim.tbl_contains(supported_filetypes, buf_ft) then
-                  return ""
-                end
-              end
-            end
-            return ""
-          end-- }}}
-
-          local function python_env()-- {{{
-            local venv = require("swenv.api").get_current_venv()
-            if venv and venv.name then
-              return venv.name:match("([^/]+)$") or ""
-            end
-            return ""
-          end-- }}}
-
-          local function buffer_counts()-- {{{
-            local loaded_buffers = #vim.tbl_filter(function(buf)
-              return vim.fn.buflisted(buf) ~= 0
-            end, vim.api.nvim_list_bufs())
-            local modified_buffers = #vim.tbl_filter(function(buf)
-              return vim.bo[buf].modified
-            end, vim.api.nvim_list_bufs())
-            return string.format("󰈔 [%d:%d+]", loaded_buffers, modified_buffers)
-          end-- }}}
-
-          local function macro_recording()-- {{{
-            local recording = vim.fn.reg_recording()
-            return recording ~= "" and "󰻃 " .. recording or ""
-          end-- }}}
-
-
-          local function molten_init()
-            if not package.loaded["molten.status"] then
-              return "M:X"
-            end
-
-            local ok, molten_status = pcall(require, "molten.status")
-            if not ok or type(molten_status.initialized) ~= "function" then
-              return "M:X"
-            end
-
-            local success, status = pcall(molten_status.initialized)
-            return success and status == "Molten" and "M:A" or "M:X"
-          end
-
-          require("lualine").setup({-- {{{
-            options = {
-              section_separators = "",
-              component_separators = "",
-              disabled_filetypes = { statusline = { "alpha", "TelescopePrompt" } },
-              theme = vscode_theme(),
-            },
-            sections = {
-              lualine_a = {
-                { "filetype", colored = false, icon_only = false },
-                { "filename", path = 4, symbols = { modified = "[+]", readonly = "[-]" } },
-                { buffer_counts },
-              },
-              lualine_b = { { macro_recording } },
-              lualine_c = { },
-              lualine_x = {},
-              -- lualine_y = { { python_env, icon = "" } },
-              lualine_y = {
-                { python_env, icon = "" },
-                {
-                  -- pre Molten, pozri [ molten ] a cast keys = {}
-                  function()
-                    return vim.g.lualine_status or ""
-                    -- return vim.g.lualine_status or (vim.tbl_contains({ "python", "quarto", "markdown" }, vim.bo.filetype) and "M:X" or "")
-                  end,
-                  icon = "󰑙"
-                }
-              },
-              lualine_z = {
-                { lsp_server_icon },
-                {
-                  "diagnostics",
-                  colored = false,
-                  symbols = { error = " ", warn = " ", info = " ", hint = "󰌵 " },
-                },
-                { "%l:%c %p%%/%L" },
-              },
-            },
-            tabline = {
-              lualine_b = {
-                {
-                  "buffers",
-                  buffers_color = {
-                    active = { fg = "#FF8800" },
-                  },
-                  filetype_names = { alpha = "", TelescopePrompt = "", lazy = "", fzf = "" },
-                },
-              },
-            },
-          })-- }}}
-
-          vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {-- {{{
-            callback = function()
-              local delay = vim.fn.reg_recording() == "" and 50 or 0
-              vim.defer_fn(function()
-                require("lualine").refresh({ place = { "statusline" } })
-              end, delay)
-            end,
-            desc = "Auto-refresh for macro recording status",
-          })-- }}}
-
-        end,
-      },
-      -- }}}
 
   }, -- }}}
 })
