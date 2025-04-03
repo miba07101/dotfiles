@@ -8,54 +8,144 @@
 --
 
 -- {{{ [[ DETECT OS ]]
-function _G.DetectOsType()
+-- function _G.DetectOsType()-- {{{
+--   local os_name = vim.loop.os_uname().sysname
+--   local os_type = (os_name == "Windows_NT" and "windows")
+--     or (os_name == "Linux" and (vim.fn.has("wsl") == 1 and "wsl" or "linux"))
+--     or os_name
+--
+--   local home = os.getenv("HOME") or os.getenv("USERPROFILE")
+--   local username = os.getenv("USERNAME") or os.getenv("USER")
+--   local venv_home = os.getenv("VENV_HOME") or (home .. "/.py-venv")
+--   local nvim_venv = venv_home .. "/nvim-venv"
+--   local debugpy_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
+--
+--   -- Set Neovim Python Host
+--   vim.g.python3_host_prog = os_type == "windows"
+--     and (nvim_venv .. "\\Scripts\\python.exe")
+--     or (nvim_venv .. "/bin/python3")
+--
+--   -- Shell & Cursor Config
+--   if os_type == "windows" then
+--     vim.opt.shell        = "pwsh.exe"
+--     vim.opt.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding = [Console]::OutputEncoding = [System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
+--     vim.opt.shellredir   = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+--     vim.opt.shellpipe    = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+--     vim.opt.shellquote   = ""
+--     vim.opt.shellxquote  = ""
+--     if username == "vimi-jonsbo" then
+--       vim.opt.guicursor = { "n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150" }
+--     end
+--   else
+--     vim.opt.shell = os_type == "wsl" and "/bin/bash" or "/bin/zsh"
+--     if os_type == "wsl" then
+--       vim.opt.guicursor = { "n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150" }
+--     end
+--   end
+--
+--   -- Python Interpreter
+--   local function PythonInterpreter()
+--     local venv = os.getenv("VIRTUAL_ENV")
+--     return venv and (os_type == "windows" and (venv .. "\\Scripts\\python.exe") or (venv .. "/bin/python")) or "python3"
+--   end
+--
+--   -- Obsidian Path
+--   local function ObsidianPath()
+--     return username == "mech" and "~\\Sync\\Obsidian/"
+--       or vim.fn.expand((os.getenv("OneDrive_DIR") or "") .. "Dokumenty/zPoznamky/Obsidian/")
+--   end
+--
+--   -- Initialize Molten.nvim
+--   local function MoltenInitialize()
+--     local venv = os.getenv("VIRTUAL_ENV")
+--     if venv then
+--       vim.cmd("MoltenInit " .. (venv:match("[^/\\]+$") or "python3"))
+--     else
+--       vim.notify("No virtual environment. Please activate one.", vim.log.levels.INFO)
+--     end
+--   end
+--
+--   -- Create a New Obsidian Note
+--   local function ObsidianNewNote(use_template, template, folder)
+--     local note_name = vim.fn.input("Enter note name without .md: ")
+--     if note_name == "" then return print("Note name cannot be empty!") end
+--
+--     local new_note_path = string.format("%s%s/%s.md", ObsidianPath(), folder or "inbox", note_name)
+--     vim.cmd("edit " .. new_note_path)
+--
+--     if use_template then
+--       local templates = { basic = "t-nvim-note.md", person = "t-person.md" }
+--       vim.cmd(templates[template] and "ObsidianTemplate " .. templates[template] or "echo 'Invalid template name'")
+--     end
+--   end
+--
+--   return {
+--     os_type = os_type,
+--     username = username,
+--     venv_home = venv_home,
+--     nvim_venv = nvim_venv,
+--     debugpy_path = debugpy_path,
+--     PythonInterpreter = PythonInterpreter,
+--     ObsidianPath = ObsidianPath,
+--     MoltenInitialize = MoltenInitialize,
+--     ObsidianNewNote = ObsidianNewNote
+--   }
+-- end-- }}}
+
+function _G.DetectOsType()-- {{{
+  -- Detect OS Type
   local os_name = vim.loop.os_uname().sysname
-  --dava chybu, nepozna tuto formu prikazu local os_name = require('vim.loop').os_uname().sysname
   local os_type = (os_name == "Windows_NT" and "windows")
     or (os_name == "Linux" and (vim.fn.has("wsl") == 1 and "wsl" or "linux"))
     or os_name
 
+  -- Environment Variables
   local home = os.getenv("HOME") or os.getenv("USERPROFILE")
   local username = os.getenv("USERNAME") or os.getenv("USER")
   local venv_home = os.getenv("VENV_HOME") or (home .. "/.py-venv")
   local nvim_venv = venv_home .. "/nvim-venv"
   local debugpy_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
+  local venv = os.getenv("VIRTUAL_ENV")  -- Moved here for reuse
 
   -- Set Neovim Python Host
   vim.g.python3_host_prog = os_type == "windows"
     and (nvim_venv .. "\\Scripts\\python.exe")
-    or (nvim_venv .. "/bin/python")
+    or (nvim_venv .. "/bin/python3")
 
-  -- Shell & Cursor Config
-  if os_type == "windows" then
-    vim.opt.shell = "pwsh.exe"
-    vim.opt.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding = [Console]::OutputEncoding = [System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
-    vim.opt.shellredir,
-    vim.opt.shellpipe,
-    vim.opt.shellquote,
-    vim.opt.shellxquote = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode","2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode", "", ""
-  else
-    vim.opt.shell = os_type == "wsl" and "/bin/bash" or "/bin/zsh"
-    if os_type == "wsl" then
-      vim.opt.guicursor = { "n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150" }
-    end
+  -- Function to set cursor appearance
+  local function SetCursor()
+    vim.opt.guicursor = { "n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150" }
   end
 
-  -- Python Interpreter
+  -- Shell & Cursor Configuration
+  if os_type == "windows" then
+    vim.opt.shell        = "pwsh.exe"
+    vim.opt.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding = [Console]::OutputEncoding = [System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
+    vim.opt.shellredir   = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+    vim.opt.shellpipe    = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+    vim.opt.shellquote   = ""
+    vim.opt.shellxquote  = ""
+
+    -- Set cursor for a specific user
+    if username == "vimi-jonsbo" then SetCursor() end
+  else
+    vim.opt.shell = os_type == "wsl" and "/bin/bash" or "/bin/zsh"
+    if os_type == "wsl" then SetCursor() end
+  end
+
+  -- Function to determine Python interpreter
   local function PythonInterpreter()
-    local venv = os.getenv("VIRTUAL_ENV")
     return venv and (os_type == "windows" and (venv .. "\\Scripts\\python.exe") or (venv .. "/bin/python")) or "python3"
   end
 
-  -- Obsidian Path
+  -- Function to get Obsidian path
   local function ObsidianPath()
     return username == "mech" and "~\\Sync\\Obsidian/"
       or vim.fn.expand((os.getenv("OneDrive_DIR") or "") .. "Dokumenty/zPoznamky/Obsidian/")
   end
 
-  -- Initialize Molten.nvim
+  -- Function to initialize Molten.nvim
   local function MoltenInitialize()
-    local venv = os.getenv("VIRTUAL_ENV")
     if venv then
       vim.cmd("MoltenInit " .. (venv:match("[^/\\]+$") or "python3"))
     else
@@ -63,7 +153,7 @@ function _G.DetectOsType()
     end
   end
 
-  -- Create a New Obsidian Note
+  -- Function to create a new Obsidian note
   local function ObsidianNewNote(use_template, template, folder)
     local note_name = vim.fn.input("Enter note name without .md: ")
     if note_name == "" then return print("Note name cannot be empty!") end
@@ -88,7 +178,7 @@ function _G.DetectOsType()
     MoltenInitialize = MoltenInitialize,
     ObsidianNewNote = ObsidianNewNote
   }
-end
+end-- }}}
 
 -- Initialize Environment
 local osvar = DetectOsType()
