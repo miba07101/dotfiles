@@ -8,85 +8,99 @@
 --
 
 -- {{{ [[ DETECT OS ]]
-function _G.DetectOsType()-- {{{
+function _G.DetectOsType()
   local os_name = vim.loop.os_uname().sysname
-  local os_type
+  --dava chybu, nepozna tuto formu prikazu local os_name = require('vim.loop').os_uname().sysname
+  local os_type = (os_name == "Windows_NT" and "windows")
+    or (os_name == "Linux" and (vim.fn.has("wsl") == 1 and "wsl" or "linux"))
+    or os_name
 
-  if os_name == "Windows_NT" then
-    os_type = "windows"
-  elseif os_name == "Linux" then
-    local is_wsl = vim.fn.has("wsl") == 1 -- Check if it's WSL
-    if is_wsl then
-      os_type = "wsl"
-    else
-      os_type = "linux"
-    end
+  local home = os.getenv("HOME") or os.getenv("USERPROFILE")
+  local username = os.getenv("USERNAME") or os.getenv("USER")
+  local venv_home = os.getenv("VENV_HOME") or (home .. "/.py-venv")
+  local nvim_venv = venv_home .. "/nvim-venv"
+  local debugpy_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
+
+  -- Set Neovim Python Host
+  vim.g.python3_host_prog = os_type == "windows"
+    and (nvim_venv .. "\\Scripts\\python.exe")
+    or (nvim_venv .. "/bin/python")
+
+  -- Shell & Cursor Config
+  if os_type == "windows" then
+    vim.opt.shell = "pwsh.exe"
+    vim.opt.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding = [Console]::OutputEncoding = [System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
+    vim.opt.shellredir,
+    vim.opt.shellpipe,
+    vim.opt.shellquote,
+    vim.opt.shellxquote = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode","2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode", "", ""
   else
-    os_type = os_name
-  end
-
-  return os_type
-end-- }}}
-
-local os_type = DetectOsType()
-local os_username = os.getenv("USERNAME") or os.getenv("USER")
-local py_venvs_path = os.getenv("VENV_HOME")
-local onedrive_path = os.getenv("OneDrive_DIR")
-local python_os = os_type == "windows" and "python" or "python3"
-local debugpy_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
-
-function _G.PythonInterpreter()-- {{{
-  local venv_path = os.getenv("VIRTUAL_ENV") -- Get the path of the active virtual environment
-    -- Get the current venv from swenv.nvim or fallback to default Python
-    -- local venv = require("swenv.api").get_current_venv()
-    -- print(vim.inspect(venv.path))
-  if venv_path then
-    if os_type == "windows" then
-      return venv_path .. "\\Scripts\\python.exe" -- For Windows
-    else
-      return venv_path .. "/bin/python" -- For Linux/macOS
-    end
-  else
-    if os_type == "windows" then
-      return "python" -- For Windows
-    else
-      return "python3" -- For Linux/macOS
+    vim.opt.shell = os_type == "wsl" and "/bin/bash" or "/bin/zsh"
+    if os_type == "wsl" then
+      vim.opt.guicursor = { "n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150" }
     end
   end
-end-- }}}
 
-function _G.MoltenInitialize()-- {{{
-  local venv_path = os.getenv("VIRTUAL_ENV") -- musi byt priamo v tejto funkcii, aby ked zmenim "venv", tak to vedelo inicializovat molten kernel
-  if venv_path then
-    -- Extract venv name (e.g., from "C:\\Users\\mech\\.py-venv\\myenv" -> "myenv")
-local venv_name = venv_path:match("[^/\\]+$") or "python3"
-    -- Initialize Molten with extracted venv name
-    vim.cmd(("MoltenInit %s"):format(venv_name))
-  else
-    vim.notify("No virtual environment. Please activate one.", vim.log.levels.INFO)
+  -- Python Interpreter
+  local function PythonInterpreter()
+    local venv = os.getenv("VIRTUAL_ENV")
+    return venv and (os_type == "windows" and (venv .. "\\Scripts\\python.exe") or (venv .. "/bin/python")) or "python3"
   end
-end-- }}}
 
-function _G.ObsidianPath()-- {{{
-  return os_username == "mech" and "~\\Sync\\Obsidian/"
-    or vim.fn.expand(onedrive_path .. "Dokumenty/zPoznamky/Obsidian/")
-end-- }}}
-
-function _G.ObsidianNewNote(use_template, template, folder)-- {{{
-  local obsidian_path = ObsidianPath()
-  local note_name = vim.fn.input("Enter note name without .md: ")
-  if note_name == "" then return print("Note name cannot be empty!") end
-
-  local new_note_path = string.format("%s%s/%s.md", obsidian_path, folder or "inbox", note_name)
-  vim.cmd("edit " .. new_note_path)
-
-  if use_template then
-    local templates = { basic = "t-nvim-note.md", person = "t-person.md" }
-    vim.cmd(templates[template] and "ObsidianTemplate " .. templates[template] or "echo 'Invalid template name'")
+  -- Obsidian Path
+  local function ObsidianPath()
+    return username == "mech" and "~\\Sync\\Obsidian/"
+      or vim.fn.expand((os.getenv("OneDrive_DIR") or "") .. "Dokumenty/zPoznamky/Obsidian/")
   end
-end-- }}}
 
+  -- Initialize Molten.nvim
+  local function MoltenInitialize()
+    local venv = os.getenv("VIRTUAL_ENV")
+    if venv then
+      vim.cmd("MoltenInit " .. (venv:match("[^/\\]+$") or "python3"))
+    else
+      vim.notify("No virtual environment. Please activate one.", vim.log.levels.INFO)
+    end
+  end
 
+  -- Create a New Obsidian Note
+  local function ObsidianNewNote(use_template, template, folder)
+    local note_name = vim.fn.input("Enter note name without .md: ")
+    if note_name == "" then return print("Note name cannot be empty!") end
+
+    local new_note_path = string.format("%s%s/%s.md", ObsidianPath(), folder or "inbox", note_name)
+    vim.cmd("edit " .. new_note_path)
+
+    if use_template then
+      local templates = { basic = "t-nvim-note.md", person = "t-person.md" }
+      vim.cmd(templates[template] and "ObsidianTemplate " .. templates[template] or "echo 'Invalid template name'")
+    end
+  end
+
+  return {
+    os_type = os_type,
+    username = username,
+    venv_home = venv_home,
+    nvim_venv = nvim_venv,
+    debugpy_path = debugpy_path,
+    PythonInterpreter = PythonInterpreter,
+    ObsidianPath = ObsidianPath,
+    MoltenInitialize = MoltenInitialize,
+    ObsidianNewNote = ObsidianNewNote
+  }
+end
+
+-- Initialize Environment
+local osvar = DetectOsType()
+
+-- Usage Example:
+-- osvar.PythonInterpreter()
+-- osvar.ObsidianPath()
+-- osvar.MoltenInitialize()
+-- osvar.ObsidianNewNote(true, "basic", "inbox")
+-- }}}
+
+-- {{{ [[ OPTIONS ]]
 vim.filetype.add {-- {{{
   extension = {
     zsh = "sh",
@@ -100,33 +114,27 @@ vim.filetype.add {-- {{{
   },
 }-- }}}
 
--- }}}
-
--- {{{ [[ OPTIONS ]]
-local opt = vim.opt
-local g = vim.g
-
 -- File
 -- opt.backup           = false -- create a backup file
-opt.clipboard = "unnamedplus" -- system clipboard
+vim.opt.clipboard = "unnamedplus" -- system clipboard
 -- opt.hidden           = true -- switching from unsaved buffers
-opt.iskeyword:remove("_") -- oddeli slova pri mazani, nebude brat ako jedno slovo
+vim.opt.iskeyword:remove("_") -- oddeli slova pri mazani, nebude brat ako jedno slovo
 -- opt.scrolloff        = 5 -- how many lines are displayed on the upper and lower sides of the cursor
 -- opt.showmode         = true -- display the current vim mode (no need)
 -- opt.sidescrolloff    = 8 -- number of columns to keep at the sides of the cursor
 -- opt.splitbelow       = true -- splitting window below
 -- opt.splitright       = true -- splitting window right
-opt.termguicolors    = true -- terminal supports more colors
-opt.timeoutlen = 400 -- time to wait for a mapped sequence to complete, default 1000
+vim.opt.termguicolors    = true -- terminal supports more colors
+vim.opt.timeoutlen = 400 -- time to wait for a mapped sequence to complete, default 1000
 -- opt.updatetime       = 100 -- speed up response time
 -- opt.wrap = false -- disable wrapping of lines longer than the width of window
 -- opt.writebackup      = false -- create backups when writing files
 
 -- Fold
-opt.foldmethod = "marker" -- folding method
+vim.opt.foldmethod = "marker" -- folding method
 
 -- UI
-opt.cmdheight = 0 -- command line height
+vim.opt.cmdheight = 0 -- command line height
 -- opt.cursorline       = true -- highlight the current line
 -- opt.laststatus       = 3 -- global status bar (sposobuje nefunkcnost resource lua.init)
 -- opt.number           = true -- absolute line numbers
@@ -932,8 +940,7 @@ require("lazy").setup({
         }) -- }}}
 
         -- {{{ mini.comment
-        local os_name = vim.loop.os_uname().sysname
-        local mappings = (os_name == "Linux")
+        local mappings = ( osvar.os_type == "linux" )
         and {
           comment = "<C-/>",
           comment_line = "<C-/>",
