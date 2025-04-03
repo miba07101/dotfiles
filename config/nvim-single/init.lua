@@ -127,7 +127,7 @@ function _G.DetectOsType()-- {{{
     vim.opt.shellxquote  = ""
 
     -- Set cursor for a specific user
-    if username == "vimi-jonsbo" then SetCursor() end
+    if username ~= "mech" then SetCursor() end
   else
     vim.opt.shell = os_type == "wsl" and "/bin/bash" or "/bin/zsh"
     if os_type == "wsl" then SetCursor() end
