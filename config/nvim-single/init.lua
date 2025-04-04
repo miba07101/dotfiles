@@ -205,20 +205,18 @@ vim.filetype.add {-- {{{
 }-- }}}
 
 -- File
--- opt.backup           = false -- create a backup file
-vim.opt.clipboard = "unnamedplus" -- system clipboard
--- opt.hidden           = true -- switching from unsaved buffers
-vim.opt.iskeyword:remove("_") -- oddeli slova pri mazani, nebude brat ako jedno slovo
--- opt.scrolloff        = 5 -- how many lines are displayed on the upper and lower sides of the cursor
--- opt.showmode         = true -- display the current vim mode (no need)
--- opt.sidescrolloff    = 8 -- number of columns to keep at the sides of the cursor
+vim.opt.clipboard     = "unnamedplus" -- system clipboard
+vim.opt.hidden        = true          -- switching from unsaved buffers
+vim.opt.scrolloff     = 5             -- how many lines are displayed on the upper and lower sides of the cursor
+vimopt.sidescrolloff  = 8             -- number of columns to keep at the sides of the cursor
+vim.opt.termguicolors = true          -- terminal supports more colors
+vim.opt.timeoutlen    = 400           -- time to wait for a mapped sequence to complete, default 1000
+vim.opt.updatetime    = 100           -- speed up response time
+vim.opt.backup        = false         -- create a backup file
+vim.opt.writebackup   = false         -- create backups when writing files
 -- opt.splitbelow       = true -- splitting window below
 -- opt.splitright       = true -- splitting window right
-vim.opt.termguicolors    = true -- terminal supports more colors
-vim.opt.timeoutlen = 400 -- time to wait for a mapped sequence to complete, default 1000
--- opt.updatetime       = 100 -- speed up response time
--- opt.wrap = false -- disable wrapping of lines longer than the width of window
--- opt.writebackup      = false -- create backups when writing files
+vim.opt.iskeyword:remove("_") -- oddeli slova pri mazani, nebude brat ako jedno slovo
 
 -- Fold
 vim.opt.foldmethod = "marker" -- folding method
