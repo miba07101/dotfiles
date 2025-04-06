@@ -204,31 +204,78 @@ vim.filetype.add {-- {{{
   },
 }-- }}}
 
--- File
+-- File{{{
+-- opt.concealcursor = "" -- conceal cursor disable
+-- opt.conceallevel  = 1 -- conceal level disable
+vim.opt.backup        = false         -- create a backup file
 vim.opt.clipboard     = "unnamedplus" -- system clipboard
 vim.opt.hidden        = true          -- switching from unsaved buffers
+vim.opt.inccommand    = "split"       -- preview substitutions live, as you type
+vim.opt.matchtime     = 2             -- duration of showmatch, default 5
+vim.opt.mouse         = "a"           -- mouse
 vim.opt.scrolloff     = 5             -- how many lines are displayed on the upper and lower sides of the cursor
-vim.opt.sidescrolloff  = 8             -- number of columns to keep at the sides of the cursor
+vim.opt.showmode      = true          -- display the current vim mode (no need)
+vim.opt.sidescrolloff = 8             -- number of columns to keep at the sides of the cursor
+vim.opt.splitbelow    = true          -- splitting window below
+vim.opt.splitright    = true          -- splitting window right
+vim.opt.swapfile      = false         -- create a swap file
+vim.opt.syntax        = "on"
 vim.opt.termguicolors = true          -- terminal supports more colors
-vim.opt.timeoutlen    = 400           -- time to wait for a mapped sequence to complete, default 1000
-vim.opt.updatetime    = 100           -- speed up response time
-vim.opt.backup        = false         -- create a backup file
+vim.opt.termguicolors = true          -- terminal supports more colors
+vim.opt.timeoutlen    = 300           -- time to wait for a mapped sequence to complete, default 1000
+vim.opt.updatetime    = 200           -- speed up response time
+vim.opt.wrap          = false         -- disable wrapping of lines longer than the width of window
 vim.opt.writebackup   = false         -- create backups when writing files
--- opt.splitbelow       = true -- splitting window below
--- opt.splitright       = true -- splitting window right
-vim.opt.iskeyword:remove("_") -- oddeli slova pri mazani, nebude brat ako jedno slovo
+vim.opt.matchpairs    = { "(:)", "{:}", "[:]", "<:>" }
+vim.opt.iskeyword:remove("_")         -- oddeli slova pri mazani, nebude brat ako jedno slovo
+-- }}}
 
--- Fold
-vim.opt.foldmethod = "marker" -- folding method
+-- Completition{{{
+vim.opt.completeopt = { "menuone", "noselect" } -- completion options
+vim.opt.pumheight   = 10                        -- completion menu height
+vim.opt.wildmenu    = true                      -- make tab completion for files/buffers act like bash
+-- }}}
 
--- UI
-vim.opt.cmdheight = 0 -- command line height
--- opt.cursorline       = true -- highlight the current line
--- opt.laststatus       = 3 -- global status bar (sposobuje nefunkcnost resource lua.init)
--- opt.number           = true -- absolute line numbers
--- opt.list             = true -- show some invisible characters (tabs...
--- opt.listchars        = { eol = "¬", tab = "› ", trail = "·", nbsp = "␣" } -- list characters
+-- Indention{{{
+local indent        = 2
+vim.opt.autoindent  = true   -- auto indentation
+vim.opt.expandtab   = true   -- convert tabs to spaces (prefered for python)
+vim.opt.shiftround  = true   -- use multiple of shiftwidth when indenting with "<" and ">"
+vim.opt.shiftwidth  = indent -- spaces inserted for each indentation
+vim.opt.smartindent = true   -- make indenting smarter
+vim.opt.softtabstop = indent -- when hitting <BS>, pretend like a tab is removed, even if spaces
+vim.opt.tabstop     = indent -- insert spaces for a tab
+-- }}}
 
+-- Fold{{{
+-- vim.opt.foldcolumn = "1"                          -- folding column show
+vim.opt.foldenable = true                         -- folding allowed
+vim.opt.foldexpr   = "nvim_treesitter#foldexpr()" -- folding method use treesitter
+vim.opt.foldlevel  = 0                            -- folding from lvl 1
+vim.opt.foldmethod = "expr"                       -- folding method
+-- vim.opt.foldmethod = "marker"                     -- folding method
+-- vim.opt.foldtext   = [[getline(v:foldstart)]]     -- folding - disable all chunk when folded
+-- vim.opt.fillchars:append({eob = " ", fold = " ", foldopen = "", foldsep = " ", foldclose = "",})
+-- }}}
+
+-- Search{{{
+vim.opt.hlsearch   = true -- search highlighting
+vim.opt.ignorecase = true -- ignore case when searching
+vim.opt.incsearch  = true -- highlight while searching
+vim.opt.smartcase  = true -- intelligent case sensitivity when searching (if there is upper case, turn off case ignoring)
+vim.opt.wrapscan   = true -- search the entire file repeatedly
+vim.opt.wildignore = vim.opt.wildignore + { "*/node_modules/*", "*/.git/*", "*/vendor/*" }
+-- }}}
+
+-- UI{{{
+vim.opt.cmdheight  = 0                                                  -- command line height
+vim.opt.cursorline = true                                               -- highlight the current line
+vim.opt.laststatus = 3                                                  -- global status bar (sposobuje nefunkcnost resource lua.init)
+-- vim.opt.list       = true                                               -- show some invisible characters (tabs...
+-- vim.opt.listchars  = { eol = "¬", tab = "› ", trail = "·", nbsp = "␣" } -- list characters
+vim.opt.number     = true                                               -- absolute line numbers
+vim.opt.signcolumn = "yes"                                              -- symbol column width
+-- }}}
 -- }}}
 
 -- {{{ [[ KEYMAPS ]]
@@ -958,8 +1005,8 @@ require("lazy").setup({
 
         require("mini.basics").setup({ -- {{{
           options = {
-            basic = true,
-            extra_ui = true,
+            basic = false,
+            extra_ui = false,
             win_borders = "solid",
           },
           mappings = {
