@@ -2538,7 +2538,7 @@ require("lazy").setup(
 ) -- ukoncuje require("lazy").setup(
 -- }}}
 
--- {{{ [[ AUTOCOMANDS ]]
+-- [[ AUTOCOMANDS ]]
 
 local mygroup = vim.api.nvim_create_augroup("vimrc", { clear = true })
 
@@ -2872,4 +2872,3 @@ vim.api.nvim_create_autocmd("VimEnter", {
 })
 -- }}}
 
--- }}}

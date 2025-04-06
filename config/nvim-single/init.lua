@@ -709,6 +709,15 @@ require("lazy").setup({
               -- MiniTablineFill = { bg = theme.ui.bg_m1, fg = colors.palette.surimiOrange }, -- unused right space of tabline.
               -- MiniTablineTabpagesection = { bg = theme.ui.bg_m1, fg = colors.palette.surimiOrange }, -- section with tabpage information.
               -- MiniTablineTrunc = { bg = theme.ui.bg_m1, fg = colors.palette.surimiOrange }, -- truncation symbols indicating more left/right tabs.
+              -- Match VSCode Markdown Colorscheme
+              -- https://github.com/rebelot/kanagawa.nvim/issues/207
+              ["@markup.link.url.markdown_inline"] = { link = "Special" }, -- (url)
+              ["@markup.link.label.markdown_inline"] = { link = "WarningMsg" }, -- [label]
+              ["@markup.italic.markdown_inline"] = { link = "Exception" }, -- *italic*
+              ["@markup.raw.markdown_inline"] = { link = "String" }, -- `code`
+              ["@markup.list.markdown"] = { link = "Function" }, -- + list
+              ["@markup.quote.markdown"] = { link = "Error" }, -- > blockcode
+              ["@markup.list.checked.markdown"] = { link = "WarningMsg" }, -- checked list item
             }
           end,-- }}}
         })-- }}}
@@ -725,7 +734,7 @@ require("lazy").setup({
       lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
       dependencies = { -- {{{
         -- "windwp/nvim-ts-autotag",
-        -- "nvim-treesitter/nvim-treesitter-textobjects",
+        "nvim-treesitter/nvim-treesitter-textobjects",
       }, -- }}}
       main = "nvim-treesitter.configs",
       opts = { -- {{{
@@ -752,6 +761,15 @@ require("lazy").setup({
         auto_install = false,
         highlight = { enable = true },
         indent = { enable = true },
+        incremental_selection = { -- oznacujem casti definovane pomocou treesitteru
+          enable = true,
+          keymaps = {
+            init_selection = "<Enter>",
+            node_incremental = "<Enter>",
+            scope_incremental = false,
+            node_decremental = "<Backspace>",
+          },
+        },
         -- autotag = { enable = true },
         -- textobjects = {
         --   move = {
@@ -988,6 +1006,7 @@ require("lazy").setup({
               a = { "@code_cell.outer", "@block.outer", "@conditional.outer", "@loop.outer" },
               i = { "@code_cell.inner", "@block.inner", "@conditional.inner", "@loop.inner" },
             }),
+            o = require("mini.ai").gen_spec.treesitter({ a = "@comment.outer", i = "@comment.inner" }), -- comments
             f = require("mini.ai").gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }), -- function
             c = require("mini.ai").gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }), -- class
             t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" }, -- tags
@@ -1265,24 +1284,6 @@ require("lazy").setup({
 
         require('mini.tabline').setup()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       end,
     },
     -- }}}
@@ -1429,6 +1430,66 @@ require("lazy").setup({
     },
     -- }}}
 
+    -- [ Notes ]{{{
+      { "epwalsh/obsidian.nvim",-- {{{
+        -- enabled = false,
+        version = "*", -- recommended, use latest release instead of latest commit
+        lazy = true,
+        dependencies = {
+          -- "nvim-lua/plenary.nvim",
+        },
+        opts = {
+          ui = { enable = false }, -- vypnute ui pre doplnok render-markdown
+          disable_frontmatter = true,
+          workspaces = {
+            {
+              name = "Obsidian",
+              path = osvar.ObsidianPath() -- definovane v [[ DETECT OS ]]
+            },
+          },
+          notes_subdir = "inbox",
+          new_notes_location = "inbox",
+          templates = {
+            subdir = "templates",
+            date_format = "%Y-%m-%d",
+            time_format = "%H:%M:%S",
+          },
+          completion = {
+            nvim_cmp = true,
+            min_chars = 2,
+          },
+          note_id_func = function(title)
+            title = title or "Untitled"
+            local sanitized_title = title:gsub(" ", "-") -- Replace spaces with underscores for file names
+            return sanitized_title -- Return the sanitized title as the file name
+          end,
+          attachments = {
+            img_folder = "images",
+          },
+        },
+        keys = {
+          { "<leader>onn", mode = "n", function()osvar.ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
+          { "<leader>onb", mode = "n", function()osvar.ObsidianNewNote(true, "basic")end, desc = "new note template basic", noremap = true, silent = true },
+          { "<leader>onp", mode = "n", function()osvar.ObsidianNewNote(true, "person")end, desc = "new note template person", noremap = true, silent = true },
+          { "<leader>ot", mode = "n", ":ObsidianTemplate<cr>", desc = "template pick", noremap = true, silent = true },
+          { "<leader>oi", mode = "n", ":ObsidianPasteImg<cr>", desc = "image paste", noremap = true, silent = true },
+          { "<leader>oc", mode = "n", ":ObsidianToggleCheckbox<cr>", desc = "checkbox toggle", noremap = true, silent = true },
+          { "<leader>oq", mode = "n", ":ObsidianQuickSwitch<cr>", desc = "switch note", noremap = true, silent = true },
+          { "<leader>olf", mode = "n", ":ObsidianFollowLink<cr>", desc = "link follow", noremap = true, silent = true },
+          { "<leader>olb", mode = "n", ":ObsidianBacklinks<cr>", desc = "backlinks", noremap = true, silent = true },
+          { "<leader>oll", mode = "n", ":ObsidianLinks<cr>", desc = "link pick", noremap = true, silent = true },
+          { "<leader>oT", mode = "n", ":ObsidianTags<cr>", desc = "tags", noremap = true, silent = true },
+          { "<leader>oD", mode = "n", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>", desc = "delete note", noremap = true, silent = true },
+          -- { "<leader>os", mode = "n", function()require('telescope.builtin').find_files({ search_dirs = { ObsidianPath() } })end, desc = "search note", noremap = true, silent = true },
+          { "<leader>oe", mode = {"v", "x"}, ":ObsidianExtractNote<cr>", desc = "extract text", noremap = true, silent = true },
+          { "<leader>ol", mode = {"v", "x"}, ":ObsidianLinkNew<cr>", desc = "link new", noremap = true, silent = true },
+        },
+      },-- }}}
+-- }}}
+
   }, -- }}}
+
+  install = { colorscheme = { "kanagawa" } },
 })
+
 -- }}}
