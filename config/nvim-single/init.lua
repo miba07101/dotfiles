@@ -646,6 +646,13 @@ require("lazy").setup({
 
   spec = { -- {{{
 
+    -- {{{ [ UI ]
+    { "nvim-lua/plenary.nvim",-- {{{
+      -- enabled = false,
+      event = "VeryLazy",
+    },-- }}}
+    -- }}}
+
     -- {{{ [ Colorscheme ]
     { "rebelot/kanagawa.nvim", -- {{{
       -- enabled = false,
@@ -1455,7 +1462,7 @@ require("lazy").setup({
             time_format = "%H:%M:%S",
           },
           completion = {
-            nvim_cmp = true,
+            nvim_cmp = false,
             min_chars = 2,
           },
           note_id_func = function(title)
