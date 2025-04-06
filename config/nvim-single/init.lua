@@ -869,19 +869,19 @@ require("lazy").setup({
           },
         } -- }}}
 
-        require("mason-lspconfig").setup_handlers({ -- {{{
-          function(server)
-            require("lspconfig")[server].setup(servers[server] or {})
-          end,
-        }) -- }}}
-
         -- -- {{{ Capabilities
-        -- local capabilities = require("blink.cmp").get_lsp_capabilities()
+        local capabilities = require("blink.cmp").get_lsp_capabilities()
         -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
         -- local on_attach = function(client, bufnr)
         --   -- sem zadat on_attach funkcie doplnkov
         -- end
         -- -- }}}
+
+        require("mason-lspconfig").setup_handlers({ -- {{{
+          function(server)
+            require("lspconfig")[server].setup({servers[server] or {}, capabilities = capabilities})
+          end,
+        }) -- }}}
 
         -- {{{ Diagnostic
         vim.diagnostic.config({
@@ -944,10 +944,44 @@ require("lazy").setup({
     -- }}}
 
     -- {{{ [ Autocompletition ]
-    { "saghen/blink.cmp",-- {{{
-      opts = {-- {{{
+      { "saghen/blink.cmp",-- {{{
+        enabled = true,
+        -- dependencies = "rafamadriz/friendly-snippets",
+        version = "v0.*",
+        opts = {-- {{{
+          keymap = {-- {{{
+            preset = "super-tab",
+            ["<CR>"] = { "accept", "fallback" },
+          },-- }}}
+          appearance = {-- {{{
+            use_nvim_cmp_as_default = true,
+            nerd_font_variant = "normal",
+          },-- }}}
+          completion = {-- {{{
+            menu = {
+              draw = {
+                columns = {
+                  { "kind_icon" },
+                  { "label", "label_description", gap = 1 },
+                  { "source_name", "kind", gap = 1 },
+                },
+              },
+            },
+          },-- }}}
+          signature = { enabled = true },
+          sources = {-- {{{
+            default = { "lsp", "path", "snippets", "buffer" },
+            providers = {
+              -- markdown = {
+              --   name = 'RenderMarkdown',
+              --   module = 'render-markdown.integ.blink',
+              --   fallbacks = { 'lsp' },
+              -- },
+            },
+          },-- }}}
+        },-- }}}
+        opts_extend = { "sources.default" },
       },-- }}}
-    },-- }}}
     -- }}}
 
     -- {{{ [ Mini.nvim collection ]
@@ -1396,7 +1430,64 @@ require("lazy").setup({
     },
     -- }}}
 
-  }, -- }}}
+
+    { "obsidian-nvim/obsidian.nvim",-- {{{
+      -- enabled = false,
+      version = "*", -- recommended, use latest release instead of latest commit
+      lazy = true,
+      dependencies = {-- {{{
+        "nvim-lua/plenary.nvim",
+      },-- }}}
+      opts = {-- {{{
+        ui = { enable = false }, -- vypnute ui pre doplnok render-markdown
+        disable_frontmatter = true,
+        workspaces = {
+          {
+            name = "Obsidian",
+            path = osvar.ObsidianPath() -- definovane v [[ DETECT OS ]]
+          },
+        },
+        notes_subdir = "inbox",
+        new_notes_location = "inbox",
+        templates = {
+          subdir = "templates",
+          date_format = "%Y-%m-%d",
+          time_format = "%H:%M:%S",
+        },
+        completion = {
+          nvim_cmp = false,
+          blink = true,
+          min_chars = 2,
+        },
+        note_id_func = function(title)
+          title = title or "Untitled"
+          local sanitized_title = title:gsub(" ", "-") -- Replace spaces with underscores for file names
+          return sanitized_title -- Return the sanitized title as the file name
+        end,
+        attachments = {
+          img_folder = "images",
+        },
+      },-- }}}
+      keys = {-- {{{
+        { "<leader>onn", mode = "n", function()osvar.ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
+        { "<leader>onb", mode = "n", function()osvar.ObsidianNewNote(true, "basic")end, desc = "new note template basic", noremap = true, silent = true },
+        { "<leader>onp", mode = "n", function()osvar.ObsidianNewNote(true, "person")end, desc = "new note template person", noremap = true, silent = true },
+        { "<leader>ot", mode = "n", ":ObsidianTemplate<cr>", desc = "template pick", noremap = true, silent = true },
+        { "<leader>oi", mode = "n", ":ObsidianPasteImg<cr>", desc = "image paste", noremap = true, silent = true },
+        { "<leader>oc", mode = "n", ":ObsidianToggleCheckbox<cr>", desc = "checkbox toggle", noremap = true, silent = true },
+        { "<leader>oq", mode = "n", ":ObsidianQuickSwitch<cr>", desc = "switch note", noremap = true, silent = true },
+        { "<leader>olf", mode = "n", ":ObsidianFollowLink<cr>", desc = "link follow", noremap = true, silent = true },
+        { "<leader>olb", mode = "n", ":ObsidianBacklinks<cr>", desc = "backlinks", noremap = true, silent = true },
+        { "<leader>oll", mode = "n", ":ObsidianLinks<cr>", desc = "link pick", noremap = true, silent = true },
+        { "<leader>oT", mode = "n", ":ObsidianTags<cr>", desc = "tags", noremap = true, silent = true },
+        { "<leader>oD", mode = "n", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>", desc = "delete note", noremap = true, silent = true },
+        -- { "<leader>os", mode = "n", function()require('telescope.builtin').find_files({ search_dirs = { ObsidianPath() } })end, desc = "search note", noremap = true, silent = true },
+        { "<leader>oe", mode = {"v", "x"}, ":ObsidianExtractNote<cr>", desc = "extract text", noremap = true, silent = true },
+        { "<leader>ol", mode = {"v", "x"}, ":ObsidianLinkNew<cr>", desc = "link new", noremap = true, silent = true },
+      },-- }}}
+    },-- }}}
+
+  }, -- spec end }}}
 
   install = { colorscheme = { "kanagawa" } },
 })
