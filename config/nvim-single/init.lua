@@ -952,7 +952,7 @@ require("lazy").setup({
 
     -- {{{ [ Autocompletition ]
     { "saghen/blink.cmp",-- {{{
-      enabled = true,
+      enabled = false,
       dependencies = "rafamadriz/friendly-snippets",
       version = "v0.*",
       opts = {-- {{{
@@ -989,6 +989,180 @@ require("lazy").setup({
       },-- }}}
       opts_extend = { "sources.default" },
     },-- }}}
+
+      { "hrsh7th/nvim-cmp",-- {{{
+        -- enabled = false,
+        dependencies = {-- {{{
+          "hrsh7th/cmp-buffer",
+          "hrsh7th/cmp-path",
+          "hrsh7th/cmp-nvim-lsp",
+          "hrsh7th/cmp-nvim-lsp-signature-help",
+          -- codeium
+          -- "jcdickinson/codeium.nvim",
+          -- sorting
+          "lukas-reineke/cmp-under-comparator",
+          -- snippets
+          "L3MON4D3/LuaSnip",
+          "saadparwaiz1/cmp_luasnip",
+          "rafamadriz/friendly-snippets",
+          -- icons
+          "onsails/lspkind.nvim",
+          -- bootstrap
+          "Jezda1337/cmp_bootstrap",
+        },-- }}}
+        config = function()-- {{{
+          local cmp = require("cmp")
+          local luasnip = require("luasnip")
+          local lspkind = require("lspkind")
+
+          local has_words_before = function()
+            unpack = unpack or table.unpack
+            local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+            return col ~= 0
+              and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+          end
+
+          -- luasnip nacita 'snippets' z friendly-snippets
+          require("luasnip.loaders.from_vscode").lazy_load()
+          require("luasnip.loaders.from_vscode").lazy_load({ paths = { "./snippets" } })
+
+          -- bootstrap
+          -- require("bootstrap-cmp.config"):setup({
+          --   file_types = { "jinja.html", "html" },
+          --   url = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
+          -- })
+
+          -- codeium
+          -- after install run ":Codeium Auth" and insert tokken from web
+          -- require("codeium").setup({})
+
+          cmp.setup({-- {{{
+            enabled = function()-- {{{
+              -- disable completion in comments
+              if require"cmp.config.context".in_treesitter_capture("comment")==true
+                or require"cmp.config.context".in_syntax_group("Comment") then
+                return false
+              else
+                return true
+              end
+            end,
+            -- enabled = true,}}}
+            snippet = {-- {{{
+              expand = function(args)
+                -- for luasnip
+                require("luasnip").lsp_expand(args.body)
+              end,
+            },-- }}}
+            mapping = cmp.mapping.preset.insert({-- {{{
+              -- ak to odkomentujem, tak mi nebude robit selkciu v ponuke
+              -- ["<Up>"] = cmp.config.disable,
+              -- ["<Down>"] = cmp.config.disable,
+              ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
+              ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
+              ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+              ["<C-e>"] = cmp.mapping({ i = cmp.mapping.abort(), c = cmp.mapping.close() }),
+              -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+              ["<C-y>"] = cmp.config.disable,
+              -- Accept currently selected item. Set `select` to `false`
+              -- to only confirm explicitly selected items.
+              ["<CR>"] = cmp.mapping.confirm({ select = false }),
+              ["<Tab>"] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                  cmp.select_next_item()
+                  -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+                  -- they way you will only jump inside the snippet region
+                elseif luasnip.expand_or_jumpable() then
+                  luasnip.expand_or_jump()
+                elseif has_words_before() then
+                  cmp.complete()
+                else
+                  fallback()
+                end
+              end, { "i", "s" }),
+              ["<S-Tab>"] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                  cmp.select_prev_item()
+                elseif luasnip.jumpable(-1) then
+                  luasnip.jump(-1)
+                else
+                  fallback()
+                end
+              end, { "i", "s" }),
+            }),-- }}}
+            -- formatting = {-- {{{
+            --   format = function(entry,item)
+            --     local color_item = require("nvim-highlight-colors").format(entry, { kind = item.kind })
+            --     item = lspkind.cmp_format({
+            --       mode = "symbol_text",
+            --       ellipsis_char = "...",
+            --       -- symbol_map = { Codeium = "" },
+            --       -- symbol_map = { Supermaven = "" },
+            --       menu = {
+            --         buffer = "[buf]",
+            --         -- codeium = "[cod]",
+            --         luasnip = "[snip]",
+            --         nvim_lsp = "[lsp]",
+            --         bootstrap = "[boot]",
+            --         -- otter = "[otter]", -- nie je uz nutne
+            --       },
+            --     })(entry, item)
+            --     if color_item.abbr_hl_group then
+            --       item.kind_hl_group = color_item.abbr_hl_group
+            --       item.kind = color_item.abbr
+            --     end
+            --     return item
+            --   end
+            -- },-- }}}
+            sources = {-- {{{
+              { name = "buffer" },
+              { name = "path" },
+              -- { name = "codeium" },
+              -- { name = "supermaven" },
+              { name = "luasnip" },
+              { name = "nvim_lsp" },
+              { name = "nvim_lsp_signature_help" },
+              -- { name = "bootstrap" },
+              -- { name = "otter" }, -- nie je uz nutne
+              -- { name = "render-markdown" },
+            },-- }}}
+            sorting = {-- {{{
+              comparators = {
+                cmp.config.compare.offset,
+                cmp.config.compare.exact,
+                cmp.config.compare.score,
+                require("cmp-under-comparator").under,
+                cmp.config.compare.kind,
+                cmp.config.compare.sort_text,
+                cmp.config.compare.length,
+                cmp.config.compare.order,
+              },
+            },-- }}}
+            confirm_opts = {-- {{{
+              behavior = cmp.ConfirmBehavior.Replace,
+              select = false,
+            },-- }}}
+            window = {-- {{{
+              completion = cmp.config.window.bordered({
+                -- farby pre winhighlight su definovane v kanagawa teme
+                winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+                scrollbar = true,
+              }),
+              documentation = cmp.config.window.bordered({
+                -- farby pre winhighlight su definovane v kanagawa teme
+                winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+              }),
+            },-- }}}
+            view = {-- {{{
+              entries = "custom",
+            },-- }}}
+            experimental = {-- {{{
+              -- doplna text pri pisani, trochu otravne
+              -- ghost_text = true,
+              -- ghost_text = {hlgroup = "Comment"}
+            },-- }}}
+          })-- }}}
+        end,-- }}}
+      },-- }}}
     -- }}}
 
     -- {{{ [ Mini.nvim collection ]
@@ -1438,61 +1612,64 @@ require("lazy").setup({
     -- }}}
 
     -- [ Notes ]{{{
-      { "epwalsh/obsidian.nvim",-- {{{
-        -- enabled = false,
-        version = "*", -- recommended, use latest release instead of latest commit
-        lazy = true,
-        dependencies = {
-          -- "nvim-lua/plenary.nvim",
-        },
-        opts = {
-          ui = { enable = false }, -- vypnute ui pre doplnok render-markdown
-          disable_frontmatter = true,
-          workspaces = {
-            {
-              name = "Obsidian",
-              path = osvar.ObsidianPath() -- definovane v [[ DETECT OS ]]
-            },
-          },
-          notes_subdir = "inbox",
-          new_notes_location = "inbox",
-          templates = {
-            subdir = "templates",
-            date_format = "%Y-%m-%d",
-            time_format = "%H:%M:%S",
-          },
-          completion = {
-            nvim_cmp = false,
-            min_chars = 2,
-          },
-          note_id_func = function(title)
-            title = title or "Untitled"
-            local sanitized_title = title:gsub(" ", "-") -- Replace spaces with underscores for file names
-            return sanitized_title -- Return the sanitized title as the file name
-          end,
-          attachments = {
-            img_folder = "images",
+    -- { "epwalsh/obsidian.nvim",-- {{{
+    { "obsidian-nvim/obsidian.nvim",-- {{{
+      -- enabled = false,
+      version = "*", -- recommended, use latest release instead of latest commit
+      lazy = true,
+      dependencies = {
+        -- "nvim-lua/plenary.nvim",
+      },
+      opts = {
+        ui = { enable = false }, -- vypnute ui pre doplnok render-markdown
+        disable_frontmatter = true,
+        workspaces = {
+          {
+            name = "Obsidian",
+            path = osvar.ObsidianPath() -- definovane v [[ DETECT OS ]]
           },
         },
-        keys = {
-          { "<leader>onn", mode = "n", function()osvar.ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
-          { "<leader>onb", mode = "n", function()osvar.ObsidianNewNote(true, "basic")end, desc = "new note template basic", noremap = true, silent = true },
-          { "<leader>onp", mode = "n", function()osvar.ObsidianNewNote(true, "person")end, desc = "new note template person", noremap = true, silent = true },
-          { "<leader>ot", mode = "n", ":ObsidianTemplate<cr>", desc = "template pick", noremap = true, silent = true },
-          { "<leader>oi", mode = "n", ":ObsidianPasteImg<cr>", desc = "image paste", noremap = true, silent = true },
-          { "<leader>oc", mode = "n", ":ObsidianToggleCheckbox<cr>", desc = "checkbox toggle", noremap = true, silent = true },
-          { "<leader>oq", mode = "n", ":ObsidianQuickSwitch<cr>", desc = "switch note", noremap = true, silent = true },
-          { "<leader>olf", mode = "n", ":ObsidianFollowLink<cr>", desc = "link follow", noremap = true, silent = true },
-          { "<leader>olb", mode = "n", ":ObsidianBacklinks<cr>", desc = "backlinks", noremap = true, silent = true },
-          { "<leader>oll", mode = "n", ":ObsidianLinks<cr>", desc = "link pick", noremap = true, silent = true },
-          { "<leader>oT", mode = "n", ":ObsidianTags<cr>", desc = "tags", noremap = true, silent = true },
-          { "<leader>oD", mode = "n", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>", desc = "delete note", noremap = true, silent = true },
-          -- { "<leader>os", mode = "n", function()require('telescope.builtin').find_files({ search_dirs = { ObsidianPath() } })end, desc = "search note", noremap = true, silent = true },
-          { "<leader>oe", mode = {"v", "x"}, ":ObsidianExtractNote<cr>", desc = "extract text", noremap = true, silent = true },
-          { "<leader>ol", mode = {"v", "x"}, ":ObsidianLinkNew<cr>", desc = "link new", noremap = true, silent = true },
+        notes_subdir = "inbox",
+        new_notes_location = "inbox",
+        templates = {
+          subdir = "templates",
+          date_format = "%Y-%m-%d",
+          time_format = "%H:%M:%S",
         },
-      },-- }}}
--- }}}
+        completion = {
+          nvim_cmp = true,
+          blink = false,
+          min_chars = 2,
+        },
+        note_id_func = function(title)
+          title = title or "Untitled"
+          local sanitized_title = title:gsub(" ", "-") -- Replace spaces with underscores for file names
+          return sanitized_title -- Return the sanitized title as the file name
+        end,
+        attachments = {
+          img_folder = "images",
+        },
+      },
+      keys = {
+        { "<leader>onn", mode = "n", function()osvar.ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
+        { "<leader>onb", mode = "n", function()osvar.ObsidianNewNote(true, "basic")end, desc = "new note template basic", noremap = true, silent = true },
+        { "<leader>onp", mode = "n", function()osvar.ObsidianNewNote(true, "person")end, desc = "new note template person", noremap = true, silent = true },
+        { "<leader>ot", mode = "n", ":ObsidianTemplate<cr>", desc = "template pick", noremap = true, silent = true },
+        { "<leader>oi", mode = "n", ":ObsidianPasteImg<cr>", desc = "image paste", noremap = true, silent = true },
+        { "<leader>oc", mode = "n", ":ObsidianToggleCheckbox<cr>", desc = "checkbox toggle", noremap = true, silent = true },
+        { "<leader>oq", mode = "n", ":ObsidianQuickSwitch<cr>", desc = "switch note", noremap = true, silent = true },
+        { "<leader>olf", mode = "n", ":ObsidianFollowLink<cr>", desc = "link follow", noremap = true, silent = true },
+        { "<leader>olb", mode = "n", ":ObsidianBacklinks<cr>", desc = "backlinks", noremap = true, silent = true },
+        { "<leader>oll", mode = "n", ":ObsidianLinks<cr>", desc = "link pick", noremap = true, silent = true },
+        { "<leader>oT", mode = "n", ":ObsidianTags<cr>", desc = "tags", noremap = true, silent = true },
+        { "<leader>oD", mode = "n", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>", desc = "delete note", noremap = true, silent = true },
+        -- { "<leader>os", mode = "n", function()require('telescope.builtin').find_files({ search_dirs = { ObsidianPath() } })end, desc = "search note", noremap = true, silent = true },
+        { "<leader>oe", mode = {"v", "x"}, ":ObsidianExtractNote<cr>", desc = "extract text", noremap = true, silent = true },
+        { "<leader>ol", mode = {"v", "x"}, ":ObsidianLinkNew<cr>", desc = "link new", noremap = true, silent = true },
+      },
+    },-- }}}
+    -- }}}
+    -- }}}
 
   }, -- }}}
 
