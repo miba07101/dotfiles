@@ -646,13 +646,6 @@ require("lazy").setup({
 
   spec = { -- {{{
 
-    -- {{{ [ UI ]
-    { "nvim-lua/plenary.nvim",-- {{{
-      -- enabled = false,
-      event = "VeryLazy",
-    },-- }}}
-    -- }}}
-
     -- {{{ [ Colorscheme ]
     { "rebelot/kanagawa.nvim", -- {{{
       -- enabled = false,
