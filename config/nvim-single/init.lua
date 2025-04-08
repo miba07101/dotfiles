@@ -8,90 +8,6 @@
 --
 
 -- {{{ [[ DETECT OS ]]
--- function _G.DetectOsType()-- {{{
---   local os_name = vim.loop.os_uname().sysname
---   local os_type = (os_name == "Windows_NT" and "windows")
---     or (os_name == "Linux" and (vim.fn.has("wsl") == 1 and "wsl" or "linux"))
---     or os_name
---
---   local home = os.getenv("HOME") or os.getenv("USERPROFILE")
---   local username = os.getenv("USERNAME") or os.getenv("USER")
---   local venv_home = os.getenv("VENV_HOME") or (home .. "/.py-venv")
---   local nvim_venv = venv_home .. "/nvim-venv"
---   local debugpy_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
---
---   -- Set Neovim Python Host
---   vim.g.python3_host_prog = os_type == "windows"
---     and (nvim_venv .. "\\Scripts\\python.exe")
---     or (nvim_venv .. "/bin/python3")
---
---   -- Shell & Cursor Config
---   if os_type == "windows" then
---     vim.opt.shell        = "pwsh.exe"
---     vim.opt.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding = [Console]::OutputEncoding = [System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
---     vim.opt.shellredir   = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
---     vim.opt.shellpipe    = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
---     vim.opt.shellquote   = ""
---     vim.opt.shellxquote  = ""
---     if username == "vimi-jonsbo" then
---       vim.opt.guicursor = { "n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150" }
---     end
---   else
---     vim.opt.shell = os_type == "wsl" and "/bin/bash" or "/bin/zsh"
---     if os_type == "wsl" then
---       vim.opt.guicursor = { "n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150" }
---     end
---   end
---
---   -- Python Interpreter
---   local function PythonInterpreter()
---     local venv = os.getenv("VIRTUAL_ENV")
---     return venv and (os_type == "windows" and (venv .. "\\Scripts\\python.exe") or (venv .. "/bin/python")) or "python3"
---   end
---
---   -- Obsidian Path
---   local function ObsidianPath()
---     return username == "mech" and "~\\Sync\\Obsidian/"
---       or vim.fn.expand((os.getenv("OneDrive_DIR") or "") .. "Dokumenty/zPoznamky/Obsidian/")
---   end
---
---   -- Initialize Molten.nvim
---   local function MoltenInitialize()
---     local venv = os.getenv("VIRTUAL_ENV")
---     if venv then
---       vim.cmd("MoltenInit " .. (venv:match("[^/\\]+$") or "python3"))
---     else
---       vim.notify("No virtual environment. Please activate one.", vim.log.levels.INFO)
---     end
---   end
---
---   -- Create a New Obsidian Note
---   local function ObsidianNewNote(use_template, template, folder)
---     local note_name = vim.fn.input("Enter note name without .md: ")
---     if note_name == "" then return print("Note name cannot be empty!") end
---
---     local new_note_path = string.format("%s%s/%s.md", ObsidianPath(), folder or "inbox", note_name)
---     vim.cmd("edit " .. new_note_path)
---
---     if use_template then
---       local templates = { basic = "t-nvim-note.md", person = "t-person.md" }
---       vim.cmd(templates[template] and "ObsidianTemplate " .. templates[template] or "echo 'Invalid template name'")
---     end
---   end
---
---   return {
---     os_type = os_type,
---     username = username,
---     venv_home = venv_home,
---     nvim_venv = nvim_venv,
---     debugpy_path = debugpy_path,
---     PythonInterpreter = PythonInterpreter,
---     ObsidianPath = ObsidianPath,
---     MoltenInitialize = MoltenInitialize,
---     ObsidianNewNote = ObsidianNewNote
---   }
--- end-- }}}
-
 function _G.DetectOsType()-- {{{
   -- Detect OS Type
   local os_name = vim.loop.os_uname().sysname
@@ -140,7 +56,7 @@ function _G.DetectOsType()-- {{{
 
   -- Function to get Obsidian path
   local function ObsidianPath()
-    return username == "mech" and "~\\Sync\\Obsidian/"
+    return username == "mech" and "~\\Obsidian/"
       or vim.fn.expand((os.getenv("OneDrive_DIR") or "") .. "Dokumenty/zPoznamky/Obsidian/")
   end
 
@@ -1432,6 +1348,7 @@ require("lazy").setup({
 
 
     { "obsidian-nvim/obsidian.nvim",-- {{{
+      -- je to fork pretoze "epwalsh/obsidian.nvim" neobsahuje zatial "blink-cmp" a "snacks.picker" 
       -- enabled = false,
       version = "*", -- recommended, use latest release instead of latest commit
       lazy = true,
@@ -1467,8 +1384,28 @@ require("lazy").setup({
         attachments = {
           img_folder = "images",
         },
+        picker = {
+          -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', 'mini.pick' or 'snacks.pick'.
+          name = "sancks.pick",
+          -- Optional, configure key mappings for the picker. These are the defaults.
+          -- Not all pickers support all mappings.
+          note_mappings = {
+            -- Create a new note from your query.
+            new = "<C-x>",
+            -- Insert a link to the selected note.
+            insert_link = "<C-l>",
+          },
+          tag_mappings = {
+            -- Add tag(s) to current note.
+            tag_note = "<C-x>",
+            -- Insert a tag at the current location.
+            insert_tag = "<C-l>",
+          },
+        },
+
       },-- }}}
       keys = {-- {{{
+        { "<leader>os", function() Snacks.picker.files({ cwd = osvar.ObsidianPath() }) end, desc = "search note", },
         { "<leader>onn", mode = "n", function()osvar.ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
         { "<leader>onb", mode = "n", function()osvar.ObsidianNewNote(true, "basic")end, desc = "new note template basic", noremap = true, silent = true },
         { "<leader>onp", mode = "n", function()osvar.ObsidianNewNote(true, "person")end, desc = "new note template person", noremap = true, silent = true },
@@ -1481,7 +1418,6 @@ require("lazy").setup({
         { "<leader>oll", mode = "n", ":ObsidianLinks<cr>", desc = "link pick", noremap = true, silent = true },
         { "<leader>oT", mode = "n", ":ObsidianTags<cr>", desc = "tags", noremap = true, silent = true },
         { "<leader>oD", mode = "n", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>", desc = "delete note", noremap = true, silent = true },
-        -- { "<leader>os", mode = "n", function()require('telescope.builtin').find_files({ search_dirs = { ObsidianPath() } })end, desc = "search note", noremap = true, silent = true },
         { "<leader>oe", mode = {"v", "x"}, ":ObsidianExtractNote<cr>", desc = "extract text", noremap = true, silent = true },
         { "<leader>ol", mode = {"v", "x"}, ":ObsidianLinkNew<cr>", desc = "link new", noremap = true, silent = true },
       },-- }}}
