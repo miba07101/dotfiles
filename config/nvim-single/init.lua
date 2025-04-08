@@ -1007,6 +1007,9 @@ require("lazy").setup({
             { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
             { mode = "n", keys = "<Leader>/", desc = "+Grep" },
           },
+          window = {
+            delay = 300,
+          },
         }) -- }}}
 
         -- {{{ mini.comment
@@ -1386,7 +1389,7 @@ require("lazy").setup({
         },
         picker = {
           -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', 'mini.pick' or 'snacks.pick'.
-          name = "sancks.pick",
+          name = "snacks.pick",
           -- Optional, configure key mappings for the picker. These are the defaults.
           -- Not all pickers support all mappings.
           note_mappings = {
