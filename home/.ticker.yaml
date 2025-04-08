@@ -43,8 +43,8 @@ lots:
     quantity: 60
     unit_cost: 158.21
   - symbol: "BAS.DE"
-    quantity: 1800.0
-    unit_cost: 45.81
+    quantity: 2000.0
+    unit_cost: 45.17
   - symbol: "SPCE"
     quantity: 70
     unit_cost: 246.68
