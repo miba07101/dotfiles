@@ -1,4 +1,9 @@
 {
+  "front": {
+    "prefix": ["front"],
+    "body": ["---", "tag: - #$1", "hub: - [[$2]]", "---"],
+    "description": "Front Matter"
+  },
   "eq": {
     "prefix": ["eq"],
     "body": ["\\$\\$", "$1", "\\$\\$ {#eq-${2: label}}"],

@@ -888,11 +888,6 @@ require("lazy").setup({
           sources = {-- {{{
             default = { "lsp", "path", "snippets", "buffer" },
             providers = {
-              -- markdown = {
-              --   name = 'RenderMarkdown',
-              --   module = 'render-markdown.integ.blink',
-              --   fallbacks = { 'lsp' },
-              -- },
             },
           },-- }}}
         },-- }}}
@@ -1002,10 +997,13 @@ require("lazy").setup({
             { mode = "n", keys = "<Leader>f", desc = "+Files" },
             { mode = "n", keys = "<Leader>g", desc = "+Git" },
             { mode = "n", keys = "<Leader>l", desc = "+LSP" },
+            { mode = "n", keys = "<Leader>n", desc = "+Notes" },
+            { mode = "n", keys = "<Leader>nl", desc = "+Links" },
             { mode = "n", keys = "<Leader>s", desc = "+Search" },
             { mode = "n", keys = "<Leader>w", desc = "+Window" },
             { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
             { mode = "n", keys = "<Leader>/", desc = "+Grep" },
+            { mode = {"n", "x"}, keys = "<Leader>n", desc = "+Notes" },
           },
           window = {
             delay = 300,
@@ -1287,7 +1285,7 @@ require("lazy").setup({
         }, -- }}}
         words = { enabled = true },
       },
-      keys = {
+      keys = {-- {{{
         -- { "<leader>si", function() require('snacks').image.hover() end, desc = "Image Preview" },
         {"]]", mode = { "n", "t" }, function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference",},
         {"[[", mode = { "n", "t" }, function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference",},
@@ -1345,11 +1343,11 @@ require("lazy").setup({
         { "<leader>ly", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
         { "<leader>ls", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
         { "<leader>lS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
-      },
+      },-- }}}
     },
     -- }}}
 
-
+    -- {{{ [ Notes ]
     { "obsidian-nvim/obsidian.nvim",-- {{{
       -- je to fork pretoze "epwalsh/obsidian.nvim" neobsahuje zatial "blink-cmp" a "snacks.picker" 
       -- enabled = false,
@@ -1408,23 +1406,55 @@ require("lazy").setup({
 
       },-- }}}
       keys = {-- {{{
-        { "<leader>os", function() Snacks.picker.files({ cwd = osvar.ObsidianPath() }) end, desc = "search note", },
-        { "<leader>onn", mode = "n", function()osvar.ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
-        { "<leader>onb", mode = "n", function()osvar.ObsidianNewNote(true, "basic")end, desc = "new note template basic", noremap = true, silent = true },
-        { "<leader>onp", mode = "n", function()osvar.ObsidianNewNote(true, "person")end, desc = "new note template person", noremap = true, silent = true },
-        { "<leader>ot", mode = "n", ":ObsidianTemplate<cr>", desc = "template pick", noremap = true, silent = true },
-        { "<leader>oi", mode = "n", ":ObsidianPasteImg<cr>", desc = "image paste", noremap = true, silent = true },
-        { "<leader>oc", mode = "n", ":ObsidianToggleCheckbox<cr>", desc = "checkbox toggle", noremap = true, silent = true },
-        { "<leader>oq", mode = "n", ":ObsidianQuickSwitch<cr>", desc = "switch note", noremap = true, silent = true },
-        { "<leader>olf", mode = "n", ":ObsidianFollowLink<cr>", desc = "link follow", noremap = true, silent = true },
-        { "<leader>olb", mode = "n", ":ObsidianBacklinks<cr>", desc = "backlinks", noremap = true, silent = true },
-        { "<leader>oll", mode = "n", ":ObsidianLinks<cr>", desc = "link pick", noremap = true, silent = true },
-        { "<leader>oT", mode = "n", ":ObsidianTags<cr>", desc = "tags", noremap = true, silent = true },
-        { "<leader>oD", mode = "n", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>", desc = "delete note", noremap = true, silent = true },
-        { "<leader>oe", mode = {"v", "x"}, ":ObsidianExtractNote<cr>", desc = "extract text", noremap = true, silent = true },
-        { "<leader>ol", mode = {"v", "x"}, ":ObsidianLinkNew<cr>", desc = "link new", noremap = true, silent = true },
+        { "<leader>ns", function() Snacks.picker.files({ cwd = osvar.ObsidianPath() }) end, desc = "Search Note", },
+        -- { "<leader>nn", mode = "n", function()osvar.ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
+        { "<leader>nn", mode = "n", function()osvar.ObsidianNewNote(true, "basic")end, desc = "New Note Basic", noremap = true, silent = true },
+        { "<leader>nt", mode = "n", ":ObsidianTemplate<cr>", desc = "Template Pick" },
+        { "<leader>ni", mode = "n", ":ObsidianPasteImg<cr>", desc = "Image Paste", noremap = true, silent = true },
+        { "<leader>nc", mode = "n", ":ObsidianToggleCheckbox<cr>", desc = "Checkbox Toggle", noremap = true, silent = true },
+        { "<leader>nq", mode = "n", ":ObsidianQuickSwitch<cr>", desc = "Switch Note", noremap = true, silent = true },
+        { "<leader>nlf", mode = "n", ":ObsidianFollowLink<cr>", desc = "Link Follow", noremap = true, silent = true },
+        { "<leader>nlb", mode = "n", ":ObsidianBacklinks<cr>", desc = "Backlinks", noremap = true, silent = true },
+        { "<leader>nlp", mode = "n", ":ObsidianLinks<cr>", desc = "Link Pick", noremap = true, silent = true },
+        { "<leader>nT", mode = "n", ":ObsidianTags<cr>", desc = "Tags", noremap = true, silent = true },
+        { "<leader>nD", mode = "n", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>", desc = "Delete Note", noremap = true, silent = true },
+        { "<leader>nE", mode = {"v", "x"}, ":ObsidianExtractNote<cr>", desc = "Extract Text", noremap = true, silent = true },
+        { "<leader>nl", mode = {"v", "x"}, ":ObsidianLinkNew<cr>", desc = "Link New", noremap = true, silent = true },
       },-- }}}
     },-- }}}
+
+      { "MeanderingProgrammer/render-markdown.nvim",-- {{{
+        -- enabled = false,
+        ft = { "markdown", "quarto" },
+        opts = {-- {{{
+          -- log_level = 'debug',
+          heading = {
+            -- icons = { '󰲡 ', '󰲣 ', '󰲥 ', '󰲧 ', '󰲩 ', '󰲫 ' },
+            icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+          },
+          completions = { blink = { enabled = true } },
+          latex = {
+            -- enabled = true,
+            enabled = (function()
+              if osvar.os_type == "windows" then
+                return false
+              else
+                return true
+              end
+            end)(),
+            converter = "latex2text",
+            highlight = 'RenderMarkdownMath',
+            top_pad = 0,
+            bottom_pad = 0,
+          },
+        },-- }}}
+        keys = {-- {{{
+          { "\\m", mode = { "n" }, "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle 'markdown preview'" },
+          -- { "<leader>mi", mode = { "n" }, "<cmd>RenderMarkdown expand<cr>", desc = "increase conceal", noremap = true, silent = true },
+          -- { "<leader>md", mode = { "n" }, "<cmd>RenderMarkdown contract<cr>", desc = "decrease conceal", noremap = true, silent = true },
+        },-- }}}
+      },
+-- }}}
 
   }, -- spec end }}}
 
