@@ -23,32 +23,6 @@ function _G.DetectOsType()-- {{{
   local debugpy_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
   local venv = os.getenv("VIRTUAL_ENV")  -- Moved here for reuse
 
-  -- Set Neovim Python Host
-  vim.g.python3_host_prog = os_type == "windows"
-    and (nvim_venv .. "\\Scripts\\python.exe")
-    or (nvim_venv .. "/bin/python3")
-
-  -- Function to set cursor appearance
-  local function SetCursor()
-    vim.opt.guicursor = { "n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150" }
-  end
-
-  -- Shell & Cursor Configuration
-  if os_type == "windows" then
-    vim.opt.shell        = "pwsh.exe"
-    vim.opt.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding = [Console]::OutputEncoding = [System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
-    vim.opt.shellredir   = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
-    vim.opt.shellpipe    = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
-    vim.opt.shellquote   = ""
-    vim.opt.shellxquote  = ""
-
-    -- Set cursor for a specific user
-    if username ~= "mech" then SetCursor() end
-  else
-    vim.opt.shell = os_type == "wsl" and "/bin/bash" or "/bin/zsh"
-    if os_type == "wsl" then SetCursor() end
-  end
-
   -- Function to determine Python interpreter
   local function PythonInterpreter()
     return venv and (os_type == "windows" and (venv .. "\\Scripts\\python.exe") or (venv .. "/bin/python")) or "python3"
@@ -192,6 +166,34 @@ vim.opt.laststatus = 3                                                  -- globa
 vim.opt.number     = true                                               -- absolute line numbers
 vim.opt.signcolumn = "yes"                                              -- symbol column width
 -- }}}
+
+
+  -- Set Neovim Python Host
+  vim.g.python3_host_prog = osvar.os_type == "windows"
+    and (osvar.nvim_venv .. "\\Scripts\\python.exe")
+    or (osvar.nvim_venv .. "/bin/python3")
+
+  -- Function to set cursor appearance
+  local function SetCursor()
+    vim.opt.guicursor = { "n-v-c:block,i-ci-ve:bar-blinkwait200-blinkoff150-blinkon150" }
+  end
+
+  -- Shell & Cursor Configuration
+  if osvar.os_type == "windows" then
+    vim.opt.shell        = "pwsh.exe"
+    vim.opt.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding = [Console]::OutputEncoding = [System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
+    vim.opt.shellredir   = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+    vim.opt.shellpipe    = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+    vim.opt.shellquote   = ""
+    vim.opt.shellxquote  = ""
+
+    -- Set cursor for a specific user
+    if osvar.username ~= "mech" then SetCursor() end
+  else
+    vim.opt.shell = osvar.os_type == "wsl" and "/bin/bash" or "/bin/zsh"
+    if osvar.os_type == "wsl" then SetCursor() end
+  end
+
 -- }}}
 
 -- {{{ [[ KEYMAPS ]]
@@ -1428,12 +1430,12 @@ require("lazy").setup({
         ft = { "markdown", "quarto" },
         opts = {-- {{{
           -- log_level = 'debug',
-          heading = {
+          heading = {-- {{{
             -- icons = { '󰲡 ', '󰲣 ', '󰲥 ', '󰲧 ', '󰲩 ', '󰲫 ' },
             icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
-          },
+          },-- }}}
           completions = { blink = { enabled = true } },
-          latex = {
+          latex = {-- {{{
             -- enabled = true,
             enabled = (function()
               if osvar.os_type == "windows" then
@@ -1446,15 +1448,116 @@ require("lazy").setup({
             highlight = 'RenderMarkdownMath',
             top_pad = 0,
             bottom_pad = 0,
-          },
+          },-- }}}
         },-- }}}
         keys = {-- {{{
           { "\\m", mode = { "n" }, "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle 'markdown preview'" },
           -- { "<leader>mi", mode = { "n" }, "<cmd>RenderMarkdown expand<cr>", desc = "increase conceal", noremap = true, silent = true },
           -- { "<leader>md", mode = { "n" }, "<cmd>RenderMarkdown contract<cr>", desc = "decrease conceal", noremap = true, silent = true },
         },-- }}}
+      },-- }}}
+  -- }}}
+
+  -- {{{ [ Quarto, Jupyterlab ]
+  { "quarto-dev/quarto-nvim",-- {{{
+    -- enabled = false,
+    ft = { "quarto", "markdown" },
+    dev = false,
+    dependencies = {-- {{{
+      {
+        "jmbuhr/otter.nvim",
+        ft = { "quarto", "markdown" },
+        dev = false,
+        config = function()
+          -- autocommand to call "otter.activate()"{{{
+          vim.api.nvim_create_autocmd("FileType", {
+            pattern = { "quarto", "markdown" },
+            callback = function()
+              require('otter').activate()
+            end,
+          })-- }}}
+        end,
       },
--- }}}
+    },-- }}}
+    opts = {-- {{{
+      lspFeatures = {
+        languages = { "python", "bash", "lua", "html", "javascript" },
+        chunks = "all",
+        diagnostics = {
+          enabled = true,
+          triggers = { "BufWritePost" },
+        },
+        completion = {
+          enabled = true,
+        },
+      },
+      codeRunner = {
+        enabled = true,
+        default_method = "molten",
+      },
+    },-- }}}
+    keys = {-- {{{
+      { "<leader>qa", mode = { "n" }, "<cmd>QuartoActivate<cr>", desc = "activate", noremap = true, silent = true },
+      { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "preview", noremap = true, silent = true },
+      { "<leader>qq", mode = { "n" }, "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = "quit", noremap = true, silent = true },
+      { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "help", noremap = true, silent = true },
+
+      -- Quarto runner keymaps (code cell)
+      { "<leader>qrc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "run cell", noremap = true, silent = true },
+      { "<leader>qrl", mode = "n", function() require("quarto.runner").run_line() end, desc = "run line", noremap = true, silent = true },
+      -- { "<leader>pca", mode = "n", function() require("quarto.runner").run_above() end, desc = "run cell and above", noremap = true, silent = true },
+      { "<leader>qra", mode = "n", function() require("quarto.runner").run_all() end, desc = "run all cells", noremap = true, silent = true },
+      { "<leader>qrA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "run all languages", noremap = true, silent = true },
+      { "<leader>qr", mode = "v", function() require("quarto.runner").run_range() end, desc = "run selection", noremap = true, silent = true },
+    },-- }}}
+  },-- }}}
+
+  { "GCBallesteros/jupytext.nvim",-- {{{
+    -- enabled = false,
+    config = function()
+      require("jupytext").setup({
+        style = "markdown",
+        output_extension = "md",
+        force_ft = "markdown",
+      })
+    end,
+  },-- }}}
+  -- }}}
+
+  -- {{{ [ Mix ]
+  { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
+    enabled = false,
+    ft = { "jinja", "htmldjango", "html" },
+  },-- }}}
+
+  { "brenoprata10/nvim-highlight-colors", -- show colors {{{
+    -- enabled = false,
+    opts = {},
+    keys = {-- {{{
+      { "<\\>H", mode = "n", "<cmd>HighlightColors Toggle<cr>", desc = "Toggle 'highlight-colors'" },
+    },-- }}}
+  },-- }}}
+
+  { "uga-rosa/ccc.nvim", -- color picker (:CccPick){{{
+    enabled = false,
+    opts = {-- {{{
+      highlighter = {
+        auto_enable = true,
+        lsp = true,
+      },
+    },-- }}}
+    keys = {-- {{{
+      { "<leader>vp", mode = "n", "<cmd>CccPick<cr>", desc = "color picker", noremap = true, silent = true },
+    },-- }}}
+  },-- }}}
+
+  { "szw/vim-maximizer", -- maximize window {{{
+    -- enabled = false,
+    keys = {-- {{{
+      { "<leader>wm", mode = {"n"}, "<cmd>MaximizerToggle<cr>", desc = "maximize", noremap = true, silent = true },
+    },-- }}}
+  },-- }}}
+  -- }}}
 
   }, -- spec end }}}
 
