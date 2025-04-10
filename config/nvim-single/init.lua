@@ -287,6 +287,7 @@ local function close_floating_and_clear_search()
 end
 
 map("n", "<Esc>", close_floating_and_clear_search, { desc = "Close floating windows, dismiss notifications, and clear search" })
+map("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit Terminal" })
 
 -- Mix
 map("n", "<BS>", "X", { desc = "TAB as X in normal mode" })
@@ -339,7 +340,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 
 -- {{{ set fold markers for init.lua
 vim.api.nvim_create_autocmd("BufReadPost", {
-  pattern = "init.lua",
+  pattern = "*.lua",
   callback = function()
     vim.opt_local.foldmethod = "marker" -- use markers for init.lua
     vim.opt_local.foldexpr = "" -- disable foldexpr
@@ -1558,6 +1559,135 @@ require("lazy").setup({
     },-- }}}
   },-- }}}
   -- }}}
+
+    -- { "pappasam/nvim-repl",-- {{{
+    --   opts = {
+    --     -- filetype_commands = {
+    --     --   javascript = {cmd = "deno repl"},
+    --     -- },
+    --     -- default = {cmd = "python", filetype = "python"},
+    --     -- open_window_default = "vnew",
+    --   },
+    --   keys = {
+    --     { "<Leader>c", "<Plug>(ReplSendCell)",   mode = "n", desc = "Send Repl Cell" },
+    --     { "<Leader>r", "<Plug>(ReplSendLine)",   mode = "n", desc = "Send Repl Line" },
+    --     { "<Leader>r", "<Plug>(ReplSendVisual)", mode = "x", desc = "Send Repl Visual Selection" },
+    --   },
+    -- },-- }}}
+
+      -- {{{ [ REPL Iron.nvim ]
+      {
+        "Vigemus/iron.nvim",
+        -- enabled = false,
+        ft = { "python", "markdown", "quarto"},
+        config = function()-- {{{
+          local iron = require("iron.core")
+          local view = require("iron.view")
+
+          iron.setup({-- {{{
+            highlight = {
+              italic = true
+            },
+            ignore_blank_lines = true,
+            keymaps = {},
+            config = {
+              highlight_last = "IronLastSent",
+              repl_definition = {
+                python = {
+                  command = { osvar.PythonInterpreter() }, -- function in detect os - dynamically resolve python interpreter
+                  format = require("iron.fts.common").bracketed_paste_python,
+                  block_deviders = { "# %%" }, -- not working properly
+                },
+                markdown = {
+                  command = { "ipython", "--no-autoindent" },
+                  -- block_deviders = { "```python", "```" }, -- not working properly
+                },
+                quarto = {
+                  command = { "ipython", "--no-autoindent" },
+                },
+              },
+              repl_open_cmd = view.split("30%"), -- open repl in a split window (30% height)
+            },
+          })-- }}}
+
+          -- -- {{{ block chunk code sending function - moja pretoze default nefunguje ako ma
+          -- _G.SendFencedCode = function()
+          --   local cursor_pos = vim.api.nvim_win_get_cursor(0)
+          --   local row = cursor_pos[1] - 1  -- lua uses 0-based indexing
+          --   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+          --
+          --   -- determine file type and set appropriate block delimiters
+          --   local filetype = vim.bo.filetype
+          --   local start_pattern, end_pattern
+          --
+          --   if filetype == "python" then
+          --     -- python uses "# %%"
+          --     start_pattern = "^# %%"
+          --     end_pattern = "^# %%"
+          --   elseif filetype == "markdown" then
+          --     -- markdown/quarto uses "```python" and "```"
+          --     start_pattern = "^```python"
+          --     end_pattern = "^```"
+          --   elseif filetype == "quarto" then
+          --     start_pattern = "^```{python}"
+          --     end_pattern = "^```"
+          --   else
+          --     print("Unsupported file type for code block detection!")
+          --     return
+          --   end
+          --
+          --   -- find the start and end of the fenced code block
+          --   local start_row, end_row
+          --   for i = row, 0, -1 do
+          --     if lines[i]:match(start_pattern) then
+          --       start_row = i
+          --       break
+          --     end
+          --   end
+          --
+          --   for i = row + 1, #lines do
+          --     if lines[i]:match(end_pattern) then
+          --       end_row = i
+          --       break
+          --     end
+          --   end
+          --
+          --   if not start_row or not end_row then
+          --     print("No fenced code block found!")
+          --     return
+          --   end
+          --
+          --   -- extract the code inside the block
+          --   local code = {}
+          --   for i = start_row + 1, end_row - 1 do
+          --     local line = lines[i]:gsub("%s+$", "")  -- remove trailing whitespace
+          --     if line ~= "" then  -- skip blank lines
+          --       table.insert(code, line)
+          --     end
+          --   end
+          --
+          --   if #code == 0 then
+          --     print("Code block is empty!")
+          --     return
+          --   end
+          --
+          --   -- send code to repl
+          --   require("iron.core").send(nil, code)
+          -- end
+          -- -- }}}
+
+        end,-- }}}
+        keys = {-- {{{
+          { "<leader>rs", mode = { "n" }, "<cmd>IronRepl<cr>", desc = "repl start", noremap = true, silent = true },
+          { "<leader>rq", mode = { "n" }, "<cmd>lua require('iron.core').close_repl()<cr>", desc = "repl quit", noremap = true, silent = true },
+          { "<leader>rl", mode = { "n" }, "<cmd>lua require('iron.core').send_line()<cr>", desc = "send line", noremap = true, silent = true },
+          { "<leader>rf", mode = { "n" }, "<cmd>lua require('iron.core').send_file()<cr>", desc = "send file", noremap = true, silent = true },
+          -- { "<leader>rb", mode = { "n" }, "<cmd>lua SendFencedCode()<cr>", desc = "send block", noremap = true, silent = true },
+          { "<leader>rb", mode = { "n" }, "<cmd>lua require('iron.core').send_code_block()<cr>", desc = "send block", noremap = true, silent = true },
+          { "<leader>rl", mode = { "v" }, "<cmd>lua require('iron.core').visual_send()<cr>", desc = "send lines", noremap = true, silent = true },
+        },-- }}}
+      },
+      -- }}}
 
   }, -- spec end }}}
 
