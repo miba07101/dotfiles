@@ -190,7 +190,7 @@ vim.opt.signcolumn = "yes"                                              -- symbo
     -- Set cursor for a specific user
     if osvar.username ~= "mech" then SetCursor() end
   else
-    vim.opt.shell = osvar.os_type == "wsl" and "/bin/bash" or "/bin/zsh"
+    vim.opt.shell = osvar.os_type == "wsl" and "/bin/zsh" or "/bin/zsh"
     if osvar.os_type == "wsl" then SetCursor() end
   end
 
@@ -306,7 +306,7 @@ map("t", "<C-Left>", "<cmd>wincmd h<cr>", { desc = "Left from Terminal" })
 map("t", "<C-Right>", "<cmd>wincmd l<cr>", { desc = "Right from Terminal" })
 
 -- Terminal Toggle{{{
-map({ "n", "t" }, "<leader>tt", function()
+map({ "n", "t" }, "<C-\\>", function()
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(win)
     if vim.bo[buf].buftype == "terminal" then
