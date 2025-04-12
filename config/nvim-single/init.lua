@@ -198,27 +198,29 @@ vim.opt.signcolumn = "yes"                                              -- symbo
 
 -- {{{ [[ KEYMAPS ]]
 
--- Wrapper for mapping custom keybindings
+-- Wrapper for mapping custom keybindings{{{
 local function map(mode, lhs, rhs, opts)
   local options = { noremap = true, silent = true }
   if opts then
     options = vim.tbl_extend("force", options, opts)
   end
   vim.keymap.set(mode, lhs, rhs, options)
-end
+end-- }}}
 
--- Leader Key
+-- Leader Key{{{
 map("", "<Space>", "<Nop>")
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+-- }}}
 
--- Save, Quit
+-- Save, Quit{{{
 map({ "n", "v", "i", "x" }, "<C-s>", "<cmd>w<cr>", { desc = "Save" })
 map({ "n", "v", "i", "x" }, "<C-w>", "<cmd>wq<cr>", { desc = "Save-Quit" })
 map({ "n", "v", "i", "x" }, "<C-q>", "<cmd>q!<cr>", { desc = "Quit" })
 -- map("n", "<leader>x", "<cmd>w<cr><cmd>luafile %<cr><esc>", { desc = "Reload Lua" })
+-- }}}
 
--- Windows
+-- Windows{{{
 map("n", "<leader>wv", "<C-w>v", { desc = "Vertical" })
 map("n", "<leader>wh", "<C-w>s", { desc = "Horizontal" })
 map("n", "<leader>we", "<C-W>=", { desc = "Equal" })
@@ -234,24 +236,28 @@ map("n", "<S-Up>", "<cmd>resize +2<cr>", { desc = "Resize Up" })
 map("n", "<S-Down>", "<cmd>resize -2<cr>", { desc = "Resize Down" })
 map("n", "<S-Left>", "<cmd>vertical resize -2<cr>", { desc = "Resize Left" })
 map("n", "<S-Right>", "<cmd>vertical resize +2<cr>", { desc = "Resize Right" })
+-- }}}
 
--- Buffers
+-- Buffers{{{
 map("n", "<A-Right>", "<cmd>bnext<cr>", { desc = "Next buffer" })
 map("n", "<A-Left>", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
 map("n", "<A-UP>", "<cmd>bp<bar>bd#<cr>", { desc = "Quit buffer" })
 map("n", "<A-Down>", "<cmd>bp<bar>bd#<cr>", { desc = "Quit buffer" })
+-- }}}
 
--- Move in insert mode
+-- Move in insert mode{{{
 map("i", "<C-h>", "<Left>", { desc = "Go Left" })
 map("i", "<C-j>", "<Down>", { desc = "Go Down" })
 map("i", "<C-k>", "<Up>", { desc = "Go Up" })
 map("i", "<C-l>", "<Right>", { desc = "Go Right" })
+-- }}}
 
--- Indenting
+-- Indenting{{{
 map("v", "<", "<gv", { desc = "Unindent line" })
 map("v", ">", ">gv", { desc = "Indent line" })
+-- }}}
 
--- Move Lines
+-- Move Lines{{{
 map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move text down" })
 map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move text up" })
 map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move text down" })
@@ -260,16 +266,19 @@ map("v", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move text up" })
 map("v", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move text down" })
 map("x", "<A-j>", "<cmd>move '>+1<cr>gv-gv", { desc = "Move text up" })
 map("x", "<A-k>", "<cmd>move '<-2<cr>gv-gv", { desc = "Move text down" })
+-- }}}
 
--- Better Paste
+-- Better Paste{{{
 map("v", "p", '"_dP', { desc = "Paste no yank" })
 map("n", "x", '"_x', { desc = "Delete character no yank" })
+-- }}}
 
--- Vertical move and center
+-- Vertical move and center{{{
 map("n", "<C-d>", "<C-d>zz", { desc = "Up and center" })
 map("n", "<C-u>", "<C-u>zz", { desc = "Down and center" })
+-- }}}
 
--- Close floating window, notification and clear search with ESC
+-- Close floating window, notification and clear search with ESC{{{
 local function close_floating_and_clear_search()
   -- Close floating windows
   for _, win in pairs(vim.api.nvim_list_wins()) do
@@ -287,9 +296,78 @@ local function close_floating_and_clear_search()
 end
 
 map("n", "<Esc>", close_floating_and_clear_search, { desc = "Close floating windows, dismiss notifications, and clear search" })
-map("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit Terminal" })
+-- }}}
 
--- Mix
+-- Terminal{{{
+map("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit Terminal" })
+map("t", "<C-Up>", "<cmd>wincmd k<cr>", { desc = "Up from Terminal" })
+map("t", "<C-Down>", "<cmd>wincmd j<cr>", { desc = "Down from Terminal" })
+map("t", "<C-Left>", "<cmd>wincmd h<cr>", { desc = "Left from Terminal" })
+map("t", "<C-Right>", "<cmd>wincmd l<cr>", { desc = "Right from Terminal" })
+
+-- Terminal Toggle{{{
+map({ "n", "t" }, "<leader>tt", function()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.bo[buf].buftype == "terminal" then
+      vim.api.nvim_win_close(win, true)
+      vim.cmd("bwipeout! " .. buf) -- Completely remove the terminal buffer
+      return
+    end
+  end
+  vim.cmd("below split | terminal")
+  vim.cmd("resize " .. math.floor(vim.o.lines * 0.4)) -- Adjust the height of the terminal split to 40% of the screen height
+  vim.cmd("startinsert")
+end, { desc = "Terminal" })
+-- }}}
+
+-- Ipython terminal REPL{{{
+map({ "n", "t" }, "<leader>ti", function()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.bo[buf].buftype == "terminal" then
+      vim.api.nvim_win_close(win, true)
+      vim.cmd("bwipeout! " .. buf) -- Completely remove the terminal buffer
+      return
+    end
+  end
+  vim.cmd("below split | terminal ipython --no-autoindent")
+  vim.cmd("resize " .. math.floor(vim.o.lines * 0.4)) -- Adjust the height of the terminal split to 40% of the screen height
+  vim.cmd("startinsert")
+end, { desc = "Ipython terminal REPL" })
+-- }}}
+
+-- Send line to terminal{{{
+map("n", "<leader>tl", function()
+  local term_buf = vim.fn.bufnr("term://*")
+
+  if term_buf ~= -1 then
+    local job_id = vim.b[term_buf].terminal_job_id
+    local line = vim.api.nvim_get_current_line()
+    vim.fn.chansend(job_id, line .. "\n")
+  end
+end, { desc = "Send line to terminal" })
+-- }}}
+
+-- Send visual selection to terminal{{{
+map("v", "<leader>tl", function()
+  -- Yank the visual selection into the default register
+  vim.cmd('normal! "vy')
+
+  local term_buf = vim.fn.bufnr("term://*")
+
+  if term_buf ~= -1 then
+    local job_id = vim.b[term_buf].terminal_job_id
+    local selection = vim.fn.getreg("v")  -- Get the yanked text from register v
+
+    -- Send the selection exactly as is to the terminal
+    vim.fn.chansend(job_id, selection .. "\n")
+  end
+end, { desc = "Send visual selection to terminal" })
+-- }}}
+-- }}}
+
+-- Mix{{{
 map("n", "<BS>", "X", { desc = "TAB as X in normal mode" })
 map("n", "<A-a>", "<esc>ggVG<cr>", { desc = "Select all text" })
 map("n", "<A-v>", "<C-q>", { desc = "Visual block mode" })
@@ -298,6 +376,8 @@ map("n", "<A-->", "<C-x>", { desc = "Decrement number" })
 -- map("n", "<leader>rw", ":%s/<c-r><c-w>//g<left><left>", { desc = "replace word" })
 -- map("n", "<leader>r", "*``cgn", { desc = "replace word under cursor" })
 map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Lazy" })
+-- }}}
+
 -- }}}
 
 -- {{{ [[ AUTOCOMANDS ]]
@@ -312,6 +392,16 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
   group = mygroup,
   desc = "restore cursor position",
+})
+-- }}}
+
+-- {{{ terminal settings
+vim.api.nvim_create_autocmd('TermOpen', {
+  callback = function()
+    -- Hide buffer name in the tabline for terminal buffers
+    vim.opt_local.buflisted = false
+    vim.cmd("setlocal nonumber norelativenumber")
+  end,
 })
 -- }}}
 
@@ -1101,7 +1191,7 @@ require("lazy").setup({
             MiniStatuslineModeVisual  = { fg = colors.white, bg = colors.green, style = "normal" },
             MiniStatuslineModeReplace = { fg = colors.white, bg = colors.orange, style = "normal" },
             MiniStatuslineModeCommand = { fg = colors.white, bg = colors.red, style = "normal" },
-            MiniStatuslineModeOther   = { fg = colors.white, bg = colors.grey, style = "normal" },
+            MiniStatuslineModeOther   = { fg = colors.white, bg = colors.black, style = "normal" },
             MiniStatuslineInactive    = { fg = colors.grey, bg = colors.black },
             -- MiniStatuslineDevinfo     = { fg = colors.white, bg = colors.grey },
             -- MiniStatuslineFilename    = { fg = colors.white, bg = colors.grey, style = "normal" },
@@ -1265,34 +1355,12 @@ require("lazy").setup({
         scope = { enabled = false }, -- Scope detection based on treesitter or indent (alternative mini.indentscope)
         scroll = { enabled = false }, -- Smooth scrolling for Neovim. Properly handles scrolloff and mouse scrolling (alt mini.animate)
         statuscolumn = { enabled = false },
-        terminal = { -- {{{
-          enabled = true,
-          win = {
-            keys = {
-              term_normal = { "<ESC>", "<C-\\><C-n>", desc = "Exit terminal", expr = true, mode = "t" },
-              nav_h = { "<C-Left>", "<cmd>wincmd h<cr>", desc = "Go to Left Window", expr = true, mode = "t" },
-              nav_j = { "<C-Down>", "<cmd>wincmd j<cr>", desc = "Go to Lower Window", expr = true, mode = "t" },
-              nav_k = { "<C-Up>", "<cmd>wincmd k<cr>", desc = "Go to Upper Window", expr = true, mode = "t" },
-              nav_l = { "<C-Right>", "<cmd>wincmd l<cr>", desc = "Go to Right Window", expr = true, mode = "t" },
-              {
-                "<c-\\>",
-                mode = "t",
-                function()
-                  vim.cmd("stopinsert") -- Exits terminal mode safely
-                  require("snacks").terminal()
-                end,
-                desc = "Toggle Terminal",
-              },
-            },
-          },
-        }, -- }}}
         words = { enabled = true },
       },
       keys = {-- {{{
         -- { "<leader>si", function() require('snacks').image.hover() end, desc = "Image Preview" },
         {"]]", mode = { "n", "t" }, function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference",},
         {"[[", mode = { "n", "t" }, function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference",},
-        {"<c-\\>", function() Snacks.terminal() end, desc = "Toggle Terminal",},
         -- Top Pickers & Explorer
         {"<leader>e", function() Snacks.explorer({ layout = { preset = "sidebar", layout = { position = "left" } } }) end, desc = "File Explorer",},
         {"<leader>E", function() vim.cmd("lcd D:\\") Snacks.explorer.open({ layout = { preset = "sidebar", layout = { position = "left" } } }) end, desc = "File Explorer D drive",},
@@ -1560,134 +1628,6 @@ require("lazy").setup({
   },-- }}}
   -- }}}
 
-    -- { "pappasam/nvim-repl",-- {{{
-    --   opts = {
-    --     -- filetype_commands = {
-    --     --   javascript = {cmd = "deno repl"},
-    --     -- },
-    --     -- default = {cmd = "python", filetype = "python"},
-    --     -- open_window_default = "vnew",
-    --   },
-    --   keys = {
-    --     { "<Leader>c", "<Plug>(ReplSendCell)",   mode = "n", desc = "Send Repl Cell" },
-    --     { "<Leader>r", "<Plug>(ReplSendLine)",   mode = "n", desc = "Send Repl Line" },
-    --     { "<Leader>r", "<Plug>(ReplSendVisual)", mode = "x", desc = "Send Repl Visual Selection" },
-    --   },
-    -- },-- }}}
-
-      -- {{{ [ REPL Iron.nvim ]
-      {
-        "Vigemus/iron.nvim",
-        -- enabled = false,
-        ft = { "python", "markdown", "quarto"},
-        config = function()-- {{{
-          local iron = require("iron.core")
-          local view = require("iron.view")
-
-          iron.setup({-- {{{
-            highlight = {
-              italic = true
-            },
-            ignore_blank_lines = true,
-            keymaps = {},
-            config = {
-              highlight_last = "IronLastSent",
-              repl_definition = {
-                python = {
-                  command = { osvar.PythonInterpreter() }, -- function in detect os - dynamically resolve python interpreter
-                  format = require("iron.fts.common").bracketed_paste_python,
-                  block_deviders = { "# %%" }, -- not working properly
-                },
-                markdown = {
-                  command = { "ipython", "--no-autoindent" },
-                  -- block_deviders = { "```python", "```" }, -- not working properly
-                },
-                quarto = {
-                  command = { "ipython", "--no-autoindent" },
-                },
-              },
-              repl_open_cmd = view.split("30%"), -- open repl in a split window (30% height)
-            },
-          })-- }}}
-
-          -- -- {{{ block chunk code sending function - moja pretoze default nefunguje ako ma
-          -- _G.SendFencedCode = function()
-          --   local cursor_pos = vim.api.nvim_win_get_cursor(0)
-          --   local row = cursor_pos[1] - 1  -- lua uses 0-based indexing
-          --   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-          --
-          --   -- determine file type and set appropriate block delimiters
-          --   local filetype = vim.bo.filetype
-          --   local start_pattern, end_pattern
-          --
-          --   if filetype == "python" then
-          --     -- python uses "# %%"
-          --     start_pattern = "^# %%"
-          --     end_pattern = "^# %%"
-          --   elseif filetype == "markdown" then
-          --     -- markdown/quarto uses "```python" and "```"
-          --     start_pattern = "^```python"
-          --     end_pattern = "^```"
-          --   elseif filetype == "quarto" then
-          --     start_pattern = "^```{python}"
-          --     end_pattern = "^```"
-          --   else
-          --     print("Unsupported file type for code block detection!")
-          --     return
-          --   end
-          --
-          --   -- find the start and end of the fenced code block
-          --   local start_row, end_row
-          --   for i = row, 0, -1 do
-          --     if lines[i]:match(start_pattern) then
-          --       start_row = i
-          --       break
-          --     end
-          --   end
-          --
-          --   for i = row + 1, #lines do
-          --     if lines[i]:match(end_pattern) then
-          --       end_row = i
-          --       break
-          --     end
-          --   end
-          --
-          --   if not start_row or not end_row then
-          --     print("No fenced code block found!")
-          --     return
-          --   end
-          --
-          --   -- extract the code inside the block
-          --   local code = {}
-          --   for i = start_row + 1, end_row - 1 do
-          --     local line = lines[i]:gsub("%s+$", "")  -- remove trailing whitespace
-          --     if line ~= "" then  -- skip blank lines
-          --       table.insert(code, line)
-          --     end
-          --   end
-          --
-          --   if #code == 0 then
-          --     print("Code block is empty!")
-          --     return
-          --   end
-          --
-          --   -- send code to repl
-          --   require("iron.core").send(nil, code)
-          -- end
-          -- -- }}}
-
-        end,-- }}}
-        keys = {-- {{{
-          { "<leader>rs", mode = { "n" }, "<cmd>IronRepl<cr>", desc = "repl start", noremap = true, silent = true },
-          { "<leader>rq", mode = { "n" }, "<cmd>lua require('iron.core').close_repl()<cr>", desc = "repl quit", noremap = true, silent = true },
-          { "<leader>rl", mode = { "n" }, "<cmd>lua require('iron.core').send_line()<cr>", desc = "send line", noremap = true, silent = true },
-          { "<leader>rf", mode = { "n" }, "<cmd>lua require('iron.core').send_file()<cr>", desc = "send file", noremap = true, silent = true },
-          -- { "<leader>rb", mode = { "n" }, "<cmd>lua SendFencedCode()<cr>", desc = "send block", noremap = true, silent = true },
-          { "<leader>rb", mode = { "n" }, "<cmd>lua require('iron.core').send_code_block()<cr>", desc = "send block", noremap = true, silent = true },
-          { "<leader>rl", mode = { "v" }, "<cmd>lua require('iron.core').visual_send()<cr>", desc = "send lines", noremap = true, silent = true },
-        },-- }}}
-      },
-      -- }}}
 
   }, -- spec end }}}
 

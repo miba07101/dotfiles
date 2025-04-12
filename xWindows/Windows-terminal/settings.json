@@ -54,6 +54,7 @@
                 "name": "Command Prompt"
             },
             {
+                "colorScheme": "KanagawaWave",
                 "guid": "{bc2da056-dd06-5879-b969-1dfcefc8d2c7}",
                 "hidden": false,
                 "icon": "C:\\Users\\vimi\\AppData\\Local\\Packages\\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\\RoamingState\\opensuse-logo.png",
