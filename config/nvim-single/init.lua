@@ -683,6 +683,7 @@ require("lazy").setup({
           overrides = function(colors)-- {{{
             local theme = colors.theme
             return {
+              WinSeparator = { fg = "NONE", bg = theme.ui.bg_m1 },
               -- change cmd popup menu colors
               Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_m1 },
               -- -- PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2, italic = true },
