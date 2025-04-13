@@ -616,6 +616,21 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
 })
 -- }}}
 
+-- -- jump between blocks in quarto/markdown{{{
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = "quarto",
+--   callback = function()
+--     vim.keymap.set('n', '<leader>nc', function()
+--       vim.cmd([[silent! /```{python}\zs]])
+--     end, { buffer = true, desc = 'Next code block' })
+--
+--     vim.keymap.set('n', '<leader>pc', function()
+--       vim.cmd([[silent! ?```{python}\zs]])
+--     end, { buffer = true, desc = 'Previous code block' })
+--   end
+-- })
+-- -- }}}
+
 -- }}}
 
 -- {{{ [[ LAZY MANAGER ]]
@@ -968,6 +983,8 @@ require("lazy").setup({
         require("mini.ai").setup({ -- {{{
           n_lines = 500,
           custom_textobjects = {
+            -- c = require('mini.ai').gen_spec.pair('```', '```', { type = 'non-balanced' }),
+
             -- Brackets and quotes
             ["("] = { "%b()", "^.().*().$" },
             ["["] = { "%b[]", "^.().*().$" },
