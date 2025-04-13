@@ -744,7 +744,7 @@ require("lazy").setup({
       lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
       dependencies = { -- {{{
         -- "windwp/nvim-ts-autotag",
-        "nvim-treesitter/nvim-treesitter-textobjects",
+        -- "nvim-treesitter/nvim-treesitter-textobjects",
       }, -- }}}
       main = "nvim-treesitter.configs",
       opts = { -- {{{
@@ -780,37 +780,6 @@ require("lazy").setup({
             node_decremental = "<Backspace>",
           },
         },
-        -- autotag = { enable = true },
-        -- textobjects = {
-        --   move = {
-        --     enable = true,
-        --     set_jumps = false, -- you can change this if you want.
-        --     goto_next_start = {
-        --       ["]c"] = { query = "@code_cell.inner", desc = "next cell" },
-        --     },
-        --     goto_previous_start = {
-        --       ["[c"] = { query = "@code_cell.inner", desc = "previous cell" },
-        --     },
-        --   },
-        --   select = {
-        --     enable = true,
-        --     lookahead = true, -- you can change this if you want
-        --     keymaps = {
-        --       ["ic"] = { query = "@code_cell.inner", desc = "in cell" },
-        --       ["ac"] = { query = "@code_cell.outer", desc = "around cell" },
-        --     },
-        --   },
-        --   swap = { -- Swap only works with code blocks that are under the same
-        --     -- markdown header
-        --     enable = true,
-        --     swap_next = {
-        --       ["<leader>psn"] = "@code_cell.outer",
-        --     },
-        --     swap_previous = {
-        --       ["<leader>psp"] = "@code_cell.outer",
-        --     },
-        --   },
-        -- },
       }, -- }}}
     },
     -- }}}
@@ -995,6 +964,7 @@ require("lazy").setup({
       event = "VeryLazy",
       enabled = true,
       config = function()
+        local gen_ai_spec = require('mini.extra').gen_ai_spec
         require("mini.ai").setup({ -- {{{
           n_lines = 500,
           custom_textobjects = {
@@ -1006,22 +976,20 @@ require("lazy").setup({
             ["'"] = { "%b''", "^.().*().$" },
             ["`"] = { "%b``", "^.().*().$" },
 
-            -- Common programming patterns
-            b = require("mini.ai").gen_spec.treesitter({ -- code block
+            -- Code blocks in quarto, jupyter notebooks etc.
+            -- musim vytvorit after/queries/.. textobjects
+            c = require("mini.ai").gen_spec.treesitter({ -- code block
               a = { "@code_cell.outer", "@block.outer", "@conditional.outer", "@loop.outer" },
               i = { "@code_cell.inner", "@block.inner", "@conditional.inner", "@loop.inner" },
             }),
-            o = require("mini.ai").gen_spec.treesitter({ a = "@comment.outer", i = "@comment.inner" }), -- comments
-            f = require("mini.ai").gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }), -- function
-            c = require("mini.ai").gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }), -- class
-            t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" }, -- tags
-            d = { "%f[%d]%d+" }, -- digits
-            e = { -- Word with case
-              { "%u[%l%d]+%f[^%l%d]", "%f[%S][%l%d]+%f[^%l%d]", "%f[%P][%l%d]+%f[^%l%d]", "^[%l%d]+%f[^%l%d]" },
-              "^().*()$",
-            },
-            u = require("mini.ai").gen_spec.function_call(), -- u for "Usage"
-            U = require("mini.ai").gen_spec.function_call({ name_pattern = "[%w_]" }), -- without dot in function name
+            -- Word with case
+            e = {{ "%u[%l%d]+%f[^%l%d]", "%f[%S][%l%d]+%f[^%l%d]", "%f[%P][%l%d]+%f[^%l%d]", "^[%l%d]+%f[^%l%d]" }, "^().*()$",},
+            -- From mini.extra
+            B = gen_ai_spec.buffer(),
+            D = gen_ai_spec.diagnostic(),
+            I = gen_ai_spec.indent(),
+            L = gen_ai_spec.line(),
+            N = gen_ai_spec.number(),
           },
         }) -- }}}
 
