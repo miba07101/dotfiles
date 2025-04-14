@@ -19,7 +19,7 @@ function _G.DetectOsType()-- {{{
   local home = os.getenv("HOME") or os.getenv("USERPROFILE")
   local username = os.getenv("USERNAME") or os.getenv("USER")
   local venv_home = os.getenv("VENV_HOME") or (home .. "/.py-venv")
-  local nvim_venv = venv_home .. "/nvim-venv"
+  local nvim_venv = venv_home .. "/base-venv"
   local debugpy_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
   local venv = os.getenv("VIRTUAL_ENV")  -- Moved here for reuse
 
@@ -795,8 +795,38 @@ require("lazy").setup({
             node_decremental = "<Backspace>",
           },
         },
-      }, -- }}}
-    },
+        -- textobjects = {
+        --   move = {
+        --     enable = true,
+        --     set_jumps = false, -- you can change this if you want.
+        --     goto_next_start = {
+        --       ["]c"] = { query = "@code_cell.inner", desc = "next cell" },
+        --     },
+        --     goto_previous_start = {
+        --       ["[c"] = { query = "@code_cell.inner", desc = "previous cell" },
+        --     },
+        --   },
+        --   select = {
+        --     enable = true,
+        --     lookahead = true, -- you can change this if you want
+        --     keymaps = {
+        --       ["ic"] = { query = "@code_cell.inner", desc = "in cell" },
+        --       ["ac"] = { query = "@code_cell.outer", desc = "around cell" },
+        --     },
+        --   },
+        --   swap = { -- Swap only works with code blocks that are under the same
+        --     -- markdown header
+        --     enable = true,
+        --     swap_next = {
+        --       ["<leader>psn"] = "@code_cell.outer",
+        --     },
+        --     swap_previous = {
+        --       ["<leader>psp"] = "@code_cell.outer",
+        --     },
+        --   },
+        -- },
+        }, -- }}}
+      },
     -- }}}
 
     -- {{{ [ LSP ]
@@ -1009,6 +1039,112 @@ require("lazy").setup({
             N = gen_ai_spec.number(),
           },
         }) -- }}}
+
+        -- Helper function to go to next or previous Treesitter node matching your textobjects
+--         local function jump_to_textobject_capture(capture, opts)
+--   local direction = opts and opts.backward and "prev" or "next"
+--
+--   local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(0))
+--   local cursor_flat = cursor_row * 1e6 + cursor_col
+--
+--   local bufnr = vim.api.nvim_get_current_buf()
+--   local lang = vim.treesitter.language.get_lang(vim.bo[bufnr].filetype)
+--   if not lang then return end
+--
+--   local query = vim.treesitter.query.get(lang, "textobjects")
+--   if not query then
+--     vim.notify("No Treesitter textobjects query for " .. lang, vim.log.levels.ERROR)
+--     return
+--   end
+--
+--   local parser = vim.treesitter.get_parser(bufnr, lang)
+--   local root = parser:parse()[1]:root()
+--
+--   local candidates = {}
+--
+--   for id, node in query:iter_captures(root, bufnr, 0, -1) do
+--     if query.captures[id] == capture then
+--       local start_row, start_col, end_row, end_col = node:range()
+--       local flat_start = start_row * 1e6 + start_col
+--       local flat_end = end_row * 1e6 + end_col
+--       table.insert(candidates, {
+--         node = node,
+--         flat_start = flat_start,
+--         flat_end = flat_end,
+--       })
+--     end
+--   end
+--
+--   table.sort(candidates, function(a, b) return a.flat_start < b.flat_start end)
+--
+--   local target = nil
+--   for _, item in ipairs(candidates) do
+--     if direction == "next" and item.flat_start > cursor_flat then
+--       target = item.node
+--       break
+--     elseif direction == "prev" and item.flat_end < cursor_flat then
+--       target = item.node
+--     end
+--   end
+--
+--   if target then
+--     local row, col = target:range()
+--     vim.api.nvim_win_set_cursor(0, { row + 1, col })
+--     vim.cmd("normal! m'")
+--   else
+--     vim.notify("No " .. direction .. " match for " .. capture, vim.log.levels.INFO)
+--   end
+-- end
+--
+-- vim.keymap.set("n", "]c", function()
+--   jump_to_textobject_capture("code_cell.outer", { backward = false })
+-- end, { desc = "Jump to next code cell" })
+--
+-- vim.keymap.set("n", "[c", function()
+--   jump_to_textobject_capture("code_cell.outer", { backward = true })
+-- end, { desc = "Jump to previous code cell" })
+
+        local function jump_code_block(dir)
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  local cursor_flat = row * 1e6 + col
+  local bufnr = 0
+  local lang = vim.treesitter.language.get_lang(vim.bo.filetype)
+  local query = vim.treesitter.query.get(lang, "textobjects")
+  local root = vim.treesitter.get_parser(bufnr, lang):parse()[1]:root()
+
+  local targets = {}
+  for id, node in query:iter_captures(root, bufnr, 0, -1) do
+    if query.captures[id] == "code_cell.outer" then
+      local sr, sc, er, ec = node:range()
+      table.insert(targets, { node = node, start = sr * 1e6 + sc, stop = er * 1e6 + ec })
+    end
+  end
+
+  table.sort(targets, function(a, b) return a.start < b.start end)
+
+  local target
+  for _, t in ipairs(targets) do
+    if dir == "next" and t.start > cursor_flat then
+      target = t.node; break
+    elseif dir == "prev" and t.stop < cursor_flat then
+      target = t.node
+    end
+  end
+
+  if target then
+    local r, c = target:range()
+    vim.api.nvim_win_set_cursor(0, { r + 1, c })
+    vim.cmd("normal! m'")
+  else
+    vim.notify("No " .. dir .. " code cell")
+  end
+end
+
+        vim.keymap.set("n", "]c", function() jump_code_block("next") end, { desc = "Next code cell" })
+vim.keymap.set("n", "[c", function() jump_code_block("prev") end, { desc = "Prev code cell" })
+
+
+
 
         require("mini.align").setup()
 
