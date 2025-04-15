@@ -119,8 +119,12 @@ local function python_code_cell(ai_type)
   end
 
   -- For 'inner', exclude the '# %%' header line
+  -- and skip one blank line if it's right after it
   if ai_type == "i" and start_line < end_line then
     start_line = start_line + 1
+    if getline_trimmed(start_line) == "" then
+      start_line = start_line + 1
+    end
   end
 
   -- Get full range of last line (col = 1 to end of line)
@@ -870,16 +874,15 @@ require("lazy").setup({
               ["[c"] = { query = "@code_cell.inner", desc = "Previous Cell" },
             },
           },
-          select = { -- definova v mini.ai
+          select = { -- pre quarto, markdown, jupyter notebooks definove v mini.ai
           },
-          swap = { -- Swap only works with code blocks that are under the same
-            -- markdown header
+          swap = { -- funguje len pre quarto a markdown, ak su pod spolocnym headrom (hlavickou)
             enable = true,
             swap_next = {
-              ["<leader>psn"] = "@code_cell.outer",
+              ["]s"] = { query = "@code_cell.outer", desc = "Swap Next Cell" },
             },
             swap_previous = {
-              ["<leader>psp"] = "@code_cell.outer",
+              ["[s"] = { query = "@code_cell.outer", desc = "Swap Previous Cell" },
             },
           },
         },

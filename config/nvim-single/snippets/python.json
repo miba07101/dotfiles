@@ -1,13 +1,13 @@
 {
   "create python code chunk": {
-    "prefix": "rc",
-    "body": ["# %%", "", "$0"],
+    "prefix": "pyc",
+    "body": ["# %%", "$0"],
     "description": "create python code chunk"
   },
 
   "create python full code chunk": {
-    "prefix": "rc2",
-    "body": ["# %%", "", "$0", "", "# %%"],
+    "prefix": "pycf",
+    "body": ["# %%", "$0", "", "# %%"],
     "description": "create python code chunk"
   },
 
