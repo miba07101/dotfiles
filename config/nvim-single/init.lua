@@ -955,7 +955,8 @@ require("lazy").setup({
         } -- }}}
 
         -- -- {{{ Capabilities
-        local capabilities = require("blink.cmp").get_lsp_capabilities()
+        -- local capabilities = require("blink.cmp").get_lsp_capabilities()
+        local capabilities = require("mini.completion").get_lsp_capabilities()
         -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
         -- local on_attach = function(client, bufnr)
         --   -- sem zadat on_attach funkcie doplnkov
@@ -1030,7 +1031,7 @@ require("lazy").setup({
 
     -- {{{ [ Autocompletition ]
       { "saghen/blink.cmp",-- {{{
-        enabled = true,
+        enabled = false,
         -- dependencies = "rafamadriz/friendly-snippets",
         version = "v0.*",
         opts = {-- {{{
@@ -1211,7 +1212,23 @@ require("lazy").setup({
           mappings = mappings,
         }) -- }}}
 
+        local minicompletion = require("mini.completion")-- {{{
+        local opts = { filtersort = "fuzzy" }
+        local process_items = function(items, base)
+          return MiniCompletion.default_process_items(items, base, opts)
+        end
+        minicompletion.setup({
+          lsp_completion = {
+            source_func = "omnifunc",
+            auto_setup = true,
+            process_items = process_items,
+            snippet_insert = MiniSnippets,
+          },
+        })
+-- }}}
+
         require("mini.icons").setup()
+        require("mini.icons").tweak_lsp_kind()
 
         require("mini.pairs").setup({ -- {{{
           modes = { insert = true, command = true, terminal = false },
@@ -1229,6 +1246,20 @@ require("lazy").setup({
             [">"] = { action = "close", pair = "<>", neigh_pattern = "[^\\].", register = { cr = false } },
           },
         }) -- }}}
+
+        local minisnippets = require("mini.snippets")-- {{{
+        local gen_loader = require('mini.snippets').gen_loader
+        minisnippets.setup({
+          snippets = {
+            -- Load custom file with global snippets first (adjust for Windows)
+            gen_loader.from_file('~/AppData/nvim/snippets/package.json'),
+
+            -- Load snippets based on current language by reading files from
+            -- "snippets/" subdirectories from 'runtimepath' directories.
+            gen_loader.from_lang(),
+          },
+        })
+-- }}}
 
         require("mini.splitjoin").setup({ -- {{{
           mappings = {
