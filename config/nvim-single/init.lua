@@ -309,8 +309,10 @@ map("n", "<S-Right>", "<cmd>vertical resize +2<cr>", { desc = "Resize Right" })
 -- Buffers{{{
 map("n", "<A-Right>", "<cmd>bnext<cr>", { desc = "Next buffer" })
 map("n", "<A-Left>", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
-map("n", "<A-UP>", "<cmd>bp<bar>bd#<cr>", { desc = "Quit buffer" })
-map("n", "<A-Down>", "<cmd>bp<bar>bd#<cr>", { desc = "Quit buffer" })
+-- map("n", "<A-UP>", "<cmd>bp<bar>bd#<cr>", { desc = "Quit buffer" })
+-- map("n", "<A-Down>", "<cmd>bp<bar>bd#<cr>", { desc = "Quit buffer" })
+map("n", "<A-UP>", "<cmd>lua require('mini.bufremove').delete()<cr>", { desc = "Quit buffer" })
+map("n", "<A-Down", "<cmd>lua require('mini.bufremove').delete()<cr>", { desc = "Quit buffer" })
 -- }}}
 
 -- Move in insert mode{{{
@@ -1134,6 +1136,8 @@ require("lazy").setup({
           silent = true,
         }) -- }}}
 
+        require('mini.bufremove').setup()
+
         local miniclue = require("mini.clue") -- {{{
         miniclue.setup({
           triggers = {
@@ -1226,6 +1230,20 @@ require("lazy").setup({
           },
         })
 -- }}}
+
+        local hipatterns = require("mini.hipatterns")-- {{{
+        hipatterns.setup({
+          highlighters = {
+            -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
+            fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
+            hack  = { pattern = '%f[%w]()HACK()%f[%W]',  group = 'MiniHipatternsHack'  },
+            todo  = { pattern = '%f[%w]()TODO()%f[%W]',  group = 'MiniHipatternsTodo'  },
+            note  = { pattern = '%f[%w]()NOTE()%f[%W]',  group = 'MiniHipatternsNote'  },
+
+            -- Highlight hex color strings (`#rrggbb`) using that color
+            hex_color = hipatterns.gen_highlighter.hex_color(),
+          },
+        })-- }}}
 
         require("mini.icons").setup()
         require("mini.icons").tweak_lsp_kind()
@@ -1622,7 +1640,8 @@ require("lazy").setup({
             -- icons = { '󰲡 ', '󰲣 ', '󰲥 ', '󰲧 ', '󰲩 ', '󰲫 ' },
             icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
           },-- }}}
-          completions = { blink = { enabled = true } },
+          -- completions = { blink = { enabled = true } },
+          completions = { lsp = { enabled = true } },
           latex = {-- {{{
             -- enabled = true,
             enabled = (function()
@@ -1719,7 +1738,7 @@ require("lazy").setup({
   },-- }}}
 
   { "brenoprata10/nvim-highlight-colors", -- show colors {{{
-    -- enabled = false,
+    enabled = false,
     opts = {},
     keys = {-- {{{
       { "<\\>H", mode = "n", "<cmd>HighlightColors Toggle<cr>", desc = "Toggle 'highlight-colors'" },
