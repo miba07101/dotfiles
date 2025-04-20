@@ -1138,6 +1138,7 @@ require("lazy").setup({
 
         require('mini.bufremove').setup()
 
+
         local miniclue = require("mini.clue") -- {{{
         miniclue.setup({
           triggers = {
@@ -1243,7 +1244,9 @@ require("lazy").setup({
             -- Highlight hex color strings (`#rrggbb`) using that color
             hex_color = hipatterns.gen_highlighter.hex_color(),
           },
-        })-- }}}
+        })
+        map("n", "\\H", function()require("mini.hipatterns").toggle()end, {desc = "Toggle 'Hipatterns'"})
+        -- }}}
 
         require("mini.icons").setup()
         require("mini.icons").tweak_lsp_kind()
@@ -1741,7 +1744,7 @@ require("lazy").setup({
     enabled = false,
     opts = {},
     keys = {-- {{{
-      { "<\\>H", mode = "n", "<cmd>HighlightColors Toggle<cr>", desc = "Toggle 'highlight-colors'" },
+      { "\\H", mode = "n", "<cmd>HighlightColors Toggle<cr>", desc = "Toggle 'highlight-colors'" },
     },-- }}}
   },-- }}}
 
