@@ -1217,14 +1217,16 @@ require("lazy").setup({
           mappings = mappings,
         }) -- }}}
 
-        local minicompletion = require("mini.completion")-- {{{
+
+        local completion = require("mini.completion")-- {{{
         local opts = { filtersort = "fuzzy" }
         local process_items = function(items, base)
           return MiniCompletion.default_process_items(items, base, opts)
         end
-        minicompletion.setup({
+        completion.setup({
+          delay = { completion = 50, info = 50, signature = 50 },
           lsp_completion = {
-            source_func = "omnifunc",
+            source_func = "completefunc", -- omnifunc
             auto_setup = true,
             process_items = process_items,
             snippet_insert = MiniSnippets,
@@ -1268,19 +1270,20 @@ require("lazy").setup({
           },
         }) -- }}}
 
-        local minisnippets = require("mini.snippets")-- {{{
-        local gen_loader = require('mini.snippets').gen_loader
-        minisnippets.setup({
-          snippets = {
-            -- Load custom file with global snippets first (adjust for Windows)
-            gen_loader.from_file('~/AppData/nvim/snippets/package.json'),
 
-            -- Load snippets based on current language by reading files from
-            -- "snippets/" subdirectories from 'runtimepath' directories.
-            gen_loader.from_lang(),
+        local snippets = require("mini.snippets")-- {{{
+        local gen_loader = require('mini.snippets').gen_loader
+        snippets.setup({
+          snippets = {
+            -- Load per-language snippets from runtimepath, like ~/.config/nvim/snippets/python.json
+            gen_loader.from_lang({ path = vim.fn.stdpath('config') .. '/snippets' }),
           },
         })
+        -- Start snippet LSP server for completion integration
+        snippets.start_lsp_server()
 -- }}}
+
+
 
         require("mini.splitjoin").setup({ -- {{{
           mappings = {
