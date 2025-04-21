@@ -771,8 +771,12 @@ require("lazy").setup({
               WinSeparator = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
               -- change cmd popup menu colors
               Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_m1 },
+              PmenuKind = { fg = theme.ui.shade0, bg = theme.ui.bg_m1 },
+              PmenuExtra = { fg = theme.ui.shade0, bg = theme.ui.bg_m1 },
               -- -- PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2, italic = true },
               PmenuSel = { fg = colors.palette.surimiOrange, bg = theme.ui.bg_p2 },
+              PmenuKindSel = { fg = colors.palette.surimiOrange, bg = theme.ui.bg_p2 },
+              PmenuExtraSel = { fg = colors.palette.surimiOrange, bg = theme.ui.bg_p2 },
               PmenuSbar = { bg = theme.ui.bg_m1 },
               PmenuThumb = { bg = theme.ui.bg_p2 },
               -- -- FloatBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
