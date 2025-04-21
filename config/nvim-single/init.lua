@@ -170,7 +170,7 @@ vim.opt.iskeyword:remove("_")         -- oddeli slova pri mazani, nebude brat ak
 -- Completition{{{
 vim.opt.completeopt = { "menuone", "noselect" } -- completion options
 vim.opt.pumheight   = 10                        -- completion menu height
-vim.opt.wildmenu    = true                      -- make tab completion for files/buffers act like bash
+-- vim.opt.wildmenu    = true                      -- make tab completion for files/buffers act like bash
 -- }}}
 
 -- Indention{{{
@@ -686,20 +686,29 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
 })
 -- }}}
 
--- -- jump between blocks in quarto/markdown{{{
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = "quarto",
---   callback = function()
---     vim.keymap.set('n', '<leader>nc', function()
---       vim.cmd([[silent! /```{python}\zs]])
---     end, { buffer = true, desc = 'Next code block' })
---
---     vim.keymap.set('n', '<leader>pc', function()
---       vim.cmd([[silent! ?```{python}\zs]])
---     end, { buffer = true, desc = 'Previous code block' })
---   end
--- })
--- -- }}}
+-- {{{ restore cursor position
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "snacks_picker_input",
+  callback = function()
+    -- Disable mini.completion for this filetype
+    vim.b.minicompletion_disable = true
+  end,
+  group = mygroup,
+  desc = "disable mini.completion in snacks.picker input",
+})
+-- }}}
+
+-- {{{ disable mini.completion in snacks.picker input 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "snacks_picker_input",
+  callback = function()
+    -- Disable mini.completion for this filetype
+    vim.b.minicompletion_disable = true
+  end,
+  group = mygroup,
+  desc = "disable mini.completion in snacks.picker input",
+})
+-- }}}
 
 -- }}}
 
