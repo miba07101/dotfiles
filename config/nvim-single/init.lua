@@ -312,7 +312,7 @@ map("n", "<A-Left>", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
 -- map("n", "<A-UP>", "<cmd>bp<bar>bd#<cr>", { desc = "Quit buffer" })
 -- map("n", "<A-Down>", "<cmd>bp<bar>bd#<cr>", { desc = "Quit buffer" })
 map("n", "<A-UP>", "<cmd>lua require('mini.bufremove').delete()<cr>", { desc = "Quit buffer" })
-map("n", "<A-Down", "<cmd>lua require('mini.bufremove').delete()<cr>", { desc = "Quit buffer" })
+map("n", "<A-Down>", "<cmd>lua require('mini.bufremove').delete()<cr>", { desc = "Quit buffer" })
 -- }}}
 
 -- Move in insert mode{{{
@@ -1045,39 +1045,46 @@ require("lazy").setup({
     -- }}}
 
     -- {{{ [ Autocompletition ]
-      { "saghen/blink.cmp",-- {{{
-        enabled = false,
-        -- dependencies = "rafamadriz/friendly-snippets",
-        version = "v0.*",
-        opts = {-- {{{
-          keymap = {-- {{{
-            preset = "super-tab",
-            ["<CR>"] = { "accept", "fallback" },
-          },-- }}}
-          appearance = {-- {{{
-            use_nvim_cmp_as_default = true,
-            nerd_font_variant = "normal",
-          },-- }}}
-          completion = {-- {{{
-            menu = {
-              draw = {
-                columns = {
-                  { "kind_icon" },
-                  { "label", "label_description", gap = 1 },
-                  { "source_name", "kind", gap = 1 },
-                },
-              },
-            },
-          },-- }}}
-          signature = { enabled = true },
-          sources = {-- {{{
-            default = { "lsp", "path", "snippets", "buffer" },
-            providers = {
-            },
-          },-- }}}
-        },-- }}}
-        opts_extend = { "sources.default" },
-      },-- }}}
+    -- { "saghen/blink.cmp",-- {{{
+    --   enabled = true,
+    --   -- dependencies = "rafamadriz/friendly-snippets",
+    --   version = "v0.*",
+    --   opts = {-- {{{
+    --     keymap = {-- {{{
+    --       preset = "enter",
+    --     },-- }}}
+    --     appearance = {-- {{{
+    --       use_nvim_cmp_as_default = true,
+    --       nerd_font_variant = "normal",
+    --     },-- }}}
+    --     completion = {-- {{{
+    --       menu = {
+    --         draw = {
+    --           columns = {
+    --             { "kind_icon" },
+    --             { "label", "label_description", gap = 1 },
+    --             { "source_name", "kind", gap = 1 },
+    --           },
+    --         },
+    --       },
+    --       list = {
+    --         selection = {
+    --           preselect = false,
+    --         },
+    --       },
+    --     },-- }}}
+    --     signature = {
+    --       enabled = true,
+    --     },
+    --     -- snippets = { preset = 'mini_snippets' },
+    --     sources = {-- {{{
+    --       default = { "lsp", "path", "snippets", "buffer" },
+    --       providers = {
+    --       },
+    --     },-- }}}
+    --   },-- }}}
+    --   opts_extend = { "sources.default" },
+    -- },-- }}}
     -- }}}
 
     -- {{{ [ Mini.nvim collection ]
