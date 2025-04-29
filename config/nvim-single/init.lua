@@ -275,20 +275,20 @@ end
 ConfigureShellAndCursor()
 -- }}}
 
-vim.filetype.add {-- {{{
+vim.filetype.add { -- {{{
   extension = {
     zsh = "sh",
-    sh = "sh", -- force sh-files with zsh-shebang to still get sh as filetype
+    sh = "sh",
     ipynb = "ipynb",
     typ = "typst",
   },
   filename = {
     [".zshrc"] = "sh",
     [".zshenv"] = "sh",
-    [".ipynb"] = "ipynb",
-    [".typ"] = "typst",  -- associate .ipynb extension with the 'ipynb' filetype
+    [".ipynb"] = "ipynb",  -- Only if you have a custom opener; otherwise, `ipynb` isn't a real filename
   },
-}-- }}}
+} -- }}}
+
 
 -- }}}
 
@@ -1742,13 +1742,6 @@ require("lazy").setup({
         style = "markdown",
         output_extension = "md",
         force_ft = "markdown",
-        -- custom_language_formatting = {
-        --   python = {
-        --     extension = "md",
-        --     style = "markdown",
-        --     force_ft = "markdown", -- you can set whatever filetype you want here
-        --   },
-        -- }
       },
     },-- }}}
     -- }}}
