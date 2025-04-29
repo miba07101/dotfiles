@@ -285,6 +285,7 @@ vim.filetype.add {-- {{{
   filename = {
     [".zshrc"] = "sh",
     [".zshenv"] = "sh",
+    [".ipynb"] = "ipynb",
     [".typ"] = "typst",  -- associate .ipynb extension with the 'ipynb' filetype
   },
 }-- }}}
@@ -552,15 +553,6 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
   command = [[:normal! zR]], -- zR-open, zM-close folds
   group = mygroup,
   desc = "unfold",
-})
--- }}}
-
--- {{{ conceal level = 1
-vim.api.nvim_create_autocmd("BufRead", {
-  pattern = "*.md",
-  command = [[:setlocal conceallevel=1]],
-  group = mygroup,
-  desc = "conceal level",
 })
 -- }}}
 
@@ -1656,40 +1648,31 @@ require("lazy").setup({
 
     { "MeanderingProgrammer/render-markdown.nvim",-- {{{
       -- enabled = false,
-      lazy = true,
-      init = function()-- {{{
-        vim.api.nvim_create_autocmd("FileType", {
-          pattern = { "markdown" },
-          callback = function(args)
-            -- Avoid activating in floating windows
-            local win = vim.fn.bufwinid(args.buf)
-            local is_floating = vim.api.nvim_win_get_config(win).relative ~= ""
-            if is_floating then return end
-
-            -- Explicitly require and setup only once
-            local ok, rm = pcall(require, "render-markdown")
-            if ok then
-              rm.setup({
-                heading = {
-                  icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
-                },
-                completions = { blink = { enabled = true } },
-                latex = {
-                  enabled = (osvar.os_type ~= "windows"),
-                  converter = "latex2text",
-                  highlight = "RenderMarkdownMath",
-                  top_pad = 0,
-                  bottom_pad = 0,
-                },
-              })
-            end
-          end,
-        })
-      end, -- }}}
+      event = {
+        'BufReadPost *.md',
+        'BufNewFile  *.md',
+        'BufReadPost *.qmd',
+        'BufNewFile  *.qmd',
+        -- TODO ipynb not working
+        'BufReadPost *.ipynb',
+        'BufNewFile  *.ipynb',
+      },
+      opts = {
+        file_types = { 'markdown', 'quarto' },
+        heading = {
+          icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+        },
+        completions = { blink = { enabled = true } },
+        latex = {
+          enabled = (osvar.os_type ~= "windows"),
+          converter = "latex2text",
+          highlight = "RenderMarkdownMath",
+          top_pad = 0,
+          bottom_pad = 0,
+        },
+      },
       keys = {-- {{{
-        { "\\m", mode = { "n" }, "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle 'markdown preview'" },
-        -- { "<leader>mi", mode = { "n" }, "<cmd>RenderMarkdown expand<cr>", desc = "increase conceal", noremap = true, silent = true },
-        -- { "<leader>md", mode = { "n" }, "<cmd>RenderMarkdown contract<cr>", desc = "decrease conceal", noremap = true, silent = true },
+        { "\\m", mode = { "n" }, "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle 'markdown preview'", noremap = true, silent = true },
       },-- }}}
     },-- }}}
     -- }}}
@@ -1716,54 +1699,57 @@ require("lazy").setup({
         },
       },
       keys = {-- {{{
-        { "<leader>qa", mode = { "n" }, "<cmd>QuartoActivate<cr>", desc = "activate", noremap = true, silent = true },
-        { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "preview", noremap = true, silent = true },
-        { "<leader>qq", mode = { "n" }, "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = "quit", noremap = true, silent = true },
-        { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "help", noremap = true, silent = true },
+        { "<leader>qa", mode = { "n" }, "<cmd>QuartoActivate<cr>", desc = "Activate", noremap = true, silent = true },
+        { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "Preview", noremap = true, silent = true },
+        { "<leader>qq", mode = { "n" }, "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = "Quit", noremap = true, silent = true },
+        { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "Help", noremap = true, silent = true },
 
         -- Quarto runner keymaps (code cell)
-        { "<leader>prc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "run cell", noremap = true, silent = true },
-        { "<leader>prl", mode = "n", function() require("quarto.runner").run_line() end, desc = "run line", noremap = true, silent = true },
+        { "<leader>qrc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "Run Cell", noremap = true, silent = true },
+        { "<leader>qrl", mode = "n", function() require("quarto.runner").run_line() end, desc = "Run Line", noremap = true, silent = true },
         -- { "<leader>pca", mode = "n", function() require("quarto.runner").run_above() end, desc = "run cell and above", noremap = true, silent = true },
-        { "<leader>pra", mode = "n", function() require("quarto.runner").run_all() end, desc = "run all cells", noremap = true, silent = true },
-        { "<leader>prA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "run all languages", noremap = true, silent = true },
-        { "<leader>pr", mode = "v", function() require("quarto.runner").run_range() end, desc = "run selection", noremap = true, silent = true },
+        { "<leader>qra", mode = "n", function() require("quarto.runner").run_all() end, desc = "Run All Cells", noremap = true, silent = true },
+        { "<leader>qrA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "Run All Languages", noremap = true, silent = true },
+        { "<leader>r", mode = "v", function() require("quarto.runner").run_range() end, desc = "Run Selection", noremap = true, silent = true },
       },-- }}}
 
     },-- }}}
 
     { "jmbuhr/otter.nvim",-- {{{
-      -- lazy = true,
-      ft = { "quarto", "markdown" },
-      -- init = function()
-      --   vim.api.nvim_create_autocmd("FileType", {
-      --     pattern = { "quarto", "markdown" },
-      --     callback = function(args)
-      --       -- Avoid activating in floating windows
-      --       local win = vim.fn.bufwinid(args.buf)
-      --       local is_floating = vim.api.nvim_win_get_config(win).relative ~= ""
-      --       if is_floating then return end
-      --
-      --       -- Explicitly require and setup only once
-      --       local ok, otter = pcall(require, "otter")
-      --       if ok then
-      --         otter.activate()
-      --       end
-      --     end,
-      --   })
-      -- end,
-      opts = {}
+      -- enabled = false,
+      event = {
+        'BufReadPost *.md',
+        'BufNewFile  *.md',
+        'BufReadPost *.qmd',
+        'BufNewFile  *.qmd',
+      },
+      init = function()
+        vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+          pattern = { "*.md", "*.qmd" }, -- TODO: ipynb
+          callback = function()
+            require('otter').activate()
+          end,
+        })
+      end,
+      keys = {-- {{{
+        { "<leader>qo", mode = { "n" }, function() require("otter").activate() end, desc = "Otter Activate", noremap = true, silent = true },
+      },-- }}}
     },-- }}}
 
     { "GCBallesteros/jupytext.nvim",-- {{{
       -- enabled = false,
-      config = function()
-        require("jupytext").setup({
-          style = "markdown",
-          output_extension = "md",
-          force_ft = "markdown",
-        })
-      end,
+      opts = {
+        style = "markdown",
+        output_extension = "md",
+        force_ft = "markdown",
+        -- custom_language_formatting = {
+        --   python = {
+        --     extension = "md",
+        --     style = "markdown",
+        --     force_ft = "markdown", -- you can set whatever filetype you want here
+        --   },
+        -- }
+      },
     },-- }}}
     -- }}}
 
