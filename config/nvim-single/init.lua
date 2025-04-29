@@ -1695,79 +1695,64 @@ require("lazy").setup({
     -- }}}
 
     -- {{{ [ Quarto, Jupyterlab ]
-
     { "quarto-dev/quarto-nvim",-- {{{
       -- enabled = false,
-      init = function()
-        vim.api.nvim_create_autocmd("FileType", {
-          pattern = { "quarto", "markdown" },
-          callback = function(args)
-            -- Avoid activating in floating windows
-            local win = vim.fn.bufwinid(args.buf)
-            local is_floating = vim.api.nvim_win_get_config(win).relative ~= ""
-            if is_floating then return end
-
-            -- Explicitly require and setup only once
-            local ok, qm = pcall(require, "quarto")
-            if ok then
-              qm.setup({
-                lspFeatures = {
-                  languages = { "python", "bash", "lua", "html", "javascript" },
-                  chunks = "all",
-                  diagnostics = {
-                    enabled = true,
-                    triggers = { "BufWritePost" },
-                  },
-                  completion = {
-                    enabled = true,
-                  },
-                },
-                codeRunner = {
-                  enabled = true,
-                  default_method = "molten",
-                },
-
-              })
-            end
-          end,
-        })
-
-        -- {{{ Keymaps
-        map("n", "<leader>qa", "<cmd>QuartoActivate<cr>", { desc = "Activate" })
-        map("n", "<leader>qp", "<cmd>lua require'quarto'.quartoPreview()<cr>", { desc = "Preview" })
-        map("n", "<leader>qq", "<cmd>lua require'quarto'.quartoClosePreview()<cr>", { desc = "Quit" })
-        map("n", "<leader>qh", "<cmd>QuartoHelp<cr>", { desc = "Help" })
+      ft = { "quarto" },
+      opts = {
+        lspFeatures = {
+          languages = { "python", "bash", "lua", "html", "javascript" },
+          chunks = "all",
+          diagnostics = {
+            enabled = true,
+            triggers = { "BufWritePost" },
+          },
+          completion = {
+            enabled = true,
+          },
+        },
+        codeRunner = {
+          enabled = true,
+          default_method = "molten",
+        },
+      },
+      keys = {-- {{{
+        { "<leader>qa", mode = { "n" }, "<cmd>QuartoActivate<cr>", desc = "activate", noremap = true, silent = true },
+        { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "preview", noremap = true, silent = true },
+        { "<leader>qq", mode = { "n" }, "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = "quit", noremap = true, silent = true },
+        { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "help", noremap = true, silent = true },
 
         -- Quarto runner keymaps (code cell)
+        { "<leader>prc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "run cell", noremap = true, silent = true },
+        { "<leader>prl", mode = "n", function() require("quarto.runner").run_line() end, desc = "run line", noremap = true, silent = true },
         -- { "<leader>pca", mode = "n", function() require("quarto.runner").run_above() end, desc = "run cell and above", noremap = true, silent = true },
-        map("n", "<leader>qrc", function() require("quarto.runner").run_cell() end, { desc = "Run Cell" })
-        map("n", "<leader>qrl", function() require("quarto.runner").run_line() end, { desc = "Run Line" })
-        map("n", "<leader>qra", function() require("quarto.runner").run_all() end, { desc = "Run All Cells" })
-        map("n", "<leader>qrA", function() require("quarto.runner").run_all(true) end, { desc = "Run All Languages" })
-        map("n", "<leader>qrr", function() require("quarto.runner").run_range() end, { desc = "Quarto Run Selection" })
-        -- }}}
+        { "<leader>pra", mode = "n", function() require("quarto.runner").run_all() end, desc = "run all cells", noremap = true, silent = true },
+        { "<leader>prA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "run all languages", noremap = true, silent = true },
+        { "<leader>pr", mode = "v", function() require("quarto.runner").run_range() end, desc = "run selection", noremap = true, silent = true },
+      },-- }}}
 
-      end,
     },-- }}}
 
     { "jmbuhr/otter.nvim",-- {{{
-      init = function()
-        vim.api.nvim_create_autocmd("FileType", {
-          pattern = { "markdown", "quarto" },
-          callback = function(args)
-            -- Avoid activating in floating windows
-            local win = vim.fn.bufwinid(args.buf)
-            local is_floating = vim.api.nvim_win_get_config(win).relative ~= ""
-            if is_floating then return end
-
-            -- Explicitly require and setup only once
-            local ok, otter = pcall(require, "otter")
-            if ok then
-              otter.activate()
-            end
-          end,
-        })
-      end,
+      -- lazy = true,
+      ft = { "quarto", "markdown" },
+      -- init = function()
+      --   vim.api.nvim_create_autocmd("FileType", {
+      --     pattern = { "quarto", "markdown" },
+      --     callback = function(args)
+      --       -- Avoid activating in floating windows
+      --       local win = vim.fn.bufwinid(args.buf)
+      --       local is_floating = vim.api.nvim_win_get_config(win).relative ~= ""
+      --       if is_floating then return end
+      --
+      --       -- Explicitly require and setup only once
+      --       local ok, otter = pcall(require, "otter")
+      --       if ok then
+      --         otter.activate()
+      --       end
+      --     end,
+      --   })
+      -- end,
+      opts = {}
     },-- }}}
 
     { "GCBallesteros/jupytext.nvim",-- {{{
