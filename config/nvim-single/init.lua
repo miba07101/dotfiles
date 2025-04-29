@@ -13,8 +13,8 @@ function _G.DetectOsType()-- {{{
   -- Detect OS Type
   local os_name = vim.loop.os_uname().sysname
   local os_type = (os_name == "Windows_NT" and "windows")
-    or (os_name == "Linux" and (vim.fn.has("wsl") == 1 and "wsl" or "linux"))
-    or os_name
+  or (os_name == "Linux" and (vim.fn.has("wsl") == 1 and "wsl" or "linux"))
+  or os_name
 
   -- Environment Variables
   local home = os.getenv("HOME") or os.getenv("USERPROFILE")
@@ -81,7 +81,7 @@ local osvar = DetectOsType()
 -- osvar.ObsidianNewNote(true, "basic", "inbox")
 -- }}}
 
- -- f. pre mini.ai selekciu blokov kodu oddelenych "% ##" v python/jupyter suboroch{{{
+-- f. pre mini.ai selekciu blokov kodu oddelenych "% ##" v python/jupyter suboroch{{{
 local function python_code_cell(ai_type)
   if vim.bo.filetype ~= "python" then return nil end
 
@@ -174,14 +174,40 @@ vim.opt.pumheight   = 10                        -- completion menu height
 -- }}}
 
 -- Indention{{{
-local indent        = 2
-vim.opt.autoindent  = true   -- auto indentation
-vim.opt.expandtab   = true   -- convert tabs to spaces (prefered for python)
-vim.opt.shiftround  = true   -- use multiple of shiftwidth when indenting with "<" and ">"
-vim.opt.shiftwidth  = indent -- spaces inserted for each indentation
-vim.opt.smartindent = true   -- make indenting smarter
-vim.opt.softtabstop = indent -- when hitting <BS>, pretend like a tab is removed, even if spaces
-vim.opt.tabstop     = indent -- insert spaces for a tab
+local indent_config = {
+  vim =        { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  python =     { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  html =       { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  css =        { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  javascript = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  typescript = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  json =       { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  jinja =      { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  django =     { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  typst =      { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  -- markdown =   { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  -- quarto =     { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  jupyter =    { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  lua =        { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+}
+
+-- Create autocommand group
+vim.api.nvim_create_augroup("CustomIndentation", { clear = true })
+
+for filetype, opts in pairs(indent_config) do
+  vim.api.nvim_create_autocmd("FileType", {
+    group = "CustomIndentation",
+    pattern = filetype,
+    callback = function()
+      vim.opt_local.autoindent  = true             -- auto indentation
+      vim.opt_local.expandtab   = true             -- convert tabs to spaces (prefered for python)
+      vim.opt_local.smartindent = true             -- make indenting smarter
+      vim.opt_local.shiftwidth  = opts.shiftwidth  -- spaces inserted for each indentation
+      vim.opt_local.softtabstop = opts.softtabstop -- when hitting <BS>, pretend like a tab is removed, even if spaces
+      vim.opt_local.tabstop     = opts.tabstop     -- insert spaces for a tab
+    end,
+  })
+end
 -- }}}
 
 -- Fold{{{
@@ -875,8 +901,8 @@ require("lazy").setup({
             },
           },
         },
-        }, -- }}}
-      },
+      }, -- }}}
+    },
     -- }}}
 
     -- {{{ [ LSP ]
@@ -1212,22 +1238,22 @@ require("lazy").setup({
           mappings = mappings,
         }) -- }}}
 
---         local completion = require("mini.completion")-- {{{
---         local opts = { filtersort = "fuzzy" }
---         local process_items = function(items, base)
---           return MiniCompletion.default_process_items(items, base, opts)
---         end
---         require("mini.icons").tweak_lsp_kind() -- for icon showing
---         completion.setup({
---           delay = { completion = 50, info = 50, signature = 50 },
---           lsp_completion = {
---             source_func = "completefunc", -- omnifunc
---             auto_setup = true,
---             process_items = process_items,
---             snippet_insert = MiniSnippets,
---           },
---         })
--- -- }}}
+        --         local completion = require("mini.completion")-- {{{
+        --         local opts = { filtersort = "fuzzy" }
+        --         local process_items = function(items, base)
+        --           return MiniCompletion.default_process_items(items, base, opts)
+        --         end
+        --         require("mini.icons").tweak_lsp_kind() -- for icon showing
+        --         completion.setup({
+        --           delay = { completion = 50, info = 50, signature = 50 },
+        --           lsp_completion = {
+        --             source_func = "completefunc", -- omnifunc
+        --             auto_setup = true,
+        --             process_items = process_items,
+        --             snippet_insert = MiniSnippets,
+        --           },
+        --         })
+        -- -- }}}
 
         local hipatterns = require("mini.hipatterns")-- {{{
         hipatterns.setup({
@@ -1264,17 +1290,17 @@ require("lazy").setup({
           },
         }) -- }}}
 
-        local snippets = require("mini.snippets")-- {{{
-        local gen_loader = require('mini.snippets').gen_loader
-        snippets.setup({
-          snippets = {
-            -- Load per-language snippets from runtimepath, like ~/.config/nvim/snippets/python.json
-            gen_loader.from_lang({ path = vim.fn.stdpath('config') .. '/snippets' }),
-          },
-        })
-        -- Start snippet LSP server for completion integration
-        snippets.start_lsp_server()
--- }}}
+        -- local snippets = require("mini.snippets")-- {{{
+        -- local gen_loader = require('mini.snippets').gen_loader
+        -- snippets.setup({
+        --   snippets = {
+        --     -- Load per-language snippets from runtimepath, like ~/.config/nvim/snippets/python.json
+        --     gen_loader.from_lang({ path = vim.fn.stdpath('config') .. '/snippets' }),
+        --   },
+        -- })
+        -- -- Start snippet LSP server for completion integration
+        -- snippets.start_lsp_server()
+        -- -- }}}
 
         require("mini.splitjoin").setup({-- {{{
           mappings = {
@@ -1628,140 +1654,168 @@ require("lazy").setup({
       },-- }}}
     },-- }}}
 
-      { "MeanderingProgrammer/render-markdown.nvim",-- {{{
-        -- enabled = false,
-        ft = { "markdown", "quarto" },
-        opts = {-- {{{
-          -- log_level = 'debug',
-          heading = {-- {{{
-            -- icons = { '󰲡 ', '󰲣 ', '󰲥 ', '󰲧 ', '󰲩 ', '󰲫 ' },
-            icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
-          },-- }}}
-          -- completions = { blink = { enabled = true } },
-          completions = { lsp = { enabled = true } },
-          latex = {-- {{{
-            -- enabled = true,
-            enabled = (function()
-              if osvar.os_type == "windows" then
-                return false
-              else
-                return true
-              end
-            end)(),
-            converter = "latex2text",
-            highlight = 'RenderMarkdownMath',
-            top_pad = 0,
-            bottom_pad = 0,
-          },-- }}}
-        },-- }}}
-        keys = {-- {{{
-          { "\\m", mode = { "n" }, "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle 'markdown preview'" },
-          -- { "<leader>mi", mode = { "n" }, "<cmd>RenderMarkdown expand<cr>", desc = "increase conceal", noremap = true, silent = true },
-          -- { "<leader>md", mode = { "n" }, "<cmd>RenderMarkdown contract<cr>", desc = "decrease conceal", noremap = true, silent = true },
-        },-- }}}
+    { "MeanderingProgrammer/render-markdown.nvim",-- {{{
+      -- enabled = false,
+      lazy = true,
+      init = function()-- {{{
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = { "markdown" },
+          callback = function(args)
+            -- Avoid activating in floating windows
+            local win = vim.fn.bufwinid(args.buf)
+            local is_floating = vim.api.nvim_win_get_config(win).relative ~= ""
+            if is_floating then return end
+
+            -- Explicitly require and setup only once
+            local ok, rm = pcall(require, "render-markdown")
+            if ok then
+              rm.setup({
+                heading = {
+                  icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+                },
+                completions = { blink = { enabled = true } },
+                latex = {
+                  enabled = (osvar.os_type ~= "windows"),
+                  converter = "latex2text",
+                  highlight = "RenderMarkdownMath",
+                  top_pad = 0,
+                  bottom_pad = 0,
+                },
+              })
+            end
+          end,
+        })
+      end, -- }}}
+      keys = {-- {{{
+        { "\\m", mode = { "n" }, "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle 'markdown preview'" },
+        -- { "<leader>mi", mode = { "n" }, "<cmd>RenderMarkdown expand<cr>", desc = "increase conceal", noremap = true, silent = true },
+        -- { "<leader>md", mode = { "n" }, "<cmd>RenderMarkdown contract<cr>", desc = "decrease conceal", noremap = true, silent = true },
       },-- }}}
-  -- }}}
-
-  -- {{{ [ Quarto, Jupyterlab ]
-  { "quarto-dev/quarto-nvim",-- {{{
-    -- enabled = false,
-    ft = { "quarto", "markdown" },
-    dev = false,
-    dependencies = {-- {{{
-      {
-        "jmbuhr/otter.nvim",
-        ft = { "quarto", "markdown" },
-        dev = false,
-        config = function()
-          -- autocommand to call "otter.activate()"{{{
-          vim.api.nvim_create_autocmd("FileType", {
-            pattern = { "quarto", "markdown" },
-            callback = function()
-              require('otter').activate()
-            end,
-          })-- }}}
-        end,
-      },
     },-- }}}
-    opts = {-- {{{
-      lspFeatures = {
-        languages = { "python", "bash", "lua", "html", "javascript" },
-        chunks = "all",
-        diagnostics = {
-          enabled = true,
-          triggers = { "BufWritePost" },
+    -- }}}
+
+    -- {{{ [ Quarto, Jupyterlab ]
+
+    { "quarto-dev/quarto-nvim",-- {{{
+      -- enabled = false,
+      init = function()
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = { "quarto", "markdown" },
+          callback = function(args)
+            -- Avoid activating in floating windows
+            local win = vim.fn.bufwinid(args.buf)
+            local is_floating = vim.api.nvim_win_get_config(win).relative ~= ""
+            if is_floating then return end
+
+            -- Explicitly require and setup only once
+            local ok, qm = pcall(require, "quarto")
+            if ok then
+              qm.setup({
+                lspFeatures = {
+                  languages = { "python", "bash", "lua", "html", "javascript" },
+                  chunks = "all",
+                  diagnostics = {
+                    enabled = true,
+                    triggers = { "BufWritePost" },
+                  },
+                  completion = {
+                    enabled = true,
+                  },
+                },
+                codeRunner = {
+                  enabled = true,
+                  default_method = "molten",
+                },
+
+              })
+            end
+          end,
+        })
+
+        -- {{{ Keymaps
+        map("n", "<leader>qa", "<cmd>QuartoActivate<cr>", { desc = "Activate" })
+        map("n", "<leader>qp", "<cmd>lua require'quarto'.quartoPreview()<cr>", { desc = "Preview" })
+        map("n", "<leader>qq", "<cmd>lua require'quarto'.quartoClosePreview()<cr>", { desc = "Quit" })
+        map("n", "<leader>qh", "<cmd>QuartoHelp<cr>", { desc = "Help" })
+
+        -- Quarto runner keymaps (code cell)
+        -- { "<leader>pca", mode = "n", function() require("quarto.runner").run_above() end, desc = "run cell and above", noremap = true, silent = true },
+        map("n", "<leader>qrc", function() require("quarto.runner").run_cell() end, { desc = "Run Cell" })
+        map("n", "<leader>qrl", function() require("quarto.runner").run_line() end, { desc = "Run Line" })
+        map("n", "<leader>qra", function() require("quarto.runner").run_all() end, { desc = "Run All Cells" })
+        map("n", "<leader>qrA", function() require("quarto.runner").run_all(true) end, { desc = "Run All Languages" })
+        map("n", "<leader>qrr", function() require("quarto.runner").run_range() end, { desc = "Quarto Run Selection" })
+        -- }}}
+
+      end,
+    },-- }}}
+
+    { "jmbuhr/otter.nvim",-- {{{
+      init = function()
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = { "markdown", "quarto" },
+          callback = function(args)
+            -- Avoid activating in floating windows
+            local win = vim.fn.bufwinid(args.buf)
+            local is_floating = vim.api.nvim_win_get_config(win).relative ~= ""
+            if is_floating then return end
+
+            -- Explicitly require and setup only once
+            local ok, otter = pcall(require, "otter")
+            if ok then
+              otter.activate()
+            end
+          end,
+        })
+      end,
+    },-- }}}
+
+    { "GCBallesteros/jupytext.nvim",-- {{{
+      -- enabled = false,
+      config = function()
+        require("jupytext").setup({
+          style = "markdown",
+          output_extension = "md",
+          force_ft = "markdown",
+        })
+      end,
+    },-- }}}
+    -- }}}
+
+    -- {{{ [ Mix ]
+    { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
+      enabled = false,
+      ft = { "jinja", "htmldjango", "html" },
+    },-- }}}
+
+    { "brenoprata10/nvim-highlight-colors", -- show colors {{{
+      enabled = false,
+      opts = {},
+      keys = {-- {{{
+        { "\\H", mode = "n", "<cmd>HighlightColors Toggle<cr>", desc = "Toggle 'highlight-colors'" },
+      },-- }}}
+    },-- }}}
+
+    { "uga-rosa/ccc.nvim", -- color picker (:CccPick){{{
+      enabled = false,
+      opts = {-- {{{
+        highlighter = {
+          auto_enable = true,
+          lsp = true,
         },
-        completion = {
-          enabled = true,
-        },
-      },
-      codeRunner = {
-        enabled = true,
-        default_method = "molten",
-      },
+      },-- }}}
+      keys = {-- {{{
+        { "<leader>vp", mode = "n", "<cmd>CccPick<cr>", desc = "color picker", noremap = true, silent = true },
+      },-- }}}
     },-- }}}
-    keys = {-- {{{
-      { "<leader>qa", mode = { "n" }, "<cmd>QuartoActivate<cr>", desc = "Activate", noremap = true, silent = true },
-      { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "Preview", noremap = true, silent = true },
-      { "<leader>qq", mode = { "n" }, "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = "Quit", noremap = true, silent = true },
-      { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "Help", noremap = true, silent = true },
 
-      -- Quarto runner keymaps (code cell)
-      { "<leader>qrc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "Run Cell", noremap = true, silent = true },
-      { "<leader>qrl", mode = "n", function() require("quarto.runner").run_line() end, desc = "Run Line", noremap = true, silent = true },
-      -- { "<leader>pca", mode = "n", function() require("quarto.runner").run_above() end, desc = "run cell and above", noremap = true, silent = true },
-      { "<leader>qra", mode = "n", function() require("quarto.runner").run_all() end, desc = "Run All Cells", noremap = true, silent = true },
-      { "<leader>qrA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "Run All Languages", noremap = true, silent = true },
-      { "<leader>q", mode = "v", function() require("quarto.runner").run_range() end, desc = "Quarto Run Selection", noremap = true, silent = true },
+    { "szw/vim-maximizer", -- maximize window {{{
+      -- enabled = false,
+      keys = {-- {{{
+        { "<leader>wm", mode = {"n"}, "<cmd>MaximizerToggle<cr>", desc = "Maximize", noremap = true, silent = true },
+      },-- }}}
     },-- }}}
-  },-- }}}
-
-  { "GCBallesteros/jupytext.nvim",-- {{{
-    -- enabled = false,
-    config = function()
-      require("jupytext").setup({
-        style = "markdown",
-        output_extension = "md",
-        force_ft = "markdown",
-      })
-    end,
-  },-- }}}
-  -- }}}
-
-  -- {{{ [ Mix ]
-  { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
-    enabled = false,
-    ft = { "jinja", "htmldjango", "html" },
-  },-- }}}
-
-  { "brenoprata10/nvim-highlight-colors", -- show colors {{{
-    enabled = false,
-    opts = {},
-    keys = {-- {{{
-      { "\\H", mode = "n", "<cmd>HighlightColors Toggle<cr>", desc = "Toggle 'highlight-colors'" },
-    },-- }}}
-  },-- }}}
-
-  { "uga-rosa/ccc.nvim", -- color picker (:CccPick){{{
-    enabled = false,
-    opts = {-- {{{
-      highlighter = {
-        auto_enable = true,
-        lsp = true,
-      },
-    },-- }}}
-    keys = {-- {{{
-      { "<leader>vp", mode = "n", "<cmd>CccPick<cr>", desc = "color picker", noremap = true, silent = true },
-    },-- }}}
-  },-- }}}
-
-  { "szw/vim-maximizer", -- maximize window {{{
-    -- enabled = false,
-    keys = {-- {{{
-      { "<leader>wm", mode = {"n"}, "<cmd>MaximizerToggle<cr>", desc = "Maximize", noremap = true, silent = true },
-    },-- }}}
-  },-- }}}
-  -- }}}
+    -- }}}
 
 
   }, -- spec end }}}
