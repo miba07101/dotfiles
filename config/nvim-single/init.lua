@@ -780,7 +780,8 @@ require("lazy").setup({
               PmenuExtraSel = { fg = colors.palette.surimiOrange, bg = theme.ui.bg_p2 },
               PmenuSbar = { bg = theme.ui.bg_m1 },
               PmenuThumb = { bg = theme.ui.bg_p2 },
-              -- -- FloatBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+              FloatBorder = { fg = colors.palette.surimiOrange, bg = colors.palette.surimiOrange },
+              NormalFloat = { fg = colors.palette.surimiOrange, bg = colors.palette.surimiOrange },
               -- change cmp items colors
               CmpItemKindVariable = { fg = colors.palette.crystalBlue, bg = "NONE" },
               CmpItemKindInterface = { fg = colors.palette.crystalBlue, bg = "NONE" },
@@ -1051,6 +1052,7 @@ require("lazy").setup({
         },-- }}}
         completion = {-- {{{
           menu = {
+            border = "single",
             draw = {
               columns = {
                 { "kind_icon" },
@@ -1064,9 +1066,13 @@ require("lazy").setup({
               preselect = false,
             },
           },
+          documentation = { window = { border = 'single' } },
         },-- }}}
         signature = {
           enabled = true,
+          window = {
+            border = "single"
+          },
         },
         -- snippets = { preset = 'mini_snippets' },
         sources = {-- {{{
@@ -1074,6 +1080,15 @@ require("lazy").setup({
           providers = {
           },
         },-- }}}
+        -- window = {-- {{{
+        --   completion = {
+        --     border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },  -- Border chars
+        --     winhighlight = 'Normal:CmpPmenu,CursorLine:CmpPmenuSel,Search:None',
+        --   },
+        --   documentation = {
+        --     border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },  -- Border chars
+        --   },
+        -- },-- }}}
       },-- }}}
       opts_extend = { "sources.default" },
     },-- }}}
