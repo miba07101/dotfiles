@@ -254,11 +254,12 @@ vim.filetype.add {-- {{{
     zsh = "sh",
     sh = "sh", -- force sh-files with zsh-shebang to still get sh as filetype
     ipynb = "ipynb",
+    typ = "typst",
   },
   filename = {
     [".zshrc"] = "sh",
     [".zshenv"] = "sh",
-    [".ipynb"] = "ipynb",  -- associate .ipynb extension with the 'ipynb' filetype
+    [".typ"] = "typst",  -- associate .ipynb extension with the 'ipynb' filetype
   },
 }-- }}}
 
@@ -404,7 +405,7 @@ map({ "n", "t" }, "<leader>ti", function()
   vim.cmd("below split | terminal ipython --no-autoindent")
   vim.cmd("resize " .. math.floor(vim.o.lines * 0.4)) -- Adjust the height of the terminal split to 40% of the screen height
   vim.cmd("startinsert")
-end, { desc = "Ipython terminal REPL" })
+end, { desc = "Ipython Terminal REPL" })
 -- }}}
 
 -- Send line to terminal{{{
@@ -416,11 +417,11 @@ map("n", "<leader>tl", function()
     local line = vim.api.nvim_get_current_line()
     vim.fn.chansend(job_id, line .. "\n")
   end
-end, { desc = "Send line to terminal" })
+end, { desc = "Send Line To Terminal" })
 -- }}}
 
 -- Send visual selection to terminal{{{
-map("v", "<leader>tl", function()
+map("v", "<leader>t", function()
   -- Yank the visual selection into the default register
   vim.cmd('normal! "vy')
 
@@ -433,7 +434,7 @@ map("v", "<leader>tl", function()
     -- Send the selection exactly as is to the terminal
     vim.fn.chansend(job_id, selection .. "\n")
   end
-end, { desc = "Send visual selection to terminal" })
+end, { desc = "Send Visual Selection To Terminal" })
 -- }}}
 -- }}}
 
@@ -472,6 +473,14 @@ vim.api.nvim_create_autocmd('TermOpen', {
     vim.opt_local.buflisted = false
     vim.cmd("setlocal nonumber norelativenumber")
   end,
+})
+-- }}}
+
+-- {{{ open terminal at same location as opened file
+vim.api.nvim_create_autocmd("BufEnter", {
+  command = [[silent! lcd %:p:h]],
+  group = mygroup,
+  desc = "open terminal in same location as opened file",
 })
 -- }}}
 
@@ -529,25 +538,25 @@ vim.api.nvim_create_autocmd("BufRead", {
 })
 -- }}}
 
--- -- {{{ autoformat code on save
--- vim.api.nvim_create_autocmd("BufWritePre", {
---   pattern = { "*.py", "*.json", "*.css", "*.scss" },
---   callback = function(args)
---     require("conform").format({ bufnr = args.buf })
---   end,
---   group = mygroup,
---   desc = "autoformat code on save",
--- })
--- -- }}}
+-- {{{ autoformat code on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = { "*.py", "*.json", "*.css", "*.scss" },
+  callback = function(args)
+    require("conform").format({ bufnr = args.buf })
+  end,
+  group = mygroup,
+  desc = "autoformat code on save",
+})
+-- }}}
 
--- -- {{{ auto linting
--- vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
---   pattern = { "*" },
---   callback = function()
---     require("lint").try_lint()
---   end,
--- })
--- -- }}}
+-- {{{ auto linting
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+  pattern = { "*" },
+  callback = function()
+    require("lint").try_lint()
+  end,
+})
+-- }}}
 
 -- {{{ sass compilation on save
 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -564,21 +573,6 @@ vim.api.nvim_create_autocmd("FileType", {
   command = [[nnoremap <buffer><silent> q :close<cr>]],
   group = mygroup,
   desc = "close windows with q",
-})
-
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = "man",
---   command = [[nnoremap <buffer><silent> q :quit<cr>]],
---   group = mygroup,
---   desc = "close man pages with q",
--- })
--- }}}
-
--- {{{ open terminal at same location as opened file
-vim.api.nvim_create_autocmd("BufEnter", {
-  command = [[silent! lcd %:p:h]],
-  group = mygroup,
-  desc = "open terminal in same location as opened file",
 })
 -- }}}
 
@@ -670,33 +664,13 @@ end, {
   }) -- }}}
 
 -- keymap for new Jupyter notebook creation
-map("n", "<leader>pj", function()
+map("n", "<leader>cj", function()
   local file_name = vim.fn.input("Notebook name: ")
   if file_name ~= "" then
     vim.cmd("NewNotebook " .. file_name)
   end
-end, { desc = "jupyter notebook" })
+end, { desc = "Create Jupyter Notebook" })
 --}}}
-
--- {{{ set typst filetype - quarto specific
-vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile" }, {
-  pattern = "*.typ",
-  command = "set filetype=typst",
-  desc = "set filetype for typst files",
-})
--- }}}
-
--- {{{ restore cursor position
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "snacks_picker_input",
-  callback = function()
-    -- Disable mini.completion for this filetype
-    vim.b.minicompletion_disable = true
-  end,
-  group = mygroup,
-  desc = "disable mini.completion in snacks.picker input",
-})
--- }}}
 
 -- {{{ disable mini.completion in snacks.picker input 
 vim.api.nvim_create_autocmd("FileType", {
@@ -970,8 +944,8 @@ require("lazy").setup({
         } -- }}}
 
         -- -- {{{ Capabilities
-        -- local capabilities = require("blink.cmp").get_lsp_capabilities()
-        local capabilities = require("mini.completion").get_lsp_capabilities()
+        local capabilities = require("blink.cmp").get_lsp_capabilities()
+        -- local capabilities = require("mini.completion").get_lsp_capabilities()
         -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
         -- local on_attach = function(client, bufnr)
         --   -- sem zadat on_attach funkcie doplnkov
@@ -1045,46 +1019,46 @@ require("lazy").setup({
     -- }}}
 
     -- {{{ [ Autocompletition ]
-    -- { "saghen/blink.cmp",-- {{{
-    --   enabled = true,
-    --   -- dependencies = "rafamadriz/friendly-snippets",
-    --   version = "v0.*",
-    --   opts = {-- {{{
-    --     keymap = {-- {{{
-    --       preset = "enter",
-    --     },-- }}}
-    --     appearance = {-- {{{
-    --       use_nvim_cmp_as_default = true,
-    --       nerd_font_variant = "normal",
-    --     },-- }}}
-    --     completion = {-- {{{
-    --       menu = {
-    --         draw = {
-    --           columns = {
-    --             { "kind_icon" },
-    --             { "label", "label_description", gap = 1 },
-    --             { "source_name", "kind", gap = 1 },
-    --           },
-    --         },
-    --       },
-    --       list = {
-    --         selection = {
-    --           preselect = false,
-    --         },
-    --       },
-    --     },-- }}}
-    --     signature = {
-    --       enabled = true,
-    --     },
-    --     -- snippets = { preset = 'mini_snippets' },
-    --     sources = {-- {{{
-    --       default = { "lsp", "path", "snippets", "buffer" },
-    --       providers = {
-    --       },
-    --     },-- }}}
-    --   },-- }}}
-    --   opts_extend = { "sources.default" },
-    -- },-- }}}
+    { "saghen/blink.cmp",-- {{{
+      enabled = true,
+      -- dependencies = "rafamadriz/friendly-snippets",
+      version = "v0.*",
+      opts = {-- {{{
+        keymap = {-- {{{
+          preset = "enter",
+        },-- }}}
+        appearance = {-- {{{
+          use_nvim_cmp_as_default = true,
+          nerd_font_variant = "normal",
+        },-- }}}
+        completion = {-- {{{
+          menu = {
+            draw = {
+              columns = {
+                { "kind_icon" },
+                { "label", "label_description", gap = 1 },
+                { "source_name", "kind", gap = 1 },
+              },
+            },
+          },
+          list = {
+            selection = {
+              preselect = false,
+            },
+          },
+        },-- }}}
+        signature = {
+          enabled = true,
+        },
+        -- snippets = { preset = 'mini_snippets' },
+        sources = {-- {{{
+          default = { "lsp", "path", "snippets", "buffer" },
+          providers = {
+          },
+        },-- }}}
+      },-- }}}
+      opts_extend = { "sources.default" },
+    },-- }}}
     -- }}}
 
     -- {{{ [ Mini.nvim collection ]
@@ -1158,7 +1132,6 @@ require("lazy").setup({
 
         require('mini.bufremove').setup()
 
-
         local miniclue = require("mini.clue") -- {{{
         miniclue.setup({
           triggers = {
@@ -1201,16 +1174,18 @@ require("lazy").setup({
             -- miniclue.gen_clues.windows(),
             miniclue.gen_clues.z(),
             -- moje skratky - normal mode
-            { mode = "n", keys = "<Leader>f", desc = "+Files" },
-            { mode = "n", keys = "<Leader>g", desc = "+Git" },
+            { mode = "n", keys = "<Leader>c", desc = "+Code/Create" },
+            { mode = "n", keys = "<Leader>f", desc = "+Find/Files" },
+            { mode = "n", keys = "<Leader>g", desc = "+Grep" },
             { mode = "n", keys = "<Leader>l", desc = "+LSP" },
             { mode = "n", keys = "<Leader>n", desc = "+Notes" },
             { mode = "n", keys = "<Leader>nl", desc = "+Links" },
-            { mode = "n", keys = "<Leader>s", desc = "+Search" },
+            { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
             { mode = "n", keys = "<Leader>w", desc = "+Window" },
             { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
-            { mode = "n", keys = "<Leader>/", desc = "+Grep" },
-            { mode = {"n", "x"}, keys = "<Leader>n", desc = "+Notes" },
+            { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
+            { mode = "x", keys = "<Leader>n", desc = "+Notes" },
+            { mode = "x", keys = "<Leader>g", desc = "+Grep" },
           },
           window = {
             delay = 300,
@@ -1237,22 +1212,22 @@ require("lazy").setup({
           mappings = mappings,
         }) -- }}}
 
-
-        local completion = require("mini.completion")-- {{{
-        local opts = { filtersort = "fuzzy" }
-        local process_items = function(items, base)
-          return MiniCompletion.default_process_items(items, base, opts)
-        end
-        completion.setup({
-          delay = { completion = 50, info = 50, signature = 50 },
-          lsp_completion = {
-            source_func = "completefunc", -- omnifunc
-            auto_setup = true,
-            process_items = process_items,
-            snippet_insert = MiniSnippets,
-          },
-        })
--- }}}
+--         local completion = require("mini.completion")-- {{{
+--         local opts = { filtersort = "fuzzy" }
+--         local process_items = function(items, base)
+--           return MiniCompletion.default_process_items(items, base, opts)
+--         end
+--         require("mini.icons").tweak_lsp_kind() -- for icon showing
+--         completion.setup({
+--           delay = { completion = 50, info = 50, signature = 50 },
+--           lsp_completion = {
+--             source_func = "completefunc", -- omnifunc
+--             auto_setup = true,
+--             process_items = process_items,
+--             snippet_insert = MiniSnippets,
+--           },
+--         })
+-- -- }}}
 
         local hipatterns = require("mini.hipatterns")-- {{{
         hipatterns.setup({
@@ -1271,7 +1246,6 @@ require("lazy").setup({
         -- }}}
 
         require("mini.icons").setup()
-        require("mini.icons").tweak_lsp_kind()
 
         require("mini.pairs").setup({ -- {{{
           modes = { insert = true, command = true, terminal = false },
@@ -1290,7 +1264,6 @@ require("lazy").setup({
           },
         }) -- }}}
 
-
         local snippets = require("mini.snippets")-- {{{
         local gen_loader = require('mini.snippets').gen_loader
         snippets.setup({
@@ -1303,9 +1276,7 @@ require("lazy").setup({
         snippets.start_lsp_server()
 -- }}}
 
-
-
-        require("mini.splitjoin").setup({ -- {{{
+        require("mini.splitjoin").setup({-- {{{
           mappings = {
             toggle = "gS",
             split = "gk",
@@ -1528,51 +1499,51 @@ require("lazy").setup({
         {"<leader>e", function() Snacks.explorer({ layout = { preset = "sidebar", layout = { position = "left" } } }) end, desc = "File Explorer",},
         {"<leader>E", function() vim.cmd("lcd D:\\") Snacks.explorer.open({ layout = { preset = "sidebar", layout = { position = "left" } } }) end, desc = "File Explorer D drive",},
         {"<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files",},
-        {"<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers",},
+        {"<leader>f,", function() Snacks.picker.buffers() end, desc = "Buffers",},
         -- find
-        {"<leader>ff", function() Snacks.picker.files() end, desc = "Find Files",},
+        {"<leader>ff", function() Snacks.picker.files() end, desc = "Files",},
         {"<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File",},
-        {"<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files",},
-        {"<leader>fp", function() Snacks.picker.projects() end, desc = "Find Projects",},
-        {"<leader>fo", function() Snacks.picker.recent() end, desc = "Find Old/Recent",},
-        {"<leader>fR", function() Snacks.rename.rename_file() end, desc = "File Rename",},
+        -- {"<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files",},
+        -- {"<leader>fp", function() Snacks.picker.projects() end, desc = "Find Projects",},
+        {"<leader>fo", function() Snacks.picker.recent() end, desc = "Old/Recent Files",},
+        {"<leader>fR", function() Snacks.rename.rename_file() end, desc = "Rename File",},
         -- git
-        {"<leader>gl", function() Snacks.lazygit() end, desc = "Lazygit",},
-        {"<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches",},
-        {"<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log",},
-        {"<leader>gL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line",},
-        {"<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status",},
-        {"<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash",},
-        {"<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)",},
-        {"<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Git Log File",},
+        -- {"<leader>gl", function() Snacks.lazygit() end, desc = "Lazygit",},
+        -- {"<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches",},
+        -- {"<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log",},
+        -- {"<leader>gL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line",},
+        -- {"<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status",},
+        -- {"<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash",},
+        -- {"<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)",},
+        -- {"<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Git Log File",},
         -- Grep
-        {"<leader>//", function() Snacks.picker.grep() end, desc = "Grep",},
-        {"<leader>/l", function() Snacks.picker.lines() end, desc = "Grep Buffer Lines",},
-        {"<leader>/b", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers",},
-        {"<leader>/w", function() Snacks.picker.grep_word() end, desc = "Grep Word or Selection", mode = { "n", "x" },},
+        {"<leader>gg", function() Snacks.picker.grep() end, desc = "Grep",},
+        {"<leader>gl", function() Snacks.picker.lines() end, desc = "Grep Buffer Lines",},
+        {"<leader>gb", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers",},
+        {"<leader>gw", function() Snacks.picker.grep_word() end, desc = "Grep Word or Selection", mode = { "n", "x" },},
         -- search
-        {'<leader>s"', function() Snacks.picker.registers() end, desc = "Search Registers",},
-        {"<leader>s/", function() Snacks.picker.search_history() end, desc = "Search History",},
-        {"<leader>sa", function() Snacks.picker.autocmds() end, desc = "Search Autocmds",},
-        {"<leader>s:", function() Snacks.picker.commands() end, desc = "Search Commands",},
-        {"<leader>sC", function() Snacks.picker.command_history() end, desc = "Command History",},
-        {"<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Search Diagnostics",},
-        {"<leader>sD", function() Snacks.picker.diagnostics_buffer() end, desc = "Search Buffer Diagnostics",},
-        {"<leader>sh", function() Snacks.picker.help() end, desc = "Search Help Pages",},
-        {"<leader>sH", function() Snacks.picker.highlights() end, desc = "Search Highlights",},
-        {"<leader>si", function() Snacks.picker.icons() end, desc = "Search Icons",},
-        {"<leader>sj", function() Snacks.picker.jumps() end, desc = "Search Jumps",},
-        {"<leader>sk", function() Snacks.picker.keymaps() end, desc = "Search Keymaps",},
-        {"<leader>sl", function() Snacks.picker.loclist() end, desc = "Search Location List",},
-        {"<leader>sm", function() Snacks.picker.marks() end, desc = "Search Marks",},
-        {"<leader>sM", function() Snacks.picker.man() end, desc = "Search Man Pages",},
-        {"<leader>sp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec",},
-        {"<leader>sq", function() Snacks.picker.qflist() end, desc = "Search Quickfix List",},
-        {"<leader>sR", function() Snacks.picker.resume() end, desc = "Search Resume",},
-        {"<leader>su", function() Snacks.picker.undo() end, desc = "Search Undo History",},
-        {"<leader>sc", function() Snacks.picker.colorschemes() end, desc = "Search Colorschemes",},
-        {"<leader>st", function() Snacks.picker.treesitter() end, desc = "Search Treesitter",},
-        {"<leader>sN", function() Snacks.picker.notifications() end, desc = "Notification History",},
+        {'<leader>f"', function() Snacks.picker.registers() end, desc = "Search Registers",},
+        {"<leader>f/", function() Snacks.picker.search_history() end, desc = "Search History",},
+        {"<leader>fa", function() Snacks.picker.autocmds() end, desc = "Search Autocmds",},
+        {"<leader>f:", function() Snacks.picker.commands() end, desc = "Search Commands",},
+        {"<leader>fC", function() Snacks.picker.command_history() end, desc = "Command History",},
+        {"<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Search Diagnostics",},
+        {"<leader>fD", function() Snacks.picker.diagnostics_buffer() end, desc = "Search Buffer Diagnostics",},
+        {"<leader>fh", function() Snacks.picker.help() end, desc = "Search Help Pages",},
+        {"<leader>fH", function() Snacks.picker.highlights() end, desc = "Search Highlights",},
+        {"<leader>fi", function() Snacks.picker.icons() end, desc = "Search Icons",},
+        {"<leader>fj", function() Snacks.picker.jumps() end, desc = "Search Jumps",},
+        {"<leader>fk", function() Snacks.picker.keymaps() end, desc = "Search Keymaps",},
+        {"<leader>fl", function() Snacks.picker.loclist() end, desc = "Search Location List",},
+        {"<leader>fm", function() Snacks.picker.marks() end, desc = "Search Marks",},
+        {"<leader>fM", function() Snacks.picker.man() end, desc = "Search Man Pages",},
+        {"<leader>fp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec",},
+        {"<leader>fq", function() Snacks.picker.qflist() end, desc = "Search Quickfix List",},
+        -- {"<leader>sR", function() Snacks.picker.resume() end, desc = "Search Resume",},
+        {"<leader>fu", function() Snacks.picker.undo() end, desc = "Search Undo History",},
+        {"<leader>fs", function() Snacks.picker.colorschemes() end, desc = "Search Colorschemes",},
+        {"<leader>ft", function() Snacks.picker.treesitter() end, desc = "Search Treesitter",},
+        {"<leader>fN", function() Snacks.picker.notifications() end, desc = "Notification History",},
         -- LSP
         { "<leader>ly", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
         { "<leader>ls", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
@@ -1730,18 +1701,18 @@ require("lazy").setup({
       },
     },-- }}}
     keys = {-- {{{
-      { "<leader>qa", mode = { "n" }, "<cmd>QuartoActivate<cr>", desc = "activate", noremap = true, silent = true },
-      { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "preview", noremap = true, silent = true },
-      { "<leader>qq", mode = { "n" }, "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = "quit", noremap = true, silent = true },
-      { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "help", noremap = true, silent = true },
+      { "<leader>qa", mode = { "n" }, "<cmd>QuartoActivate<cr>", desc = "Activate", noremap = true, silent = true },
+      { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "Preview", noremap = true, silent = true },
+      { "<leader>qq", mode = { "n" }, "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = "Quit", noremap = true, silent = true },
+      { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "Help", noremap = true, silent = true },
 
       -- Quarto runner keymaps (code cell)
-      { "<leader>qrc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "run cell", noremap = true, silent = true },
-      { "<leader>qrl", mode = "n", function() require("quarto.runner").run_line() end, desc = "run line", noremap = true, silent = true },
+      { "<leader>qrc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "Run Cell", noremap = true, silent = true },
+      { "<leader>qrl", mode = "n", function() require("quarto.runner").run_line() end, desc = "Run Line", noremap = true, silent = true },
       -- { "<leader>pca", mode = "n", function() require("quarto.runner").run_above() end, desc = "run cell and above", noremap = true, silent = true },
-      { "<leader>qra", mode = "n", function() require("quarto.runner").run_all() end, desc = "run all cells", noremap = true, silent = true },
-      { "<leader>qrA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "run all languages", noremap = true, silent = true },
-      { "<leader>qr", mode = "v", function() require("quarto.runner").run_range() end, desc = "run selection", noremap = true, silent = true },
+      { "<leader>qra", mode = "n", function() require("quarto.runner").run_all() end, desc = "Run All Cells", noremap = true, silent = true },
+      { "<leader>qrA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "Run All Languages", noremap = true, silent = true },
+      { "<leader>q", mode = "v", function() require("quarto.runner").run_range() end, desc = "Quarto Run Selection", noremap = true, silent = true },
     },-- }}}
   },-- }}}
 
@@ -1787,7 +1758,7 @@ require("lazy").setup({
   { "szw/vim-maximizer", -- maximize window {{{
     -- enabled = false,
     keys = {-- {{{
-      { "<leader>wm", mode = {"n"}, "<cmd>MaximizerToggle<cr>", desc = "maximize", noremap = true, silent = true },
+      { "<leader>wm", mode = {"n"}, "<cmd>MaximizerToggle<cr>", desc = "Maximize", noremap = true, silent = true },
     },-- }}}
   },-- }}}
   -- }}}
