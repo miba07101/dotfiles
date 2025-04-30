@@ -690,17 +690,17 @@ map("n", "<leader>cj", function()
 end, { desc = "Create Jupyter Notebook" })
 --}}}
 
--- {{{ disable mini.completion in snacks.picker input 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "snacks_picker_input",
-  callback = function()
-    -- Disable mini.completion for this filetype
-    vim.b.minicompletion_disable = true
-  end,
-  group = mygroup,
-  desc = "disable mini.completion in snacks.picker input",
-})
--- }}}
+-- -- {{{ disable mini.completion in snacks.picker input
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = "snacks_picker_input",
+--   callback = function()
+--     -- Disable mini.completion for this filetype
+--     vim.b.minicompletion_disable = true
+--   end,
+--   group = mygroup,
+--   desc = "disable mini.completion in snacks.picker input",
+-- })
+-- -- }}}
 
 -- }}}
 
@@ -1221,6 +1221,8 @@ require("lazy").setup({
             { mode = "n", keys = "<Leader>f", desc = "+Find/Files" },
             { mode = "n", keys = "<Leader>g", desc = "+Grep" },
             { mode = "n", keys = "<Leader>l", desc = "+LSP" },
+            { mode = "n", keys = "<Leader>m", desc = "+Mini" },
+            { mode = "n", keys = "<Leader>ms", desc = "+Sessions" },
             { mode = "n", keys = "<Leader>n", desc = "+Notes" },
             { mode = "n", keys = "<Leader>nl", desc = "+Links" },
             { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
@@ -1333,6 +1335,15 @@ require("lazy").setup({
             [">"] = { action = "close", pair = "<>", neigh_pattern = "[^\\].", register = { cr = false } },
           },
         }) -- }}}
+
+        -- require("mini.pick").setup()
+
+        require("mini.sessions").setup()-- {{{
+        map("n", "<leader>msw", function()vim.ui.input({ prompt = "Session name: " }, function(input)if input and input ~= "" then MiniSessions.write(input) end end)end, { desc = "Session Write" })
+        map("n", "<leader>msr", function()vim.ui.input({ prompt = "Session name: " }, function(input)if input and input ~= "" then MiniSessions.read(input) end end)end, { desc = "Session Read" })
+        map("n", "<leader>msD", function()vim.ui.input({ prompt = "Session name: " }, function(input)if input and input ~= "" then MiniSessions.delete(input) end end)end, { desc = "Session Delete" })
+        map("n", "<leader>mss", "<cmd>lua MiniSessions.select()<cr>", { desc = "Session Select" })
+        -- }}}
 
         -- local snippets = require("mini.snippets")-- {{{
         -- local gen_loader = require('mini.snippets').gen_loader
@@ -1498,6 +1509,15 @@ require("lazy").setup({
 
         require("mini.tabline").setup()
 
+        require('mini.trailspace').setup()-- {{{
+        vim.api.nvim_create_autocmd("BufWritePre", {
+          callback = function()
+            MiniTrailspace.trim()
+            MiniTrailspace.trim_last_lines()
+          end,
+          desc = "Trim trailing whitespace and empty lines on save",
+        })-- }}}
+
       end,
     },
     -- }}}
@@ -1535,12 +1555,12 @@ require("lazy").setup({
         input = { enabled = true },
         lazygit = { enabled = true },
         notifier = { enabled = true },
-        picker = {
-          enabled = true, -- {{{
+        picker = {-- {{{
+          enabled = true,
           sources = {
-            explorer = {
+            explorer = {-- {{{
               -- your explorer picker configuration comes here
-              auto_close = false,
+              auto_close = true,
               win = {
                 list = {
                   keys = {
@@ -1550,9 +1570,9 @@ require("lazy").setup({
                   },
                 },
               },
-            },
+            },-- }}}
           },
-          layout = { preset = "vscode", layout = { position = "bottom" } },
+          -- layout = { preset = "ivy", layout = { position = "bottom" } },
         }, -- }}}
         quickfile = { enabled = true }, -- When doing nvim somefile.txt, it will render the file as quickly as possible, before loading your plugins
         rename = { enabled = true },
@@ -1624,7 +1644,7 @@ require("lazy").setup({
 
     -- {{{ [ Notes ]
     { "obsidian-nvim/obsidian.nvim",-- {{{
-      -- je to fork pretoze "epwalsh/obsidian.nvim" neobsahuje zatial "blink-cmp" a "snacks.picker" 
+      -- je to fork pretoze "epwalsh/obsidian.nvim" neobsahuje zatial "blink-cmp" a "snacks.picker"
       -- enabled = false,
       version = "*", -- recommended, use latest release instead of latest commit
       lazy = true,
