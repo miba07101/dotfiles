@@ -1050,11 +1050,11 @@ require("lazy").setup({
     },
     -- }}}
 
-    -- {{{ [ Autocompletition ]
+    -- {{{ [ Autocompletion ]
     { "saghen/blink.cmp",-- {{{
       enabled = true,
       -- dependencies = "rafamadriz/friendly-snippets",
-      version = "*",
+      version = "1.*",
       opts = {-- {{{
         fuzzy = { implementation = "prefer_rust" }, -- "prefer_rust" or "lua"
         keymap = {-- {{{
