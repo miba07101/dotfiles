@@ -1031,6 +1031,7 @@ require("lazy").setup({
         map("n", "<leader>lr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "References" })
         map("n", "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "Rename" })
         map("n", "<leader>lh", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "Signature Help" })
+        map("n", "<leader>lx", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Diagnostic Open Float" })
         -- }}}
       end,
     },
@@ -1042,7 +1043,7 @@ require("lazy").setup({
       -- dependencies = "rafamadriz/friendly-snippets",
       version = "*",
       opts = {-- {{{
-        fuzzy = { implementation = "lua" }, -- "prefer_rust"
+        fuzzy = { implementation = "prefer_rust" }, -- "prefer_rust" or "lua"
         keymap = {-- {{{
           preset = "enter",
         },-- }}}
@@ -1166,7 +1167,13 @@ require("lazy").setup({
           silent = true,
         }) -- }}}
 
-        require('mini.bufremove').setup()
+        require("mini.bracketed").setup({-- {{{
+          buffer     = { suffix = "b", options = {} },
+          comment    = { suffix = "x", options = {} },
+          conflict   = { suffix = "", options = {} },
+        })-- }}}
+
+        require("mini.bufremove").setup()
 
         local miniclue = require("mini.clue") -- {{{
         miniclue.setup({
@@ -1266,6 +1273,26 @@ require("lazy").setup({
         --         })
         -- -- }}}
 
+        require("mini.files").setup({-- {{{
+          mappings = {
+            close       = '<ESC>',
+            go_in       = '<Right>',
+            go_in_plus  = 'L',
+            go_out      = '<Left>',
+            go_out_plus = 'H',
+            mark_goto   = "'",
+            mark_set    = 'm',
+            reset       = '<BS>',
+            reveal_cwd  = '@',
+            show_help   = 'g?',
+            synchronize = '=',
+            trim_left   = '<',
+            trim_right  = '>',
+          },
+        })
+        map("n", "<leader>-", function() if not MiniFiles.close() then MiniFiles.open() end end, { desc = "Mini files" })
+        -- }}}
+
         local hipatterns = require("mini.hipatterns")-- {{{
         hipatterns.setup({
           highlighters = {
@@ -1283,6 +1310,12 @@ require("lazy").setup({
         -- }}}
 
         require("mini.icons").setup()
+
+        require("mini.jump2d").setup({-- {{{
+          mappings = {
+            start_jumping = ',',
+          },
+        })-- }}}
 
         require("mini.pairs").setup({ -- {{{
           modes = { insert = true, command = true, terminal = false },
@@ -1463,7 +1496,7 @@ require("lazy").setup({
         })-- }}}
         -- }}}
 
-        require('mini.tabline').setup()
+        require("mini.tabline").setup()
 
       end,
     },
