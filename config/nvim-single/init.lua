@@ -780,13 +780,12 @@ require("lazy").setup({
               PmenuExtraSel = { fg = colors.palette.surimiOrange, bg = theme.ui.bg_p2 },
               PmenuSbar = { bg = theme.ui.bg_m1 },
               PmenuThumb = { bg = theme.ui.bg_p2 },
-              FloatBorder = { fg = colors.palette.surimiOrange, bg = colors.palette.surimiOrange },
-              NormalFloat = { fg = colors.palette.surimiOrange, bg = colors.palette.surimiOrange },
               -- change cmp items colors
-              CmpItemKindVariable = { fg = colors.palette.crystalBlue, bg = "NONE" },
-              CmpItemKindInterface = { fg = colors.palette.crystalBlue, bg = "NONE" },
-              CmpItemKindFunction = { fg = colors.palette.oniViolet, bg = "NONE" },
-              CmpItemKindMethod = { fg = colors.palette.oniViolet, bg = "NONE" },
+              BlinkCmpMenuBorder = { link = "FloatBorder"},
+              -- CmpItemKindVariable = { fg = colors.palette.crystalBlue, bg = "NONE" },
+              -- CmpItemKindInterface = { fg = colors.palette.crystalBlue, bg = "NONE" },
+              -- CmpItemKindFunction = { fg = colors.palette.oniViolet, bg = "NONE" },
+              -- CmpItemKindMethod = { fg = colors.palette.oniViolet, bg = "NONE" },
               -- render-markdown headings
               RenderMarkdownH1Bg = { bg = theme.ui.bg_m1, fg = colors.palette.autumnRed },
               RenderMarkdownH2Bg = { bg = theme.ui.bg_m1, fg = colors.palette.autumnYellow },
@@ -1041,8 +1040,9 @@ require("lazy").setup({
     { "saghen/blink.cmp",-- {{{
       enabled = true,
       -- dependencies = "rafamadriz/friendly-snippets",
-      version = "v0.*",
+      version = "*",
       opts = {-- {{{
+        fuzzy = { implementation = "lua" }, -- "prefer_rust"
         keymap = {-- {{{
           preset = "enter",
         },-- }}}
@@ -1051,8 +1051,9 @@ require("lazy").setup({
           nerd_font_variant = "normal",
         },-- }}}
         completion = {-- {{{
+          accept = { auto_brackets = { enabled = true } },
           menu = {
-            border = "single",
+            border = "rounded",
             draw = {
               columns = {
                 { "kind_icon" },
@@ -1066,13 +1067,15 @@ require("lazy").setup({
               preselect = false,
             },
           },
-          documentation = { window = { border = 'single' } },
+          documentation = {
+            auto_show = true,
+            auto_show_delay_ms = 250,
+            window = { border = "rounded" }
+          },
         },-- }}}
         signature = {
           enabled = true,
-          window = {
-            border = "single"
-          },
+          window = { border = "rounded" },
         },
         -- snippets = { preset = 'mini_snippets' },
         sources = {-- {{{
@@ -1217,6 +1220,7 @@ require("lazy").setup({
             { mode = "n", keys = "<Leader>w", desc = "+Window" },
             { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
             { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
+            { mode = "n", keys = "<Leader>qr", desc = "+Runner" },
             { mode = "x", keys = "<Leader>n", desc = "+Notes" },
             { mode = "x", keys = "<Leader>g", desc = "+Grep" },
           },
@@ -1664,16 +1668,14 @@ require("lazy").setup({
     { "MeanderingProgrammer/render-markdown.nvim",-- {{{
       -- enabled = false,
       event = {
-        'BufReadPost *.md',
-        'BufNewFile  *.md',
-        'BufReadPost *.qmd',
-        'BufNewFile  *.qmd',
-        -- TODO ipynb not working
-        'BufReadPost *.ipynb',
-        'BufNewFile  *.ipynb',
+        "BufReadPost *.md",
+        "BufNewFile  *.md",
+        "BufReadPost *.qmd",
+        "BufNewFile  *.qmd",
+        "BufEnter  *.ipynb", -- pre jupyternotebooks
       },
       opts = {
-        file_types = { 'markdown', 'quarto' },
+        file_types = { "markdown", "quarto" },
         heading = {
           icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
         },
@@ -1733,14 +1735,15 @@ require("lazy").setup({
     { "jmbuhr/otter.nvim",-- {{{
       -- enabled = false,
       event = {
-        'BufReadPost *.md',
-        'BufNewFile  *.md',
-        'BufReadPost *.qmd',
-        'BufNewFile  *.qmd',
+        "BufReadPost *.md",
+        "BufNewFile  *.md",
+        "BufReadPost *.qmd",
+        "BufNewFile  *.qmd",
+        "BufEnter  *.ipynb",  -- pre jupyternotebooks
       },
       init = function()
-        vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
-          pattern = { "*.md", "*.qmd" }, -- TODO: ipynb
+        vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile", "BufEnter" }, {
+          pattern = { "*.md", "*.qmd", "*.ipynb" },
           callback = function()
             require('otter').activate()
           end,
