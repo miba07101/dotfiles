@@ -481,18 +481,18 @@ map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Lazy" })
 -- {{{ [[ AUTOCOMANDS ]]
 local mygroup = vim.api.nvim_create_augroup("vimi", { clear = true })
 
--- {{{ starter page
-vim.api.nvim_create_autocmd("VimEnter", {
-  nested = true,
-  callback = function()
-    if vim.fn.argv(0) == "" then
-      require("mini.starter").open()
-    end
-  end,
-  group = mygroup,
-  desc = "start mini.starter",
-})
--- }}}
+-- -- {{{ starter page
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--   nested = true,
+--   callback = function()
+--     if vim.fn.argv(0) == "" then
+--       require("mini.starter").open()
+--     end
+--   end,
+--   group = mygroup,
+--   desc = "start mini.starter",
+-- })
+-- -- }}}
 
 -- {{{ restore cursor position
 vim.api.nvim_create_autocmd("BufReadPost", {
@@ -975,7 +975,9 @@ require("lazy").setup({
         } -- }}}
 
         -- -- {{{ Capabilities
-        local capabilities = require("blink.cmp").get_lsp_capabilities()
+        local original_capabilities = vim.lsp.protocol.make_client_capabilities()
+        local capabilities = require("blink.cmp").get_lsp_capabilities(original_capabilities)
+        -- local capabilities = require("blink.cmp").get_lsp_capabilities()
         -- local capabilities = require("mini.completion").get_lsp_capabilities()
         -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
         -- local on_attach = function(client, bufnr)
@@ -1522,25 +1524,6 @@ require("lazy").setup({
 
         require("mini.tabline").setup()
 
-
-        local starter = require('mini.starter')
-        starter.setup({
-          evaluate_single = true,
-          items = {
-            starter.sections.builtin_actions(),
-            starter.sections.recent_files(10, false),
-            starter.sections.recent_files(10, true),
-            -- Use this if you set up 'mini.sessions'
-            starter.sections.sessions(5, true)
-          },
-          content_hooks = {
-            starter.gen_hook.adding_bullet(),
-            starter.gen_hook.indexing('all', { 'Builtin actions' }),
-            starter.gen_hook.aligning('center', 'center'),
-            starter.gen_hook.padding(3, 2),
-          },
-        })
-
         require('mini.trailspace').setup()-- {{{
         vim.api.nvim_create_autocmd("BufWritePre", {
           callback = function()
@@ -1563,6 +1546,7 @@ require("lazy").setup({
       opts = {
         styles = { -- {{{
         }, -- }}}
+        dashboard = { enabled = true},
         image = { -- {{{
           enabled = true,
           formats = {
