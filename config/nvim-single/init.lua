@@ -1599,8 +1599,11 @@ require("lazy").setup({
                 },
               },
             },-- }}}
+            select = {
+              layout = { preset = "vertical", preview = false },
+            },
           },
-          -- layout = { preset = "ivy", layout = { position = "bottom" } },
+          layout = { preset = "ivy", layout = { position = "bottom" }, preview = false },
         }, -- }}}
         quickfile = { enabled = true }, -- When doing nvim somefile.txt, it will render the file as quickly as possible, before loading your plugins
         rename = { enabled = true },
