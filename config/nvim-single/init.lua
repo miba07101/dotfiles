@@ -1558,6 +1558,12 @@ require("lazy").setup({
   ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═══╝  ╚═╝╚═╝     ╚═╝
             ]],
           },
+          sections = {
+            { section = "header" },
+            { section = "keys", gap = 1, padding = 1 },
+            {icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1,},
+            { section = "startup" },
+          },
         },-- }}}
         image = { -- {{{
           enabled = true,
