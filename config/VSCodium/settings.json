@@ -37,7 +37,7 @@
   //-------------------------------------------------------------------
   "python.languageServer": "Default",
   "basedpyright.analysis.diagnosticMode": "openFilesOnly",
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
@@ -300,5 +300,5 @@
   // OTHERS
   //-------------------------------------------------------------------
   "workbench.colorTheme": "Kanagawa Wave",
-  "python.defaultInterpreterPath": "C:\\Users\\mech\\scoop\\apps\\python\\current\\python.exe"
+  "python.defaultInterpreterPath": "c:\\Users\\vimi\\.py-venv\\base-venv\\Scripts\\python.exe"
 }
