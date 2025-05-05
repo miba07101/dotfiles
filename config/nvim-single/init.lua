@@ -1876,6 +1876,20 @@ require("lazy").setup({
     -- }}}
 
     -- {{{ [ Mix ]
+    { "benomahony/uv.nvim",
+      config = function()
+        require('uv').setup({
+          venvs = function()
+            local home = vim.loop.os_homedir()
+            return os.getenv("VENV_HOME") or (home .. "/.py-venv")
+          end,
+          keymaps = {
+            prefix = "<leader>x",  -- Change prefix to <leader>u
+          }
+        })
+      end,
+    },
+
     { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
       enabled = false,
       ft = { "jinja", "htmldjango", "html" },
