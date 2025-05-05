@@ -1876,154 +1876,64 @@ require("lazy").setup({
     -- }}}
 
     -- {{{ [ Mix ]
-{
-  "benomahony/uv.nvim",
-  ft = { "python" },
-  config = function()
-    local uv = require("uv")
-    local snacks = require("snacks")
+    { "benomahony/uv.nvim",-- python uv and custom venv picker {{{
+      -- enabled = false,
+      ft = { "python" },
+      config = function()-- {{{
+        local uv = require("uv")
+        -- local snacks = require("snacks")
 
-    snacks.picker.sources.venv_home = {
-      finder = function()
-        local items = {
-          { text = "Create new venv", is_create = true }
-        }
-        local handle = vim.loop.fs_scandir(osvar.venv_home)
-        while handle do
-          local name, typ = vim.loop.fs_scandir_next(handle)
-          if not name then break end
-          if typ == "directory" then
-            local path = osvar.venv_home .. "/" .. name
-            table.insert(items, {
-              text = name,
-              path = path,
-              is_current = vim.env.VIRTUAL_ENV == path,
-            })
-          end
-        end
-        return items
-      end,
-
-      format = function(i)
-        return { { (i.is_current and "● " or "○ ") .. i.text } }
-      end,
-
-    confirm = function(picker, item)
-        picker:close()
-        if item then
-          if item.is_create then
-            vim.ui.input({ prompt = "New venv name: " }, function(name)
-              if name and #name > 0 then
+        -- custom snack venv picker
+        Snacks.picker.sources.venv_home = {-- {{{
+          finder = function()
+            local items = {
+              { text = "Create new venv", is_create = true }
+            }
+            local handle = vim.loop.fs_scandir(osvar.venv_home)
+            while handle do
+              local name, typ = vim.loop.fs_scandir_next(handle)
+              if not name then break end
+              if typ == "directory" then
                 local path = osvar.venv_home .. "/" .. name
-                uv.run_command("uv venv " .. path)  -- Simplified command to create venv
-                uv.activate_venv(path)
+                table.insert(items, {
+                  text = name,
+                  path = path,
+                  is_current = vim.env.VIRTUAL_ENV == path,
+                })
               end
-            end)
-          else
-            uv.activate_venv(item.path)
-            -- uv.run_command("uv activate " .. item.path)  -- Simplified command to activate venv
-          end
-        end
-      end,
-    }
+            end
+            return items
+          end,
 
-    vim.keymap.set("n", "<leader>vp", function()
-      snacks.picker("venv_home")
-    end, { desc = "Pick venv" })
+          format = function(i)
+            return { { (i.is_current and "● " or "○ ") .. i.text } }
+          end,
 
-    uv.setup({ keymaps = { prefix = "<leader>x" } })
-  end,
-},
+          confirm = function(picker, item)
+            picker:close()
+            if item then
+              if item.is_create then
+                vim.ui.input({ prompt = "New venv name: " }, function(name)
+                  if name and #name > 0 then
+                    local path = osvar.venv_home .. "/" .. name
+                    uv.run_command("uv venv " .. path)  -- Simplified command to create venv
+                    uv.activate_venv(path)
+                  end
+                end)
+              else
+                uv.activate_venv(item.path)
+                -- uv.run_command("uv activate " .. item.path)  -- Simplified command to activate venv
+              end
+            end
+          end,
+        }-- }}}
 
-
-
-
-    -- { "benomahony/uv.nvim",-- {{{
-    --   -- enabled = false,
-    --   ft = { "python" },
-    --   config = function()
-    --     local uv = require("uv")
-    --     local snacks = require("snacks")
-    --
-    --     -- local home = vim.loop.os_homedir()
-    --     -- local venv_home = os.getenv("VENV_HOME") or (home .. "/.py-venv")
-    --
-    --     snacks.picker.sources.venv_home = {
-    --       finder = function()
-    --         local entries = {}
-    --         local handle = vim.loop.fs_scandir(osvar.venv_home)
-    --         if handle then
-    --           while true do
-    --             local name, type = vim.loop.fs_scandir_next(handle)
-    --             if not name then break end
-    --             if type == "directory" then
-    --               local full_path = osvar.venv_home .. "/" .. name
-    --               table.insert(entries, {
-    --                 text = name,
-    --                 path = full_path,
-    --                 is_current = vim.env.VIRTUAL_ENV == full_path,
-    --               })
-    --             end
-    --           end
-    --         end
-    --
-    --         -- Add "create new" option at the top
-    --         table.insert(entries, 1, {
-    --           text = "Create new virtual environment (uv venv)",
-    --           is_create = true,
-    --         })
-    --
-    --         return entries
-    --       end,
-    --
-    --       format = function(item)
-    --         if item.is_create then
-    --           return { { "➕ " .. item.text } }
-    --         else
-    --           local icon = item.is_current and "● " or "○ "
-    --           return { { icon .. item.text .. " (Activate)" } }
-    --         end
-    --       end,
-    --
-    --       confirm = function(picker, item)
-    --         picker:close()
-    --         if not item then return end
-    --
-    --         if item.is_create then
-    --           vim.ui.input({ prompt = "New venv name: " }, function(input)
-    --             -- require("snacks").input({ prompt = "New venv name: " }, function(input)
-    --             if input and #input > 0 then
-    --               local target_path = osvar.venv_home .. "/" .. input
-    --               local output = vim.fn.system({ "uv", "venv", target_path })
-    --               if vim.v.shell_error ~= 0 then
-    --                 vim.notify("Failed to create venv: " .. output, vim.log.levels.ERROR)
-    --               else
-    --                 vim.notify("Created venv: " .. target_path, vim.log.levels.INFO)
-    --                 require("uv").activate_venv(target_path)
-    --               end
-    --             end
-    --           end)
-    --           -- vim.schedule(function()
-    --           --   vim.cmd("startinsert")
-    --           -- end)
-    --         elseif item.path then
-    --           require("uv").activate_venv(item.path)
-    --         end
-    --       end
-    --
-    --     }
-    --     vim.keymap.set("n", "<leader>vp", function()
-    --       require("snacks").picker("venv_home")
-    --     end, { desc = "Pick venv from ~/.py-venv" })
-    --
-    --
-    --     uv.setup({
-    --       keymaps = {
-    --         prefix = "<leader>x",  -- Change prefix to <leader>u
-    --       }
-    --     })
-    --   end,
-    -- },-- }}}
+        uv.setup({ keymaps = { prefix = "<leader>x" } })
+      end,-- }}}
+      keys = {-- {{{
+        { "<leader>pe", mode = {"n"}, function() Snacks.picker("venv_home") end, desc = "Pick Venv (~/py-venv)", noremap = true, silent = true },
+      }-- }}}
+    },-- }}}
 
     { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
       enabled = false,
