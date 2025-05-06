@@ -1787,6 +1787,20 @@ require("lazy").setup({
       },-- }}}
     },-- }}}
 
+    { "zk-org/zk-nvim",-- {{{
+      -- enabled = false,
+      event = {
+        "BufReadPost *.md",
+        "BufNewFile  *.md",
+      },
+      config = function()-- {{{
+        require("zk").setup({
+        -- See Setup section below
+        picker = "snacks_picker",
+      })
+      end-- }}}
+    },-- }}}
+
     { "MeanderingProgrammer/render-markdown.nvim",-- {{{
       -- enabled = false,
       event = {
