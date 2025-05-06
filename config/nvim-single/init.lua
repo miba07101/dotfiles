@@ -936,6 +936,8 @@ require("lazy").setup({
             "marksman",
             "tinymist",
             "jinja_lsp",
+            "htmx",
+            "zk",
           },
           automatic_installation = true,
         })
@@ -976,6 +978,8 @@ require("lazy").setup({
             end,
             single_file_support = true,
           },
+          htmx = {},
+          zk = {},
         } -- }}}
 
         -- -- {{{ Capabilities
