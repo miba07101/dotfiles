@@ -1798,7 +1798,10 @@ require("lazy").setup({
         -- See Setup section below
         picker = "snacks_picker",
       })
-      end-- }}}
+      end,-- }}}
+      keys = {-- {{{
+        { "<leader>nz", mode = "n", ":ZkNew {title = vim.fn.input('New ZK note Title: ')}<cr>", desc = "ZK New Note", noremap = true, silent = true },
+      },-- }}}
     },-- }}}
 
     { "MeanderingProgrammer/render-markdown.nvim",-- {{{
