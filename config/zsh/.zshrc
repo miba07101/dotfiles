@@ -269,6 +269,7 @@ export PATH=$PATH:$HOME/.npm/bin
 export NODE_PATH=$NODE_PATH:$HOME/.npm/lib/node_modules
 export OneDrive_DIR
 export SCRIPTS_DIR
+export ZK_NOTEBOOK_DIR="$HOME/zk"
 
 #############
 # ALIASES
