@@ -699,7 +699,7 @@ end, {
   }) -- }}}
 
 -- keymap for new Jupyter notebook creation
-map("n", "<leader>cj", function()
+map("n", "<leader>pj", function()
   local file_name = vim.fn.input("Notebook name: ")
   if file_name ~= "" then
     vim.cmd("NewNotebook " .. file_name)
@@ -1244,6 +1244,7 @@ require("lazy").setup({
             { mode = "n", keys = "<Leader>ms", desc = "+Sessions" },
             { mode = "n", keys = "<Leader>n", desc = "+Notes" },
             { mode = "n", keys = "<Leader>nl", desc = "+Links" },
+            { mode = "n", keys = "<Leader>p", desc = "+Python" },
             { mode = "n", keys = "<Leader>t", desc = "+Terminal" },
             { mode = "n", keys = "<Leader>w", desc = "+Window" },
             { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
@@ -1251,6 +1252,7 @@ require("lazy").setup({
             { mode = "n", keys = "<Leader>qr", desc = "+Runner" },
             { mode = "x", keys = "<Leader>n", desc = "+Notes" },
             { mode = "x", keys = "<Leader>g", desc = "+Grep" },
+            { mode = "x", keys = "<Leader>p", desc = "+Python" },
           },
           window = {
             delay = 300,
@@ -1933,10 +1935,21 @@ require("lazy").setup({
           end,
         }-- }}}
 
-        uv.setup({ keymaps = { prefix = "<leader>x" } })
+        uv.setup({
+          keymaps = false
+          -- keymaps = { prefix = "<leader>x" }
+        })
       end,-- }}}
       keys = {-- {{{
         { "<leader>pe", mode = {"n"}, function() Snacks.picker("venv_home") end, desc = "Pick Venv (~/py-venv)", noremap = true, silent = true },
+        { "<leader>pr", mode = {"n"}, "<cmd>UVRunFile<cr>", desc = "UV Run Current File", noremap = true, silent = true },
+        { "<leader>ps", mode = {"v"}, "<cmd>UVRunSelection<cr>", desc = "UV Run Selection", noremap = true, silent = true },
+        { "<leader>pf", mode = {"n"}, "<cmd>UVRunFunction<cr>", desc = "UV Run Function", noremap = true, silent = true },
+        { "<leader>pE", mode = {"n"}, "<cmd>lua Snacks.picker.pick('uv_venv')<cr>", desc = "UV Environment", noremap = true, silent = true },
+        { "<leader>pi", mode = {"n"}, "<cmd>UVInit<cr>", desc = "UV Init", noremap = true, silent = true },
+        { "<leader>pa", mode = {"n"}, "<cmd>lua vim.ui.input({prompt = 'Enter package name: '}, function(input) if input and input ~= '' then require('uv').run_command('uv add ' .. input) end end)<cr>", desc = "UV Add Package", noremap = true, silent = true },
+        { "<leader>pd", mode = {"n"}, "<cmd>lua vim.ui.input({prompt = 'Enter package name: '}, function(input) if input and input ~= '' then require('uv').run_command('uv remove ' .. input) end end)<cr>", desc = "UV Remove Package", noremap = true, silent = true },
+        { "<leader>ps", mode = {"n"}, "<cmd>lua require('uv').run_command('uv sync')<cr>", desc = "UV Sync Packages", noremap = true, silent = true },
       }-- }}}
     },-- }}}
 
