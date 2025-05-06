@@ -1,11 +1,11 @@
---[[
+local dashboard_header = [[
 ██╗   ██╗██╗███╗   ███╗██╗██╗   ██╗██╗███╗   ███╗
 ██║   ██║██║████╗ ████║██║██║   ██║██║████╗ ████║
 ██║   ██║██║██╔████╔██║██║██║   ██║██║██╔████╔██║
 ╚██╗ ██╔╝██║██║╚██╔╝██║██║╚██╗ ██╔╝██║██║╚██╔╝██║
  ╚████╔╝ ██║██║ ╚═╝ ██║██║ ╚████╔╝ ██║██║ ╚═╝ ██║
   ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═══╝  ╚═╝╚═╝     ╚═╝
---]]
+]]
 
 -- {{{ [[ UTILS ]]
 
@@ -397,7 +397,7 @@ local function close_floating_and_clear_search()
   vim.cmd("nohlsearch")
 end
 
-map({ "n","i" }, "<Esc>", close_floating_and_clear_search, { desc = "Close floating windows, dismiss notifications, and clear search" })
+map({ "n" }, "<Esc>", close_floating_and_clear_search, { desc = "Close floating windows, dismiss notifications, and clear search" })
 -- }}}
 
 -- Terminal{{{
@@ -1569,14 +1569,7 @@ require("lazy").setup({
               { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
               { icon = " ", key = "q", desc = "Quit", action = ":qa" },
             },
-            header = [[
-██╗   ██╗██╗███╗   ███╗██╗██╗   ██╗██╗███╗   ███╗
-██║   ██║██║████╗ ████║██║██║   ██║██║████╗ ████║
-██║   ██║██║██╔████╔██║██║██║   ██║██║██╔████╔██║
-╚██╗ ██╔╝██║██║╚██╔╝██║██║╚██╗ ██╔╝██║██║╚██╔╝██║
- ╚████╔╝ ██║██║ ╚═╝ ██║██║ ╚████╔╝ ██║██║ ╚═╝ ██║
-  ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═══╝  ╚═╝╚═╝     ╚═╝
-            ]],
+            header = dashboard_header,
           },
           sections = {
             -- { section = "header" },
@@ -1617,7 +1610,15 @@ require("lazy").setup({
           },
           force = true,
         }, -- }}}
-        input = { enabled = true },
+        input = {
+          enabled = true,
+          win = {
+            style = "input",
+            keys = {
+              i_esc = { "<esc>", { "cmp_close", "cancel", "stopinsert" }, mode = "i", expr = true },
+            },
+          },
+        },
         lazygit = { enabled = true },
         notifier = { enabled = true },
         picker = {-- {{{
@@ -1789,10 +1790,6 @@ require("lazy").setup({
 
     { "zk-org/zk-nvim",-- {{{
       -- enabled = false,
-      event = {
-        "BufReadPost *.md",
-        "BufNewFile  *.md",
-      },
       config = function()-- {{{
         require("zk").setup({
         -- See Setup section below
