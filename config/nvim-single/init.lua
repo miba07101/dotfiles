@@ -72,7 +72,7 @@ function _G.DetectOsType()-- {{{
 end
 
 -- Initialize Environment
-local osvar = DetectOsType()
+_G.osvar = DetectOsType()
 
 -- Usage Example:
 -- osvar.PythonInterpreter()
@@ -136,6 +136,16 @@ local function python_code_cell(ai_type)
   }
 end
 -- }}}
+
+-- for snacks.dashboard.sections.terminal "weather wttr.in app"
+local city = vim.fn.system("curl -s ipinfo.io/city"):gsub("%s+", "")
+local dashboard_cmd = "echo 'hello " .. osvar.username .. "' && curl -s \"wttr.in/"
+    .. city .. "?format=%l:+%c+%t+%w+%m+%T\\n\""
+-- local weather_line = vim.fn.system("curl -s 'wttr.in/" .. city .. "?format=4'"):gsub("%s+$", "")
+--
+-- local term_width = vim.o.columns
+-- local padding = math.floor((term_width - #weather_line) / 2)
+-- local centered_weather = string.rep(" ", padding > 0 and padding or 0) .. weather_line
 
 -- }}}
 
@@ -1555,8 +1565,9 @@ require("lazy").setup({
               { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
               { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
               { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
-              -- { icon = " ", key = "s", desc = "Restore Session", section = "session" },
               { icon = " ", key = "p", desc = "Projects", action = ":lua Snacks.dashboard.pick('projects', {dev = '~/git-repos/', recent = false})" },
+              { icon = "󱙓 ", key = "N", desc = "Notes", action = ":lua Snacks.dashboard.pick('files', {cwd = osvar.ObsidianPath()})" },
+              -- { icon = " ", key = "s", desc = "Restore Session", section = "session" },
               { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
               { icon = " ", key = "q", desc = "Quit", action = ":qa" },
             },
@@ -1570,20 +1581,21 @@ require("lazy").setup({
             ]],
           },
           sections = {
-            { section = "header" },
-            -- { section = "terminal", cmd = "echo 'hello'", random = 2 },
+            -- { section = "header" },
+            { section = "terminal", cmd = "echo '\27[1;35mHello " .. osvar.username .. "\27[0m'", indent = 28, padding = 2, height = 1 },
+            { section = "terminal", cmd = "curl -s \"wttr.in/" .. city .. "?format=%l:+%c+%t+%w+%T\\n\" | sed 's/.*/\\x1b[34m&\\x1b[0m/'", indent = 8, padding = 2, height = 1 },
             { section = "keys", gap = 1, padding = 1 },
-            {
+            -- {
               -- icon = " ",
-              title = "Projects",
-              section = "projects",
+              -- title = "Projects",
+              -- section = "projects",
               -- limit=1,
               -- dirs = "~/git-repos/python/",
               -- pick=true,
               -- indent = 2,
               -- padding = 1,
-            },
-            { section = "startup" },
+            -- },
+            { section = "startup", padding = 2 },
           },
         },-- }}}
         image = { -- {{{
@@ -1643,6 +1655,7 @@ require("lazy").setup({
         -- { "<leader>si", function() require('snacks').image.hover() end, desc = "Image Preview" },
         {"]]", mode = { "n", "t" }, function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference",},
         {"[[", mode = { "n", "t" }, function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference",},
+        -- {"<leader>D", function() Snacks.dashboard.open() end, desc = "Dashboard",},
         -- Top Pickers & Explorer
         {"<leader>e", function() Snacks.explorer({ layout = { preset = "sidebar", layout = { position = "left" } } }) end, desc = "File Explorer",},
         {"<leader>E", function() vim.cmd("lcd D:\\") Snacks.explorer.open({ layout = { preset = "sidebar", layout = { position = "left" } } }) end, desc = "File Explorer D drive",},
@@ -1652,7 +1665,7 @@ require("lazy").setup({
         {"<leader>ff", function() Snacks.picker.files() end, desc = "Files",},
         {"<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File",},
         -- {"<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files",},
-        -- {"<leader>fp", function() Snacks.picker.projects() end, desc = "Find Projects",},
+        {"<leader>fp", function() Snacks.picker.projects({dev = '~/git-repos/', recent = false}) end, desc = "Find Projects",},
         {"<leader>fo", function() Snacks.picker.recent() end, desc = "Old/Recent Files",},
         {"<leader>fR", function() Snacks.rename.rename_file() end, desc = "Rename File",},
         -- git
@@ -1685,7 +1698,7 @@ require("lazy").setup({
         {"<leader>fl", function() Snacks.picker.loclist() end, desc = "Search Location List",},
         {"<leader>fm", function() Snacks.picker.marks() end, desc = "Search Marks",},
         {"<leader>fM", function() Snacks.picker.man() end, desc = "Search Man Pages",},
-        {"<leader>fp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec",},
+        -- {"<leader>fp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec",},
         {"<leader>fq", function() Snacks.picker.qflist() end, desc = "Search Quickfix List",},
         -- {"<leader>sR", function() Snacks.picker.resume() end, desc = "Search Resume",},
         {"<leader>fu", function() Snacks.picker.undo() end, desc = "Search Undo History",},
