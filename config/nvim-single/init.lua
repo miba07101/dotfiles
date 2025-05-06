@@ -137,15 +137,9 @@ local function python_code_cell(ai_type)
 end
 -- }}}
 
--- for snacks.dashboard.sections.terminal "weather wttr.in app"
+-- for snacks.dashboard.sections.terminal "weather wttr.in app"{{{
 local city = vim.fn.system("curl -s ipinfo.io/city"):gsub("%s+", "")
-local dashboard_cmd = "echo 'hello " .. osvar.username .. "' && curl -s \"wttr.in/"
-    .. city .. "?format=%l:+%c+%t+%w+%m+%T\\n\""
--- local weather_line = vim.fn.system("curl -s 'wttr.in/" .. city .. "?format=4'"):gsub("%s+$", "")
---
--- local term_width = vim.o.columns
--- local padding = math.floor((term_width - #weather_line) / 2)
--- local centered_weather = string.rep(" ", padding > 0 and padding or 0) .. weather_line
+-- }}}
 
 -- }}}
 
@@ -1468,20 +1462,20 @@ require("lazy").setup({
           return string.format("󰌠 %s", venv_name)
         end-- }}}
 
-        -- Function to show the active Molten status{{{
-        local function molten_init()
-          if not package.loaded["molten.status"] then
-            return "M:X"
-          end
-
-          local ok, molten_status = pcall(require, "molten.status")
-          if not ok or type(molten_status.initialized) ~= "function" then
-            return "M:X"
-          end
-
-          local success, status = pcall(molten_status.initialized)
-          return success and status == "Molten" and "M:A" or "M:X"
-        end-- }}}
+        -- -- Function to show the active Molten status{{{
+        -- local function molten_init()
+        --   if not package.loaded["molten.status"] then
+        --     return "M:X"
+        --   end
+        --
+        --   local ok, molten_status = pcall(require, "molten.status")
+        --   if not ok or type(molten_status.initialized) ~= "function" then
+        --     return "M:X"
+        --   end
+        --
+        --   local success, status = pcall(molten_status.initialized)
+        --   return success and status == "Molten" and "M:A" or "M:X"
+        -- end-- }}}
 
         -- Function to show buffer counts{{{
         local function buffer_counts()
@@ -1515,7 +1509,7 @@ require("lazy").setup({
               local search          = MiniStatusline.section_searchcount({ trunc_width = 75 })
               local buffer_counts   = buffer_counts()
               local macro_recording = macro_recording()
-              local molten_init     = molten_init()
+              -- local molten_init     = molten_init()
               local python_venv     = python_venv()
 
               return MiniStatusline.combine_groups({
@@ -1523,8 +1517,6 @@ require("lazy").setup({
                 '%<', -- Mark general truncate point
                 { hl    =   mode_hl,                   strings = { filename, buffer_counts, macro_recording } },
                 '%= ', -- End left alignment
-                -- { hl =   'MiniStatuslineFileinfo', strings  = { fileinfo } },
-                -- { hl    =   mode_hl,                   strings = { python_venv, molten_init, lsp } },
                 { hl    =   mode_hl,                   strings = { python_venv, lsp, molten_init, git, diff, diagnostics, location } },
               })
             end
