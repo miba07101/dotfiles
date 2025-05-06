@@ -397,7 +397,7 @@ local function close_floating_and_clear_search()
   vim.cmd("nohlsearch")
 end
 
-map("n", "<Esc>", close_floating_and_clear_search, { desc = "Close floating windows, dismiss notifications, and clear search" })
+map({ "n","i" }, "<Esc>", close_floating_and_clear_search, { desc = "Close floating windows, dismiss notifications, and clear search" })
 -- }}}
 
 -- Terminal{{{
@@ -1800,7 +1800,8 @@ require("lazy").setup({
       })
       end,-- }}}
       keys = {-- {{{
-        { "<leader>nz", mode = "n", ":ZkNew {title = vim.fn.input('New ZK note Title: ')}<cr>", desc = "ZK New Note", noremap = true, silent = true },
+        -- {"<leader>nz", mode = "n", function() require("zk").new({ title = vim.fn.input("Title: ") }) end, desc = "ZK New Note", noremap = true, silent = true,},
+        { "<leader>nz", mode = "n", function() vim.ui.input({ prompt = "Title: "}, function(title) if not title then return end if title ~= "" then require("zk").new({title = title}) else return end end) end, desc = "ZK New Note", noremap = true, silent = true },
       },-- }}}
     },-- }}}
 
