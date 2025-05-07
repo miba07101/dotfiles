@@ -269,7 +269,7 @@ export PATH=$PATH:$HOME/.npm/bin
 export NODE_PATH=$NODE_PATH:$HOME/.npm/lib/node_modules
 export OneDrive_DIR
 export SCRIPTS_DIR
-export ZK_NOTEBOOK_DIR="$HOME/zk"
+export ZK_NOTEBOOK_DIR="$OneDrive_DIR/Dokumenty/zPoznamky/Obsidian/inbox/"
 
 #############
 # ALIASES
@@ -386,7 +386,7 @@ mkvenv() {
 }
 
 rmvenv() {
-  if [ $# -eq 0 ]
+  if [$# -eq 0 ]
     then
       echo "Please provide venv name"
     else

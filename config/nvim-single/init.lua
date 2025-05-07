@@ -304,7 +304,7 @@ vim.filetype.add({ -- {{{
     typ = "typst",
   },
   filename = {
-    [".zshrc"] = "sh",
+    [".zshrc"] = "bash",
     [".zshenv"] = "sh",
     [".ipynb"] = "ipynb", -- Only if you have a custom opener; otherwise, `ipynb` isn't a real filename
   },
@@ -930,7 +930,7 @@ require("lazy").setup({
     },
     -- }}}
 
-    -- {{{ [ LSP ]
+    -- {{{ [ LSP servers, Formaters, Linters ]
     { -- Mason - installing lsp servers{{{
       "WhoIsSethDaniel/mason-tool-installer.nvim",
       -- enable = false,
@@ -983,94 +983,94 @@ require("lazy").setup({
         -- end
         -- }}}
 
-        -- {{{ Diagnostic
-        vim.diagnostic.config({
-          virtual_text = { current_line = true },
-          underline = true,
-          severity_sort = true,
-          float = { border = "rounded" },
-          hover = true,
-        })
-
-        for _, sign in ipairs({ { "Error", "" }, { "Warn", "" }, { "Hint", "󰌵" }, { "Info", "" } }) do
-          vim.fn.sign_define("DiagnosticSign" .. sign[1], { texthl = "DiagnosticSign" .. sign[1], text = sign[2] })
-        end
-        -- }}}
+        -- -- {{{ Diagnostic
+        -- vim.diagnostic.config({
+        --   virtual_text = { current_line = true },
+        --   underline = true,
+        --   severity_sort = true,
+        --   float = { border = "rounded" },
+        --   hover = true,
+        -- })
+        --
+        -- for _, sign in ipairs({ { "Error", "" }, { "Warn", "" }, { "Hint", "󰌵" }, { "Info", "" } }) do
+        --   vim.fn.sign_define("DiagnosticSign" .. sign[1], { texthl = "DiagnosticSign" .. sign[1], text = sign[2] })
+        -- end
+        -- -- }}}
 
         local servers = { -- {{{
-          lua_ls = {
-            -- cmd = { vim.fn.stdpath("data") .. "/mason/bin/lua-language-server" }, -- full path to Mason-installed server
-            cmd = { "lua-language-server" }, -- only name of Mason-installed server, because in "OPTIONS" section I have defined Path to Mason folder
-            filetypes = { "lua" },
-            root_dir = function(fname)
-              return vim.fs.dirname(
-                vim.fs.find({ ".git", "init.lua", ".luarc.json" }, { upward = true, path = fname })[1]
-              )
-            end,
-            settings = {
-              Lua = {
-                completion = { callSnippet = "Replace" },
-                diagnostics = { disable = { "missing-fields", "vim" } },
-                workspace = { library = { [vim.fn.expand("$VIMRUNTIME/lua")] = true } },
-                telemetry = { enable = false },
-              },
-            },
-          },
-          bashls = {
-            cmd = { "bash-language-server" },
-            filetypes = { "zsh", "bash", "sh" },
-          },
-          emmet_ls = {
-            cmd = { "emmet-ls", "--stdio" },
-            filetypes = { "html", "css", "sass", "scss", "less", "javascript", "typescript" },
-            init_options = { html = { options = { ["bem.enabled"] = true } } },
-          },
-          basedpyright = {
-            cmd = { "basedpyright-langserver", "--stdio" },
-            filetypes = { "python" },
-            root_dir = function(fname)
-              return require("lspconfig.util").root_pattern(
-                "pyproject.toml",
-                "setup.py",
-                "setup.cfg",
-                "requirements.txt",
-                ".git"
-              )(fname) or vim.fn.getcwd()
-            end,
-            settings = {
-              python = {
-                analysis = {
-                  autoSearchPaths = true,
-                  diagnosticMode = "openFilesOnly",
-                  useLibraryCodeForTypes = true,
-                },
-              },
-            },
-          },
-          marksman = {
-            cmd = { "marksman" },
-            filetypes = { "markdown", "quarto" },
-          },
-          tinymist = {
-            cmd = { "tinymist" },
-            filetypes = { "typst" },
-          },
-          jinja_lsp = {
-            cmd = { "jinja-lsp" },
-            filetypes = { "htmldjango", "jinja" },
-            root_dir = function(fname)
-              return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
-            end,
-            single_file_support = true,
-          },
-          htmx = {
-            cmd = { "htmx-lsp" },
-            filetypes = { "django-html", "htmldjango", "html" },
-          },
-          zk = {
-            cmd = { "zk" },
-            filetypes = { "markdown" },
-          },
+          -- lua_ls = {
+          --   -- cmd = { vim.fn.stdpath("data") .. "/mason/bin/lua-language-server" }, -- full path to Mason-installed server
+          --   cmd = { "lua-language-server" }, -- only name of Mason-installed server, because in "OPTIONS" section I have defined Path to Mason folder
+          --   filetypes = { "lua" },
+          --   root_dir = function(fname)
+          --     return vim.fs.dirname(
+          --       vim.fs.find({ ".git", "init.lua", ".luarc.json" }, { upward = true, path = fname })[1]
+          --     )
+          --   end,
+          --   settings = {
+          --     Lua = {
+          --       completion = { callSnippet = "Replace" },
+          --       diagnostics = { disable = { "missing-fields", "vim" } },
+          --       workspace = { library = { [vim.fn.expand("$VIMRUNTIME/lua")] = true } },
+          --       telemetry = { enable = false },
+          --     },
+          --   },
+          -- },
+          -- bashls = {
+          --   cmd = { "bash-language-server" },
+          --   filetypes = { "zsh", "bash", "sh" },
+          -- },
+          -- emmet_ls = {
+          --   cmd = { "emmet-ls", "--stdio" },
+          --   filetypes = { "html", "css", "sass", "scss", "less", "javascript", "typescript" },
+          --   init_options = { html = { options = { ["bem.enabled"] = true } } },
+          -- },
+          -- basedpyright = {
+          --   cmd = { "basedpyright-langserver", "--stdio" },
+          --   filetypes = { "python" },
+          --   root_dir = function(fname)
+          --     return require("lspconfig.util").root_pattern(
+          --       "pyproject.toml",
+          --       "setup.py",
+          --       "setup.cfg",
+          --       "requirements.txt",
+          --       ".git"
+          --     )(fname) or vim.fn.getcwd()
+          --   end,
+          --   settings = {
+          --     python = {
+          --       analysis = {
+          --         autoSearchPaths = true,
+          --         diagnosticMode = "openFilesOnly",
+          --         useLibraryCodeForTypes = true,
+          --       },
+          --     },
+          --   },
+          -- },
+          -- marksman = {
+          --   cmd = { "marksman" },
+          --   filetypes = { "markdown", "quarto" },
+          -- },
+          -- tinymist = {
+          --   cmd = { "tinymist" },
+          --   filetypes = { "typst" },
+          -- },
+          -- jinja_lsp = {
+          --   cmd = { "jinja-lsp" },
+          --   filetypes = { "htmldjango", "jinja" },
+          --   root_dir = function(fname)
+          --     return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
+          --   end,
+          --   single_file_support = true,
+          -- },
+          -- htmx = {
+          --   cmd = { "htmx-lsp" },
+          --   filetypes = { "django-html", "htmldjango", "html" },
+          -- },
+          -- zk = {
+          --   cmd = { "zk" },
+          --   filetypes = { "markdown" },
+          -- },
         } -- }}}
 
         vim.api.nvim_create_autocmd("FileType", { -- {{{
@@ -2613,3 +2613,107 @@ require("lazy").setup({
 })
 
 -- }}}
+
+-- [[ LSP ]]{{{
+
+-- {{{ [ Diagnostic ]
+vim.diagnostic.config({
+  virtual_text = { current_line = true },
+  underline = true,
+  severity_sort = true,
+  float = { border = "rounded" },
+  hover = true,
+})
+
+for _, sign in ipairs({ { "Error", "" }, { "Warn", "" }, { "Hint", "󰌵" }, { "Info", "" } }) do
+  vim.fn.sign_define("DiagnosticSign" .. sign[1], { texthl = "DiagnosticSign" .. sign[1], text = sign[2] })
+end
+-- }}}
+
+vim.lsp.config("luals", {-- {{{
+  cmd = {"lua-language-server"},
+  filetypes = {"lua"},
+  root_markers = {".luarc.json", ".luarc.jsonc"},
+})
+vim.lsp.enable("luals")
+-- }}}
+
+vim.lsp.config("basedpyright", {-- {{{
+  cmd = { "basedpyright-langserver", "--stdio" },
+  filetypes = { "python" },
+  root_markers ={ "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile", "pyrightconfig.json", ".git" },
+  settings = {
+    python = {
+      analysis = {
+        autoSearchPaths = true,
+        diagnosticMode = "openFilesOnly",
+        useLibraryCodeForTypes = true,
+      },
+    },
+  },
+})
+vim.lsp.enable("basedpyright")
+-- }}}
+
+vim.lsp.config("bashls", {-- {{{
+  cmd = { "bash-language-server", "start" },
+  filetypes = { "zsh", "bash", "sh" },
+  root_markers = { ".git" },
+  settings = {
+    bashIde = {
+      globPattern = "*@(.sh|.inc|.bash|.command)"
+    },
+  },
+})
+vim.lsp.enable("bashls")
+-- }}}
+
+vim.lsp.config("emmet_ls", {-- {{{
+  cmd = { "emmet-ls", "--stdio" },
+  filetypes = { "html", "css", "sass", "scss", "less", "javascript", "typescript" },
+})
+vim.lsp.enable("emmet_ls")
+-- }}}
+
+vim.lsp.config("marksman", {-- {{{
+  cmd = { "marksman", "server" },
+  filetypes = { "markdown", "quarto" },
+})
+vim.lsp.enable("marksman")
+-- }}}
+
+vim.lsp.config("tinymist", {-- {{{
+  cmd = { "tinymist" },
+  filetypes = { "typst" },
+  root_markers = { ".git" },
+})
+vim.lsp.enable("tinymist")
+-- }}}
+
+vim.lsp.config("jinja_lsp", {-- {{{
+  cmd = { "jinja-lsp" },
+  filetypes = { "htmldjango", "jinja" },
+  root_dir = function(fname)
+    return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
+  end,
+  single_file_support = true,
+})
+vim.lsp.enable("jinja_lsp")
+-- }}}
+
+vim.lsp.config("htmx",  {-- {{{
+  cmd = { "htmx-lsp" },
+  filetypes = { "django-html", "htmldjango", "html" },
+})
+vim.lsp.enable("htmx")
+-- }}}
+
+vim.lsp.config("zk", {-- {{{
+  cmd = { "zk", "lsp" },
+  filetypes = { "markdown" },
+  root_markers = { ".zk" },
+})
+vim.lsp.enable("zk")
+-- }}}
+
+-- LSP ends }}}
