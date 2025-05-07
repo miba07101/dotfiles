@@ -2630,6 +2630,14 @@ for _, sign in ipairs({ { "Error", "" }, { "Warn", "" }, { "Hint", "󰌵" 
 end
 -- }}}
 
+-- {{{ [ Capabilities ]
+local original_capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities = require("blink.cmp").get_lsp_capabilities(original_capabilities)
+vim.lsp.config("*", {
+  capabilities = capabilities,
+})
+-- }}}
+
 vim.lsp.config("luals", {-- {{{
   cmd = {"lua-language-server"},
   filetypes = {"lua"},
