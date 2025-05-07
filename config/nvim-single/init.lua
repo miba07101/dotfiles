@@ -9,12 +9,12 @@ local dashboard_header = [[
 
 -- {{{ [[ UTILS ]]
 
-function _G.DetectOsType()-- {{{
+function _G.DetectOsType() -- {{{
   -- Detect OS Type
   local os_name = vim.loop.os_uname().sysname
   local os_type = (os_name == "Windows_NT" and "windows")
-  or (os_name == "Linux" and (vim.fn.has("wsl") == 1 and "wsl" or "linux"))
-  or os_name
+    or (os_name == "Linux" and (vim.fn.has("wsl") == 1 and "wsl" or "linux"))
+    or os_name
 
   -- Environment Variables
   local home = os.getenv("HOME") or os.getenv("USERPROFILE")
@@ -22,7 +22,7 @@ function _G.DetectOsType()-- {{{
   local venv_home = os.getenv("VENV_HOME") or (home .. "/.py-venv")
   local nvim_venv = venv_home .. "/base-venv"
   local debugpy_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
-  local venv = os.getenv("VIRTUAL_ENV")  -- Moved here for reuse
+  local venv = os.getenv("VIRTUAL_ENV") -- Moved here for reuse
 
   -- Function to determine Python interpreter
   local function PythonInterpreter()
@@ -46,16 +46,23 @@ function _G.DetectOsType()-- {{{
 
   -- Function to create a new Obsidian note
   local function ObsidianNewNote(use_template, template, folder)
-    local note_name = vim.fn.input("Enter note name without .md: ")
-    if note_name == "" then return print("Note name cannot be empty!") end
+    -- local note_name = vim.fn.input("Enter note name without .md: ")
+    -- if note_name == "" then return print("Note name cannot be empty!") end
 
-    local new_note_path = string.format("%s%s/%s.md", ObsidianPath(), folder or "inbox", note_name)
-    vim.cmd("edit " .. new_note_path)
+    vim.ui.input({ prompt = "Enter note name without .md: " }, function(note_name)
+      if not note_name or note_name == "" then
+        print("Note name cannot be empty!")
+        return
+      end
 
-    if use_template then
-      local templates = { basic = "t-nvim-note.md", person = "t-person.md" }
-      vim.cmd(templates[template] and "ObsidianTemplate " .. templates[template] or "echo 'Invalid template name'")
-    end
+      local new_note_path = string.format("%s%s/%s.md", ObsidianPath(), folder or "inbox", note_name)
+      vim.cmd("edit " .. new_note_path)
+
+      if use_template then
+        local templates = { basic = "t-nvim-note.md", person = "t-person.md" }
+        vim.cmd(templates[template] and "ObsidianTemplate " .. templates[template] or "echo 'Invalid template name'")
+      end
+    end)
   end
 
   return {
@@ -67,7 +74,7 @@ function _G.DetectOsType()-- {{{
     PythonInterpreter = PythonInterpreter,
     ObsidianPath = ObsidianPath,
     MoltenInitialize = MoltenInitialize,
-    ObsidianNewNote = ObsidianNewNote
+    ObsidianNewNote = ObsidianNewNote,
   }
 end
 
@@ -83,7 +90,9 @@ _G.osvar = DetectOsType()
 
 -- f. pre mini.ai selekciu blokov kodu oddelenych "% ##" v python/jupyter suboroch{{{
 local function python_code_cell(ai_type)
-  if vim.bo.filetype ~= "python" then return nil end
+  if vim.bo.filetype ~= "python" then
+    return nil
+  end
 
   local function getline_trimmed(lnum)
     return vim.trim(vim.fn.getline(lnum))
@@ -101,7 +110,9 @@ local function python_code_cell(ai_type)
       break
     end
   end
-  if not start_line then return end
+  if not start_line then
+    return
+  end
 
   -- Find end
   local end_line = nil
@@ -111,7 +122,9 @@ local function python_code_cell(ai_type)
       break
     end
   end
-  if not end_line then end_line = total_lines end
+  if not end_line then
+    end_line = total_lines
+  end
 
   -- Trim trailing blank lines
   while end_line > start_line and getline_trimmed(end_line) == "" do
@@ -148,51 +161,51 @@ local city = vim.fn.system("curl -s ipinfo.io/city"):gsub("%s+", "")
 -- File{{{
 -- opt.concealcursor = "" -- conceal cursor disable
 -- opt.conceallevel  = 1 -- conceal level disable
-vim.opt.backup        = false         -- create a backup file
-vim.opt.clipboard     = "unnamedplus" -- system clipboard
-vim.opt.hidden        = true          -- switching from unsaved buffers
-vim.opt.inccommand    = "split"       -- preview substitutions live, as you type
-vim.opt.matchtime     = 2             -- duration of showmatch, default 5
-vim.opt.mouse         = "a"           -- mouse
-vim.opt.scrolloff     = 5             -- how many lines are displayed on the upper and lower sides of the cursor
-vim.opt.showmode      = true          -- display the current vim mode (no need)
-vim.opt.sidescrolloff = 8             -- number of columns to keep at the sides of the cursor
-vim.opt.splitbelow    = true          -- splitting window below
-vim.opt.splitright    = true          -- splitting window right
-vim.opt.swapfile      = false         -- create a swap file
-vim.opt.syntax        = "on"
-vim.opt.termguicolors = true          -- terminal supports more colors
-vim.opt.termguicolors = true          -- terminal supports more colors
-vim.opt.timeoutlen    = 300           -- time to wait for a mapped sequence to complete, default 1000
-vim.opt.updatetime    = 200           -- speed up response time
-vim.opt.wrap          = false         -- disable wrapping of lines longer than the width of window
-vim.opt.writebackup   = false         -- create backups when writing files
-vim.opt.matchpairs    = { "(:)", "{:}", "[:]", "<:>" }
-vim.opt.iskeyword:remove("_")         -- oddeli slova pri mazani, nebude brat ako jedno slovo
+vim.opt.backup = false -- create a backup file
+vim.opt.clipboard = "unnamedplus" -- system clipboard
+vim.opt.hidden = true -- switching from unsaved buffers
+vim.opt.inccommand = "split" -- preview substitutions live, as you type
+vim.opt.matchtime = 2 -- duration of showmatch, default 5
+vim.opt.mouse = "a" -- mouse
+vim.opt.scrolloff = 5 -- how many lines are displayed on the upper and lower sides of the cursor
+vim.opt.showmode = true -- display the current vim mode (no need)
+vim.opt.sidescrolloff = 8 -- number of columns to keep at the sides of the cursor
+vim.opt.splitbelow = true -- splitting window below
+vim.opt.splitright = true -- splitting window right
+vim.opt.swapfile = false -- create a swap file
+vim.opt.syntax = "on"
+vim.opt.termguicolors = true -- terminal supports more colors
+vim.opt.termguicolors = true -- terminal supports more colors
+vim.opt.timeoutlen = 300 -- time to wait for a mapped sequence to complete, default 1000
+vim.opt.updatetime = 200 -- speed up response time
+vim.opt.wrap = false -- disable wrapping of lines longer than the width of window
+vim.opt.writebackup = false -- create backups when writing files
+vim.opt.matchpairs = { "(:)", "{:}", "[:]", "<:>" }
+vim.opt.iskeyword:remove("_") -- oddeli slova pri mazani, nebude brat ako jedno slovo
 -- }}}
 
 -- Completition{{{
 vim.opt.completeopt = { "menuone", "noselect" } -- completion options
-vim.opt.pumheight   = 10                        -- completion menu height
+vim.opt.pumheight = 10 -- completion menu height
 -- vim.opt.wildmenu    = true                      -- make tab completion for files/buffers act like bash
 -- }}}
 
 -- Indention{{{
 local indent_config = {
-  vim =        { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  python =     { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
-  html =       { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  css =        { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  vim = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  python = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  html = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  css = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   javascript = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   typescript = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  json =       { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  jinja =      { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  django =     { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
-  typst =      { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  json = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  jinja = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  django = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  typst = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   -- markdown =   { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   -- quarto =     { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  jupyter =    { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
-  lua =        { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  jupyter = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  lua = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
 }
 
 -- Create autocommand group
@@ -203,12 +216,12 @@ for filetype, opts in pairs(indent_config) do
     group = "CustomIndentation",
     pattern = filetype,
     callback = function()
-      vim.opt_local.autoindent  = true             -- auto indentation
-      vim.opt_local.expandtab   = true             -- convert tabs to spaces (prefered for python)
-      vim.opt_local.smartindent = true             -- make indenting smarter
-      vim.opt_local.shiftwidth  = opts.shiftwidth  -- spaces inserted for each indentation
+      vim.opt_local.autoindent = true -- auto indentation
+      vim.opt_local.expandtab = true -- convert tabs to spaces (prefered for python)
+      vim.opt_local.smartindent = true -- make indenting smarter
+      vim.opt_local.shiftwidth = opts.shiftwidth -- spaces inserted for each indentation
       vim.opt_local.softtabstop = opts.softtabstop -- when hitting <BS>, pretend like a tab is removed, even if spaces
-      vim.opt_local.tabstop     = opts.tabstop     -- insert spaces for a tab
+      vim.opt_local.tabstop = opts.tabstop -- insert spaces for a tab
     end,
   })
 end
@@ -216,39 +229,38 @@ end
 
 -- Fold{{{
 -- vim.opt.foldcolumn = "1"                          -- folding column show
-vim.opt.foldenable = true                         -- folding allowed
-vim.opt.foldexpr   = "nvim_treesitter#foldexpr()" -- folding method use treesitter
-vim.opt.foldlevel  = 0                            -- folding from lvl 1
-vim.opt.foldmethod = "expr"                       -- folding method
+vim.opt.foldenable = true -- folding allowed
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()" -- folding method use treesitter
+vim.opt.foldlevel = 0 -- folding from lvl 1
+vim.opt.foldmethod = "expr" -- folding method
 -- vim.opt.foldmethod = "marker"                     -- folding method
 -- vim.opt.foldtext   = [[getline(v:foldstart)]]     -- folding - disable all chunk when folded
 -- vim.opt.fillchars:append({eob = " ", fold = " ", foldopen = "", foldsep = " ", foldclose = "",})
 -- }}}
 
 -- Search{{{
-vim.opt.hlsearch   = true -- search highlighting
+vim.opt.hlsearch = true -- search highlighting
 vim.opt.ignorecase = true -- ignore case when searching
-vim.opt.incsearch  = true -- highlight while searching
-vim.opt.smartcase  = true -- intelligent case sensitivity when searching (if there is upper case, turn off case ignoring)
-vim.opt.wrapscan   = true -- search the entire file repeatedly
+vim.opt.incsearch = true -- highlight while searching
+vim.opt.smartcase = true -- intelligent case sensitivity when searching (if there is upper case, turn off case ignoring)
+vim.opt.wrapscan = true -- search the entire file repeatedly
 vim.opt.wildignore = vim.opt.wildignore + { "*/node_modules/*", "*/.git/*", "*/vendor/*" }
 -- }}}
 
 -- UI{{{
-vim.opt.cmdheight  = 0                                                  -- command line height
-vim.opt.cursorline = true                                               -- highlight the current line
-vim.opt.laststatus = 3                                                  -- global status bar (sposobuje nefunkcnost resource lua.init)
-vim.opt.fillchars = ""                                                  -- disable fillchars
+vim.opt.cmdheight = 0 -- command line height
+vim.opt.cursorline = true -- highlight the current line
+vim.opt.laststatus = 3 -- global status bar (sposobuje nefunkcnost resource lua.init)
+vim.opt.fillchars = "" -- disable fillchars
 -- vim.opt.list       = true                                               -- show some invisible characters (tabs...
 -- vim.opt.listchars  = { eol = "¬", tab = "› ", trail = "·", nbsp = "␣" } -- list characters
-vim.opt.number     = true                                               -- absolute line numbers
-vim.opt.signcolumn = "yes"                                              -- symbol column width
+vim.opt.number = true -- absolute line numbers
+vim.opt.signcolumn = "yes" -- symbol column width
 -- }}}
 
 -- Neovim Python Host{{{
-vim.g.python3_host_prog = osvar.os_type == "windows"
-and (osvar.nvim_venv .. "\\Scripts\\python.exe")
-or (osvar.nvim_venv .. "/bin/python3")
+vim.g.python3_host_prog = osvar.os_type == "windows" and (osvar.nvim_venv .. "\\Scripts\\python.exe")
+  or (osvar.nvim_venv .. "/bin/python3")
 -- }}}
 
 -- Shell and Cursor Setup{{{
@@ -260,18 +272,23 @@ local function ConfigureShellAndCursor()
 
   -- Shell & Cursor Configuration
   if osvar.os_type == "windows" then
-    vim.opt.shell        = "pwsh.exe"
-    vim.opt.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding = [Console]::OutputEncoding = [System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
-    vim.opt.shellredir   = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
-    vim.opt.shellpipe    = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
-    vim.opt.shellquote   = ""
-    vim.opt.shellxquote  = ""
+    vim.opt.shell = "pwsh.exe"
+    vim.opt.shellcmdflag =
+      "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding = [Console]::OutputEncoding = [System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
+    vim.opt.shellredir = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+    vim.opt.shellpipe = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+    vim.opt.shellquote = ""
+    vim.opt.shellxquote = ""
 
     -- Set cursor for a specific user
-    if osvar.username ~= "mech" then SetCursor() end
+    if osvar.username ~= "mech" then
+      SetCursor()
+    end
   else
     vim.opt.shell = osvar.os_type == "wsl" and "/bin/zsh" or "/bin/zsh"
-    if osvar.os_type == "wsl" then SetCursor() end
+    if osvar.os_type == "wsl" then
+      SetCursor()
+    end
   end
 end
 
@@ -279,7 +296,7 @@ end
 ConfigureShellAndCursor()
 -- }}}
 
-vim.filetype.add { -- {{{
+vim.filetype.add({ -- {{{
   extension = {
     zsh = "sh",
     sh = "sh",
@@ -289,10 +306,13 @@ vim.filetype.add { -- {{{
   filename = {
     [".zshrc"] = "sh",
     [".zshenv"] = "sh",
-    [".ipynb"] = "ipynb",  -- Only if you have a custom opener; otherwise, `ipynb` isn't a real filename
+    [".ipynb"] = "ipynb", -- Only if you have a custom opener; otherwise, `ipynb` isn't a real filename
   },
-} -- }}}
+}) -- }}}
 
+-- Path to Mason-installed binaries{{{
+vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
+-- }}}
 
 -- }}}
 
@@ -305,7 +325,7 @@ local function map(mode, lhs, rhs, opts)
     options = vim.tbl_extend("force", options, opts)
   end
   vim.keymap.set(mode, lhs, rhs, options)
-end-- }}}
+end -- }}}
 
 -- Leader Key{{{
 map("", "<Space>", "<Nop>")
@@ -397,7 +417,12 @@ local function close_floating_and_clear_search()
   vim.cmd("nohlsearch")
 end
 
-map({ "n" }, "<Esc>", close_floating_and_clear_search, { desc = "Close floating windows, dismiss notifications, and clear search" })
+map(
+  { "n" },
+  "<Esc>",
+  close_floating_and_clear_search,
+  { desc = "Close floating windows, dismiss notifications, and clear search" }
+)
 -- }}}
 
 -- Terminal{{{
@@ -460,7 +485,7 @@ map("v", "<leader>t", function()
 
   if term_buf ~= -1 then
     local job_id = vim.b[term_buf].terminal_job_id
-    local selection = vim.fn.getreg("v")  -- Get the yanked text from register v
+    local selection = vim.fn.getreg("v") -- Get the yanked text from register v
 
     -- Send the selection exactly as is to the terminal
     vim.fn.chansend(job_id, selection .. "\n")
@@ -511,7 +536,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 -- }}}
 
 -- {{{ terminal settings
-vim.api.nvim_create_autocmd('TermOpen', {
+vim.api.nvim_create_autocmd("TermOpen", {
   callback = function()
     -- Hide buffer name in the tabline for terminal buffers
     vim.opt_local.buflisted = false
@@ -573,34 +598,23 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 })
 -- }}}
 
--- {{{ autoformat code on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = { "*.py", "*.json", "*.css", "*.scss" },
-  callback = function(args)
-    require("conform").format({ bufnr = args.buf })
-  end,
-  group = mygroup,
-  desc = "autoformat code on save",
-})
--- }}}
+-- -- {{{ auto linting
+-- vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+--   pattern = { "*" },
+--   callback = function()
+--     require("lint").try_lint()
+--   end,
+-- })
+-- -- }}}
 
--- {{{ auto linting
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-  pattern = { "*" },
-  callback = function()
-    require("lint").try_lint()
-  end,
-})
--- }}}
-
--- {{{ sass compilation on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = { "*.sass", "*.scss" },
-  command = [[:silent exec "!sass --no-source-map %:p %:r.css"]],
-  group = mygroup,
-  desc = "sass compilation on save",
-})
--- }}}
+-- -- {{{ sass compilation on save
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   pattern = { "*.sass", "*.scss" },
+--   command = [[:silent exec "!sass --no-source-map %:p %:r.css"]],
+--   group = mygroup,
+--   desc = "sass compilation on save",
+-- })
+-- -- }}}
 
 -- {{{ windows to close with "q"
 vim.api.nvim_create_autocmd("FileType", {
@@ -694,9 +708,9 @@ end -- }}}
 vim.api.nvim_create_user_command("NewNotebook", function(opts) -- {{{
   new_notebook(opts.args)
 end, {
-    nargs = 1,
-    complete = "file",
-  }) -- }}}
+  nargs = 1,
+  complete = "file",
+}) -- }}}
 
 -- keymap for new Jupyter notebook creation
 map("n", "<leader>pj", function()
@@ -759,12 +773,13 @@ require("lazy").setup({
   spec = { -- {{{
 
     -- {{{ [ Colorscheme ]
-    { "rebelot/kanagawa.nvim", -- {{{
+    {
+      "rebelot/kanagawa.nvim", -- {{{
       -- enabled = false,
       priority = 1000,
       config = function()
-        require("kanagawa").setup({-- {{{
-          colors = {-- {{{
+        require("kanagawa").setup({ -- {{{
+          colors = { -- {{{
             palette = {
               fujiWhite = "#FEFEFA",
               -- https://coolors.co/gradient-palette/fefefa-edebda?number=3
@@ -782,8 +797,8 @@ require("lazy").setup({
                 },
               },
             },
-          },-- }}}
-          overrides = function(colors)-- {{{
+          }, -- }}}
+          overrides = function(colors) -- {{{
             local theme = colors.theme
             return {
               WinSeparator = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
@@ -798,7 +813,7 @@ require("lazy").setup({
               PmenuSbar = { bg = theme.ui.bg_m1 },
               PmenuThumb = { bg = theme.ui.bg_p2 },
               -- change cmp items colors
-              BlinkCmpMenuBorder = { link = "FloatBorder"},
+              BlinkCmpMenuBorder = { link = "FloatBorder" },
               -- CmpItemKindVariable = { fg = colors.palette.crystalBlue, bg = "NONE" },
               -- CmpItemKindInterface = { fg = colors.palette.crystalBlue, bg = "NONE" },
               -- CmpItemKindFunction = { fg = colors.palette.oniViolet, bg = "NONE" },
@@ -806,13 +821,13 @@ require("lazy").setup({
               -- render-markdown headings
               RenderMarkdownH1Bg = { bg = theme.ui.bg_m1, fg = colors.palette.autumnRed },
               RenderMarkdownH2Bg = { bg = theme.ui.bg_m1, fg = colors.palette.autumnYellow },
-              RenderMarkdownH3Bg = { bg = theme.ui.bg_m1, fg = colors.palette.autumnGreen  },
+              RenderMarkdownH3Bg = { bg = theme.ui.bg_m1, fg = colors.palette.autumnGreen },
               RenderMarkdownH4Bg = { bg = theme.ui.bg_m1, fg = colors.palette.oniViolet },
               RenderMarkdownH5Bg = { bg = theme.ui.bg_m1, fg = colors.palette.dragonBlue },
               RenderMarkdownH6Bg = { bg = theme.ui.bg_m1, fg = "#717C7C" },
               RenderMarkdownH1 = { fg = colors.palette.autumnRed },
               RenderMarkdownH2 = { fg = colors.palette.autumnYellow },
-              RenderMarkdownH3 = { fg = colors.palette.autumnGreen  },
+              RenderMarkdownH3 = { fg = colors.palette.autumnGreen },
               RenderMarkdownH4 = { fg = colors.palette.oniViolet },
               RenderMarkdownH5 = { fg = colors.palette.dragonBlue },
               RenderMarkdownH6 = { fg = "#717C7C" },
@@ -836,15 +851,16 @@ require("lazy").setup({
               ["@markup.quote.markdown"] = { link = "Error" }, -- > blockcode
               ["@markup.list.checked.markdown"] = { link = "WarningMsg" }, -- checked list item
             }
-          end,-- }}}
-        })-- }}}
+          end, -- }}}
+        }) -- }}}
         vim.cmd.colorscheme("kanagawa")
       end,
     }, -- }}}
     -- }}}
 
     -- {{{ [ Treesitter ]
-    { "nvim-treesitter/nvim-treesitter",
+    {
+      "nvim-treesitter/nvim-treesitter",
       -- enabled = false,
       version = false,
       build = ":TSUpdate",
@@ -915,74 +931,48 @@ require("lazy").setup({
     -- }}}
 
     -- {{{ [ LSP ]
-    { "neovim/nvim-lspconfig",
-      dependencies = { -- {{{
-        "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
-        "WhoIsSethDaniel/mason-tool-installer.nvim",
-        "stevearc/conform.nvim",
-        "mfussenegger/nvim-lint",
-      }, -- }}}
+    { -- Mason - installing lsp servers{{{
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+      -- enable = false,
+      lazy = true,
+      cmd = { "Mason", "MasonToolsInstall" },
+      dependencies = {
+        { "williamboman/mason.nvim", opts = {} },
+      },
+      opts = {
+        ensure_installed = {
+          "bash-language-server",
+          "emmet-ls",
+          "lua-language-server",
+          "basedpyright",
+          "marksman",
+          "tinymist",
+          "jinja-lsp",
+          "json-lsp",
+          "htmx-lsp",
+          "zk",
+          --formatters
+          "beautysh",
+          "prettier",
+          "stylua",
+          "ruff",
+          "black",
+          -- linters
+          "shellcheck",
+          "eslint_d",
+          "djlint",
+          -- "vale",
+        },
+        auto_update = false,
+        run_on_start = false,
+      },
+    }, -- }}}
+
+    { -- LSP config{{{
+      "neovim/nvim-lspconfig",
+      event = "BufReadPre",
       config = function()
-        require("mason").setup()
-        require("mason-lspconfig").setup({ -- {{{
-          ensure_installed = {
-            "bashls",
-            "cssls",
-            "jsonls",
-            "emmet_ls",
-            "lua_ls",
-            "basedpyright",
-            "marksman",
-            "tinymist",
-            "jinja_lsp",
-            "htmx",
-            "zk",
-          },
-          automatic_installation = true,
-        })
-
-        local servers = {
-          bashls = { filetypes = { "zsh", "bash", "sh" } },
-          emmet_ls = {
-            filetypes = { "html", "css", "sass", "scss", "less", "javascript", "typescript" },
-            init_options = { html = { options = { ["bem.enabled"] = true } } },
-          },
-          lua_ls = {
-            settings = {
-              Lua = {
-                completion = { callSnippet = "Replace" },
-                diagnostics = { globals = { "vim" } },
-                workspace = { library = { [vim.fn.expand("$VIMRUNTIME/lua")] = true } },
-                telemetry = { enable = false },
-              },
-            },
-          },
-          basedpyright = {
-            root_dir = function(fname)
-              return vim.fn.fnamemodify(fname, ":p:h")
-            end,
-            settings = {
-              python = {
-                analysis = { autoSearchPaths = true, diagnosticMode = "openFilesOnly", useLibraryCodeForTypes = true },
-              },
-            },
-          },
-          marksman = { filetypes = { "markdown", "quarto" } },
-          tinymist = { filetypes = { "typst" } },
-          jinja_lsp = {
-            cmd = { "jinja-lsp" },
-            filetypes = { "htmldjango", "jinja" },
-            root_dir = function(fname)
-              return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
-            end,
-            single_file_support = true,
-          },
-          htmx = {},
-          zk = {},
-        } -- }}}
-
-        -- -- {{{ Capabilities
+        -- {{{ Capabilities
         local original_capabilities = vim.lsp.protocol.make_client_capabilities()
         local capabilities = require("blink.cmp").get_lsp_capabilities(original_capabilities)
         -- local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -991,13 +981,7 @@ require("lazy").setup({
         -- local on_attach = function(client, bufnr)
         --   -- sem zadat on_attach funkcie doplnkov
         -- end
-        -- -- }}}
-
-        require("mason-lspconfig").setup_handlers({ -- {{{
-          function(server)
-            require("lspconfig")[server].setup({servers[server] or {}, capabilities = capabilities})
-          end,
-        }) -- }}}
+        -- }}}
 
         -- {{{ Diagnostic
         vim.diagnostic.config({
@@ -1013,41 +997,106 @@ require("lazy").setup({
         end
         -- }}}
 
-        -- {{{ Formaters/Linters/Debug(DAP)
-        require("mason-tool-installer").setup({
-          ensure_installed = {
-            "beautysh",
-            "prettier",
-            "stylua",
-            "black",
-            "shellcheck",
-            "flake8",
-            "eslint_d",
-            "djlint",
-            "debugpy",
+        local servers = { -- {{{
+          lua_ls = {
+            -- cmd = { vim.fn.stdpath("data") .. "/mason/bin/lua-language-server" }, -- full path to Mason-installed server
+            cmd = { "lua-language-server" }, -- only name of Mason-installed server, because in "OPTIONS" section I have defined Path to Mason folder
+            filetypes = { "lua" },
+            root_dir = function(fname)
+              return vim.fs.dirname(
+                vim.fs.find({ ".git", "init.lua", ".luarc.json" }, { upward = true, path = fname })[1]
+              )
+            end,
+            settings = {
+              Lua = {
+                completion = { callSnippet = "Replace" },
+                diagnostics = { disable = { "missing-fields", "vim" } },
+                workspace = { library = { [vim.fn.expand("$VIMRUNTIME/lua")] = true } },
+                telemetry = { enable = false },
+              },
+            },
           },
-        })
-
-        -- Formaters
-        require("conform").setup({
-          formatters_by_ft = {
-            bash = { "beautysh" },
-            javascript = { "prettier" },
-            css = { "prettier" },
-            lua = { "stylua" },
-            python = { "black" },
+          bashls = {
+            cmd = { "bash-language-server" },
+            filetypes = { "zsh", "bash", "sh" },
           },
-        })
+          emmet_ls = {
+            cmd = { "emmet-ls", "--stdio" },
+            filetypes = { "html", "css", "sass", "scss", "less", "javascript", "typescript" },
+            init_options = { html = { options = { ["bem.enabled"] = true } } },
+          },
+          basedpyright = {
+            cmd = { "basedpyright-langserver", "--stdio" },
+            filetypes = { "python" },
+            root_dir = function(fname)
+              return require("lspconfig.util").root_pattern(
+                "pyproject.toml",
+                "setup.py",
+                "setup.cfg",
+                "requirements.txt",
+                ".git"
+              )(fname) or vim.fn.getcwd()
+            end,
+            settings = {
+              python = {
+                analysis = {
+                  autoSearchPaths = true,
+                  diagnosticMode = "openFilesOnly",
+                  useLibraryCodeForTypes = true,
+                },
+              },
+            },
+          },
+          marksman = {
+            cmd = { "marksman" },
+            filetypes = { "markdown", "quarto" },
+          },
+          tinymist = {
+            cmd = { "tinymist" },
+            filetypes = { "typst" },
+          },
+          jinja_lsp = {
+            cmd = { "jinja-lsp" },
+            filetypes = { "htmldjango", "jinja" },
+            root_dir = function(fname)
+              return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
+            end,
+            single_file_support = true,
+          },
+          htmx = {
+            cmd = { "htmx-lsp" },
+            filetypes = { "django-html", "htmldjango", "html" },
+          },
+          zk = {
+            cmd = { "zk" },
+            filetypes = { "markdown" },
+          },
+        } -- }}}
 
-        -- Linters
-        require("lint").linters_by_ft = {bash = { "shellcheck" }, javascript = { "eslint_d" }, python = { "flake8" },}
-        -- }}}
+        vim.api.nvim_create_autocmd("FileType", { -- {{{
+          group = vim.api.nvim_create_augroup("LspAutoStart", {}),
+          callback = function(args)
+            local ft = vim.bo[args.buf].filetype
+            for name, config in pairs(servers) do
+              if vim.list_contains(config.filetypes or {}, ft) then
+                local attached = vim.iter(vim.lsp.get_clients({ bufnr = args.buf })):any(function(c)
+                  return c.name == name
+                end)
+                if not attached then
+                  vim.lsp.start(vim.tbl_extend("force", config, {
+                    name = name,
+                    capabilities = capabilities,
+                  }))
+                end
+              end
+            end
+          end,
+        }) -- }}}
 
         -- {{{ Keymaps
         map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action" })
         map("n", "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Goto Definition" })
         map("n", "<leader>lD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Goto Declaration" })
-        map("n", "<leader>lf", function()require("conform").format({ async = true, lsp_fallback = true })end, { desc = "Formatting" })
         map("n", "<leader>li", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "Implementation" })
         map("n", "<leader>lI", "<cmd>LspInfo<cr>", { desc = "Info" })
         map("n", "<leader>lk", "<cmd>lua vim.lsp.buf.hover()<cr>", { desc = "Hoover" })
@@ -1057,24 +1106,83 @@ require("lazy").setup({
         map("n", "<leader>lx", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Diagnostic Open Float" })
         -- }}}
       end,
-    },
+    }, -- }}}
+
+    { -- Formating{{{
+      "stevearc/conform.nvim",
+      event = { "BufWritePre" },
+      cmd = { "ConformInfo" },
+      keys = {
+        {
+          "<leader>lf",
+          function()
+            require("conform").format({ async = true, lsp_fallback = true })
+          end,
+          mode = "",
+          desc = "Formatting",
+        },
+      },
+      config = function()
+        require("conform").setup({
+          formatters_by_ft = {
+            bash = { "beautysh" },
+            javascript = { "prettier" },
+            css = { "prettier" },
+            lua = { "stylua" },
+            python = { "ruff_format", "black" },
+            ["_"] = { "trim_whitespace" },
+          },
+        })
+
+        -- Manual format on save excluding lua
+        -- vim.api.nvim_create_autocmd("BufWritePre", {
+        --   callback = function(args)
+        --     local ft = vim.bo[args.buf].filetype
+        --     if ft ~= "lua" then
+        --       require("conform").format({ bufnr = args.buf, lsp_fallback = true, timeout_ms = 500 })
+        --     end
+        --   end,
+        -- })
+      end,
+    }, -- }}}
+
+    { -- Linters{{{
+      "mfussenegger/nvim-lint",
+      event = { "BufWritePost", "BufReadPost", "InsertLeave" },
+      config = function()
+        require("lint").linters_by_ft = {
+          bash = { "shellcheck" },
+          javascript = { "eslint_d" },
+          python = { "ruff" },
+          -- markdown = { "vale" },
+        }
+        -- Automatically run linters on file events
+        vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost", "InsertLeave" }, {
+          callback = function()
+            require("lint").try_lint()
+          end,
+        })
+      end,
+    }, -- }}}
     -- }}}
 
     -- {{{ [ Autocompletion ]
-    { "saghen/blink.cmp",-- {{{
+    {
+      "saghen/blink.cmp", -- {{{
       enabled = true,
+      event = "InsertEnter",
       -- dependencies = "rafamadriz/friendly-snippets",
       version = "1.*",
-      opts = {-- {{{
+      opts = { -- {{{
         fuzzy = { implementation = "prefer_rust" }, -- "prefer_rust" or "lua"
-        keymap = {-- {{{
+        keymap = { -- {{{
           preset = "enter",
-        },-- }}}
-        appearance = {-- {{{
+        }, -- }}}
+        appearance = { -- {{{
           use_nvim_cmp_as_default = true,
           nerd_font_variant = "normal",
-        },-- }}}
-        completion = {-- {{{
+        }, -- }}}
+        completion = { -- {{{
           accept = { auto_brackets = { enabled = true } },
           menu = {
             border = "rounded",
@@ -1094,19 +1202,18 @@ require("lazy").setup({
           documentation = {
             auto_show = true,
             auto_show_delay_ms = 250,
-            window = { border = "rounded" }
+            window = { border = "rounded" },
           },
-        },-- }}}
+        }, -- }}}
         signature = {
           enabled = true,
           window = { border = "rounded" },
         },
         -- snippets = { preset = 'mini_snippets' },
-        sources = {-- {{{
+        sources = { -- {{{
           default = { "lsp", "path", "snippets", "buffer" },
-          providers = {
-          },
-        },-- }}}
+          providers = {},
+        }, -- }}}
         -- window = {-- {{{
         --   completion = {
         --     border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },  -- Border chars
@@ -1116,19 +1223,446 @@ require("lazy").setup({
         --     border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },  -- Border chars
         --   },
         -- },-- }}}
-      },-- }}}
+      }, -- }}}
       opts_extend = { "sources.default" },
-    },-- }}}
+    }, -- }}}
+    -- }}}
+
+    -- {{{ [ Snack.nvim collection ]
+    {
+      "folke/snacks.nvim",
+      priority = 1000,
+      lazy = false,
+      -- enabled = false,
+      opts = {
+        styles = { -- {{{
+        }, -- }}}
+        dashboard = { -- {{{
+          enabled = true,
+          preset = {
+            keys = {
+              { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+              { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+              { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+              { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+              {
+                icon = " ",
+                key = "c",
+                desc = "Config",
+                action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",
+              },
+              {
+                icon = " ",
+                key = "p",
+                desc = "Projects",
+                action = ":lua Snacks.dashboard.pick('projects', {dev = '~/git-repos/', recent = false})",
+              },
+              {
+                icon = "󱙓 ",
+                key = "N",
+                desc = "Notes",
+                action = ":lua Snacks.dashboard.pick('files', {cwd = osvar.ObsidianPath()})",
+              },
+              -- { icon = " ", key = "s", desc = "Restore Session", section = "session" },
+              { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+              { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+            },
+            header = dashboard_header,
+          },
+          sections = {
+            -- { section = "header" },
+            {
+              section = "terminal",
+              cmd = "echo '\27[1;35mHello " .. osvar.username .. "\27[0m'",
+              indent = 28,
+              padding = 2,
+              height = 1,
+            },
+            {
+              section = "terminal",
+              cmd = 'curl -s "wttr.in/' .. city .. "?format=%l:+%c+%t+%w+%T\\n\" | sed 's/.*/\\x1b[34m&\\x1b[0m/'",
+              indent = 8,
+              padding = 2,
+              height = 1,
+            },
+            { section = "keys", gap = 1, padding = 1 },
+            -- {
+            -- icon = " ",
+            -- title = "Projects",
+            -- section = "projects",
+            -- limit=1,
+            -- dirs = "~/git-repos/python/",
+            -- pick=true,
+            -- indent = 2,
+            -- padding = 1,
+            -- },
+            { section = "startup", padding = 2 },
+          },
+        }, -- }}}
+        image = { -- {{{
+          enabled = true,
+          formats = {
+            "png",
+            "jpg",
+            "jpeg",
+            "gif",
+            "bmp",
+            "webp",
+            "tiff",
+            "heic",
+            "avif",
+            "mp4",
+            "mov",
+            "avi",
+            "mkv",
+            "webm",
+            "pdf",
+          },
+          force = true,
+        }, -- }}}
+        input = {
+          enabled = true,
+          win = {
+            style = "input",
+            keys = {
+              i_esc = { "<esc>", { "cmp_close", "cancel", "stopinsert" }, mode = "i", expr = true },
+            },
+          },
+        },
+        lazygit = { enabled = true },
+        notifier = { enabled = true },
+        picker = { -- {{{
+          enabled = true,
+          sources = {
+            explorer = { -- {{{
+              -- your explorer picker configuration comes here
+              auto_close = true,
+              win = {
+                list = {
+                  keys = {
+                    ["<c-h>"] = "toggle_hidden",
+                    ["<RIGHT>"] = "confirm",
+                    ["<LEFT>"] = "explorer_close", -- close directory
+                  },
+                },
+              },
+            }, -- }}}
+            select = {
+              layout = { preset = "vertical", preview = false },
+            },
+          },
+          layout = { preset = "ivy", layout = { position = "bottom" }, preview = false },
+        }, -- }}}
+        quickfile = { enabled = true }, -- When doing nvim somefile.txt, it will render the file as quickly as possible, before loading your plugins
+        rename = { enabled = true },
+        scope = { enabled = false }, -- Scope detection based on treesitter or indent (alternative mini.indentscope)
+        scroll = { enabled = false }, -- Smooth scrolling for Neovim. Properly handles scrolloff and mouse scrolling (alt mini.animate)
+        statuscolumn = { enabled = false },
+        words = { enabled = true },
+      },
+      keys = { -- {{{
+        -- { "<leader>si", function() require('snacks').image.hover() end, desc = "Image Preview" },
+        {
+          "]]",
+          mode = { "n", "t" },
+          function()
+            Snacks.words.jump(vim.v.count1)
+          end,
+          desc = "Next Reference",
+        },
+        {
+          "[[",
+          mode = { "n", "t" },
+          function()
+            Snacks.words.jump(-vim.v.count1)
+          end,
+          desc = "Prev Reference",
+        },
+        -- {"<leader>D", function() Snacks.dashboard.open() end, desc = "Dashboard",},
+        -- Top Pickers & Explorer
+        {
+          "<leader>e",
+          function()
+            Snacks.explorer({ layout = { preset = "sidebar", layout = { position = "left" } } })
+          end,
+          desc = "File Explorer",
+        },
+        {
+          "<leader>E",
+          function()
+            vim.cmd("lcd D:\\")
+            Snacks.explorer.open({ layout = { preset = "sidebar", layout = { position = "left" } } })
+          end,
+          desc = "File Explorer D drive",
+        },
+        {
+          "<leader><space>",
+          function()
+            Snacks.picker.smart()
+          end,
+          desc = "Smart Find Files",
+        },
+        {
+          "<leader>f,",
+          function()
+            Snacks.picker.buffers()
+          end,
+          desc = "Buffers",
+        },
+        -- find
+        {
+          "<leader>ff",
+          function()
+            Snacks.picker.files()
+          end,
+          desc = "Files",
+        },
+        {
+          "<leader>fc",
+          function()
+            Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
+          end,
+          desc = "Find Config File",
+        },
+        -- {"<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files",},
+        {
+          "<leader>fp",
+          function()
+            Snacks.picker.projects({ dev = "~/git-repos/", recent = false })
+          end,
+          desc = "Find Projects",
+        },
+        {
+          "<leader>fo",
+          function()
+            Snacks.picker.recent()
+          end,
+          desc = "Old/Recent Files",
+        },
+        {
+          "<leader>fR",
+          function()
+            Snacks.rename.rename_file()
+          end,
+          desc = "Rename File",
+        },
+        -- git
+        -- {"<leader>gl", function() Snacks.lazygit() end, desc = "Lazygit",},
+        -- {"<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches",},
+        -- {"<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log",},
+        -- {"<leader>gL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line",},
+        -- {"<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status",},
+        -- {"<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash",},
+        -- {"<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)",},
+        -- {"<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Git Log File",},
+        -- Grep
+        {
+          "<leader>gg",
+          function()
+            Snacks.picker.grep()
+          end,
+          desc = "Grep",
+        },
+        {
+          "<leader>gl",
+          function()
+            Snacks.picker.lines()
+          end,
+          desc = "Grep Buffer Lines",
+        },
+        {
+          "<leader>gb",
+          function()
+            Snacks.picker.grep_buffers()
+          end,
+          desc = "Grep Open Buffers",
+        },
+        {
+          "<leader>gw",
+          function()
+            Snacks.picker.grep_word()
+          end,
+          desc = "Grep Word or Selection",
+          mode = { "n", "x" },
+        },
+        -- search
+        {
+          '<leader>f"',
+          function()
+            Snacks.picker.registers()
+          end,
+          desc = "Search Registers",
+        },
+        {
+          "<leader>f/",
+          function()
+            Snacks.picker.search_history()
+          end,
+          desc = "Search History",
+        },
+        {
+          "<leader>fa",
+          function()
+            Snacks.picker.autocmds()
+          end,
+          desc = "Search Autocmds",
+        },
+        {
+          "<leader>f:",
+          function()
+            Snacks.picker.commands()
+          end,
+          desc = "Search Commands",
+        },
+        {
+          "<leader>fC",
+          function()
+            Snacks.picker.command_history()
+          end,
+          desc = "Command History",
+        },
+        {
+          "<leader>fd",
+          function()
+            Snacks.picker.diagnostics()
+          end,
+          desc = "Search Diagnostics",
+        },
+        {
+          "<leader>fD",
+          function()
+            Snacks.picker.diagnostics_buffer()
+          end,
+          desc = "Search Buffer Diagnostics",
+        },
+        {
+          "<leader>fh",
+          function()
+            Snacks.picker.help()
+          end,
+          desc = "Search Help Pages",
+        },
+        {
+          "<leader>fH",
+          function()
+            Snacks.picker.highlights()
+          end,
+          desc = "Search Highlights",
+        },
+        {
+          "<leader>fi",
+          function()
+            Snacks.picker.icons()
+          end,
+          desc = "Search Icons",
+        },
+        {
+          "<leader>fj",
+          function()
+            Snacks.picker.jumps()
+          end,
+          desc = "Search Jumps",
+        },
+        {
+          "<leader>fk",
+          function()
+            Snacks.picker.keymaps()
+          end,
+          desc = "Search Keymaps",
+        },
+        {
+          "<leader>fl",
+          function()
+            Snacks.picker.loclist()
+          end,
+          desc = "Search Location List",
+        },
+        {
+          "<leader>fm",
+          function()
+            Snacks.picker.marks()
+          end,
+          desc = "Search Marks",
+        },
+        {
+          "<leader>fM",
+          function()
+            Snacks.picker.man()
+          end,
+          desc = "Search Man Pages",
+        },
+        -- {"<leader>fp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec",},
+        {
+          "<leader>fq",
+          function()
+            Snacks.picker.qflist()
+          end,
+          desc = "Search Quickfix List",
+        },
+        -- {"<leader>sR", function() Snacks.picker.resume() end, desc = "Search Resume",},
+        {
+          "<leader>fu",
+          function()
+            Snacks.picker.undo()
+          end,
+          desc = "Search Undo History",
+        },
+        {
+          "<leader>fs",
+          function()
+            Snacks.picker.colorschemes()
+          end,
+          desc = "Search Colorschemes",
+        },
+        {
+          "<leader>ft",
+          function()
+            Snacks.picker.treesitter()
+          end,
+          desc = "Search Treesitter",
+        },
+        {
+          "<leader>fN",
+          function()
+            Snacks.picker.notifications()
+          end,
+          desc = "Notification History",
+        },
+        -- LSP
+        {
+          "<leader>ly",
+          function()
+            Snacks.picker.lsp_type_definitions()
+          end,
+          desc = "Goto T[y]pe Definition",
+        },
+        {
+          "<leader>ls",
+          function()
+            Snacks.picker.lsp_symbols()
+          end,
+          desc = "LSP Symbols",
+        },
+        {
+          "<leader>lS",
+          function()
+            Snacks.picker.lsp_workspace_symbols()
+          end,
+          desc = "LSP Workspace Symbols",
+        },
+      }, -- }}}
+    },
     -- }}}
 
     -- {{{ [ Mini.nvim collection ]
     {
       "echasnovski/mini.nvim",
+      -- event = "BufReadPre",
       event = "VeryLazy",
       enabled = true,
       config = function()
-        local ai = require("mini.ai")-- {{{
-        local gen_ai_spec = require('mini.extra').gen_ai_spec
+        local ai = require("mini.ai") -- {{{
+        local gen_ai_spec = require("mini.extra").gen_ai_spec
         local ts_spec = ai.gen_spec.treesitter({
           a = { "@code_cell.outer", "@block.outer", "@conditional.outer", "@loop.outer" },
           i = { "@code_cell.inner", "@block.inner", "@conditional.inner", "@loop.inner" },
@@ -1159,7 +1693,10 @@ require("lazy").setup({
             ["`"] = { "%b``", "^.().*().$" },
 
             -- Word with case
-            e = {{ "%u[%l%d]+%f[^%l%d]", "%f[%S][%l%d]+%f[^%l%d]", "%f[%P][%l%d]+%f[^%l%d]", "^[%l%d]+%f[^%l%d]" }, "^().*()$",},
+            e = {
+              { "%u[%l%d]+%f[^%l%d]", "%f[%S][%l%d]+%f[^%l%d]", "%f[%P][%l%d]+%f[^%l%d]", "^[%l%d]+%f[^%l%d]" },
+              "^().*()$",
+            },
             -- From mini.extra
             B = gen_ai_spec.buffer(),
             D = gen_ai_spec.diagnostic(),
@@ -1190,11 +1727,11 @@ require("lazy").setup({
           silent = true,
         }) -- }}}
 
-        require("mini.bracketed").setup({-- {{{
-          buffer     = { suffix = "b", options = {} },
-          comment    = { suffix = "x", options = {} },
-          conflict   = { suffix = "", options = {} },
-        })-- }}}
+        require("mini.bracketed").setup({ -- {{{
+          buffer = { suffix = "b", options = {} },
+          comment = { suffix = "x", options = {} },
+          conflict = { suffix = "", options = {} },
+        }) -- }}}
 
         require("mini.bufremove").setup()
 
@@ -1264,19 +1801,19 @@ require("lazy").setup({
         }) -- }}}
 
         -- {{{ mini.comment
-        local mappings = ( osvar.os_type == "linux" )
-        and {
-          comment = "<C-/>",
-          comment_line = "<C-/>",
-          comment_visual = "<C-/>",
-          textobject = "<C-/>",
-        }
-        or {
-          comment = "<C-_>",
-          comment_line = "<C-_>",
-          comment_visual = "<C-_>",
-          textobject = "<C-_>",
-        }
+        local mappings = (osvar.os_type == "linux")
+            and {
+              comment = "<C-/>",
+              comment_line = "<C-/>",
+              comment_visual = "<C-/>",
+              textobject = "<C-/>",
+            }
+          or {
+            comment = "<C-_>",
+            comment_line = "<C-_>",
+            comment_visual = "<C-_>",
+            textobject = "<C-_>",
+          }
 
         require("mini.comment").setup({
           options = {},
@@ -1300,49 +1837,55 @@ require("lazy").setup({
         --         })
         -- -- }}}
 
-        require("mini.files").setup({-- {{{
+        require("mini.files").setup({ -- {{{
           mappings = {
-            close       = '<ESC>',
-            go_in       = '<Right>',
-            go_in_plus  = 'L',
-            go_out      = '<Left>',
-            go_out_plus = 'H',
-            mark_goto   = "'",
-            mark_set    = 'm',
-            reset       = '<BS>',
-            reveal_cwd  = '@',
-            show_help   = 'g?',
-            synchronize = '=',
-            trim_left   = '<',
-            trim_right  = '>',
+            close = "<ESC>",
+            go_in = "<Right>",
+            go_in_plus = "L",
+            go_out = "<Left>",
+            go_out_plus = "H",
+            mark_goto = "'",
+            mark_set = "m",
+            reset = "<BS>",
+            reveal_cwd = "@",
+            show_help = "g?",
+            synchronize = "=",
+            trim_left = "<",
+            trim_right = ">",
           },
         })
-        map("n", "<leader>-", function() if not MiniFiles.close() then MiniFiles.open() end end, { desc = "Mini files" })
+        map("n", "<leader>-", function()
+          if not MiniFiles.close() then
+            MiniFiles.open()
+          end
+        end, { desc = "Mini files" })
         -- }}}
 
-        local hipatterns = require("mini.hipatterns")-- {{{
+        local hipatterns = require("mini.hipatterns") -- {{{
         hipatterns.setup({
           highlighters = {
             -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
-            fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
-            hack  = { pattern = '%f[%w]()HACK()%f[%W]',  group = 'MiniHipatternsHack'  },
-            todo  = { pattern = '%f[%w]()TODO()%f[%W]',  group = 'MiniHipatternsTodo'  },
-            note  = { pattern = '%f[%w]()NOTE()%f[%W]',  group = 'MiniHipatternsNote'  },
+            fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
+            hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
+            todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
+            note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
 
             -- Highlight hex color strings (`#rrggbb`) using that color
             hex_color = hipatterns.gen_highlighter.hex_color(),
           },
         })
-        map("n", "\\H", function()require("mini.hipatterns").toggle()end, {desc = "Toggle 'Hipatterns'"})
+        map("n", "\\H", function()
+          require("mini.hipatterns").toggle()
+        end, { desc = "Toggle 'Hipatterns'" })
         -- }}}
 
         require("mini.icons").setup()
 
-        require("mini.jump2d").setup({-- {{{
+        require("mini.jump2d").setup({ -- {{{
           mappings = {
-            start_jumping = ',',
+            start_jumping = ",",
           },
-        })-- }}}
+        }) -- }}}
 
         require("mini.pairs").setup({ -- {{{
           modes = { insert = true, command = true, terminal = false },
@@ -1363,10 +1906,28 @@ require("lazy").setup({
 
         -- require("mini.pick").setup()
 
-        require("mini.sessions").setup()-- {{{
-        map("n", "<leader>msw", function()vim.ui.input({ prompt = "Session name: " }, function(input)if input and input ~= "" then MiniSessions.write(input) end end)end, { desc = "Session Write" })
-        map("n", "<leader>msr", function()vim.ui.input({ prompt = "Session name: " }, function(input)if input and input ~= "" then MiniSessions.read(input) end end)end, { desc = "Session Read" })
-        map("n", "<leader>msD", function()vim.ui.input({ prompt = "Session name: " }, function(input)if input and input ~= "" then MiniSessions.delete(input) end end)end, { desc = "Session Delete" })
+        require("mini.sessions").setup() -- {{{
+        map("n", "<leader>msw", function()
+          vim.ui.input({ prompt = "Session name: " }, function(input)
+            if input and input ~= "" then
+              MiniSessions.write(input)
+            end
+          end)
+        end, { desc = "Session Write" })
+        map("n", "<leader>msr", function()
+          vim.ui.input({ prompt = "Session name: " }, function(input)
+            if input and input ~= "" then
+              MiniSessions.read(input)
+            end
+          end)
+        end, { desc = "Session Read" })
+        map("n", "<leader>msD", function()
+          vim.ui.input({ prompt = "Session name: " }, function(input)
+            if input and input ~= "" then
+              MiniSessions.delete(input)
+            end
+          end)
+        end, { desc = "Session Delete" })
         map("n", "<leader>mss", "<cmd>lua MiniSessions.select()<cr>", { desc = "Session Select" })
         -- }}}
 
@@ -1382,7 +1943,7 @@ require("lazy").setup({
         -- snippets.start_lsp_server()
         -- -- }}}
 
-        require("mini.splitjoin").setup({-- {{{
+        require("mini.splitjoin").setup({ -- {{{
           mappings = {
             toggle = "gS",
             split = "gk",
@@ -1408,31 +1969,31 @@ require("lazy").setup({
           },
         }) -- }}}
 
-        local statusline = require("mini.statusline")-- {{{
+        local statusline = require("mini.statusline") -- {{{
 
         -- VS Code-like theme {{{
         local colors = {
-          red    = "#e74d23",
+          red = "#e74d23",
           orange = "#FF8800",
           yellow = "#ffc233",
-          green  = "#427b00",
-          blue   = "#007ACD",
+          green = "#427b00",
+          blue = "#007ACD",
           purple = "#67217A",
-          black  = "#16161D",
-          white  = "#FFFFFF",
-          grey   = "#727169",
+          black = "#16161D",
+          white = "#FFFFFF",
+          grey = "#727169",
         }
 
         -- Set highlights for different modes
         local function set_statusline_highlights()
           local hl_groups = {
-            MiniStatuslineModeNormal  = { fg = colors.white, bg = colors.purple, style = "normal" },
-            MiniStatuslineModeInsert  = { fg = colors.white, bg = colors.blue, style = "normal" },
-            MiniStatuslineModeVisual  = { fg = colors.white, bg = colors.green, style = "normal" },
+            MiniStatuslineModeNormal = { fg = colors.white, bg = colors.purple, style = "normal" },
+            MiniStatuslineModeInsert = { fg = colors.white, bg = colors.blue, style = "normal" },
+            MiniStatuslineModeVisual = { fg = colors.white, bg = colors.green, style = "normal" },
             MiniStatuslineModeReplace = { fg = colors.white, bg = colors.orange, style = "normal" },
             MiniStatuslineModeCommand = { fg = colors.white, bg = colors.red, style = "normal" },
-            MiniStatuslineModeOther   = { fg = colors.white, bg = colors.black, style = "normal" },
-            MiniStatuslineInactive    = { fg = colors.grey, bg = colors.black },
+            MiniStatuslineModeOther = { fg = colors.white, bg = colors.black, style = "normal" },
+            MiniStatuslineInactive = { fg = colors.grey, bg = colors.black },
             -- MiniStatuslineDevinfo     = { fg = colors.white, bg = colors.grey },
             -- MiniStatuslineFilename    = { fg = colors.white, bg = colors.grey, style = "normal" },
             -- MiniStatuslineFileinfo    = { fg = colors.white, bg = colors.grey },
@@ -1450,23 +2011,27 @@ require("lazy").setup({
         vim.api.nvim_create_autocmd("ColorScheme", {
           pattern = "*",
           callback = set_statusline_highlights,
-        })-- }}}
+        }) -- }}}
 
         -- Function to show macro recording status{{{
         local function macro_recording()
           local reg = vim.fn.reg_recording()
-          if reg == "" then return "" end -- Return empty string if no macro is being recorded
+          if reg == "" then
+            return ""
+          end -- Return empty string if no macro is being recorded
           return string.format("󰑋 @%s", reg)
-        end-- }}}
+        end -- }}}
 
         -- Function to show the active Python virtual environment{{{
         local function python_venv()
           local venv = os.getenv("VIRTUAL_ENV") -- Get virtual environment path
-          if not venv or venv == "" then return "" end -- Return empty string if no venv
+          if not venv or venv == "" then
+            return ""
+          end -- Return empty string if no venv
 
           local venv_name = vim.fn.fnamemodify(venv, ":t") -- Extract only the folder name
           return string.format("󰌠 %s", venv_name)
-        end-- }}}
+        end -- }}}
 
         -- -- Function to show the active Molten status{{{
         -- local function molten_init()
@@ -1492,9 +2057,9 @@ require("lazy").setup({
             return vim.bo[buf].modified
           end, vim.api.nvim_list_bufs())
           return string.format("󰈔 [%d:%d+]", loaded_buffers, modified_buffers)
-        end-- }}}
+        end -- }}}
 
-        statusline.setup({-- {{{
+        statusline.setup({ -- {{{
           use_icons = true,
           content = {
             inactive = function()
@@ -1504,230 +2069,70 @@ require("lazy").setup({
             end,
 
             active = function()
-              local mode, mode_hl   = MiniStatusline.section_mode({ trunc_width        = 120 })
-              local git             = MiniStatusline.section_git({ trunc_width         = 40 })
-              local diff            = MiniStatusline.section_diff({ trunc_width        = 75 })
-              local diagnostics     = MiniStatusline.section_diagnostics({ trunc_width = 75, icon = "", signs = { ERROR = " ", WARN = " ", INFO = " ", HINT = "󰌵 " } })
-              local lsp             = MiniStatusline.section_lsp({ trunc_width         = 75, icon = "" })
-              local filename        = MiniStatusline.section_filename({ trunc_width    = 140 })
-              local fileinfo        = MiniStatusline.section_fileinfo({ trunc_width    = 1000 })
-              local location        = MiniStatusline.section_location({ trunc_width    = 75 })
-              local search          = MiniStatusline.section_searchcount({ trunc_width = 75 })
-              local buffer_counts   = buffer_counts()
+              local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 120 })
+              local git = MiniStatusline.section_git({ trunc_width = 40 })
+              local diff = MiniStatusline.section_diff({ trunc_width = 75 })
+              local diagnostics = MiniStatusline.section_diagnostics({
+                trunc_width = 75,
+                icon = "",
+                signs = { ERROR = " ", WARN = " ", INFO = " ", HINT = "󰌵 " },
+              })
+              local lsp = MiniStatusline.section_lsp({ trunc_width = 75, icon = "" })
+              local filename = MiniStatusline.section_filename({ trunc_width = 140 })
+              local fileinfo = MiniStatusline.section_fileinfo({ trunc_width = 1000 })
+              local location = MiniStatusline.section_location({ trunc_width = 75 })
+              local search = MiniStatusline.section_searchcount({ trunc_width = 75 })
+              local buffer_counts = buffer_counts()
               local macro_recording = macro_recording()
               -- local molten_init     = molten_init()
-              local python_venv     = python_venv()
+              local python_venv = python_venv()
 
               return MiniStatusline.combine_groups({
-                { hl    =   mode_hl,                   strings = { fileinfo } },
-                '%<', -- Mark general truncate point
-                { hl    =   mode_hl,                   strings = { filename, buffer_counts, macro_recording } },
-                '%= ', -- End left alignment
-                { hl    =   mode_hl,                   strings = { python_venv, lsp, molten_init, git, diff, diagnostics, location } },
+                { hl = mode_hl, strings = { fileinfo } },
+                "%<", -- Mark general truncate point
+                { hl = mode_hl, strings = { filename, buffer_counts, macro_recording } },
+                "%= ", -- End left alignment
+                {
+                  hl = mode_hl,
+                  strings = { python_venv, lsp, molten_init, git, diff, diagnostics, location },
+                },
               })
-            end
+            end,
           },
-        })-- }}}
+        }) -- }}}
         -- }}}
 
         require("mini.tabline").setup()
 
-        require('mini.trailspace').setup()-- {{{
-        vim.api.nvim_create_autocmd("BufWritePre", {
-          callback = function()
-            MiniTrailspace.trim()
-            MiniTrailspace.trim_last_lines()
-          end,
-          desc = "Trim trailing whitespace and empty lines on save",
-        })-- }}}
-
+        -- require("mini.trailspace").setup() -- {{{
+        -- vim.api.nvim_create_autocmd("BufWritePre", {
+        --   callback = function()
+        --     MiniTrailspace.trim()
+        --     MiniTrailspace.trim_last_lines()
+        --   end,
+        --   desc = "Trim trailing whitespace and empty lines on save",
+        -- }) -- }}}
       end,
     },
     -- }}}
 
-    -- {{{ [ Snack.nvim collection ]
-    {
-      "folke/snacks.nvim",
-      priority = 1000,
-      lazy = false,
-      -- enabled = false,
-      opts = {
-        styles = { -- {{{
-        }, -- }}}
-        dashboard = {-- {{{
-          enabled = true,
-          preset = {
-            keys = {
-              { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
-              { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-              { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
-              { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
-              { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
-              { icon = " ", key = "p", desc = "Projects", action = ":lua Snacks.dashboard.pick('projects', {dev = '~/git-repos/', recent = false})" },
-              { icon = "󱙓 ", key = "N", desc = "Notes", action = ":lua Snacks.dashboard.pick('files', {cwd = osvar.ObsidianPath()})" },
-              -- { icon = " ", key = "s", desc = "Restore Session", section = "session" },
-              { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
-              { icon = " ", key = "q", desc = "Quit", action = ":qa" },
-            },
-            header = dashboard_header,
-          },
-          sections = {
-            -- { section = "header" },
-            { section = "terminal", cmd = "echo '\27[1;35mHello " .. osvar.username .. "\27[0m'", indent = 28, padding = 2, height = 1 },
-            { section = "terminal", cmd = "curl -s \"wttr.in/" .. city .. "?format=%l:+%c+%t+%w+%T\\n\" | sed 's/.*/\\x1b[34m&\\x1b[0m/'", indent = 8, padding = 2, height = 1 },
-            { section = "keys", gap = 1, padding = 1 },
-            -- {
-              -- icon = " ",
-              -- title = "Projects",
-              -- section = "projects",
-              -- limit=1,
-              -- dirs = "~/git-repos/python/",
-              -- pick=true,
-              -- indent = 2,
-              -- padding = 1,
-            -- },
-            { section = "startup", padding = 2 },
-          },
-        },-- }}}
-        image = { -- {{{
-          enabled = true,
-          formats = {
-            "png",
-            "jpg",
-            "jpeg",
-            "gif",
-            "bmp",
-            "webp",
-            "tiff",
-            "heic",
-            "avif",
-            "mp4",
-            "mov",
-            "avi",
-            "mkv",
-            "webm",
-            "pdf",
-          },
-          force = true,
-        }, -- }}}
-        input = {
-          enabled = true,
-          win = {
-            style = "input",
-            keys = {
-              i_esc = { "<esc>", { "cmp_close", "cancel", "stopinsert" }, mode = "i", expr = true },
-            },
-          },
-        },
-        lazygit = { enabled = true },
-        notifier = { enabled = true },
-        picker = {-- {{{
-          enabled = true,
-          sources = {
-            explorer = {-- {{{
-              -- your explorer picker configuration comes here
-              auto_close = true,
-              win = {
-                list = {
-                  keys = {
-                    ["<c-h>"] = "toggle_hidden",
-                    ["<RIGHT>"] = "confirm",
-                    ["<LEFT>"] = "explorer_close", -- close directory
-                  },
-                },
-              },
-            },-- }}}
-            select = {
-              layout = { preset = "vertical", preview = false },
-            },
-          },
-          layout = { preset = "ivy", layout = { position = "bottom" }, preview = false },
-        }, -- }}}
-        quickfile = { enabled = true }, -- When doing nvim somefile.txt, it will render the file as quickly as possible, before loading your plugins
-        rename = { enabled = true },
-        scope = { enabled = false }, -- Scope detection based on treesitter or indent (alternative mini.indentscope)
-        scroll = { enabled = false }, -- Smooth scrolling for Neovim. Properly handles scrolloff and mouse scrolling (alt mini.animate)
-        statuscolumn = { enabled = false },
-        words = { enabled = true },
-      },
-      keys = {-- {{{
-        -- { "<leader>si", function() require('snacks').image.hover() end, desc = "Image Preview" },
-        {"]]", mode = { "n", "t" }, function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference",},
-        {"[[", mode = { "n", "t" }, function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference",},
-        -- {"<leader>D", function() Snacks.dashboard.open() end, desc = "Dashboard",},
-        -- Top Pickers & Explorer
-        {"<leader>e", function() Snacks.explorer({ layout = { preset = "sidebar", layout = { position = "left" } } }) end, desc = "File Explorer",},
-        {"<leader>E", function() vim.cmd("lcd D:\\") Snacks.explorer.open({ layout = { preset = "sidebar", layout = { position = "left" } } }) end, desc = "File Explorer D drive",},
-        {"<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files",},
-        {"<leader>f,", function() Snacks.picker.buffers() end, desc = "Buffers",},
-        -- find
-        {"<leader>ff", function() Snacks.picker.files() end, desc = "Files",},
-        {"<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File",},
-        -- {"<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files",},
-        {"<leader>fp", function() Snacks.picker.projects({dev = '~/git-repos/', recent = false}) end, desc = "Find Projects",},
-        {"<leader>fo", function() Snacks.picker.recent() end, desc = "Old/Recent Files",},
-        {"<leader>fR", function() Snacks.rename.rename_file() end, desc = "Rename File",},
-        -- git
-        -- {"<leader>gl", function() Snacks.lazygit() end, desc = "Lazygit",},
-        -- {"<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches",},
-        -- {"<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log",},
-        -- {"<leader>gL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line",},
-        -- {"<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status",},
-        -- {"<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash",},
-        -- {"<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)",},
-        -- {"<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Git Log File",},
-        -- Grep
-        {"<leader>gg", function() Snacks.picker.grep() end, desc = "Grep",},
-        {"<leader>gl", function() Snacks.picker.lines() end, desc = "Grep Buffer Lines",},
-        {"<leader>gb", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers",},
-        {"<leader>gw", function() Snacks.picker.grep_word() end, desc = "Grep Word or Selection", mode = { "n", "x" },},
-        -- search
-        {'<leader>f"', function() Snacks.picker.registers() end, desc = "Search Registers",},
-        {"<leader>f/", function() Snacks.picker.search_history() end, desc = "Search History",},
-        {"<leader>fa", function() Snacks.picker.autocmds() end, desc = "Search Autocmds",},
-        {"<leader>f:", function() Snacks.picker.commands() end, desc = "Search Commands",},
-        {"<leader>fC", function() Snacks.picker.command_history() end, desc = "Command History",},
-        {"<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Search Diagnostics",},
-        {"<leader>fD", function() Snacks.picker.diagnostics_buffer() end, desc = "Search Buffer Diagnostics",},
-        {"<leader>fh", function() Snacks.picker.help() end, desc = "Search Help Pages",},
-        {"<leader>fH", function() Snacks.picker.highlights() end, desc = "Search Highlights",},
-        {"<leader>fi", function() Snacks.picker.icons() end, desc = "Search Icons",},
-        {"<leader>fj", function() Snacks.picker.jumps() end, desc = "Search Jumps",},
-        {"<leader>fk", function() Snacks.picker.keymaps() end, desc = "Search Keymaps",},
-        {"<leader>fl", function() Snacks.picker.loclist() end, desc = "Search Location List",},
-        {"<leader>fm", function() Snacks.picker.marks() end, desc = "Search Marks",},
-        {"<leader>fM", function() Snacks.picker.man() end, desc = "Search Man Pages",},
-        -- {"<leader>fp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec",},
-        {"<leader>fq", function() Snacks.picker.qflist() end, desc = "Search Quickfix List",},
-        -- {"<leader>sR", function() Snacks.picker.resume() end, desc = "Search Resume",},
-        {"<leader>fu", function() Snacks.picker.undo() end, desc = "Search Undo History",},
-        {"<leader>fs", function() Snacks.picker.colorschemes() end, desc = "Search Colorschemes",},
-        {"<leader>ft", function() Snacks.picker.treesitter() end, desc = "Search Treesitter",},
-        {"<leader>fN", function() Snacks.picker.notifications() end, desc = "Notification History",},
-        -- LSP
-        { "<leader>ly", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
-        { "<leader>ls", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
-        { "<leader>lS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
-      },-- }}}
-    },
-    -- }}}
-
     -- {{{ [ Notes ]
-    { "obsidian-nvim/obsidian.nvim",-- {{{
+    {
+      "obsidian-nvim/obsidian.nvim", -- {{{
       -- je to fork pretoze "epwalsh/obsidian.nvim" neobsahuje zatial "blink-cmp" a "snacks.picker"
       -- enabled = false,
       version = "*", -- recommended, use latest release instead of latest commit
       lazy = true,
-      dependencies = {-- {{{
+      dependencies = { -- {{{
         "nvim-lua/plenary.nvim",
-      },-- }}}
-      opts = {-- {{{
+      }, -- }}}
+      opts = { -- {{{
         ui = { enable = false }, -- vypnute ui pre doplnok render-markdown
         disable_frontmatter = true,
         workspaces = {
           {
             name = "Obsidian",
-            path = osvar.ObsidianPath() -- definovane v [[ DETECT OS ]]
+            path = osvar.ObsidianPath(), -- definovane v [[ DETECT OS ]]
           },
         },
         notes_subdir = "inbox",
@@ -1768,41 +2173,96 @@ require("lazy").setup({
             insert_tag = "<C-l>",
           },
         },
-
-      },-- }}}
-      keys = {-- {{{
-        { "<leader>ns", function() Snacks.picker.files({ cwd = osvar.ObsidianPath() }) end, desc = "Search Note", },
+      }, -- }}}
+      keys = { -- {{{
+        {
+          "<leader>ns",
+          function()
+            Snacks.picker.files({ cwd = osvar.ObsidianPath() })
+          end,
+          desc = "Search Note",
+        },
         -- { "<leader>nn", mode = "n", function()osvar.ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
-        { "<leader>nn", mode = "n", function()osvar.ObsidianNewNote(true, "basic")end, desc = "New Note Basic", noremap = true, silent = true },
+        {
+          "<leader>nn",
+          mode = "n",
+          function()
+            osvar.ObsidianNewNote(true, "basic")
+          end,
+          desc = "New Note Basic",
+          noremap = true,
+          silent = true,
+        },
         { "<leader>nt", mode = "n", ":ObsidianTemplate<cr>", desc = "Template Pick" },
         { "<leader>ni", mode = "n", ":ObsidianPasteImg<cr>", desc = "Image Paste", noremap = true, silent = true },
-        { "<leader>nc", mode = "n", ":ObsidianToggleCheckbox<cr>", desc = "Checkbox Toggle", noremap = true, silent = true },
+        {
+          "<leader>nc",
+          mode = "n",
+          ":ObsidianToggleCheckbox<cr>",
+          desc = "Checkbox Toggle",
+          noremap = true,
+          silent = true,
+        },
         { "<leader>nq", mode = "n", ":ObsidianQuickSwitch<cr>", desc = "Switch Note", noremap = true, silent = true },
         { "<leader>nlf", mode = "n", ":ObsidianFollowLink<cr>", desc = "Link Follow", noremap = true, silent = true },
         { "<leader>nlb", mode = "n", ":ObsidianBacklinks<cr>", desc = "Backlinks", noremap = true, silent = true },
         { "<leader>nlp", mode = "n", ":ObsidianLinks<cr>", desc = "Link Pick", noremap = true, silent = true },
         { "<leader>nT", mode = "n", ":ObsidianTags<cr>", desc = "Tags", noremap = true, silent = true },
-        { "<leader>nD", mode = "n", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>", desc = "Delete Note", noremap = true, silent = true },
-        { "<leader>nE", mode = {"v", "x"}, ":ObsidianExtractNote<cr>", desc = "Extract Text", noremap = true, silent = true },
-        { "<leader>nl", mode = {"v", "x"}, ":ObsidianLinkNew<cr>", desc = "Link New", noremap = true, silent = true },
-      },-- }}}
-    },-- }}}
+        {
+          "<leader>nD",
+          mode = "n",
+          ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>",
+          desc = "Delete Note",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>nE",
+          mode = { "v", "x" },
+          ":ObsidianExtractNote<cr>",
+          desc = "Extract Text",
+          noremap = true,
+          silent = true,
+        },
+        { "<leader>nl", mode = { "v", "x" }, ":ObsidianLinkNew<cr>", desc = "Link New", noremap = true, silent = true },
+      }, -- }}}
+    }, -- }}}
 
-    { "zk-org/zk-nvim",-- {{{
+    {
+      "zk-org/zk-nvim", -- {{{
       -- enabled = false,
-      config = function()-- {{{
+      config = function() -- {{{
         require("zk").setup({
-        -- See Setup section below
-        picker = "snacks_picker",
-      })
-      end,-- }}}
-      keys = {-- {{{
+          -- See Setup section below
+          picker = "snacks_picker",
+        })
+      end, -- }}}
+      keys = { -- {{{
         -- {"<leader>nz", mode = "n", function() require("zk").new({ title = vim.fn.input("Title: ") }) end, desc = "ZK New Note", noremap = true, silent = true,},
-        { "<leader>nz", mode = "n", function() vim.ui.input({ prompt = "Title: "}, function(title) if not title then return end if title ~= "" then require("zk").new({title = title}) else return end end) end, desc = "ZK New Note", noremap = true, silent = true },
-      },-- }}}
-    },-- }}}
+        {
+          "<leader>nz",
+          mode = "n",
+          function()
+            vim.ui.input({ prompt = "Title: " }, function(title)
+              if not title then
+                return
+              end
+              if title ~= "" then
+                require("zk").new({ title = title })
+              else
+                return
+              end
+            end)
+          end,
+          desc = "ZK New Note",
+          noremap = true,
+          silent = true,
+        },
+      }, -- }}}
+    }, -- }}}
 
-    { "MeanderingProgrammer/render-markdown.nvim",-- {{{
+    {
+      "MeanderingProgrammer/render-markdown.nvim", -- {{{
       -- enabled = false,
       event = {
         "BufReadPost *.md",
@@ -1825,14 +2285,22 @@ require("lazy").setup({
           bottom_pad = 0,
         },
       },
-      keys = {-- {{{
-        { "\\m", mode = { "n" }, "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle 'markdown preview'", noremap = true, silent = true },
-      },-- }}}
-    },-- }}}
+      keys = { -- {{{
+        {
+          "\\m",
+          mode = { "n" },
+          "<cmd>RenderMarkdown toggle<cr>",
+          desc = "Toggle 'markdown preview'",
+          noremap = true,
+          silent = true,
+        },
+      }, -- }}}
+    }, -- }}}
     -- }}}
 
     -- {{{ [ Quarto, Jupyterlab ]
-    { "quarto-dev/quarto-nvim",-- {{{
+    {
+      "quarto-dev/quarto-nvim", -- {{{
       -- enabled = false,
       ft = { "quarto" },
       opts = {
@@ -1852,73 +2320,145 @@ require("lazy").setup({
           default_method = "molten",
         },
       },
-      keys = {-- {{{
+      keys = { -- {{{
         { "<leader>qa", mode = { "n" }, "<cmd>QuartoActivate<cr>", desc = "Activate", noremap = true, silent = true },
-        { "<leader>qp", mode = { "n" }, "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = "Preview", noremap = true, silent = true },
-        { "<leader>qq", mode = { "n" }, "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = "Quit", noremap = true, silent = true },
+        {
+          "<leader>qp",
+          mode = { "n" },
+          "<cmd>lua require'quarto'.quartoPreview()<cr>",
+          desc = "Preview",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>qq",
+          mode = { "n" },
+          "<cmd>lua require'quarto'.quartoClosePreview()<cr>",
+          desc = "Quit",
+          noremap = true,
+          silent = true,
+        },
         { "<leader>qh", mode = { "n" }, "<cmd>QuartoHelp<cr>", desc = "Help", noremap = true, silent = true },
 
         -- Quarto runner keymaps (code cell)
-        { "<leader>qrc", mode = "n", function() require("quarto.runner").run_cell() end, desc = "Run Cell", noremap = true, silent = true },
-        { "<leader>qrl", mode = "n", function() require("quarto.runner").run_line() end, desc = "Run Line", noremap = true, silent = true },
+        {
+          "<leader>qrc",
+          mode = "n",
+          function()
+            require("quarto.runner").run_cell()
+          end,
+          desc = "Run Cell",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>qrl",
+          mode = "n",
+          function()
+            require("quarto.runner").run_line()
+          end,
+          desc = "Run Line",
+          noremap = true,
+          silent = true,
+        },
         -- { "<leader>pca", mode = "n", function() require("quarto.runner").run_above() end, desc = "run cell and above", noremap = true, silent = true },
-        { "<leader>qra", mode = "n", function() require("quarto.runner").run_all() end, desc = "Run All Cells", noremap = true, silent = true },
-        { "<leader>qrA", mode = "n", function() require("quarto.runner").run_all(true) end, desc = "Run All Languages", noremap = true, silent = true },
-        { "<leader>r", mode = "v", function() require("quarto.runner").run_range() end, desc = "Run Selection", noremap = true, silent = true },
-      },-- }}}
+        {
+          "<leader>qra",
+          mode = "n",
+          function()
+            require("quarto.runner").run_all()
+          end,
+          desc = "Run All Cells",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>qrA",
+          mode = "n",
+          function()
+            require("quarto.runner").run_all(true)
+          end,
+          desc = "Run All Languages",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>r",
+          mode = "v",
+          function()
+            require("quarto.runner").run_range()
+          end,
+          desc = "Run Selection",
+          noremap = true,
+          silent = true,
+        },
+      }, -- }}}
+    }, -- }}}
 
-    },-- }}}
-
-    { "jmbuhr/otter.nvim",-- {{{
+    {
+      "jmbuhr/otter.nvim", -- {{{
       -- enabled = false,
       event = {
         "BufReadPost *.md",
         "BufNewFile  *.md",
         "BufReadPost *.qmd",
         "BufNewFile  *.qmd",
-        "BufEnter  *.ipynb",  -- pre jupyternotebooks
+        "BufEnter  *.ipynb", -- pre jupyternotebooks
       },
       init = function()
         vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile", "BufEnter" }, {
           pattern = { "*.md", "*.qmd", "*.ipynb" },
           callback = function()
-            require('otter').activate()
+            require("otter").activate()
           end,
         })
       end,
-      keys = {-- {{{
-        { "<leader>qo", mode = { "n" }, function() require("otter").activate() end, desc = "Otter Activate", noremap = true, silent = true },
-      },-- }}}
-    },-- }}}
+      keys = { -- {{{
+        {
+          "<leader>qo",
+          mode = { "n" },
+          function()
+            require("otter").activate()
+          end,
+          desc = "Otter Activate",
+          noremap = true,
+          silent = true,
+        },
+      }, -- }}}
+    }, -- }}}
 
-    { "GCBallesteros/jupytext.nvim",-- {{{
+    {
+      "GCBallesteros/jupytext.nvim", -- {{{
       -- enabled = false,
       opts = {
         style = "markdown",
         output_extension = "md",
         force_ft = "markdown",
       },
-    },-- }}}
+    }, -- }}}
     -- }}}
 
     -- {{{ [ Mix ]
-    { "benomahony/uv.nvim",-- python uv and custom venv picker {{{
+    {
+      "benomahony/uv.nvim", -- python uv and custom venv picker {{{
       -- enabled = false,
       ft = { "python" },
-      config = function()-- {{{
+      config = function() -- {{{
         local uv = require("uv")
         -- local snacks = require("snacks")
 
         -- custom snack venv picker
-        Snacks.picker.sources.venv_home = {-- {{{
+        Snacks.picker.sources.venv_home = { -- {{{
           finder = function()
             local items = {
-              { text = "Create new venv", is_create = true }
+              { text = "Create new venv", is_create = true },
             }
             local handle = vim.loop.fs_scandir(osvar.venv_home)
             while handle do
               local name, typ = vim.loop.fs_scandir_next(handle)
-              if not name then break end
+              if not name then
+                break
+              end
               if typ == "directory" then
                 local path = osvar.venv_home .. "/" .. name
                 table.insert(items, {
@@ -1942,7 +2482,7 @@ require("lazy").setup({
                 vim.ui.input({ prompt = "New venv name: " }, function(name)
                   if name and #name > 0 then
                     local path = osvar.venv_home .. "/" .. name
-                    uv.run_command("uv venv " .. path)  -- Simplified command to create venv
+                    uv.run_command("uv venv " .. path) -- Simplified command to create venv
                     uv.activate_venv(path)
                   end
                 end)
@@ -1952,61 +2492,121 @@ require("lazy").setup({
               end
             end
           end,
-        }-- }}}
+        } -- }}}
 
         uv.setup({
-          keymaps = false
+          keymaps = false,
           -- keymaps = { prefix = "<leader>x" }
         })
-      end,-- }}}
-      keys = {-- {{{
-        { "<leader>pe", mode = {"n"}, function() Snacks.picker("venv_home") end, desc = "Pick Venv (~/py-venv)", noremap = true, silent = true },
-        { "<leader>pr", mode = {"n"}, "<cmd>UVRunFile<cr>", desc = "UV Run Current File", noremap = true, silent = true },
-        { "<leader>ps", mode = {"v"}, "<cmd>UVRunSelection<cr>", desc = "UV Run Selection", noremap = true, silent = true },
-        { "<leader>pf", mode = {"n"}, "<cmd>UVRunFunction<cr>", desc = "UV Run Function", noremap = true, silent = true },
-        { "<leader>pE", mode = {"n"}, "<cmd>lua Snacks.picker.pick('uv_venv')<cr>", desc = "UV Environment", noremap = true, silent = true },
-        { "<leader>pi", mode = {"n"}, "<cmd>UVInit<cr>", desc = "UV Init", noremap = true, silent = true },
-        { "<leader>pa", mode = {"n"}, "<cmd>lua vim.ui.input({prompt = 'Enter package name: '}, function(input) if input and input ~= '' then require('uv').run_command('uv add ' .. input) end end)<cr>", desc = "UV Add Package", noremap = true, silent = true },
-        { "<leader>pd", mode = {"n"}, "<cmd>lua vim.ui.input({prompt = 'Enter package name: '}, function(input) if input and input ~= '' then require('uv').run_command('uv remove ' .. input) end end)<cr>", desc = "UV Remove Package", noremap = true, silent = true },
-        { "<leader>ps", mode = {"n"}, "<cmd>lua require('uv').run_command('uv sync')<cr>", desc = "UV Sync Packages", noremap = true, silent = true },
-      }-- }}}
-    },-- }}}
+      end, -- }}}
+      keys = { -- {{{
+        {
+          "<leader>pe",
+          mode = { "n" },
+          function()
+            Snacks.picker("venv_home")
+          end,
+          desc = "Pick Venv (~/py-venv)",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>pr",
+          mode = { "n" },
+          "<cmd>UVRunFile<cr>",
+          desc = "UV Run Current File",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>ps",
+          mode = { "v" },
+          "<cmd>UVRunSelection<cr>",
+          desc = "UV Run Selection",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>pf",
+          mode = { "n" },
+          "<cmd>UVRunFunction<cr>",
+          desc = "UV Run Function",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>pE",
+          mode = { "n" },
+          "<cmd>lua Snacks.picker.pick('uv_venv')<cr>",
+          desc = "UV Environment",
+          noremap = true,
+          silent = true,
+        },
+        { "<leader>pi", mode = { "n" }, "<cmd>UVInit<cr>", desc = "UV Init", noremap = true, silent = true },
+        {
+          "<leader>pa",
+          mode = { "n" },
+          "<cmd>lua vim.ui.input({prompt = 'Enter package name: '}, function(input) if input and input ~= '' then require('uv').run_command('uv add ' .. input) end end)<cr>",
+          desc = "UV Add Package",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>pd",
+          mode = { "n" },
+          "<cmd>lua vim.ui.input({prompt = 'Enter package name: '}, function(input) if input and input ~= '' then require('uv').run_command('uv remove ' .. input) end end)<cr>",
+          desc = "UV Remove Package",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>ps",
+          mode = { "n" },
+          "<cmd>lua require('uv').run_command('uv sync')<cr>",
+          desc = "UV Sync Packages",
+          noremap = true,
+          silent = true,
+        },
+      }, -- }}}
+    }, -- }}}
 
-    { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
+    {
+      "lepture/vim-jinja", -- syntax/indent for jinja files {{{
       enabled = false,
       ft = { "jinja", "htmldjango", "html" },
-    },-- }}}
+    }, -- }}}
 
-    { "brenoprata10/nvim-highlight-colors", -- show colors {{{
+    {
+      "brenoprata10/nvim-highlight-colors", -- show colors {{{
       enabled = false,
       opts = {},
-      keys = {-- {{{
+      keys = { -- {{{
         { "\\H", mode = "n", "<cmd>HighlightColors Toggle<cr>", desc = "Toggle 'highlight-colors'" },
-      },-- }}}
-    },-- }}}
+      }, -- }}}
+    }, -- }}}
 
-    { "uga-rosa/ccc.nvim", -- color picker (:CccPick){{{
+    {
+      "uga-rosa/ccc.nvim", -- color picker (:CccPick){{{
       enabled = false,
-      opts = {-- {{{
+      opts = { -- {{{
         highlighter = {
           auto_enable = true,
           lsp = true,
         },
-      },-- }}}
-      keys = {-- {{{
+      }, -- }}}
+      keys = { -- {{{
         { "<leader>vp", mode = "n", "<cmd>CccPick<cr>", desc = "color picker", noremap = true, silent = true },
-      },-- }}}
-    },-- }}}
+      }, -- }}}
+    }, -- }}}
 
-    { "szw/vim-maximizer", -- maximize window {{{
+    {
+      "szw/vim-maximizer", -- maximize window {{{
       -- enabled = false,
-      keys = {-- {{{
-        { "<leader>wm", mode = {"n"}, "<cmd>MaximizerToggle<cr>", desc = "Maximize", noremap = true, silent = true },
-      },-- }}}
-    },-- }}}
+      keys = { -- {{{
+        { "<leader>wm", mode = { "n" }, "<cmd>MaximizerToggle<cr>", desc = "Maximize", noremap = true, silent = true },
+      }, -- }}}
+    }, -- }}}
     -- }}}
-
-
   }, -- spec end }}}
 
   install = { colorscheme = { "kanagawa" } },
