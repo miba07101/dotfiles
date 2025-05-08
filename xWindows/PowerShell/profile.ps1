@@ -120,6 +120,8 @@ if (-not $env:OneDrive_DIR) {
   }
 }
 
+# premenna pre zk notes default vault notebook
+$env:ZK_NOTEBOOK_DIR = "C:\Users\$env:UserName\OneDrive\Dokumenty\zPoznamky\Obsidian\inbox"
 # -----------------------------------------------------------------------------
 # aliases
 # -----------------------------------------------------------------------------
