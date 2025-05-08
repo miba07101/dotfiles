@@ -1090,8 +1090,7 @@ require("lazy").setup({
       lazy = false,
       -- enabled = false,
       opts = {
-        styles = { -- {{{
-        }, -- }}}
+        styles = {},
         dashboard = { -- {{{
           enabled = true,
           preset = {
@@ -1100,24 +1099,9 @@ require("lazy").setup({
               { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
               { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
               { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
-              {
-                icon = " ",
-                key = "c",
-                desc = "Config",
-                action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",
-              },
-              {
-                icon = " ",
-                key = "p",
-                desc = "Projects",
-                action = ":lua Snacks.dashboard.pick('projects', {dev = '~/git-repos/', recent = false})",
-              },
-              {
-                icon = "󱙓 ",
-                key = "N",
-                desc = "Notes",
-                action = ":lua Snacks.dashboard.pick('files', {cwd = osvar.ObsidianPath()})",
-              },
+              { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",},
+              { icon = " ", key = "p", desc = "Projects", action = ":lua Snacks.dashboard.pick('projects', {dev = '~/git-repos/', recent = false})",},
+              { icon = "󱙓 ", key = "N", desc = "Notes", action = ":lua Snacks.dashboard.pick('files', {cwd = osvar.ObsidianPath()})",},
               -- { icon = " ", key = "s", desc = "Restore Session", section = "session" },
               { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
               { icon = " ", key = "q", desc = "Quit", action = ":qa" },
@@ -1126,56 +1110,18 @@ require("lazy").setup({
           },
           sections = {
             -- { section = "header" },
-            {
-              section = "terminal",
-              cmd = "echo '\27[1;35mHello " .. osvar.username .. "\27[0m'",
-              indent = 28,
-              padding = 2,
-              height = 1,
-            },
-            {
-              section = "terminal",
-              cmd = 'curl -s "wttr.in/' .. city .. "?format=%l:+%c+%t+%w+%T\\n\" | sed 's/.*/\\x1b[34m&\\x1b[0m/'",
-              indent = 8,
-              padding = 2,
-              height = 1,
-            },
+            { section = "terminal", cmd = "echo '\27[1;35mHello " .. osvar.username .. "\27[0m'", indent = 28, padding = 2, height = 1,},
+            { section = "terminal", cmd = 'curl -s "wttr.in/' .. city .. "?format=%l:+%c+%t+%w+%T\\n\" | sed 's/.*/\\x1b[34m&\\x1b[0m/'", indent = 8, padding = 2, height = 1,},
             { section = "keys", gap = 1, padding = 1 },
-            -- {
-            -- icon = " ",
-            -- title = "Projects",
-            -- section = "projects",
-            -- limit=1,
-            -- dirs = "~/git-repos/python/",
-            -- pick=true,
-            -- indent = 2,
-            -- padding = 1,
-            -- },
             { section = "startup", padding = 2 },
           },
         }, -- }}}
         image = { -- {{{
           enabled = true,
-          formats = {
-            "png",
-            "jpg",
-            "jpeg",
-            "gif",
-            "bmp",
-            "webp",
-            "tiff",
-            "heic",
-            "avif",
-            "mp4",
-            "mov",
-            "avi",
-            "mkv",
-            "webm",
-            "pdf",
-          },
+          formats = { "png", "jpg", "jpeg", "gif", "bmp", "webp", "tiff", "heic", "avif", "mp4", "mov", "avi", "mkv", "webm", "pdf",},
           force = true,
         }, -- }}}
-        input = {
+        input = {-- {{{
           enabled = true,
           win = {
             style = "input",
@@ -1183,14 +1129,13 @@ require("lazy").setup({
               i_esc = { "<esc>", { "cmp_close", "cancel", "stopinsert" }, mode = "i", expr = true },
             },
           },
-        },
+        },-- }}}
         lazygit = { enabled = true },
         notifier = { enabled = true },
         picker = { -- {{{
           enabled = true,
           sources = {
             explorer = { -- {{{
-              -- your explorer picker configuration comes here
               auto_close = true,
               win = {
                 list = {
@@ -1959,14 +1904,14 @@ require("lazy").setup({
 
         require("mini.tabline").setup()
 
-        -- require("mini.trailspace").setup() -- {{{
-        -- vim.api.nvim_create_autocmd("BufWritePre", {
-        --   callback = function()
-        --     MiniTrailspace.trim()
-        --     MiniTrailspace.trim_last_lines()
-        --   end,
-        --   desc = "Trim trailing whitespace and empty lines on save",
-        -- }) -- }}}
+        require("mini.trailspace").setup() -- {{{
+        vim.api.nvim_create_autocmd("BufWritePre", {
+          callback = function()
+            MiniTrailspace.trim()
+            MiniTrailspace.trim_last_lines()
+          end,
+          desc = "Trim trailing whitespace and empty lines on save",
+        }) -- }}}
       end,
     },
     -- }}}
@@ -2441,10 +2386,12 @@ require("lazy").setup({
         { "<leader>wm", mode = { "n" }, "<cmd>MaximizerToggle<cr>", desc = "Maximize", noremap = true, silent = true },
       }, -- }}}
     }, -- }}}
+
     -- }}}
   }, -- spec end }}}
 
   install = { colorscheme = { "kanagawa" } },
+  dev = { path = "~/git-repos/" },
 })
 
 -- }}}
