@@ -310,10 +310,6 @@ vim.filetype.add({ -- {{{
   },
 }) -- }}}
 
--- Path to Mason-installed binaries{{{
-vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
--- }}}
-
 -- }}}
 
 -- {{{ [[ KEYMAPS ]]
@@ -930,7 +926,7 @@ require("lazy").setup({
     },
     -- }}}
 
-    -- {{{ [ LSP servers, Formaters, Linters ]
+    -- {{{ [ Mason, Formaters, Linters ]
     { -- Mason - installing lsp servers{{{
       "WhoIsSethDaniel/mason-tool-installer.nvim",
       -- enable = false,
@@ -968,146 +964,6 @@ require("lazy").setup({
       },
     }, -- }}}
 
-    -- { -- LSP config{{{
-    --   "neovim/nvim-lspconfig",
-    --   event = "BufReadPre",
-    --   config = function()
-    --     -- {{{ Capabilities
-    --     -- local original_capabilities = vim.lsp.protocol.make_client_capabilities()
-    --     -- local capabilities = require("blink.cmp").get_lsp_capabilities(original_capabilities)
-    --     -- local capabilities = require("blink.cmp").get_lsp_capabilities()
-    --     -- local capabilities = require("mini.completion").get_lsp_capabilities()
-    --     -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
-    --     -- local on_attach = function(client, bufnr)
-    --     --   -- sem zadat on_attach funkcie doplnkov
-    --     -- end
-    --     -- }}}
-    --
-    --     -- -- {{{ Diagnostic
-    --     -- vim.diagnostic.config({
-    --     --   virtual_text = { current_line = true },
-    --     --   underline = true,
-    --     --   severity_sort = true,
-    --     --   float = { border = "rounded" },
-    --     --   hover = true,
-    --     -- })
-    --     --
-    --     -- for _, sign in ipairs({ { "Error", "" }, { "Warn", "" }, { "Hint", "󰌵" }, { "Info", "" } }) do
-    --     --   vim.fn.sign_define("DiagnosticSign" .. sign[1], { texthl = "DiagnosticSign" .. sign[1], text = sign[2] })
-    --     -- end
-    --     -- -- }}}
-    --
-    --     local servers = { -- {{{
-    --       -- lua_ls = {
-    --       --   -- cmd = { vim.fn.stdpath("data") .. "/mason/bin/lua-language-server" }, -- full path to Mason-installed server
-    --       --   cmd = { "lua-language-server" }, -- only name of Mason-installed server, because in "OPTIONS" section I have defined Path to Mason folder
-    --       --   filetypes = { "lua" },
-    --       --   root_dir = function(fname)
-    --       --     return vim.fs.dirname(
-    --       --       vim.fs.find({ ".git", "init.lua", ".luarc.json" }, { upward = true, path = fname })[1]
-    --       --     )
-    --       --   end,
-    --       --   settings = {
-    --       --     Lua = {
-    --       --       completion = { callSnippet = "Replace" },
-    --       --       diagnostics = { disable = { "missing-fields", "vim" } },
-    --       --       workspace = { library = { [vim.fn.expand("$VIMRUNTIME/lua")] = true } },
-    --       --       telemetry = { enable = false },
-    --       --     },
-    --       --   },
-    --       -- },
-    --       -- bashls = {
-    --       --   cmd = { "bash-language-server" },
-    --       --   filetypes = { "zsh", "bash", "sh" },
-    --       -- },
-    --       -- emmet_ls = {
-    --       --   cmd = { "emmet-ls", "--stdio" },
-    --       --   filetypes = { "html", "css", "sass", "scss", "less", "javascript", "typescript" },
-    --       --   init_options = { html = { options = { ["bem.enabled"] = true } } },
-    --       -- },
-    --       -- basedpyright = {
-    --       --   cmd = { "basedpyright-langserver", "--stdio" },
-    --       --   filetypes = { "python" },
-    --       --   root_dir = function(fname)
-    --       --     return require("lspconfig.util").root_pattern(
-    --       --       "pyproject.toml",
-    --       --       "setup.py",
-    --       --       "setup.cfg",
-    --       --       "requirements.txt",
-    --       --       ".git"
-    --       --     )(fname) or vim.fn.getcwd()
-    --       --   end,
-    --       --   settings = {
-    --       --     python = {
-    --       --       analysis = {
-    --       --         autoSearchPaths = true,
-    --       --         diagnosticMode = "openFilesOnly",
-    --       --         useLibraryCodeForTypes = true,
-    --       --       },
-    --       --     },
-    --       --   },
-    --       -- },
-    --       -- marksman = {
-    --       --   cmd = { "marksman" },
-    --       --   filetypes = { "markdown", "quarto" },
-    --       -- },
-    --       -- tinymist = {
-    --       --   cmd = { "tinymist" },
-    --       --   filetypes = { "typst" },
-    --       -- },
-    --       -- jinja_lsp = {
-    --       --   cmd = { "jinja-lsp" },
-    --       --   filetypes = { "htmldjango", "jinja" },
-    --       --   root_dir = function(fname)
-    --       --     return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
-    --       --   end,
-    --       --   single_file_support = true,
-    --       -- },
-    --       -- htmx = {
-    --       --   cmd = { "htmx-lsp" },
-    --       --   filetypes = { "django-html", "htmldjango", "html" },
-    --       -- },
-    --       -- zk = {
-    --       --   cmd = { "zk" },
-    --       --   filetypes = { "markdown" },
-    --       -- },
-    --     } -- }}}
-    --
-    --     vim.api.nvim_create_autocmd("FileType", { -- {{{
-    --       group = vim.api.nvim_create_augroup("LspAutoStart", {}),
-    --       callback = function(args)
-    --         local ft = vim.bo[args.buf].filetype
-    --         for name, config in pairs(servers) do
-    --           if vim.list_contains(config.filetypes or {}, ft) then
-    --             local attached = vim.iter(vim.lsp.get_clients({ bufnr = args.buf })):any(function(c)
-    --               return c.name == name
-    --             end)
-    --             if not attached then
-    --               vim.lsp.start(vim.tbl_extend("force", config, {
-    --                 name = name,
-    --                 capabilities = capabilities,
-    --               }))
-    --             end
-    --           end
-    --         end
-    --       end,
-    --     }) -- }}}
-    --
-    --     -- {{{ Keymaps
-    --     map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action" })
-    --     map("n", "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Goto Definition" })
-    --     map("n", "<leader>lD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Goto Declaration" })
-    --     map("n", "<leader>li", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "Implementation" })
-    --     map("n", "<leader>lI", "<cmd>LspInfo<cr>", { desc = "Info" })
-    --     map("n", "<leader>lk", "<cmd>lua vim.lsp.buf.hover()<cr>", { desc = "Hoover" })
-    --     map("n", "<leader>lr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "References" })
-    --     map("n", "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "Rename" })
-    --     map("n", "<leader>lh", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "Signature Help" })
-    --     map("n", "<leader>lx", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Diagnostic Open Float" })
-    --     -- }}}
-    --   end,
-    -- }, -- }}}
-
     { -- Formating{{{
       "stevearc/conform.nvim",
       event = { "BufWritePre" },
@@ -1132,17 +988,17 @@ require("lazy").setup({
             python = { "ruff_format", "black" },
             ["_"] = { "trim_whitespace" },
           },
+          format_on_save = function(bufnr)
+            local disable_filetypes = { lua = true, json = true }
+            if disable_filetypes[vim.bo[bufnr].filetype] then
+              return nil -- Disable format on save
+            end
+            return {
+              timeout_ms = 500,
+              lsp_fallback = true,
+            }
+          end,
         })
-
-        -- Manual format on save excluding lua
-        -- vim.api.nvim_create_autocmd("BufWritePre", {
-        --   callback = function(args)
-        --     local ft = vim.bo[args.buf].filetype
-        --     if ft ~= "lua" then
-        --       require("conform").format({ bufnr = args.buf, lsp_fallback = true, timeout_ms = 500 })
-        --     end
-        --   end,
-        -- })
       end,
     }, -- }}}
 
@@ -1841,7 +1697,7 @@ require("lazy").setup({
           mappings = {
             close = "<ESC>",
             go_in = "<Right>",
-            go_in_plus = "L",
+            go_in_plus = "<CR>",
             go_out = "<Left>",
             go_out_plus = "H",
             mark_goto = "'",
@@ -2615,8 +2471,55 @@ require("lazy").setup({
 -- }}}
 
 -- [[ LSP ]]{{{
+-- Path to Mason-installed binaries and formatters missing packages{{{
+vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
--- {{{ [ Diagnostic ]
+-- solving problem with missing python packages "setuptools" for formatters, in shell run:
+-- /home/vimi/.local/share/nvim/mason/packages/beautysh/venv/bin/pip install setuptools
+-- }}}
+
+-- LspInfo autocommand{{{
+vim.api.nvim_create_user_command("LspInfo", function()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if vim.tbl_isempty(clients) then
+    print("No LSP clients attached to this buffer.")
+    return
+  end
+
+  -- Prepare the floating window content
+  local lines = {}
+  for _, client in ipairs(clients) do
+    table.insert(lines, " Name:          " .. client.name)
+    table.insert(lines, " ID:            " .. client.id)
+    table.insert(lines, " Root Dir:      " .. (client.config.root_dir or "N/A"))
+    table.insert(lines, " Filetypes:     " .. table.concat(client.config.filetypes or {}, ", "))
+    table.insert(lines, " CMD:           " .. table.concat(client.config.cmd or {}, " "))
+    table.insert(lines, " Capabilities:  ")
+    for k, v in pairs(client.server_capabilities or {}) do
+      table.insert(lines, "   - " .. k)
+    end
+  end
+
+  -- Create a floating window to display the info
+  local buf = vim.api.nvim_create_buf(false, true) -- Create an empty buffer
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines) -- Set the lines in the buffer
+
+  -- Set the floating window options
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = 'editor',
+    width = 80,
+    height = #lines,
+    row = 5,
+    col = 5,
+    style = 'minimal',
+    border = 'rounded',
+  })
+
+  -- Optional: set the buffer to not be modifiable (just to display info)
+  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+end, {})-- }}}
+
+-- {{{ [ LSP Diagnostic ]
 vim.diagnostic.config({
   virtual_text = { current_line = true },
   underline = true,
@@ -2630,7 +2533,7 @@ for _, sign in ipairs({ { "Error", "" }, { "Warn", "" }, { "Hint", "󰌵" 
 end
 -- }}}
 
--- {{{ [ Capabilities ]
+-- {{{ [ LSP Capabilities ]
 local original_capabilities = vim.lsp.protocol.make_client_capabilities()
 local capabilities = require("blink.cmp").get_lsp_capabilities(original_capabilities)
 vim.lsp.config("*", {
@@ -2638,90 +2541,93 @@ vim.lsp.config("*", {
 })
 -- }}}
 
-vim.lsp.config("luals", {-- {{{
-  cmd = {"lua-language-server"},
-  filetypes = {"lua"},
-  root_markers = {".luarc.json", ".luarc.jsonc"},
-})
-vim.lsp.enable("luals")
--- }}}
-
-vim.lsp.config("basedpyright", {-- {{{
-  cmd = { "basedpyright-langserver", "--stdio" },
-  filetypes = { "python" },
-  root_markers ={ "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile", "pyrightconfig.json", ".git" },
-  settings = {
-    python = {
-      analysis = {
-        autoSearchPaths = true,
-        diagnosticMode = "openFilesOnly",
-        useLibraryCodeForTypes = true,
+-- {{{ [ LSP Configs ]
+local lsp_configs = {
+  luals = {
+    cmd = { "lua-language-server" },
+    filetypes = { "lua" },
+    root_markers = { ".luarc.json", ".luarc.jsonc" },
+  },
+  basedpyright = {
+    cmd = { "basedpyright-langserver", "--stdio" },
+    filetypes = { "python" },
+    root_markers = {
+      "pyproject.toml",
+      "setup.py",
+      "setup.cfg",
+      "requirements.txt",
+      "Pipfile",
+      "pyrightconfig.json",
+      ".git",
+    },
+    settings = {
+      python = {
+        analysis = {
+          autoSearchPaths = true,
+          diagnosticMode = "openFilesOnly",
+          useLibraryCodeForTypes = true,
+        },
       },
     },
   },
-})
-vim.lsp.enable("basedpyright")
--- }}}
-
-vim.lsp.config("bashls", {-- {{{
-  cmd = { "bash-language-server", "start" },
-  filetypes = { "zsh", "bash", "sh" },
-  root_markers = { ".git" },
-  settings = {
-    bashIde = {
-      globPattern = "*@(.sh|.inc|.bash|.command)"
+  bashls = {
+    cmd = { "bash-language-server", "start" },
+    filetypes = { "zsh", "bash", "sh" },
+    root_markers = { ".git" },
+    settings = {
+      bashIde = {
+        globPattern = "*@(.sh|.inc|.bash|.command)",
+      },
     },
   },
-})
-vim.lsp.enable("bashls")
+  emmet_ls = {
+    cmd = { "emmet-ls", "--stdio" },
+    filetypes = { "html", "css", "sass", "scss", "less", "javascript", "typescript" },
+  },
+  marksman = {
+    cmd = { "marksman", "server" },
+    filetypes = { "markdown", "quarto" },
+  },
+  tinymist = {
+    cmd = { "tinymist" },
+    filetypes = { "typst" },
+    root_markers = { ".git" },
+  },
+  jinja_lsp = {
+    cmd = { "jinja-lsp" },
+    filetypes = { "htmldjango", "jinja" },
+    root_dir = function(fname)
+      return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
+    end,
+    single_file_support = true,
+  },
+  htmx = {
+    cmd = { "htmx-lsp" },
+    filetypes = { "django-html", "htmldjango", "html" },
+  },
+  zk = {
+    cmd = { "zk", "lsp" },
+    filetypes = { "markdown" },
+    root_markers = { ".zk" },
+  },
+}
+
+for name, opts in pairs(lsp_configs) do
+  vim.lsp.config(name, opts)
+  vim.lsp.enable(name)
+end
 -- }}}
 
-vim.lsp.config("emmet_ls", {-- {{{
-  cmd = { "emmet-ls", "--stdio" },
-  filetypes = { "html", "css", "sass", "scss", "less", "javascript", "typescript" },
-})
-vim.lsp.enable("emmet_ls")
+-- {{{ [ LSP Keymaps ]
+map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action" })
+map("n", "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Goto Definition" })
+map("n", "<leader>lD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Goto Declaration" })
+map("n", "<leader>li", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "Implementation" })
+map("n", "<leader>lI", "<cmd>LspInfo<cr>", { desc = "Info" })
+map("n", "<leader>lk", "<cmd>lua vim.lsp.buf.hover()<cr>", { desc = "Hoover" })
+map("n", "<leader>lr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "References" })
+map("n", "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "Rename" })
+map("n", "<leader>lh", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "Signature Help" })
+map("n", "<leader>lx", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Diagnostic Open Float" })
 -- }}}
-
-vim.lsp.config("marksman", {-- {{{
-  cmd = { "marksman", "server" },
-  filetypes = { "markdown", "quarto" },
-})
-vim.lsp.enable("marksman")
--- }}}
-
-vim.lsp.config("tinymist", {-- {{{
-  cmd = { "tinymist" },
-  filetypes = { "typst" },
-  root_markers = { ".git" },
-})
-vim.lsp.enable("tinymist")
--- }}}
-
-vim.lsp.config("jinja_lsp", {-- {{{
-  cmd = { "jinja-lsp" },
-  filetypes = { "htmldjango", "jinja" },
-  root_dir = function(fname)
-    return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
-  end,
-  single_file_support = true,
-})
-vim.lsp.enable("jinja_lsp")
--- }}}
-
-vim.lsp.config("htmx",  {-- {{{
-  cmd = { "htmx-lsp" },
-  filetypes = { "django-html", "htmldjango", "html" },
-})
-vim.lsp.enable("htmx")
--- }}}
-
-vim.lsp.config("zk", {-- {{{
-  cmd = { "zk", "lsp" },
-  filetypes = { "markdown" },
-  root_markers = { ".zk" },
-})
-vim.lsp.enable("zk")
--- }}}
-
 -- LSP ends }}}

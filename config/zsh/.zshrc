@@ -83,10 +83,10 @@ function colormap() {
 
 # Firefox backup
 function fire_backup(){
-# ak je iba 1x '>' tak prepise cely dokument, ak su 2x '>>' tak vlozi novy riadok
-grep 'browser.compactmode.show' ${HOME}/.mozilla/firefox/*.default-release/prefs.js > ${HOME}/.mozilla/firefox/*.default-release/user.js
-grep 'browser.uiCustomization.state' ${HOME}/.mozilla/firefox/*.default-release/prefs.js >> ${HOME}/.mozilla/firefox/*.default-release/user.js
-grep 'browser.newtabpage.pinned' ${HOME}/.mozilla/firefox/*.default-release/prefs.js >> ${HOME}/.mozilla/firefox/*.default-release/user.js
+    # ak je iba 1x '>' tak prepise cely dokument, ak su 2x '>>' tak vlozi novy riadok
+    grep 'browser.compactmode.show' ${HOME}/.mozilla/firefox/*.default-release/prefs.js > ${HOME}/.mozilla/firefox/*.default-release/user.js
+    grep 'browser.uiCustomization.state' ${HOME}/.mozilla/firefox/*.default-release/prefs.js >> ${HOME}/.mozilla/firefox/*.default-release/user.js
+    grep 'browser.newtabpage.pinned' ${HOME}/.mozilla/firefox/*.default-release/prefs.js >> ${HOME}/.mozilla/firefox/*.default-release/user.js
 }
 
 # Ranger - otvori shell tam kde vypnem rangera
@@ -101,12 +101,12 @@ function f() {
 
 # Yazi - otvori shell tam kde vypnem yazi
 function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
 }
 
 # Firefox update - updatne prefs.js s usre.js a naopak - kvoli zaloskam serialov
@@ -238,9 +238,9 @@ function pull() {
 function ytd() {
     # Get the YouTube link from clipboard
     if [[ $isWSL == 1 ]]; then
-      link=$(powershell.exe Get-Clipboard | tr -d '\r')
+        link=$(powershell.exe Get-Clipboard | tr -d '\r')
     else
-      link=$(xclip -o -selection clipboard)
+        link=$(xclip -o -selection clipboard)
     fi
 
     # Check if the link looks like a YouTube URL
@@ -364,34 +364,34 @@ export VENV_HOME="$HOME/.py-venv"
 [[ -d $VENV_HOME ]] || mkdir $VENV_HOME
 
 lsvenv() {
-  ls -1 $VENV_HOME
+    ls -1 $VENV_HOME
 }
 
 venv() {
-  if [ $# -eq 0 ]
+    if [ $# -eq 0 ]
     then
-      echo "Please provide venv name"
+        echo "Please provide venv name"
     else
-      source "$VENV_HOME/$1/bin/activate"
-  fi
+        source "$VENV_HOME/$1/bin/activate"
+    fi
 }
 
 mkvenv() {
-  if [ $# -eq 0 ]
+    if [ $# -eq 0 ]
     then
-      echo "Please provide venv name"
+        echo "Please provide venv name"
     else
-      python3 -m venv $VENV_HOME/$1
-  fi
+        python3 -m venv $VENV_HOME/$1
+    fi
 }
 
 rmvenv() {
-  if [$# -eq 0 ]
+    if [$# -eq 0 ]
     then
-      echo "Please provide venv name"
+        echo "Please provide venv name"
     else
-      rm -r $VENV_HOME/$1
-  fi
+        rm -r $VENV_HOME/$1
+    fi
 }
 
 #############
@@ -414,38 +414,38 @@ bindkey -s '^[v' 'cava^M'
 
 # case $isWSL in
 #     1)
-        # zistim nazov distribucie
-        # _distro=$(awk '/^ID=/' /etc/*-release | awk -F'=' '{ print tolower($2) }')
-        #
-        # # oznaci ikonu na zaklade distribucie
-        # case $_distro in
-        #     *kali*)                  ICON="ﴣ" ;;
-        #     *arch*)                  ICON="" ;;
-        #     *debian*)                ICON="" ;;
-        #     *raspbian*)              ICON="" ;;
-        #     *ubuntu*)                ICON="" ;;
-        #     *elementary*)            ICON="" ;;
-        #     *fedora*)                ICON="" ;;
-        #     *coreos*)                ICON="" ;;
-        #     *gentoo*)                ICON="" ;;
-        #     *mageia*)                ICON="" ;;
-        #     *centos*)                ICON="" ;;
-        #     # *opensuse*)              ICON="" ;;
-        #     *opensuse*|*tumbleweed*) ICON="" ;;
-        #     *sabayon*)               ICON="" ;;
-        #     *slackware*)             ICON="" ;;
-        #     *linuxmint*)             ICON="" ;;
-        #     *alpine*)                ICON="" ;;
-        #     *aosc*)                  ICON="" ;;
-        #     *nixos*)                 ICON="" ;;
-        #     *devuan*)                ICON="" ;;
-        #     *manjaro*)               ICON="" ;;
-        #     *rhel*)                  ICON="" ;;
-        #     *)                       ICON="" ;;
-        # esac
-        #
-        # export STARSHIP_DISTRO="$ICON  "
-        # ;;
+# zistim nazov distribucie
+# _distro=$(awk '/^ID=/' /etc/*-release | awk -F'=' '{ print tolower($2) }')
+#
+# # oznaci ikonu na zaklade distribucie
+# case $_distro in
+#     *kali*)                  ICON="ﴣ" ;;
+#     *arch*)                  ICON="" ;;
+#     *debian*)                ICON="" ;;
+#     *raspbian*)              ICON="" ;;
+#     *ubuntu*)                ICON="" ;;
+#     *elementary*)            ICON="" ;;
+#     *fedora*)                ICON="" ;;
+#     *coreos*)                ICON="" ;;
+#     *gentoo*)                ICON="" ;;
+#     *mageia*)                ICON="" ;;
+#     *centos*)                ICON="" ;;
+#     # *opensuse*)              ICON="" ;;
+#     *opensuse*|*tumbleweed*) ICON="" ;;
+#     *sabayon*)               ICON="" ;;
+#     *slackware*)             ICON="" ;;
+#     *linuxmint*)             ICON="" ;;
+#     *alpine*)                ICON="" ;;
+#     *aosc*)                  ICON="" ;;
+#     *nixos*)                 ICON="" ;;
+#     *devuan*)                ICON="" ;;
+#     *manjaro*)               ICON="" ;;
+#     *rhel*)                  ICON="" ;;
+#     *)                       ICON="" ;;
+# esac
+#
+# export STARSHIP_DISTRO="$ICON  "
+# ;;
 # esac
 
 # potrebne pre spustenie Starshipu
