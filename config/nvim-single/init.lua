@@ -945,7 +945,7 @@ require("lazy").setup({
           "jinja-lsp",
           "json-lsp",
           "htmx-lsp",
-          "zk",
+          -- "zk",
           --formatters
           "beautysh",
           "prettier",
@@ -2419,9 +2419,14 @@ vim.api.nvim_create_user_command("LspInfo", function()
     table.insert(lines, " ID:            " .. client.id)
     table.insert(lines, " Root Dir:      " .. (client.config.root_dir or "N/A"))
     table.insert(lines, " Filetypes:     " .. table.concat(client.config.filetypes or {}, ", "))
-    table.insert(lines, " CMD:           " .. table.concat(client.config.cmd or {}, " "))
+
+    local cmd_display = type(client.config.cmd) == "table"
+    and table.concat(client.config.cmd, " ")
+    or "<function>"
+    table.insert(lines, " CMD:           " .. cmd_display)
+
     table.insert(lines, " Capabilities:  ")
-    for k, v in pairs(client.server_capabilities or {}) do
+    for k, _ in pairs(client.server_capabilities or {}) do
       table.insert(lines, "   - " .. k)
     end
   end
