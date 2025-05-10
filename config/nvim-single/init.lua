@@ -588,25 +588,22 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 -- }}}
 
--- -- {{{ htmldjango - v treesitter instalovat jinja a jinja_inline (htmldjango netreba nepaci sa mi syntax highlight)
--- -- Function to select the filetype for HTML-based templates with Jinja
+-- -- htmljinja / htmldjango filetype for HTML-based template{{{
+-- -- https://github.com/lepture/vim-jinja/blob/master/ftdetect/jinja.vim
 -- local function select_html_filetype()
---   local n = 1
---   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
---   while n <= #lines and n < 100 do
---     -- Check for Jinja tags like {{ ... }} or {% ... %}
---     if lines[n]:match("{{.*}}") or lines[n]:match("{%%?%s*(end.*|extends|block|macro|set|if|for|include|trans)>") then
---       vim.bo.filetype = "htmldjango" -- Set filetype to htmldjango for Jinja content
+--   local max_lines = math.min(50, vim.fn.line("$"))
+--   for n = 1, max_lines do
+--     local line = vim.fn.getline(n)
+--     if line:match("{{.*}}") or line:match("{%%%-?%s*(end.*|extends|block|macro|set|if|for|include|trans)%f[%W]") then
+--       vim.bo.filetype = "htmljinja" -- Set filetype to htmljinja/htmldjango for Jinja content
 --       return
 --     end
---     n = n + 1
 --   end
 -- end
 --
--- -- Autocommands to handle .html and related files
--- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
---   pattern = { "*.html", "*.htm" }, -- Only for HTML files
---   callback = select_html_filetype, -- Check if it contains Jinja tags and assign the filetype
+-- vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+--   pattern = { "*.html", "*.htm" },
+--   callback = select_html_filetype
 -- })
 -- -- }}}
 
@@ -1989,6 +1986,14 @@ require("lazy").setup({
     -- { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
     --   enabled = true,
     --   ft = { "jinja", "htmldjango", "html" },
+    --   init = function()
+    --     vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+    --       pattern = { "*.html", "*.htm" },
+    --       callback = function()
+    --         vim.bo.filetype = "jinja"
+    --       end,
+    --     })
+    --   end
     -- }, -- }}}
 
     { "brenoprata10/nvim-highlight-colors", -- show colors {{{
