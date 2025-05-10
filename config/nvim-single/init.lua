@@ -44,26 +44,26 @@ function _G.DetectOsType() -- {{{
       or vim.fn.expand((os.getenv("OneDrive_DIR") or "") .. "Dokumenty/zPoznamky/Obsidian/")
   end
 
-  -- -- Function to create a new Obsidian note
-  -- local function ObsidianNewNote(use_template, template, folder)
-  --   -- local note_name = vim.fn.input("Enter note name without .md: ")
-  --   -- if note_name == "" then return print("Note name cannot be empty!") end
-  --
-  --   vim.ui.input({ prompt = "Enter note name without .md: " }, function(note_name)
-  --     if not note_name or note_name == "" then
-  --       print("Note name cannot be empty!")
-  --       return
-  --     end
-  --
-  --     local new_note_path = string.format("%s%s/%s.md", ObsidianPath(), folder or "inbox", note_name)
-  --     vim.cmd("edit " .. new_note_path)
-  --
-  --     if use_template then
-  --       local templates = { basic = "t-nvim-note.md", person = "t-person.md" }
-  --       vim.cmd(templates[template] and "ObsidianTemplate " .. templates[template] or "echo 'Invalid template name'")
-  --     end
-  --   end)
-  -- end
+  -- Function to create a new Obsidian note
+  local function ObsidianNewNote(use_template, template, folder)
+    -- local note_name = vim.fn.input("Enter note name without .md: ")
+    -- if note_name == "" then return print("Note name cannot be empty!") end
+
+    vim.ui.input({ prompt = "Enter note name without .md: " }, function(note_name)
+      if not note_name or note_name == "" then
+        print("Note name cannot be empty!")
+        return
+      end
+
+      local new_note_path = string.format("%s%s/%s.md", ObsidianPath(), folder or "inbox", note_name)
+      vim.cmd("edit " .. new_note_path)
+
+      if use_template then
+        local templates = { basic = "t-nvim-note.md", person = "t-person.md" }
+        vim.cmd(templates[template] and "ObsidianTemplate " .. templates[template] or "echo 'Invalid template name'")
+      end
+    end)
+  end
 
   return {
     os_type = os_type,
@@ -74,7 +74,7 @@ function _G.DetectOsType() -- {{{
     PythonInterpreter = PythonInterpreter,
     ObsidianPath = ObsidianPath,
     -- MoltenInitialize = MoltenInitialize,
-    -- ObsidianNewNote = ObsidianNewNote,
+    ObsidianNewNote = ObsidianNewNote,
   }
 end
 
@@ -984,8 +984,9 @@ require("lazy").setup({
             javascript = { "prettier" },
             css = { "prettier" },
             lua = { "stylua" },
+            -- python = { "ruff_fix", "ruff_organize_imports", "black", lsp_format = "first" },
             python = { "ruff_format", "black" },
-            ["_"] = { "trim_whitespace" },
+            ["_"] = { "trim_whitespace", "trim_newlines" },
           },
           format_on_save = function(bufnr)
             local disable_filetypes = { lua = true, json = true }
@@ -1536,6 +1537,58 @@ require("lazy").setup({
         require("mini.bufremove").setup()
 
         local miniclue = require("mini.clue") -- {{{
+        -- Add a-z/A-Z marks.{{{
+        local function mark_clues()
+          local marks = {}
+          vim.list_extend(marks, vim.fn.getmarklist(vim.api.nvim_get_current_buf()))
+          vim.list_extend(marks, vim.fn.getmarklist())
+
+          return vim
+            .iter(marks)
+            :map(function(mark)
+              local key = mark.mark:sub(2, 2)
+              if not string.match(key, '^%a') then
+                return nil
+              end
+
+              local desc
+              if mark.file then
+                desc = vim.fn.fnamemodify(mark.file, ':p:~:.')
+              elseif mark.pos[1] and mark.pos[1] ~= 0 then
+                local line_num = mark.pos[2]
+                local lines = vim.fn.getbufline(mark.pos[1], line_num)
+                if lines and lines[1] then
+                  desc = string.format('%d: %s', line_num, lines[1]:gsub('^%s*', ''))
+                end
+              end
+
+              if desc then
+                return {
+                  { mode = 'n', keys = string.format("`%s", key), desc = desc },
+                  { mode = 'n', keys = string.format("'%s", key), desc = desc },
+                }
+              end
+            end)
+            :flatten()
+            :filter(function(clue) return clue ~= nil end)
+            :totable()
+        end-- }}}
+
+        -- Clues for recorded macros.{{{
+        local function macro_clues()
+          local res = {}
+          for _, register in ipairs(vim.split('abcdefghijklmnopqrstuvwxyz', '')) do
+            local keys = string.format('"%s', register)
+            local ok, desc = pcall(vim.fn.getreg, register, 1)
+            if ok and desc ~= '' then
+              table.insert(res, { mode = 'n', keys = keys, desc = desc })
+              table.insert(res, { mode = 'v', keys = keys, desc = desc })
+            end
+          end
+
+          return res
+        end-- }}}
+
         miniclue.setup({
           triggers = {
             -- Leader triggers
@@ -1576,6 +1629,9 @@ require("lazy").setup({
             miniclue.gen_clues.registers(),
             -- miniclue.gen_clues.windows(),
             miniclue.gen_clues.z(),
+            -- Custom extras.
+            mark_clues,
+            macro_clues,
             -- moje skratky - normal mode
             { mode = "n", keys = "<Leader>c", desc = "+Code/Create" },
             { mode = "n", keys = "<Leader>f", desc = "+Find/Files" },
@@ -1699,8 +1755,20 @@ require("lazy").setup({
           -- better deal with markdown code blocks
           markdown = true,
           mappings = {
+            -- Prevents the action if the cursor is just before any character or next to a "\".
+            ['('] = { action = 'open', pair = '()', neigh_pattern = '[^\\][%s%)%]%}]',},
+            ['['] = { action = 'open', pair = '[]', neigh_pattern = '[^\\][%s%)%]%}]',},
+            ['{'] = { action = 'open', pair = '{}', neigh_pattern = '[^\\][%s%)%]%}]',},
+            -- This is default (prevents the action if the cursor is just next to a "\").
+            [')'] = { action = 'close', pair = '()', neigh_pattern = '[^\\].' },
+            [']'] = { action = 'close', pair = '[]', neigh_pattern = '[^\\].' },
+            ['}'] = { action = 'close', pair = '{}', neigh_pattern = '[^\\].' },
             ["<"] = { action = "open", pair = "<>", neigh_pattern = "[^\\].", register = { cr = false } },
             [">"] = { action = "close", pair = "<>", neigh_pattern = "[^\\].", register = { cr = false } },
+            -- Prevents the action if the cursor is just before or next to any character.
+            ['"'] = {action = 'closeopen', pair = '""', neigh_pattern = '[^%w][^%w]', register = { cr = false },},
+            ["'"] = {action = 'closeopen', pair = "''", neigh_pattern = '[^%w][^%w]', register = { cr = false },},
+            ['`'] = {action = 'closeopen', pair = '``', neigh_pattern = '[^%w][^%w]', register = { cr = false },},
           },
         }) -- }}}
 
@@ -1917,116 +1985,116 @@ require("lazy").setup({
     -- }}}
 
     -- {{{ [ Notes ]
-    -- {
-    --   "obsidian-nvim/obsidian.nvim", -- {{{
-    --   -- je to fork pretoze "epwalsh/obsidian.nvim" neobsahuje zatial "blink-cmp" a "snacks.picker"
-    --   -- enabled = false,
-    --   version = "*", -- recommended, use latest release instead of latest commit
-    --   lazy = true,
-    --   dependencies = { -- {{{
-    --     "nvim-lua/plenary.nvim",
-    --   }, -- }}}
-    --   opts = { -- {{{
-    --     ui = { enable = false }, -- vypnute ui pre doplnok render-markdown
-    --     disable_frontmatter = true,
-    --     workspaces = {
-    --       {
-    --         name = "Obsidian",
-    --         path = osvar.ObsidianPath(), -- definovane v [[ DETECT OS ]]
-    --       },
-    --     },
-    --     notes_subdir = "inbox",
-    --     new_notes_location = "inbox",
-    --     templates = {
-    --       subdir = "templates",
-    --       date_format = "%Y-%m-%d",
-    --       time_format = "%H:%M:%S",
-    --     },
-    --     completion = {
-    --       nvim_cmp = false,
-    --       blink = true,
-    --       min_chars = 2,
-    --     },
-    --     note_id_func = function(title)
-    --       title = title or "Untitled"
-    --       local sanitized_title = title:gsub(" ", "-") -- Replace spaces with underscores for file names
-    --       return sanitized_title -- Return the sanitized title as the file name
-    --     end,
-    --     attachments = {
-    --       img_folder = "images",
-    --     },
-    --     picker = {
-    --       -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', 'mini.pick' or 'snacks.pick'.
-    --       name = "snacks.pick",
-    --       -- Optional, configure key mappings for the picker. These are the defaults.
-    --       -- Not all pickers support all mappings.
-    --       note_mappings = {
-    --         -- Create a new note from your query.
-    --         new = "<C-x>",
-    --         -- Insert a link to the selected note.
-    --         insert_link = "<C-l>",
-    --       },
-    --       tag_mappings = {
-    --         -- Add tag(s) to current note.
-    --         tag_note = "<C-x>",
-    --         -- Insert a tag at the current location.
-    --         insert_tag = "<C-l>",
-    --       },
-    --     },
-    --   }, -- }}}
-    --   keys = { -- {{{
-    --     {
-    --       "<leader>ns",
-    --       function()
-    --         Snacks.picker.files({ cwd = osvar.ObsidianPath() })
-    --       end,
-    --       desc = "Search Note",
-    --     },
-    --     -- { "<leader>nn", mode = "n", function()osvar.ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
-    --     {
-    --       "<leader>nn",
-    --       mode = "n",
-    --       function()
-    --         osvar.ObsidianNewNote(true, "basic")
-    --       end,
-    --       desc = "New Note Basic",
-    --       noremap = true,
-    --       silent = true,
-    --     },
-    --     { "<leader>nt", mode = "n", ":ObsidianTemplate<cr>", desc = "Template Pick" },
-    --     { "<leader>ni", mode = "n", ":ObsidianPasteImg<cr>", desc = "Image Paste", noremap = true, silent = true },
-    --     {
-    --       "<leader>nc",
-    --       mode = "n",
-    --       ":ObsidianToggleCheckbox<cr>",
-    --       desc = "Checkbox Toggle",
-    --       noremap = true,
-    --       silent = true,
-    --     },
-    --     { "<leader>nq", mode = "n", ":ObsidianQuickSwitch<cr>", desc = "Switch Note", noremap = true, silent = true },
-    --     { "<leader>nlf", mode = "n", ":ObsidianFollowLink<cr>", desc = "Link Follow", noremap = true, silent = true },
-    --     { "<leader>nlb", mode = "n", ":ObsidianBacklinks<cr>", desc = "Backlinks", noremap = true, silent = true },
-    --     { "<leader>nlp", mode = "n", ":ObsidianLinks<cr>", desc = "Link Pick", noremap = true, silent = true },
-    --     { "<leader>nT", mode = "n", ":ObsidianTags<cr>", desc = "Tags", noremap = true, silent = true },
-    --     {
-    --       "<leader>nD",
-    --       mode = "n",
-    --       ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>",
-    --       desc = "Delete Note",
-    --       noremap = true,
-    --       silent = true,
-    --     },
-    --     {
-    --       "<leader>nE",
-    --       mode = { "v", "x" },
-    --       ":ObsidianExtractNote<cr>",
-    --       desc = "Extract Text",
-    --       noremap = true,
-    --       silent = true,
-    --     },
-    --     { "<leader>nl", mode = { "v", "x" }, ":ObsidianLinkNew<cr>", desc = "Link New", noremap = true, silent = true },
-    --   }, -- }}}
-    -- }, -- }}}
+    {
+      "obsidian-nvim/obsidian.nvim", -- {{{
+      -- je to fork pretoze "epwalsh/obsidian.nvim" neobsahuje zatial "blink-cmp" a "snacks.picker"
+      -- enabled = false,
+      version = "*", -- recommended, use latest release instead of latest commit
+      lazy = true,
+      dependencies = { -- {{{
+        "nvim-lua/plenary.nvim",
+      }, -- }}}
+      opts = { -- {{{
+        ui = { enable = false }, -- vypnute ui pre doplnok render-markdown
+        disable_frontmatter = true,
+        workspaces = {
+          {
+            name = "Obsidian",
+            path = osvar.ObsidianPath(), -- definovane v [[ DETECT OS ]]
+          },
+        },
+        notes_subdir = "inbox",
+        new_notes_location = "inbox",
+        templates = {
+          subdir = "templates",
+          date_format = "%Y-%m-%d",
+          time_format = "%H:%M:%S",
+        },
+        completion = {
+          nvim_cmp = false,
+          blink = true,
+          min_chars = 2,
+        },
+        note_id_func = function(title)
+          title = title or "Untitled"
+          local sanitized_title = title:gsub(" ", "-") -- Replace spaces with underscores for file names
+          return sanitized_title -- Return the sanitized title as the file name
+        end,
+        attachments = {
+          img_folder = "images",
+        },
+        picker = {
+          -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', 'mini.pick' or 'snacks.pick'.
+          name = "snacks.pick",
+          -- Optional, configure key mappings for the picker. These are the defaults.
+          -- Not all pickers support all mappings.
+          note_mappings = {
+            -- Create a new note from your query.
+            new = "<C-x>",
+            -- Insert a link to the selected note.
+            insert_link = "<C-l>",
+          },
+          tag_mappings = {
+            -- Add tag(s) to current note.
+            tag_note = "<C-x>",
+            -- Insert a tag at the current location.
+            insert_tag = "<C-l>",
+          },
+        },
+      }, -- }}}
+      keys = { -- {{{
+        {
+          "<leader>ns",
+          function()
+            Snacks.picker.files({ cwd = osvar.ObsidianPath() })
+          end,
+          desc = "Search Note",
+        },
+        -- { "<leader>nn", mode = "n", function()osvar.ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
+        {
+          "<leader>nn",
+          mode = "n",
+          function()
+            osvar.ObsidianNewNote(true, "basic")
+          end,
+          desc = "New Note Basic",
+          noremap = true,
+          silent = true,
+        },
+        { "<leader>nt", mode = "n", ":ObsidianTemplate<cr>", desc = "Template Pick" },
+        { "<leader>ni", mode = "n", ":ObsidianPasteImg<cr>", desc = "Image Paste", noremap = true, silent = true },
+        {
+          "<leader>nc",
+          mode = "n",
+          ":ObsidianToggleCheckbox<cr>",
+          desc = "Checkbox Toggle",
+          noremap = true,
+          silent = true,
+        },
+        { "<leader>nq", mode = "n", ":ObsidianQuickSwitch<cr>", desc = "Switch Note", noremap = true, silent = true },
+        { "<leader>nlf", mode = "n", ":ObsidianFollowLink<cr>", desc = "Link Follow", noremap = true, silent = true },
+        { "<leader>nlb", mode = "n", ":ObsidianBacklinks<cr>", desc = "Backlinks", noremap = true, silent = true },
+        { "<leader>nlp", mode = "n", ":ObsidianLinks<cr>", desc = "Link Pick", noremap = true, silent = true },
+        { "<leader>nT", mode = "n", ":ObsidianTags<cr>", desc = "Tags", noremap = true, silent = true },
+        {
+          "<leader>nD",
+          mode = "n",
+          ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>",
+          desc = "Delete Note",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>nE",
+          mode = { "v", "x" },
+          ":ObsidianExtractNote<cr>",
+          desc = "Extract Text",
+          noremap = true,
+          silent = true,
+        },
+        { "<leader>nl", mode = { "v", "x" }, ":ObsidianLinkNew<cr>", desc = "Link New", noremap = true, silent = true },
+      }, -- }}}
+    }, -- }}}
 
     { "zk-org/zk-nvim", -- {{{
       -- enabled = false,
@@ -2038,6 +2106,7 @@ require("lazy").setup({
       keys = { -- {{{
         { "<leader>nz", mode = "n", function() vim.ui.input({ prompt = "Title: " }, function(title) if not title then return end if title ~= "" then require("zk").new({ title = title }) else return end end) end, desc = "ZK New Note", noremap = true, silent = true,},
         { "<leader>ns", mode = "n", function() Snacks.picker.files({ cwd = osvar.ObsidianPath() }) end, desc = "Search Note"},
+        {	"<leader>nZ", mode = "n",	":ZkNew {dir = vim.fn.input('Target dir: '), title = vim.fn.input('Title: ') }<cr>", desc = "Create new ZK note" },
       }, -- }}}
     }, -- }}}
 
@@ -2536,11 +2605,11 @@ local lsp_configs = {
     cmd = { "htmx-lsp" },
     filetypes = { "django-html", "htmldjango", "html" },
   },
-  zk = {
-    cmd = { "zk", "lsp" },
-    filetypes = { "markdown" },
-    root_markers = { ".zk" },
-  },
+  -- zk = {
+  --   cmd = { "zk", "lsp" },
+  --   filetypes = { "markdown" },
+  --   root_markers = { ".zk" },
+  -- },
 }
 
 for name, opts in pairs(lsp_configs) do
