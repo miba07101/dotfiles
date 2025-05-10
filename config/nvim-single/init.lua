@@ -292,10 +292,10 @@ ConfigureShellAndCursor()
 
 vim.filetype.add({ -- {{{
   extension = {
-    zsh   = "sh",
-    sh    = "sh",
-    ipynb = "ipynb",
-    typ   = "typst",
+    zsh    = "sh",
+    sh     = "sh",
+    ipynb  = "ipynb",
+    typ    = "typst",
   },
   filename = {
     [".zshrc"]  = "bash",
@@ -588,27 +588,27 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 -- }}}
 
--- {{{ htmldjango - v treesitter instalovat jinja a jinja_inline (htmldjango netreba nepaci sa mi syntax highlight)
--- Function to select the filetype for HTML-based templates with Jinja
-local function select_html_filetype()
-  local n = 1
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-  while n <= #lines and n < 100 do
-    -- Check for Jinja tags like {{ ... }} or {% ... %}
-    if lines[n]:match("{{.*}}") or lines[n]:match("{%%?%s*(end.*|extends|block|macro|set|if|for|include|trans)>") then
-      vim.bo.filetype = "htmldjango" -- Set filetype to htmldjango for Jinja content
-      return
-    end
-    n = n + 1
-  end
-end
-
--- Autocommands to handle .html and related files
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-  pattern = { "*.html", "*.htm" }, -- Only for HTML files
-  callback = select_html_filetype, -- Check if it contains Jinja tags and assign the filetype
-})
--- }}}
+-- -- {{{ htmldjango - v treesitter instalovat jinja a jinja_inline (htmldjango netreba nepaci sa mi syntax highlight)
+-- -- Function to select the filetype for HTML-based templates with Jinja
+-- local function select_html_filetype()
+--   local n = 1
+--   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+--   while n <= #lines and n < 100 do
+--     -- Check for Jinja tags like {{ ... }} or {% ... %}
+--     if lines[n]:match("{{.*}}") or lines[n]:match("{%%?%s*(end.*|extends|block|macro|set|if|for|include|trans)>") then
+--       vim.bo.filetype = "htmldjango" -- Set filetype to htmldjango for Jinja content
+--       return
+--     end
+--     n = n + 1
+--   end
+-- end
+--
+-- -- Autocommands to handle .html and related files
+-- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+--   pattern = { "*.html", "*.htm" }, -- Only for HTML files
+--   callback = select_html_filetype, -- Check if it contains Jinja tags and assign the filetype
+-- })
+-- -- }}}
 
 -- create a new Python notebook (Jupyter notebook){{{
 -- https://github.com/benlubas/molten-nvim/blob/main/docs/Notebook-Setup.md
@@ -823,8 +823,8 @@ require("lazy").setup({
           "css",
           "scss",
           -- "htmldjango",
-          "jinja",
-          "jinja_inline",
+          -- "jinja",
+          -- "jinja_inline",
           "markdown",
           "markdown_inline",
           "query",
@@ -892,6 +892,7 @@ require("lazy").setup({
           "marksman",
           "tinymist",
           "jinja-lsp",
+          "django-template-lsp",
           "json-lsp",
           "htmx-lsp",
           -- "zk",
@@ -1985,10 +1986,10 @@ require("lazy").setup({
       }, -- }}}
     }, -- }}}
 
-    { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
-      enabled = false,
-      ft = { "jinja", "htmldjango", "html" },
-    }, -- }}}
+    -- { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
+    --   enabled = true,
+    --   ft = { "jinja", "htmldjango", "html" },
+    -- }, -- }}}
 
     { "brenoprata10/nvim-highlight-colors", -- show colors {{{
       enabled = false,
@@ -2144,7 +2145,8 @@ local lsp_configs = {
   },
   emmet_ls = {
     cmd = { "emmet-ls", "--stdio" },
-    filetypes = { "html", "css", "sass", "scss", "less", "javascript", "typescript" },
+    filetypes = { "astro", "css", "eruby", "html", "javascriptreact", "less", "pug", "sass", "scss", "svelte", "typescriptreact", "vue", "htmlangular" },
+    root_markers = { ".git" },
   },
   marksman = {
     cmd = { "marksman", "server" },
@@ -2155,17 +2157,21 @@ local lsp_configs = {
     filetypes = { "typst" },
     root_markers = { ".git" },
   },
-  jinja_lsp = {
-    cmd = { "jinja-lsp" },
-    filetypes = { "htmldjango", "jinja" },
-    root_dir = function(fname)
-      return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
-    end,
-    single_file_support = true,
-  },
+  -- djlsp = {
+  --   cmd = { "djlsp" },
+  --   filetypes = { "html", "htmldjango" },
+  --   root_markers = { ".git" },
+  -- },
+  -- jinja_lsp = {
+  --   name = { "jinja_lsp" },
+  --   cmd = { "jinja-lsp" },
+  --   filetypes = { "jinja" },
+  --   root_markers = { ".git" },
+  -- },
   htmx = {
     cmd = { "htmx-lsp" },
     filetypes = { "django-html", "htmldjango", "html" },
+    root_markers = { ".git" },
   },
   -- zk = {
   --   cmd = { "zk", "lsp" },
