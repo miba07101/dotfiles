@@ -1033,8 +1033,7 @@ require("lazy").setup({
     -- }}}
 
     -- {{{ [ Snack.nvim collection ]
-    {
-      "folke/snacks.nvim",
+    { "folke/snacks.nvim",
       priority = 1000,
       lazy = false,
       -- enabled = false,
@@ -1046,13 +1045,13 @@ require("lazy").setup({
             keys = {
               { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
               { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-              { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
-              { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+              -- { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+              { icon = " ", key = "o", desc = "Old Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
               { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",},
               { icon = " ", key = "p", desc = "Projects", action = ":lua Snacks.dashboard.pick('projects', {dev = '~/git-repos/', recent = false})",},
               { icon = "󱙓 ", key = "N", desc = "Notes", action = ":lua Snacks.dashboard.pick('files', {cwd = osvar.ObsidianPath()})",},
               -- { icon = " ", key = "s", desc = "Restore Session", section = "session" },
-              { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+              -- { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
               { icon = " ", key = "q", desc = "Quit", action = ":qa" },
             },
             header = dashboard_header,
@@ -1622,16 +1621,16 @@ require("lazy").setup({
         --   return success and status == "Molten" and "M:A" or "M:X"
         -- end-- }}}
 
-        -- Function to show buffer counts{{{
-        local function buffer_counts()
-          local loaded_buffers = #vim.tbl_filter(function(buf)
-            return vim.fn.buflisted(buf) ~= 0
-          end, vim.api.nvim_list_bufs())
-          local modified_buffers = #vim.tbl_filter(function(buf)
-            return vim.bo[buf].modified
-          end, vim.api.nvim_list_bufs())
-          return string.format("󰈔 [%d:%d+]", loaded_buffers, modified_buffers)
-        end -- }}}
+        -- -- Function to show buffer counts{{{
+        -- local function buffer_counts()
+        --   local loaded_buffers = #vim.tbl_filter(function(buf)
+        --     return vim.fn.buflisted(buf) ~= 0
+        --   end, vim.api.nvim_list_bufs())
+        --   local modified_buffers = #vim.tbl_filter(function(buf)
+        --     return vim.bo[buf].modified
+        --   end, vim.api.nvim_list_bufs())
+        --   return string.format("󰈔 [%d:%d+]", loaded_buffers, modified_buffers)
+        -- end -- }}}
 
         statusline.setup({ -- {{{
           use_icons = true,
@@ -1643,26 +1642,23 @@ require("lazy").setup({
             end,
 
             active = function()
-              local mode, mode_hl   = MiniStatusline.section_mode({ trunc_width        = 120 })
-              local git             = MiniStatusline.section_git({ trunc_width         = 40 })
-              local diff            = MiniStatusline.section_diff({ trunc_width        = 75 })
-              local diagnostics     = MiniStatusline.section_diagnostics({trunc_width  = 75, icon = "", signs = { ERROR = " ", WARN = " ", INFO = " ", HINT = "󰌵 " },})
-              local lsp             = MiniStatusline.section_lsp({ trunc_width         = 75, icon = "" })
-              local filename        = MiniStatusline.section_filename({ trunc_width    = 140 })
-              local fileinfo        = MiniStatusline.section_fileinfo({ trunc_width    = 1000 })
-              local location        = MiniStatusline.section_location({ trunc_width    = 75 })
-              local search          = MiniStatusline.section_searchcount({ trunc_width = 75 })
-              local buffer_counts   = buffer_counts()
+              local mode, mode_hl = MiniStatusline.section_mode({ trunc_width       = 120 })
+              local diagnostics   = MiniStatusline.section_diagnostics({trunc_width = 75, icon = "", signs = { ERROR = " ", WARN = " ", INFO = " ", HINT = "󰌵 " },})
+              local lsp           = MiniStatusline.section_lsp({ trunc_width        = 75, icon = "" })
+              local filename      = MiniStatusline.section_filename({ trunc_width   = 140 })
+              local fileinfo      = MiniStatusline.section_fileinfo({ trunc_width   = 1000 })
+              local location      = "%l,%c"
+              -- local buffer_counts   = buffer_counts()
               local macro_recording = macro_recording()
               -- local molten_init  = molten_init()
               local python_venv     = python_venv()
 
               return MiniStatusline.combine_groups({
-                { hl = mode_hl, strings = { fileinfo } },
+                { hl = mode_hl, strings = { fileinfo, diagnostics } },
                 "%<", -- Mark general truncate point
-                { hl = mode_hl, strings = { filename, buffer_counts, macro_recording } },
+                { hl = mode_hl, strings = { filename, macro_recording } },
                 "%= ", -- End left alignment
-                { hl = mode_hl, strings = { python_venv, lsp, molten_init, git, diff, diagnostics, location },},
+                { hl = mode_hl, strings = { python_venv, lsp, git, diff, location },},
               })
             end,
           },
