@@ -1981,10 +1981,10 @@ require("lazy").setup({
       }, -- }}}
     }, -- }}}
 
-    -- { "lepture/vim-jinja", -- syntax/indent for jinja.html files {{{
-    --   enabled = true,
-    --   ft = { "jinja", "htmldjango", "html", "jinja.html" },
-    -- }, -- }}}
+    { "lepture/vim-jinja", -- syntax/indent for jinja.html files {{{
+      enabled = false,
+      ft = { "jinja", "htmldjango", "html", "jinja.html" },
+    }, -- }}}
 
     { "brenoprata10/nvim-highlight-colors", -- show colors {{{
       enabled = false,
