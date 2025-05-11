@@ -689,6 +689,22 @@ map("n", "<leader>pj", function()
 end, { desc = "Create Jupyter Notebook" })
 --}}}
 
+-- {{{ python
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  command = [[nnoremap <buffer> <M-p> :w<cr>:terminal python3 "%"<cr>]],
+  group = mygroup,
+  desc = "open file in python terminal",
+})
+
+vim.api.nvim_create_autocmd("filetype", {
+  pattern = "python",
+  command = [[setlocal colorcolumn=80]],
+  group = mygroup,
+  desc = "set colorcolumn for python files",
+})
+-- }}}
+
 -- }}}
 
 -- {{{ [[ LAZY MANAGER ]]
@@ -1632,7 +1648,7 @@ require("lazy").setup({
                 "%<", -- Mark general truncate point
                 { hl = mode_hl, strings = { filename, macro_recording } },
                 "%= ", -- End left alignment
-                { hl = mode_hl, strings = { python_venv, lsp, git, diff, location },},
+                { hl = mode_hl, strings = { python_venv, lsp, location },},
               })
             end,
           },
@@ -1654,116 +1670,6 @@ require("lazy").setup({
     -- }}}
 
     -- {{{ [ Notes ]
-    -- { "obsidian-nvim/obsidian.nvim", -- {{{
-    --   -- je to fork pretoze "epwalsh/obsidian.nvim" neobsahuje zatial "blink-cmp" a "snacks.picker"
-    --   -- enabled = false,
-    --   version = "*", -- recommended, use latest release instead of latest commit
-    --   lazy = true,
-    --   dependencies = { -- {{{
-    --     "nvim-lua/plenary.nvim",
-    --   }, -- }}}
-    --   opts = { -- {{{
-    --     ui = { enable = false }, -- vypnute ui pre doplnok render-markdown
-    --     disable_frontmatter = true,
-    --     workspaces = {
-    --       {
-    --         name = "Obsidian",
-    --         path = osvar.ObsidianPath(), -- definovane v [[ DETECT OS ]]
-    --       },
-    --     },
-    --     notes_subdir = "inbox",
-    --     new_notes_location = "inbox",
-    --     templates = {
-    --       subdir = "templates",
-    --       date_format = "%Y-%m-%d",
-    --       time_format = "%H:%M:%S",
-    --     },
-    --     completion = {
-    --       nvim_cmp = false,
-    --       blink = true,
-    --       min_chars = 2,
-    --     },
-    --     note_id_func = function(title)
-    --       title = title or "Untitled"
-    --       local sanitized_title = title:gsub(" ", "-") -- Replace spaces with underscores for file names
-    --       return sanitized_title -- Return the sanitized title as the file name
-    --     end,
-    --     attachments = {
-    --       img_folder = "images",
-    --     },
-    --     picker = {
-    --       -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', 'mini.pick' or 'snacks.pick'.
-    --       name = "snacks.pick",
-    --       -- Optional, configure key mappings for the picker. These are the defaults.
-    --       -- Not all pickers support all mappings.
-    --       note_mappings = {
-    --         -- Create a new note from your query.
-    --         new = "<C-x>",
-    --         -- Insert a link to the selected note.
-    --         insert_link = "<C-l>",
-    --       },
-    --       tag_mappings = {
-    --         -- Add tag(s) to current note.
-    --         tag_note = "<C-x>",
-    --         -- Insert a tag at the current location.
-    --         insert_tag = "<C-l>",
-    --       },
-    --     },
-    --   }, -- }}}
-    --   keys = { -- {{{
-    --     {
-    --       "<leader>ns",
-    --       function()
-    --         Snacks.picker.files({ cwd = osvar.ObsidianPath() })
-    --       end,
-    --       desc = "Search Note",
-    --     },
-    --     -- { "<leader>nn", mode = "n", function()osvar.ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
-    --     {
-    --       "<leader>nn",
-    --       mode = "n",
-    --       function()
-    --         osvar.ObsidianNewNote(true, "basic")
-    --       end,
-    --       desc = "New Note Basic",
-    --       noremap = true,
-    --       silent = true,
-    --     },
-    --     { "<leader>nt", mode = "n", ":ObsidianTemplate<cr>", desc = "Template Pick" },
-    --     { "<leader>ni", mode = "n", ":ObsidianPasteImg<cr>", desc = "Image Paste", noremap = true, silent = true },
-    --     {
-    --       "<leader>nc",
-    --       mode = "n",
-    --       ":ObsidianToggleCheckbox<cr>",
-    --       desc = "Checkbox Toggle",
-    --       noremap = true,
-    --       silent = true,
-    --     },
-    --     { "<leader>nq", mode = "n", ":ObsidianQuickSwitch<cr>", desc = "Switch Note", noremap = true, silent = true },
-    --     { "<leader>nlf", mode = "n", ":ObsidianFollowLink<cr>", desc = "Link Follow", noremap = true, silent = true },
-    --     { "<leader>nlb", mode = "n", ":ObsidianBacklinks<cr>", desc = "Backlinks", noremap = true, silent = true },
-    --     { "<leader>nlp", mode = "n", ":ObsidianLinks<cr>", desc = "Link Pick", noremap = true, silent = true },
-    --     { "<leader>nT", mode = "n", ":ObsidianTags<cr>", desc = "Tags", noremap = true, silent = true },
-    --     {
-    --       "<leader>nD",
-    --       mode = "n",
-    --       ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>",
-    --       desc = "Delete Note",
-    --       noremap = true,
-    --       silent = true,
-    --     },
-    --     {
-    --       "<leader>nE",
-    --       mode = { "v", "x" },
-    --       ":ObsidianExtractNote<cr>",
-    --       desc = "Extract Text",
-    --       noremap = true,
-    --       silent = true,
-    --     },
-    --     { "<leader>nl", mode = { "v", "x" }, ":ObsidianLinkNew<cr>", desc = "Link New", noremap = true, silent = true },
-    --   }, -- }}}
-    -- }, -- }}}
-
     { "zk-org/zk-nvim", -- {{{
       -- enabled = false,
       event = {
@@ -1818,6 +1724,123 @@ require("lazy").setup({
         { "\\m", mode = { "n" }, "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle 'markdown preview'", noremap = true, silent = true,},
       }, -- }}}
     }, -- }}}
+
+    { "obsidian-nvim/obsidian.nvim", -- {{{
+      -- je to fork pretoze "epwalsh/obsidian.nvim" neobsahuje zatial "blink-cmp" a "snacks.picker"
+      enabled = false,
+      version = "*", -- recommended, use latest release instead of latest commit
+      lazy = true,
+      dependencies = { -- {{{
+        "nvim-lua/plenary.nvim",
+      }, -- }}}
+      opts = { -- {{{
+        ui = { enable = false }, -- vypnute ui pre doplnok render-markdown
+        disable_frontmatter = true,
+        workspaces = {
+          {
+            name = "Obsidian",
+            path = osvar.ObsidianPath(), -- definovane v [[ DETECT OS ]]
+          },
+        },
+        notes_subdir = "inbox",
+        new_notes_location = "inbox",
+        templates = {
+          subdir = "templates",
+          date_format = "%Y-%m-%d",
+          time_format = "%H:%M:%S",
+        },
+        completion = {
+          nvim_cmp = false,
+          blink = true,
+          min_chars = 2,
+        },
+        note_id_func = function(title)
+          title = title or "Untitled"
+          local sanitized_title = title:gsub(" ", "-") -- Replace spaces with underscores for file names
+          return sanitized_title -- Return the sanitized title as the file name
+        end,
+        attachments = {
+          img_folder = "images",
+        },
+        picker = {
+          -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', 'mini.pick' or 'snacks.pick'.
+          name = "snacks.pick",
+          -- Optional, configure key mappings for the picker. These are the defaults.
+          -- Not all pickers support all mappings.
+          note_mappings = {
+            -- Create a new note from your query.
+            new = "<C-x>",
+            -- Insert a link to the selected note.
+            insert_link = "<C-l>",
+          },
+          tag_mappings = {
+            -- Add tag(s) to current note.
+            tag_note = "<C-x>",
+            -- Insert a tag at the current location.
+            insert_tag = "<C-l>",
+          },
+        },
+      }, -- }}}
+      keys = { -- {{{
+        {
+          "<leader>ns",
+          function()
+            Snacks.picker.files({ cwd = osvar.ObsidianPath() })
+          end,
+          desc = "Search Note",
+        },
+        -- { "<leader>nn", mode = "n", function()osvar.ObsidianNewNote(false)end, desc = "new note", noremap = true, silent = true },
+        {
+          "<leader>nn",
+          mode = "n",
+          function()
+            osvar.ObsidianNewNote(true, "basic")
+          end,
+          desc = "New Note Basic",
+          noremap = true,
+          silent = true,
+        },
+        { "<leader>nt", mode = "n", ":ObsidianTemplate<cr>", desc = "Template Pick" },
+        { "<leader>ni", mode = "n", ":ObsidianPasteImg<cr>", desc = "Image Paste", noremap = true, silent = true },
+        {
+          "<leader>nc",
+          mode = "n",
+          ":ObsidianToggleCheckbox<cr>",
+          desc = "Checkbox Toggle",
+          noremap = true,
+          silent = true,
+        },
+        { "<leader>nq", mode = "n", ":ObsidianQuickSwitch<cr>", desc = "Switch Note", noremap = true, silent = true },
+        { "<leader>nlf", mode = "n", ":ObsidianFollowLink<cr>", desc = "Link Follow", noremap = true, silent = true },
+        { "<leader>nlb", mode = "n", ":ObsidianBacklinks<cr>", desc = "Backlinks", noremap = true, silent = true },
+        { "<leader>nlp", mode = "n", ":ObsidianLinks<cr>", desc = "Link Pick", noremap = true, silent = true },
+        { "<leader>nT", mode = "n", ":ObsidianTags<cr>", desc = "Tags", noremap = true, silent = true },
+        {
+          "<leader>nD",
+          mode = "n",
+          ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>",
+          desc = "Delete Note",
+          noremap = true,
+          silent = true,
+        },
+        {
+          "<leader>nE",
+          mode = { "v", "x" },
+          ":ObsidianExtractNote<cr>",
+          desc = "Extract Text",
+          noremap = true,
+          silent = true,
+        },
+        { "<leader>nl", mode = { "v", "x" }, ":ObsidianLinkNew<cr>", desc = "Link New", noremap = true, silent = true },
+      }, -- }}}
+    }, -- }}}
+
+      { "Kicamon/markdown-table-mode.nvim", -- auto format table in markdown {{{
+        enabled = false,
+        lazy = true,
+        ft = { "markdown", "quarto" },
+        opts = {},
+      },-- }}}
     -- }}}
 
     -- {{{ [ Quarto, Jupyterlab ]
@@ -1884,6 +1907,214 @@ require("lazy").setup({
         force_ft = "markdown",
       },
     }, -- }}}
+
+      { "benlubas/molten-nvim",-- {{{
+        enabled = false,
+        -- build = ":UpdateRemotePlugins",
+        -- ft = { "python", "quarto", "markdown" },
+        dependencies = os_type == "linux"-- {{{
+          and { "3rd/image.nvim" }
+          or { "willothy/wezterm.nvim", config = true },-- }}}
+        init = function()-- {{{
+        -- "pynvim" nainstalovat vo "venv"
+        -- v mojom venv, kde som nainstaloval "ipykernel", resp. "jupyterlab", tak spustim:
+        -- "python -m ipykernel install --user --name project_name"
+        -- "project_name" dam nazov mojho venv, napr. venv: "base-venv", tak project_name:"base-venv"
+        -- for windows read: https://github.com/benlubas/molten-nvim/blob/main/docs/Windows.md
+        -- after that, update remote plugins ":UpdateRemotePlugins"
+        -- restart neovim
+          vim.g.python3_host_prog = PythonInterpreter()
+          if os_type == "linux" then
+            vim.g.molten_image_provider = "image.nvim"
+          else
+            vim.g.molten_image_provider = "wezterm"
+            -- image_provider_opts = {
+            --   command = "wezterm imgcat"  -- Remove `--tmux-passthru`
+            -- }
+            vim.g.molten_split_direction = "bottom" --direction of the output window, options are "right", "left", "top", "bottom"
+            vim.g.molten_split_size = 40 --(0-100) % size of the screen dedicated to the output window
+          end
+          vim.g.molten_output_win_max_height = 20
+          vim.g.molten_wrap_output = true
+          vim.g.molten_auto_open_output = false -- cannot be true if molten_image_provider = "wezterm"
+          vim.g.molten_virt_lines_off_by_1 = true -- this will make it so the output shows up below the \`\`\` cell delimiter
+          vim.g.molten_virt_text_output = true
+
+          -- -- change the configuration when editing a python file{{{
+          -- vim.api.nvim_create_autocmd("BufEnter", {
+          --   pattern = "*.py",
+          --   callback = function(e)
+          --     if string.match(e.file, ".otter.") then
+          --       return
+          --     end
+          --     if require("molten.status").initialized() == "Molten" then -- this is kinda a hack...
+          --       vim.fn.MoltenUpdateOption("virt_lines_off_by_1", false)
+          --       vim.fn.MoltenUpdateOption("virt_text_output", false)
+          --     else
+          --       vim.g.molten_virt_lines_off_by_1 = false
+          --       vim.g.molten_virt_text_output = false
+          --     end
+          --   end,
+          -- })-- }}}
+
+          -- -- Undo those config changes when we go back to a markdown or quarto file{{{
+          -- vim.api.nvim_create_autocmd("BufEnter", {
+          --   pattern = { "*.qmd", "*.md", "*.ipynb" },
+          --   callback = function(e)
+          --     if string.match(e.file, ".otter.") then
+          --       return
+          --     end
+          --     if require("molten.status").initialized() == "Molten" then
+          --       vim.fn.MoltenUpdateOption("virt_lines_off_by_1", true)
+          --       vim.fn.MoltenUpdateOption("virt_text_output", true)
+          --     else
+          --       vim.g.molten_virt_lines_off_by_1 = true
+          --       vim.g.molten_virt_text_output = true
+          --     end
+          --   end,
+          -- })-- }}}
+
+        end,-- }}}
+        keys = {-- {{{
+          -- { "<leader>pma", mode = "n", MoltenInitialize, desc = "activate", noremap = true, silent = true },
+          { "<leader>pma", mode = "n", function()
+            MoltenInitialize()
+            vim.defer_fn(function()
+              -- suvisi s [ Lualine ] statusline
+              -- ak je molten activovany tak v lualine vypise "M:A"
+              if require('molten.status').initialized() == "Molten" then
+                vim.g.lualine_status = "M:A"  -- Store status in a global variable
+                -- Refresh lualine statusline to apply the changes
+                require("lualine").refresh({ place = { "statusline" } })
+              end
+            end, 200)
+          end, desc = "activate", noremap = true, silent = true },
+          { "<leader>pmb", mode = "n", ":MoltenOpenInBrowser<cr>", desc = "open in browser (html only)", noremap = true, silent = true },
+          -- { "<leader>pmo", mode = "n", ":MoltenEvaluateOperator<cr>", desc = "operator evaluate", noremap = true, silent = true },
+          -- { "<leader>pml", mode = "n", ":MoltenEvaluateLine<cr>", desc = "line evaluate", noremap = true, silent = true },
+          -- { "<leader>pcR", mode = "n", ":MoltenReevaluateCell<cr>", desc = "re-evaluate cell", noremap = true, silent = true },
+          { "<leader>pmd", mode = "n", ":MoltenDelete<cr>", desc = "delete output", noremap = true, silent = true },
+          { "<leader>pmh", mode = "n", ":MoltenHideOutput<cr>", desc = "hide output", noremap = true, silent = true },
+          { "<leader>pme", mode = "n", ":noautocmd MoltenEnterOutput<cr>", desc = "show/enter cell output", noremap = true, silent = true },
+          -- { "<leader>pl", mode = "v", ":<C-u>MoltenEvaluateVisual<cr>gv", desc = "run lines", noremap = true, silent = true },
+
+        },-- }}}
+      },-- }}}
+    -- }}}
+
+    -- {{{ [ DAP debug ]
+
+    { "mfussenegger/nvim-dap",
+      enabled = false,
+      dependencies = {-- {{{
+        "rcarriga/nvim-dap-ui",
+        "nvim-neotest/nvim-nio",
+        "jay-babu/mason-nvim-dap.nvim",
+        -- Add debuggers here
+        "mfussenegger/nvim-dap-python",
+      },-- }}}
+      config = function()
+        local dap = require("dap")
+        local dapui = require("dapui")
+        local dap_python = require("dap-python")
+
+        require("mason-nvim-dap").setup {-- {{{
+          automatic_installation = true,
+          handlers = {},
+          ensure_installed = {
+            "debugpy",
+          },
+        }-- }}}
+
+        -- Dap UI setup
+        dapui.setup({-- {{{
+          -- icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
+          -- controls = {
+          --   icons = {
+          --     pause = "⏸",
+          --     play = "▶",
+          --     step_into = "⏎",
+          --     step_over = "⏭",
+          --     step_out = "⏮",
+          --     step_back = "b",
+          --     run_last = "▶▶",
+          --     terminate = "⏹",
+          --     disconnect = "⏏",
+          --   },
+          -- },
+        })-- }}}
+
+        -- -- Change breakpoint icons
+        -- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
+        -- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
+        -- local breakpoint_icons = vim.g.have_nerd_font
+        --     and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
+        --   or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
+        -- for type, icon in pairs(breakpoint_icons) do
+        --   local tp = 'Dap' .. type
+        --   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
+        --   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
+        -- end
+
+
+        vim.fn.sign_define("DapBreakpoint", {
+          text = "",
+          texthl = "DiagnosticSignError",
+          linehl = "",
+          numhl = "",
+        })
+
+        vim.fn.sign_define("DapBreakpointRejected", {
+          text = "", -- or "❌"
+          texthl = "DiagnosticSignError",
+          linehl = "",
+          numhl = "",
+        })
+
+        vim.fn.sign_define("DapStopped", {
+          text = "", -- or "→"
+          texthl = "DiagnosticSignWarn",
+          linehl = "Visual",
+          numhl = "DiagnosticSignWarn",
+        })
+
+        -- Automatically open/close DAP UI
+        dap.listeners.after.event_initialized["dapui_config"] = function()
+          dapui.open()
+        end
+
+        -- dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+        -- dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+        -- dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
+        -- python specific config
+        dap_python.setup(debugpy_path)
+        -- dap_python.setup("python")
+
+      end,
+      keys = {-- {{{
+        -- { "<leader>pdB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "breakpoint condition", noremap = true, silent = true },
+        { "<leader>pdb", function() require("dap").toggle_breakpoint() end, desc = "toggle breakpoint", noremap = true, silent = true },
+        { "<leader>pdc", function() require("dap").continue() end, desc = "run/continue", noremap = true, silent = true },
+        -- { "<leader>pda", function() require("dap").continue({ before = get_args }) end, desc = "run with args", noremap = true, silent = true },
+        -- { "<leader>pdC", function() require("dap").run_to_cursor() end, desc = "run to cursor", noremap = true, silent = true },
+        -- { "<leader>pdg", function() require("dap").goto_() end, desc = "go to line (no execute)", noremap = true, silent = true },
+        { "<leader>pdi", function() require("dap").step_into() end, desc = "step into", noremap = true, silent = true },
+        -- { "<leader>pdj", function() require("dap").down() end, desc = "down", noremap = true, silent = true },
+        -- { "<leader>pdk", function() require("dap").up() end, desc = "up", noremap = true, silent = true },
+        -- { "<leader>pdl", function() require("dap").run_last() end, desc = "run last", noremap = true, silent = true },
+        { "<leader>pdo", function() require("dap").step_out() end, desc = "step out", noremap = true, silent = true },
+        { "<leader>pdO", function() require("dap").step_over() end, desc = "step over", noremap = true, silent = true },
+        -- { "<leader>pdP", function() require("dap").pause() end, desc = "pause", noremap = true, silent = true },
+        -- { "<leader>pdr", function() require("dap").repl.toggle() end, desc = "toggle REPL", noremap = true, silent = true },
+        -- { "<leader>pds", function() require("dap").session() end, desc = "session", noremap = true, silent = true },
+        { "<leader>pdq", function() require("dap").terminate() end, desc = "terminate", noremap = true, silent = true },
+        { "<leader>pdw", function() require("dap.ui.widgets").hover() end, desc = "widgets", noremap = true, silent = true },
+        -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+        { "<leader>pdu", function() require("dapui").toggle() end, desc = "UI", noremap = true, silent = true },
+        -- { "<leader>pde", mode = {"n", "v"}, function() require("dapui").eval() end, desc = "eval", noremap = true, silent = true },
+      },-- }}}
+    },
     -- }}}
 
     -- {{{ [ Mix ]
@@ -2082,7 +2313,14 @@ local lsp_configs = {
   luals = {
     cmd = { "lua-language-server" },
     filetypes = { "lua" },
-    root_markers = { ".luarc.json", ".luarc.jsonc" },
+    root_markers = { ".luarc.json", ".luarc.jsonc", "init.lua" },
+    settings = {
+      Lua = {
+        diagnostics = {
+          globals = { "vim", "Snacks", "MiniFiles", "MiniStatusline", "MiniSessions", "MiniTrailspace" },
+        },
+      },
+    },
   },
   basedpyright = {
     cmd = { "basedpyright-langserver", "--stdio" },
