@@ -291,6 +291,7 @@ alias vq='nvim $HOME/.config/qtile/config.py'
 alias vs='nvim $HOME/.config/starship.toml'
 
 # App
+alias v='nvim'
 alias ranger='f'
 alias yazi='y'
 alias ex='exit'

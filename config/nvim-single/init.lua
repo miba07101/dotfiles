@@ -1066,7 +1066,7 @@ require("lazy").setup({
               { icon = " ", key = "s", desc = "Sessions", action = ":lua MiniSessions.select()",},
               { icon = "󱙓 ", key = "N", desc = "Notes", action = ":lua Snacks.dashboard.pick('files', {cwd = osvar.ObsidianPath()})",},
               -- { icon = " ", key = "S", desc = "Restore Session", section = "session" },
-              -- { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+              { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
               { icon = " ", key = "q", desc = "Quit", action = ":qa" },
             },
             header = dashboard_header,
