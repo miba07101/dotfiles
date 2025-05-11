@@ -195,9 +195,9 @@ local indent_config = {
   javascript = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   typescript = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   json       = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  jinja      = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  django     = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  htmldjango = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  jinja      = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  django     = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  htmldjango = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   typst      = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   jupyter    = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   lua        = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
@@ -900,10 +900,12 @@ require("lazy").setup({
           "stylua",
           "ruff",
           "black",
+          "htmlbeautifier",
           -- linters
           "shellcheck",
           "eslint_d",
           "djlint",
+          "htmlhint,"
           -- "vale",
         },
         auto_update = false,
@@ -916,14 +918,7 @@ require("lazy").setup({
       event = { "BufWritePre" },
       cmd = { "ConformInfo" },
       keys = {
-        {
-          "<leader>lf",
-          function()
-            require("conform").format({ async = true, lsp_fallback = true })
-          end,
-          mode = "",
-          desc = "Formatting",
-        },
+        { "<leader>lf", function() require("conform").format({ async = true, lsp_fallback = true }) end, mode = "", desc = "Formatting",},
       },
       config = function()
         require("conform").setup({
@@ -932,6 +927,8 @@ require("lazy").setup({
             javascript = { "prettier" },
             css = { "prettier" },
             lua = { "stylua" },
+            html = { "htmlbeautifier" },
+            htmldjango = { "djlint" },
             -- python = { "ruff_fix", "ruff_organize_imports", "black", lsp_format = "first" },
             python = { "ruff_format", "black" },
             ["_"] = { "trim_whitespace", "trim_newlines" },
@@ -958,6 +955,8 @@ require("lazy").setup({
           bash = { "shellcheck" },
           javascript = { "eslint_d" },
           python = { "ruff" },
+          html = { "htmlhint" },
+          htmldjango = { "djlint" },
           -- markdown = { "vale" },
         }
         -- Automatically run linters on file events
@@ -1476,28 +1475,10 @@ require("lazy").setup({
         -- require("mini.pick").setup()
 
         require("mini.sessions").setup() -- {{{
-        map("n", "<leader>msw", function()
-          vim.ui.input({ prompt = "Session name: " }, function(input)
-            if input and input ~= "" then
-              MiniSessions.write(input)
-            end
-          end)
-        end, { desc = "Session Write" })
-        map("n", "<leader>msr", function()
-          vim.ui.input({ prompt = "Session name: " }, function(input)
-            if input and input ~= "" then
-              MiniSessions.read(input)
-            end
-          end)
-        end, { desc = "Session Read" })
-        map("n", "<leader>msD", function()
-          vim.ui.input({ prompt = "Session name: " }, function(input)
-            if input and input ~= "" then
-              MiniSessions.delete(input)
-            end
-          end)
-        end, { desc = "Session Delete" })
-        map("n", "<leader>mss", "<cmd>lua MiniSessions.select()<cr>", { desc = "Session Select" })
+        map( "n", "<leader>msw", function()vim.ui.input({ prompt = "Session name: " }, function(input) if input and input ~= "" then MiniSessions.write(input) end end)end, { desc = "Session Write" })
+        map( "n", "<leader>msr", function()vim.ui.input({ prompt = "Session name: " }, function(input) if input and input ~= "" then MiniSessions.read(input) end end)end, { desc = "Session Read" })
+        map( "n", "<leader>msD", function()vim.ui.input({ prompt = "Session name: " }, function(input) if input and input ~= "" then MiniSessions.delete(input) end end)end, { desc = "Session Delete" })
+        map( "n", "<leader>mss", "<cmd>lua MiniSessions.select()<cr>", { desc = "Session Select" })
         -- }}}
 
         -- local snippets = require("mini.snippets")-- {{{
