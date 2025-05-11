@@ -1474,9 +1474,8 @@ require("lazy").setup({
 
         require("mini.sessions").setup() -- {{{
         map( "n", "<leader>msw", function()vim.ui.input({ prompt = "Session name: " }, function(input) if input and input ~= "" then MiniSessions.write(input) end end)end, { desc = "Session Write" })
-        map( "n", "<leader>msr", function()vim.ui.input({ prompt = "Session name: " }, function(input) if input and input ~= "" then MiniSessions.read(input) end end)end, { desc = "Session Read" })
-        map( "n", "<leader>msD", function()vim.ui.input({ prompt = "Session name: " }, function(input) if input and input ~= "" then MiniSessions.delete(input) end end)end, { desc = "Session Delete" })
-        map( "n", "<leader>mss", "<cmd>lua MiniSessions.select()<cr>", { desc = "Session Select" })
+        map( "n", "<leader>mss", "<cmd>lua MiniSessions.select()<cr>", { desc = "Session Select/Read" })
+        map( "n", "<leader>msD", "<cmd>lua MiniSessions.select('delete')<cr>", { desc = "Session Delete" })
         -- }}}
 
         -- local snippets = require("mini.snippets")-- {{{
