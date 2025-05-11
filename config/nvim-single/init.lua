@@ -825,7 +825,6 @@ require("lazy").setup({
           "bash",
           "lua",
           "html",
-          "htmldjango",
           "scss",
           "markdown",
           "markdown_inline",
