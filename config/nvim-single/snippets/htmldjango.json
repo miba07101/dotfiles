@@ -1,7 +1,7 @@
 {
   "autoescape": {
     "prefix": "autoescape",
-    "description": "autoescape tag jinja template",
+    "description": "autoescape tag",
     "body": [
       "{% autoescape ${off} %}",
       "$2",
@@ -10,7 +10,7 @@
   },
   "block": {
     "prefix": "block",
-    "description": "block tag jinja template",
+    "description": "block tag",
     "body": [
       "{% block ${blockname} %}",
       "$2",
@@ -19,7 +19,7 @@
   },
   "comment": {
     "prefix": "comment",
-    "description": "Comment tag jinja template",
+    "description": "Comment tag",
     "body": [
       "{% comment %}",
       "  $1",
@@ -28,42 +28,42 @@
   },
   "csrf": {
     "prefix": "csrf",
-    "description": "csrf token jinja template",
+    "description": "csrf token",
     "body": [
       "{% csrf_token %}"
     ]
   },
   "cycle": {
     "prefix": "cycle",
-    "description": "cycle tag jinja template",
+    "description": "cycle tag",
     "body": [
       "{% cycle %}"
     ]
   },
   "debug": {
     "prefix": "debug",
-    "description": "debug tag jinja template",
+    "description": "debug tag",
     "body": [
       "{% debug %}"
     ]
   },
   "ext": {
     "prefix": "ext",
-    "description": "extends tag jinja template",
+    "description": "extends tag",
     "body": [
       "{% extends \"$1\" %}"
     ]
   },
   "extends": {
     "prefix": "extends",
-    "description": "extends tag jinja template",
+    "description": "extends tag",
     "body": [
       "{% extends \"$1\" %}"
     ]
   },
   "filter": {
     "prefix": "filter",
-    "description": "filter tag jinja template",
+    "description": "filter tag",
     "body": [
       "{% filter $1 %}",
       "$2",
@@ -72,14 +72,14 @@
   },
   "firstof": {
     "prefix": "firstof",
-    "description": "firstof tag jinja template",
+    "description": "firstof tag",
     "body": [
       "{% firstof %}"
     ]
   },
   "for": {
     "prefix": "for",
-    "description": "for tag jinja template",
+    "description": "for tag",
     "body": [
       "{% for $1 in $2 %}",
       "$3",
@@ -88,7 +88,7 @@
   },
   "fore": {
     "prefix": "fore",
-    "description": "foreach with empty tag jinja template",
+    "description": "foreach with empty tag",
     "body": [
       "{% for $1 in $2 %}",
       "$3",
@@ -99,7 +99,7 @@
   },
   "if": {
     "prefix": "if",
-    "description": "if tag jinja template",
+    "description": "if tag",
     "body": [
       "{% if $1 %}",
       "$2",
@@ -108,7 +108,7 @@
   },
   "ifchanged": {
     "prefix": "ifchanged",
-    "description": "ifchanged tag jinja template",
+    "description": "ifchanged tag",
     "body": [
       "{% ifchanged $1 %}",
       "$2",
@@ -117,7 +117,7 @@
   },
   "ife": {
     "prefix": "ife",
-    "description": "if else tag jinja template",
+    "description": "if else tag",
     "body": [
       "{% if $1 %}",
       "$2",
@@ -129,7 +129,7 @@
   },
   "ifelse": {
     "prefix": "ifelse",
-    "description": "if else tag jinja template",
+    "description": "if else tag",
     "body": [
       "{% if $1 %}",
       "$2",
@@ -141,7 +141,7 @@
   },
   "ifeq": {
     "prefix": "ifeq",
-    "description": "ifequal tag jinja template",
+    "description": "ifequal tag",
     "body": [
       "{% ifequal $1 %}",
       "$2",
@@ -150,7 +150,7 @@
   },
   "ifequal": {
     "prefix": "ifeq",
-    "description": "ifequal tag jinja template",
+    "description": "ifequal tag",
     "body": [
       "{% ifequal $1 %}",
       "$2",
@@ -159,7 +159,7 @@
   },
   "ifnotequal": {
     "prefix": "ifnotequal",
-    "description": "ifnotequal tag jinja template",
+    "description": "ifnotequal tag",
     "body": [
       "{% ifnotequal $1 %}",
       "$2",
@@ -168,42 +168,42 @@
   },
   "inc": {
     "prefix": "inc",
-    "description": "include tag jinja template",
+    "description": "include tag",
     "body": [
       "{% include \"$1\" %}"
     ]
   },
   "include": {
     "prefix": "include",
-    "description": "include tag jinja template",
+    "description": "include tag",
     "body": [
       "{% include \"$1\" %}"
     ]
   },
   "load": {
     "prefix": "load",
-    "description": "load tag jinja template",
+    "description": "load tag",
     "body": [
       "{% load $1 %}"
     ]
   },
   "now": {
     "prefix": "now",
-    "description": "now tag jinja template",
+    "description": "now tag",
     "body": [
       "{% now \"$1\" %}"
     ]
   },
   "regroup": {
     "prefix": "regroup",
-    "description": "regroup tag jinja template",
+    "description": "regroup tag",
     "body": [
       "{% regroup $1 by $2 as $3 %}"
     ]
   },
   "spaceless": {
     "prefix": "spaceless",
-    "description": "spaceless tag jinja template",
+    "description": "spaceless tag",
     "body": [
       "{% spaceless %}",
       "  $1",
@@ -212,35 +212,35 @@
   },
   "ssi": {
     "prefix": "ssi",
-    "description": "ssi tag jinja template",
+    "description": "ssi tag",
     "body": [
       "{% ssi $1 parsed %}"
     ]
   },
   "static": {
     "prefix": "static",
-    "description": "static tag jinja template",
+    "description": "static tag",
     "body": [
       "{% static \"$1\" %}"
     ]
   },
   "templatetag": {
     "prefix": "templatetag",
-    "description": "templatetag tag jinja template",
+    "description": "templatetag tag",
     "body": [
       "{% templatetag $1 %}"
     ]
   },
   "url": {
     "prefix": "url",
-    "description": "url tag jinja template",
+    "description": "url tag",
     "body": [
       "{% url $1 %}"
     ]
   },
   "verbatim": {
     "prefix": "verbatim",
-    "description": "verbatim tag jinja template",
+    "description": "verbatim tag",
     "body": [
       "{% verbatim %}",
       "  $1",
@@ -249,14 +249,14 @@
   },
   "widthratio": {
     "prefix": "widthratio",
-    "description": "widthratio tag jinja template",
+    "description": "widthratio tag",
     "body": [
       "{% widthratio ${this_value} max_value 100 %}"
     ]
   },
   "with": {
     "prefix": "with",
-    "description": "with tag jinja template",
+    "description": "with tag",
     "body": [
       "{% with $1 as $2 %}",
       "$3",
@@ -265,14 +265,14 @@
   },
   "trans": {
     "prefix": "trans",
-    "description": "trans tag jinja template",
+    "description": "trans tag",
     "body": [
       "{% trans \"$1\" %}"
     ]
   },
   "blocktrans": {
     "prefix": "blocktrans",
-    "description": "blocktrans tag jinja template",
+    "description": "blocktrans tag",
     "body": [
       "{% blocktrans %}",
       "  $1",
@@ -281,7 +281,7 @@
   },
   "blocktransinline": {
     "prefix": "blocktransinline",
-    "description": "blocktrans tag jinja template (single line)",
+    "description": "blocktrans tag (single line)",
     "body": [
       "{% blocktrans %}$1{% endblocktrans %}"
     ]
@@ -304,7 +304,7 @@
   },
   "extrastyle": {
     "prefix": "extrastyle",
-    "description": "Extrastyle no oficial Tag",
+    "description": "Extrastyle no oficial tag",
     "body": [
       "{% block extrahead %}",
       "    $1",

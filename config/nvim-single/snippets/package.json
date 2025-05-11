@@ -1,11 +1,10 @@
 {
-  "name": "jinja-snippets",
+  "name": "my-snippets",
   "contributes": {
     "snippets": [
       {
         "language": [
-          "jinja",
-          "jinja.html",
+          "htmldjango",
           "markdown",
           "quarto"
         ],
@@ -13,10 +12,9 @@
       },
       {
         "language": [
-          "jinja",
-          "jinja.html"
+          "htmldjango"
         ],
-        "path": "./jinja.json"
+        "path": "./htmldjango.json"
       },
       {
         "language": [

@@ -196,7 +196,8 @@ local indent_config = {
   typescript = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   json       = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   jinja      = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  django     = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  django     = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  htmldjango = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   typst      = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   jupyter    = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   lua        = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
@@ -588,24 +589,31 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 -- }}}
 
--- -- htmljinja / htmldjango filetype for HTML-based template{{{
--- -- https://github.com/lepture/vim-jinja/blob/master/ftdetect/jinja.vim
--- local function select_html_filetype()
---   local max_lines = math.min(50, vim.fn.line("$"))
---   for n = 1, max_lines do
---     local line = vim.fn.getline(n)
---     if line:match("{{.*}}") or line:match("{%%%-?%s*(end.*|extends|block|macro|set|if|for|include|trans)%f[%W]") then
---       vim.bo.filetype = "htmljinja" -- Set filetype to htmljinja/htmldjango for Jinja content
---       return
---     end
---   end
--- end
---
--- vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
---   pattern = { "*.html", "*.htm" },
---   callback = select_html_filetype
--- })
--- -- }}}
+-- htmldjango / jinja.html filetypes and comment{{{
+local function select_html_filetype()
+  local max_lines = math.min(50, vim.fn.line("$"))
+  for n = 1, max_lines do
+    local line = vim.fn.getline(n)
+    if line:match("{{.*}}") or line:match("{%%%-?%s*(end.*|extends|block|macro|set|if|for|include|trans)%f[%W]") then
+      vim.bo.filetype = "htmldjango"
+      return
+    end
+  end
+end
+
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+  pattern = { "*.html", "*.htm" },
+  callback = select_html_filetype
+})
+
+-- for commenting
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "htmldjango",
+  callback = function()
+    vim.bo.commentstring = "{# %s #}"
+  end,
+})
+-- }}}
 
 -- create a new Python notebook (Jupyter notebook){{{
 -- https://github.com/benlubas/molten-nvim/blob/main/docs/Notebook-Setup.md
@@ -817,11 +825,8 @@ require("lazy").setup({
           "bash",
           "lua",
           "html",
-          "css",
+          "htmldjango",
           "scss",
-          -- "htmldjango",
-          -- "jinja",
-          -- "jinja_inline",
           "markdown",
           "markdown_inline",
           "query",
@@ -832,7 +837,7 @@ require("lazy").setup({
           "latex",
           "regex",
         }, -- }}}
-        auto_install = false,
+        auto_install = true,
         highlight = { enable = true },
         indent = { enable = true },
         incremental_selection = { -- oznacujem casti definovane pomocou treesitteru
@@ -888,11 +893,8 @@ require("lazy").setup({
           "basedpyright",
           "marksman",
           "tinymist",
-          "jinja-lsp",
-          "django-template-lsp",
           "json-lsp",
           "htmx-lsp",
-          -- "zk",
           --formatters
           "beautysh",
           "prettier",
@@ -1365,24 +1367,21 @@ require("lazy").setup({
           },
         }) -- }}}
 
-        -- {{{ mini.comment
-        local mappings = (osvar.os_type == "linux")
+        require("mini.comment").setup({-- {{{
+          options = {},
+          mappings = (osvar.os_type == "linux")
             and {
               comment = "<C-/>",
               comment_line = "<C-/>",
               comment_visual = "<C-/>",
               textobject = "<C-/>",
             }
-          or {
-            comment = "<C-_>",
-            comment_line = "<C-_>",
-            comment_visual = "<C-_>",
-            textobject = "<C-_>",
-          }
-
-        require("mini.comment").setup({
-          options = {},
-          mappings = mappings,
+            or {
+              comment = "<C-_>",
+              comment_line = "<C-_>",
+              comment_visual = "<C-_>",
+              textobject = "<C-_>",
+            },
         }) -- }}}
 
         --         local completion = require("mini.completion")-- {{{
@@ -1983,17 +1982,9 @@ require("lazy").setup({
       }, -- }}}
     }, -- }}}
 
-    -- { "lepture/vim-jinja", -- syntax/indent for jinja files {{{
+    -- { "lepture/vim-jinja", -- syntax/indent for jinja.html files {{{
     --   enabled = true,
-    --   ft = { "jinja", "htmldjango", "html" },
-    --   init = function()
-    --     vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-    --       pattern = { "*.html", "*.htm" },
-    --       callback = function()
-    --         vim.bo.filetype = "jinja"
-    --       end,
-    --     })
-    --   end
+    --   ft = { "jinja", "htmldjango", "html", "jinja.html" },
     -- }, -- }}}
 
     { "brenoprata10/nvim-highlight-colors", -- show colors {{{
@@ -2162,27 +2153,11 @@ local lsp_configs = {
     filetypes = { "typst" },
     root_markers = { ".git" },
   },
-  -- djlsp = {
-  --   cmd = { "djlsp" },
-  --   filetypes = { "html", "htmldjango" },
-  --   root_markers = { ".git" },
-  -- },
-  -- jinja_lsp = {
-  --   name = { "jinja_lsp" },
-  --   cmd = { "jinja-lsp" },
-  --   filetypes = { "jinja" },
-  --   root_markers = { ".git" },
-  -- },
   htmx = {
     cmd = { "htmx-lsp" },
-    filetypes = { "django-html", "htmldjango", "html" },
+    filetypes = { "django-html", "htmldjango", "html", "jinja.html" },
     root_markers = { ".git" },
   },
-  -- zk = {
-  --   cmd = { "zk", "lsp" },
-  --   filetypes = { "markdown" },
-  --   root_markers = { ".zk" },
-  -- },
 }
 
 for name, opts in pairs(lsp_configs) do
