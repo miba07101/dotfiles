@@ -1046,7 +1046,7 @@ require("lazy").setup({
               -- { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
               { icon = " ", key = "o", desc = "Old Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
               { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",},
-              { icon = " ", key = "p", desc = "Projects", action = ":lua Snacks.dashboard.pick('projects', {dev = '~/git-repos/', recent = false})",},
+              { icon = " ", key = "p", desc = "Projects", action = ":lua Snacks.dashboard.pick('projects', {dev = '~/git-repos/', confirm='picker', recent = false})",},
               { icon = " ", key = "s", desc = "Sessions", action = ":lua MiniSessions.select()",},
               { icon = "󱙓 ", key = "N", desc = "Notes", action = ":lua Snacks.dashboard.pick('files', {cwd = osvar.ObsidianPath()})",},
               -- { icon = " ", key = "S", desc = "Restore Session", section = "session" },
