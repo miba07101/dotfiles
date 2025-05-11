@@ -1047,9 +1047,9 @@ require("lazy").setup({
               { icon = " ", key = "o", desc = "Old Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
               { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",},
               { icon = " ", key = "p", desc = "Projects", action = ":lua Snacks.dashboard.pick('projects', {dev = '~/git-repos/', recent = false})",},
-              { icon = " ", key = "s", desc = "Sessions", action = ":lua MiniSessions.select()",},
+              { icon = " ", key = "s", desc = "Sessions", action = ":lua MiniSessions.select()",},
               { icon = "󱙓 ", key = "N", desc = "Notes", action = ":lua Snacks.dashboard.pick('files', {cwd = osvar.ObsidianPath()})",},
-              -- { icon = " ", key = "s", desc = "Restore Session", section = "session" },
+              -- { icon = " ", key = "S", desc = "Restore Session", section = "session" },
               -- { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
               { icon = " ", key = "q", desc = "Quit", action = ":qa" },
             },
@@ -1081,6 +1081,7 @@ require("lazy").setup({
         notifier = { enabled = true },
         picker = { -- {{{
           enabled = true,
+          layout = { preset = "ivy", preview = false },
           sources = {
             explorer = { -- {{{
               auto_close = true,
@@ -1094,11 +1095,7 @@ require("lazy").setup({
                 },
               },
             }, -- }}}
-            select = {
-              layout = { preset = "vertical", preview = false },
-            },
           },
-          layout = { preset = "ivy", layout = { position = "bottom" }, preview = false },
         }, -- }}}
         quickfile = { enabled = true }, -- When doing nvim somefile.txt, it will render the file as quickly as possible, before loading your plugins
         rename = { enabled = true },
