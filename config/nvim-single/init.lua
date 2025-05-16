@@ -893,16 +893,12 @@ require("lazy").setup({
     -- }}}
 
     -- {{{ [ Mason, Formatter, Linter ]
-    { -- Mason - installing lsp servers{{{
-      "WhoIsSethDaniel/mason-tool-installer.nvim",
+    { "williamboman/mason.nvim",-- {{{
       -- enable = false,
       lazy = true,
-      cmd = { "Mason", "MasonToolsInstall" },
-      dependencies = {
-        { "williamboman/mason.nvim", opts = {} },
-      },
-      opts = {
-        ensure_installed = {
+      cmd = { "Mason", "MasonInstallAll" },
+      config = function()
+        local ensure_installed = {
           "bash-language-server",
           "emmet-ls",
           "lua-language-server",
@@ -922,13 +918,18 @@ require("lazy").setup({
           "shellcheck",
           "eslint_d",
           "djlint",
-          "htmlhint,"
+          "htmlhint",
           -- "vale",
-        },
-        auto_update = false,
-        run_on_start = false,
-      },
-    }, -- }}}
+        }
+        vim.api.nvim_create_user_command("MasonInstallAll", function()
+          for _, server in ipairs(ensure_installed) do
+            vim.cmd("MasonInstall " .. server)
+          end
+        end, {})
+
+        require("mason").setup()
+      end,
+    },-- }}}
 
     { -- Formatter{{{
       "stevearc/conform.nvim",
