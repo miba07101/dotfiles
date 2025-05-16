@@ -830,7 +830,8 @@ require("lazy").setup({
       -- enabled = false,
       version = false,
       build = ":TSUpdate",
-      lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+      -- lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+      lazy = false,
       dependencies = { -- {{{
         -- "windwp/nvim-ts-autotag",
         "nvim-treesitter/nvim-treesitter-textobjects",
