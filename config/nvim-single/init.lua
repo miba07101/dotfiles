@@ -1685,7 +1685,7 @@ require("lazy").setup({
         })
       end, -- }}}
       keys = { -- {{{
-        { "<leader>nn", mode = "n", function() vim.ui.input({ prompt = "Title: " }, function(title) if not title then return end if title ~= "" then require("zk").new({ title = title, dir = "inbox" }) else return end end) end, desc = "ZK New Note", noremap = true, silent = true},
+        { "<leader>nn", mode = "n", function() vim.ui.input({ prompt = "Title: " }, function(title) if not title then return end if title ~= "" then require("zk").new({ title = title, dir = osvar.ObsidianPath() .. "/inbox" }) else return end end) end, desc = "ZK New Note", noremap = true, silent = true},
         { "<leader>ns", mode = "n", function() Snacks.picker.files({ cwd = osvar.ObsidianPath() }) end, desc = "Search Note", noremap = true, silent = true },
         { "<leader>nD", mode = "n", ":lua local f=vim.fn.expand('%:p'); if vim.fn.confirm('Delete '..f..'?', '&Yes\\n&No') == 1 then os.remove(f); vim.cmd('bd!'); end<cr>", desc = "Delete Note", noremap = true, silent = true,},
         { "<leader>nt", mode = "n", "<cmd>ZkTags<cr>", desc = "Open Tags" },
