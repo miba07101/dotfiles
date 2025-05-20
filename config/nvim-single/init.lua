@@ -1683,6 +1683,20 @@ require("lazy").setup({
         require("zk").setup({
           picker = "snacks_picker",
         })
+        -- # custom command
+        require("zk.commands").add("ZkFromLink", function()
+          local line = vim.fn.getline(".")
+          local col = vim.fn.col(".")
+          local start_pos = line:sub(1, col):find("%[%[[^%]]*$")
+          local end_pos = line:find("%]%]", col)
+
+          if start_pos and end_pos then
+            local title = line:sub(start_pos + 2, end_pos - 1)
+            require("zk").new({ title = title })
+          else
+            print("No valid [[wikilink]] under cursor.")
+          end
+        end)
       end, -- }}}
       keys = { -- {{{
         { "<leader>nn", mode = "n", function() vim.ui.input({ prompt = "Title: " }, function(title) if not title then return end if title ~= "" then require("zk").new({ title = title, dir = osvar.ObsidianPath() .. "/inbox" }) else return end end) end, desc = "ZK New Note", noremap = true, silent = true},
@@ -1694,24 +1708,25 @@ require("lazy").setup({
         { "<leader>ni", mode = "n", "<cmd>ZkInsertLink<cr>", desc = "Insert Link" },
         { "<leader>nb", mode = "n", "<cmd>ZkBacklinks<cr>", desc = "Backlinks" },
         { "<leader>nL", mode = "n", "<cmd>ZkLinks<cr>", desc = "Open Notes Linked To Buffer" },
+        { "<leader>nN", mode = "n", "<cmd>ZkFromLink<cr>", desc = "Create Note From Link" },
         { "<leader>nf", mode = "v", ":'<,'>ZkMatch<cr>", desc = "Search Note Matching Visual Selection" },
         { "<leader>nt", mode = "v", ":'<,'>ZkNewFromTitleSelection<CR>", desc = "New Note From Title" },
         { "<leader>nc", mode = "v", ":'<,'>ZkNewFromContentSelection { dir = vim.fn.expand('%:p:h'), title = vim.fn.input('Title: ') }<CR>", desc = "New Note From Content Selection" },
-        { "<leader>nN", mode = "n", function()
-          local line = vim.fn.getline(".")
-  local col = vim.fn.col(".")
-  local start_pos = line:sub(1, col):find("%[%[[^%]]*$")
-  local end_pos = line:find("%]%]", col)
-
-  if start_pos and end_pos then
-    local title = line:sub(start_pos + 2, end_pos - 1)
-    require("zk").new({ title = title, dir = osvar.ObsidianPath() .. "/inbox" })
-  else
-    print("No valid [[wikilink]] under cursor.")
-  end
-        end,
-          desc = "Note From Link", silent = true
-        },
+        -- { "<leader>nN", mode = "n", function()
+        --   local line = vim.fn.getline(".")
+        --   local col = vim.fn.col(".")
+        --   local start_pos = line:sub(1, col):find("%[%[[^%]]*$")
+        --   local end_pos = line:find("%]%]", col)
+        --
+        --   if start_pos and end_pos then
+        --     local title = line:sub(start_pos + 2, end_pos - 1)
+        --     require("zk").new({ title = title, dir = osvar.ObsidianPath() .. "/inbox" })
+        --   else
+        --     print("No valid [[wikilink]] under cursor.")
+        --   end
+        -- end,
+        --   desc = "Note From Link", silent = true
+        -- },
 
       }, -- }}}
     }, -- }}}
