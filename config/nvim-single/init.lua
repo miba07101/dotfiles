@@ -1696,6 +1696,21 @@ require("lazy").setup({
         { "<leader>nf", mode = "v", ":'<,'>ZkMatch<cr>", desc = "Search Note Matching Visual Selection" },
         { "<leader>nt", mode = "v", ":'<,'>ZkNewFromTitleSelection<CR>", desc = "New Note From Title" },
         { "<leader>nc", mode = "v", ":'<,'>ZkNewFromContentSelection { dir = vim.fn.expand('%:p:h'), title = vim.fn.input('Title: ') }<CR>", desc = "New Note From Content Selection" },
+        { "<leader>nN", mode = "n", function()
+          local line = vim.fn.getline(".")
+          local col = vim.fn.col(".")
+          local before_cursor = line:sub(1, col)
+          local _, start = before_cursor:reverse():find("%[%[")
+          local _, stop = line:find("]]", col)
+          if start and stop then
+            local link = line:sub(col - start + 2, stop - 1)
+            require("zk").new({ title = link, dir = osvar.ObsidianPath() .. "/inbox" })
+          else
+            print("No valid [[wikilink]] under cursor.")
+          end
+        end,
+          desc = "Note From Link", silent = true
+        },
 
       }, -- }}}
     }, -- }}}
