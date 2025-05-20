@@ -40,7 +40,8 @@ function _G.DetectOsType() -- {{{
 
   -- Function to get Obsidian path
   local function ObsidianPath()
-    return username == "mech" and "~\\Obsidian/"
+    local tilda = vim.fn.expand("~")
+    return username == "mech" and (tilda .. "\\Obsidian/")
       or vim.fn.expand((os.getenv("OneDrive_DIR") or "") .. "Dokumenty/zPoznamky/Obsidian/")
   end
 
@@ -1124,7 +1125,6 @@ require("lazy").setup({
         words = { enabled = true },
       },
       keys = { -- {{{
-        -- { "<leader>si", function() require('snacks').image.hover() end, desc = "Image Preview" },
         { "]]", mode = { "n", "t" }, function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference",},
         { "[[", mode = { "n", "t" }, function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference",},
         -- {"<leader>D", function() Snacks.dashboard.open() end, desc = "Dashboard",},
@@ -1714,6 +1714,29 @@ require("lazy").setup({
         { "<leader>nc", mode = "v", ":'<,'>ZkNewFromContentSelection { dir = vim.fn.expand('%:p:h'), title = vim.fn.input('Title: ') }<CR>", desc = "New Note From Content Selection" },
       }, -- }}}
     }, -- }}}
+
+    { "HakonHarnes/img-clip.nvim",
+      opts = {
+        -- add options here
+        -- or leave it empty to use the default settings
+        default = {
+          -- file and directory options
+          -- relative_to_current_file = true,
+          -- dir_path = "../../pokus-image"
+          -- use_absolute_path = true,
+          -- relative_to_current_file = true,
+          -- dir_path = "C:\\Users\\vimi\\OneDrive\\Dokumenty\\zPoznamky\\Obsidian\\assets\\images",
+
+          dir_path = function()
+            return vim.fn.expand("%:t:r")
+          end,
+        },
+      },
+      keys = {
+        { "<leader>ip", "<cmd>PasteImage<cr>", desc = "Image Paste" },
+        { "<leader>ik", function() Snacks.image.hover() end, desc = "Image Hoover" },
+      },
+    },
 
     { "MeanderingProgrammer/render-markdown.nvim", -- {{{
       -- enabled = false,
