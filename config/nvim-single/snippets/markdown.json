@@ -1,4 +1,37 @@
 {
+  "Contact Template": {
+    "prefix": "contact",
+    "body": [
+      "priezvisko: $1",
+      "meno: $2",
+      "pozicia: $3",
+      "telefon: $4",
+      "email: $5",
+      "firma: $6",
+      "zakazka: [[$7]]"
+    ],
+    "description": "Contact info"
+  },
+   "Work Template": {
+    "prefix": "work",
+    "body": [
+      "kontakt: [[${1:kto}]]",
+      "",
+      "vypocet: [[${2:vypocet-nazov}]]",
+      "norma: STN EN 12952-3",
+      "materialy: 12022.1, 15128.5",
+      "",
+      "> [!note]+ protiplnenia",
+      "> $3",
+      "",
+      "> [!note]+ materialy",
+      "> $4",
+      "",
+      "> [!note]+ MathCad (mcad)",
+      "> $5"
+    ],
+    "description": "Work template"
+  },
   "front": {
     "prefix": ["front"],
     "body": ["---", "tag: - #$1", "hub: - [[$2]]", "---"],

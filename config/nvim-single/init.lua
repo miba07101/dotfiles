@@ -1691,23 +1691,24 @@ require("lazy").setup({
         { "<leader>nt", mode = "n", "<cmd>ZkTags<cr>", desc = "Open Tags" },
         { "<leader>nq", mode = "n", "<cmd>ZkNotes { sort = { 'modified' }, match = { vim.fn.input('Search: ') } }<cr>", desc = "Search Query" },
         { "<leader>nl", mode = "n", "<cmd>lua vim.lsp.buf.definition()<cr>", desc = "Follow Link" },
-        { "<leader>nb", mode = "n", "<Cmd>ZkBacklinks<CR>", desc = "Backlinks" },
-        { "<leader>nL", mode = "n", "<Cmd>ZkLinks<CR>", desc = "Open Notes Linked To Buffer" },
+        { "<leader>ni", mode = "n", "<cmd>ZkInsertLink<cr>", desc = "Insert Link" },
+        { "<leader>nb", mode = "n", "<cmd>ZkBacklinks<cr>", desc = "Backlinks" },
+        { "<leader>nL", mode = "n", "<cmd>ZkLinks<cr>", desc = "Open Notes Linked To Buffer" },
         { "<leader>nf", mode = "v", ":'<,'>ZkMatch<cr>", desc = "Search Note Matching Visual Selection" },
         { "<leader>nt", mode = "v", ":'<,'>ZkNewFromTitleSelection<CR>", desc = "New Note From Title" },
         { "<leader>nc", mode = "v", ":'<,'>ZkNewFromContentSelection { dir = vim.fn.expand('%:p:h'), title = vim.fn.input('Title: ') }<CR>", desc = "New Note From Content Selection" },
         { "<leader>nN", mode = "n", function()
           local line = vim.fn.getline(".")
-          local col = vim.fn.col(".")
-          local before_cursor = line:sub(1, col)
-          local _, start = before_cursor:reverse():find("%[%[")
-          local _, stop = line:find("]]", col)
-          if start and stop then
-            local link = line:sub(col - start + 2, stop - 1)
-            require("zk").new({ title = link, dir = osvar.ObsidianPath() .. "/inbox" })
-          else
-            print("No valid [[wikilink]] under cursor.")
-          end
+  local col = vim.fn.col(".")
+  local start_pos = line:sub(1, col):find("%[%[[^%]]*$")
+  local end_pos = line:find("%]%]", col)
+
+  if start_pos and end_pos then
+    local title = line:sub(start_pos + 2, end_pos - 1)
+    require("zk").new({ title = title, dir = osvar.ObsidianPath() .. "/inbox" })
+  else
+    print("No valid [[wikilink]] under cursor.")
+  end
         end,
           desc = "Note From Link", silent = true
         },
