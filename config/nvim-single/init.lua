@@ -752,7 +752,7 @@ require("lazy").setup({
         require("kanagawa").setup({ -- {{{
           colors = { -- {{{
             palette = {
-              fujiWhite = "#FEFEFA",
+              -- fujiWhite = "#FEFEFA",
               -- https://coolors.co/gradient-palette/fefefa-edebda?number=3
               lotusWhite0 = "#EDEBDA",
               lotusWhite1 = "#EDEBDA",
@@ -815,7 +815,7 @@ require("lazy").setup({
               ["@markup.italic.markdown_inline"] = { link = "Exception" }, -- *italic*
               ["@markup.raw.markdown_inline"] = { link = "String" }, -- `code`
               ["@markup.list.markdown"] = { link = "Function" }, -- + list
-              ["@markup.quote.markdown"] = { link = "Error" }, -- > blockcode
+              ["@markup.quote.markdown"] = { link = "@spell" }, -- > blockcode
               ["@markup.list.checked.markdown"] = { link = "WarningMsg" }, -- checked list item
             }
           end, -- }}}
