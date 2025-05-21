@@ -73,6 +73,8 @@ function _G.DetectOsType() -- {{{
     nvim_venv = nvim_venv,
     debugpy_path = debugpy_path,
     PythonInterpreter = PythonInterpreter,
+    SupportedTerminal= SupportedTerminal,
+    is_supported_terminal = is_supported_terminal,
     ObsidianPath = ObsidianPath,
     -- MoltenInitialize = MoltenInitialize,
     -- ObsidianNewNote = ObsidianNewNote,
@@ -1084,7 +1086,8 @@ require("lazy").setup({
           },
         }, -- }}}
         image = { -- {{{
-          enabled = true,
+          -- enabled = true,
+          enabled = osvar.os_type ~= "wsl",
           formats = { "png", "jpg", "jpeg", "gif", "bmp", "webp", "tiff", "heic", "avif", "mp4", "mov", "avi", "mkv", "webm", "pdf",},
           force = true,
         }, -- }}}
@@ -1715,28 +1718,24 @@ require("lazy").setup({
       }, -- }}}
     }, -- }}}
 
-    { "HakonHarnes/img-clip.nvim",
+    { "HakonHarnes/img-clip.nvim",-- {{{
       opts = {
-        -- add options here
-        -- or leave it empty to use the default settings
         default = {
-          -- file and directory options
-          -- relative_to_current_file = true,
-          -- dir_path = "../../pokus-image"
-          -- use_absolute_path = true,
-          -- relative_to_current_file = true,
-          -- dir_path = "C:\\Users\\vimi\\OneDrive\\Dokumenty\\zPoznamky\\Obsidian\\assets\\images",
-
-          dir_path = function()
-            return vim.fn.expand("%:t:r")
+          relative_to_current_file = true,
+          dir_path = ".",
+          file_name = function()
+            local base = vim.fn.expand("%:t:r") -- note name without extension
+            local time = os.date("%H%M%S")
+            return base .. "-" .. time
           end,
+          prompt_for_file_name = false,
         },
       },
       keys = {
         { "<leader>ip", "<cmd>PasteImage<cr>", desc = "Image Paste" },
         { "<leader>ik", function() Snacks.image.hover() end, desc = "Image Hoover" },
       },
-    },
+    },-- }}}
 
     { "MeanderingProgrammer/render-markdown.nvim", -- {{{
       -- enabled = false,
