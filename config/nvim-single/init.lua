@@ -1384,9 +1384,11 @@ require("lazy").setup({
             { mode = "n", keys = "<Leader>wl", desc = "+Layout" },
             { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
             { mode = "n", keys = "<Leader>qr", desc = "+Runner" },
+            { mode = "n", keys = "<Leader>i", desc = "+Image" },
             { mode = "x", keys = "<Leader>n", desc = "+Notes" },
             { mode = "x", keys = "<Leader>g", desc = "+Grep" },
             { mode = "x", keys = "<Leader>p", desc = "+Python" },
+            { mode = "x", keys = "<Leader>l", desc = "+LSP" },
           },
           window = {
             delay = 300,
