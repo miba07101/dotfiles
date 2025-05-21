@@ -1079,8 +1079,16 @@ require("lazy").setup({
           },
           sections = {
             -- { section = "header" },
-            { section = "terminal", cmd = "echo '\27[1;35mHello " .. osvar.username .. "\27[0m'", indent = 28, padding = 2, height = 1,},
-            { section = "terminal", cmd = 'curl -s "wttr.in/' .. city .. "?format=%l:+%c+%t+%w+%T\\n\" | sed 's/.*/\\x1b[34m&\\x1b[0m/'", indent = 8, padding = 2, height = 1,},
+            { section = "terminal",
+              cmd = (osvar.os_type == "windows")
+                and ('powershell -NoLogo -Command "Write-Host \'Hello ' .. osvar.username .. '\' -ForegroundColor Magenta"')
+                or  ("echo '\27[1;35mHello " .. osvar.username .. "\27[0m'"),
+              indent = 28, padding = 2, height = 1 },
+            { section = "terminal",
+              cmd = (osvar.os_type == "windows")
+                and ('powershell -Command "Invoke-RestMethod wttr.in/' .. city .. '?format=`"%l: %c %t %w %T`""')
+                or  ('curl -s "wttr.in/' .. city .. '?format=%l:+%c+%t+%w+%T\\n" | sed \'s/.*/\\x1b[34m&\\x1b[0m/\''),
+              indent = 8, padding = 2, height = 1 },
             { section = "keys", gap = 1, padding = 1 },
             { section = "startup", padding = 2 },
           },
