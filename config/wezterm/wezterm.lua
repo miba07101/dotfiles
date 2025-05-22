@@ -1,6 +1,27 @@
 -- pull in the wezterm API
 local wezterm = require 'wezterm'
 
+-- customize tab titles with icons and domain names
+wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
+  local domain = tab.active_pane.domain_name or ''
+  local icon = ''
+  local display_name = domain
+
+  if domain == 'local' then
+    icon = ''
+    display_name = 'PowerShell'
+  elseif domain:find('Tumbleweed') then
+    icon = ''
+  else
+    icon = ''
+  end
+
+  return {
+    { Text = string.format(' %s    %s ', icon, display_name) },
+  }
+end)
+
+
 -- function to get light/dark theme according os theme
 function scheme_for_appearance(appearance)
   if appearance:find "Dark" then
@@ -116,6 +137,13 @@ config.cursor_blink_rate = 500
 config.cursor_blink_ease_in = "Constant"
 config.cursor_blink_ease_out = "Constant"
 
+config.wsl_domains = {
+  {
+    name = "Tumbleweed",
+    distribution = "openSUSE-Tumbleweed",
+  },
+}
+
 -- keybidings
 config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 }
 config.keys = {
@@ -123,6 +151,13 @@ config.keys = {
   { key = 'c', mods = 'CTRL', action = wezterm.action.CopyTo 'ClipboardAndPrimarySelection', },
   { key = 'v', mods = 'CTRL', action = wezterm.action.PasteFrom 'Clipboard', },
   { key = 'v', mods = 'CTRL', action = wezterm.action.PasteFrom 'PrimarySelection', },
+  {
+    key = "t",
+    mods = "CTRL|ALT",
+    action = wezterm.action.SpawnTab {
+      DomainName = "Tumbleweed",
+    },
+  },
 }
 
 -- and finally, return the configuration to wezterm
