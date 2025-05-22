@@ -1,6 +1,6 @@
 {
   "Contact Template": {
-    "prefix": "contact",
+    "prefix": "kontakt",
     "body": [
       "priezvisko: $1",
       "meno: $2",
@@ -13,22 +13,22 @@
     "description": "Contact info"
   },
    "Work Template": {
-    "prefix": "work",
+    "prefix": "zakazka",
     "body": [
-      "kontakt: [[${1:kto}]]",
+      "kontakt: $1",
       "",
-      "vypocet: [[${2:vypocet-nazov}]]",
-      "norma: STN EN 12952-3",
-      "materialy: 12022.1, 15128.5",
+      "vypocet: $2",
+      "norma: $3",
+      "materialy: $4",
       "",
       "> [!note]+ protiplnenia",
-      "> $3",
+      "> $5",
       "",
       "> [!note]+ materialy",
-      "> $4",
+      "> $6",
       "",
       "> [!note]+ MathCad (mcad)",
-      "> $5"
+      "> $7"
     ],
     "description": "Work template"
   },
