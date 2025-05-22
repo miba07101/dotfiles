@@ -23,6 +23,31 @@ end
 -- this will hold the configuration.
 local config = wezterm.config_builder()
 
+config.color_schemes = {
+  ["kanagawa-dark"] = {
+    foreground = "#dcd7ba",
+    background = "#1f1f28",
+    cursor_bg = "#c8c093",
+    cursor_border = "#c8c093",
+    cursor_fg = "#1f1f28",
+    selection_bg = "#2d4f67",
+    selection_fg = "#c8c093",
+    ansi = {"#090618", "#c34043", "#76946a", "#c0a36e", "#7e9cd8", "#957fb8", "#6a9589", "#c8c093"},
+    brights = {"#727169", "#e82424", "#98bb6c", "#e6c384", "#7fb4ca", "#938aa9", "#7aa89f", "#dcd7ba"},
+  },
+  ["kanagawa-light"] = {
+    foreground = "#6B7089",
+    background = "#F2ECBC",
+    cursor_bg = "#6B7089",
+    cursor_border = "#6B7089",
+    cursor_fg = "#F2ECBC",
+    selection_bg = "#DCD7BA",
+    selection_fg = "#1F1F28",
+    ansi = {"#1F1F28", "#C34043", "#76946A", "#C0A36E", "#7E9CD8", "#957FB8", "#6A9589", "#DCD7BA"},
+    brights = {"#727169", "#E82424", "#98BB6C", "#E6C384", "#7FB4CA", "#938AA9", "#7AA89F", "#DCD7BA"},
+  },
+}
+
 -- check if on windows
 if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   config.default_prog = { 'pwsh.exe', '-NoLogo' }
@@ -49,6 +74,17 @@ else
   -- config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
   config.hide_tab_bar_if_only_one_tab = true
 end
+
+-- local scheme = wezterm.color.load_scheme('C:/Users/vimi/.config/wezterm/colors/kanagawa-dark.toml')
+local scheme = config.color_schemes["kanagawa-dark"]
+config.colors = {
+  tab_bar = {
+    active_tab = {
+      bg_color = scheme.background,
+      fg_color = scheme.foreground,
+    },
+  },
+}
 
 -- fonts settings
 -- config.font_size = 11.2 -- je tam .2 kvoli lepsiemu renderovaniu
