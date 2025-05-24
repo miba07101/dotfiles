@@ -917,7 +917,6 @@ require("lazy").setup({
           "stylua",
           "ruff",
           "black",
-          "htmlbeautifier",
           -- linters
           "shellcheck",
           "eslint_d",
@@ -949,7 +948,7 @@ require("lazy").setup({
             javascript = { "prettier" },
             css = { "prettier" },
             lua = { "stylua" },
-            html = { "htmlbeautifier" },
+            html = { "prettier" },
             htmldjango = { "djlint" },
             -- python = { "ruff_fix", "ruff_organize_imports", "black", lsp_format = "first" },
             python = { "ruff_format", "black" },
