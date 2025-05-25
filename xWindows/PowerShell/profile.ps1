@@ -21,6 +21,26 @@ function lsi {
 }
 
 # -----------------------------------------------------------------------------
+# environment variables
+# -----------------------------------------------------------------------------
+# premenna pre python virtual enviroments priecinok, pouzitie v neovime
+if (-not $env:VENV_HOME) {
+  $env:VENV_HOME = "C:\Users\$($env:UserName)\.py-venv"
+}
+
+# premenna pre onedrive priecinok, pouzitie v neovime pre obsidian
+if (-not $env:OneDrive_DIR) {
+  $env:OneDrive_DIR = if ($env:UserName -eq "mech") {
+    "C:\Users\$env:UserName\OneDrive - VUZ\"
+  } else {
+    "C:\Users\$env:UserName\OneDrive\"
+  }
+}
+
+# premenna pre zk notes default vault notebook
+$env:ZK_NOTEBOOK_DIR = "$env:OneDrive_DIR\Dokumenty\zPoznamky\Obsidian"
+
+# -----------------------------------------------------------------------------
 # load scripts/functions
 # -----------------------------------------------------------------------------
 
@@ -80,25 +100,35 @@ function fireup {
     FirefoxBackup
 }
 
-# -----------------------------------------------------------------------------
-# environment variables
-# -----------------------------------------------------------------------------
-# premenna pre python virtual enviroments priecinok, pouzitie v neovime
-if (-not $env:VENV_HOME) {
-  $env:VENV_HOME = "C:\Users\$($env:UserName)\.py-venv"
+# zk notes
+function zk-nn {
+    param([string[]]$args)
+    # Join all arguments as title string
+    $title = $args -join ' '
+    zk new --title "$title" "$env:ZK_NOTEBOOK_DIR\inbox"
 }
 
-# premenna pre onedrive priecinok, pouzitie v neovime pre obsidian
-if (-not $env:OneDrive_DIR) {
-  $env:OneDrive_DIR = if ($env:UserName -eq "mech") {
-    "C:\Users\$env:UserName\OneDrive - VUZ\"
-  } else {
-    "C:\Users\$env:UserName\OneDrive\"
-  }
+function zk-ls {
+    param([string[]]$args)
+    zk edit --interactive @args
 }
 
-# premenna pre zk notes default vault notebook
-$env:ZK_NOTEBOOK_DIR = "C:\Users\$env:UserName\OneDrive\Dokumenty\zPoznamky\Obsidian"
+function zk-search {
+    param([string[]]$args)
+    $match = $args -join ' '
+    zk edit --interactive --match "$match"
+}
+
+function zk-tags {
+    param([string[]]$args)
+    $tag = $args -join ' '
+    zk edit --interactive --tag "$tag"
+}
+
+function zk-last {
+    param([string[]]$args)
+    zk edit --limit 1 --sort modified- @args
+}
 
 # -----------------------------------------------------------------------------
 # aliases
