@@ -205,6 +205,7 @@ local indent_config = {
   jupyter    = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   lua        = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   ps1        = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  bash       = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
 }
 
 -- Create autocommand group

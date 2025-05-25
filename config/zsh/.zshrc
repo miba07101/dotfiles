@@ -326,11 +326,21 @@ alias ok='obsidian-kategorize-notes.sh'
 alias or='nvim $OneDrive_DIR/Dokumenty/zPoznamky/Obsidian/inbox/*.md'
 
 # ZK notes
-alias nn='zk new --title "$@" "$ZK_NOTEBOOK_DIR/inbox"'
-alias ls='zk edit --interactive "$@"'
-alias search='zk edit --interactive --match "$@"'
-alias tags='zk edit --interactive --tag "$@"'
-alias last='zk edit --limit 1 --sort modified- "$@"'
+function zn(){
+	zk new --title "$@" "$ZK_NOTEBOOK_DIR/inbox"
+}
+function zl(){
+	zk edit --interactive "$@"
+}
+function zf(){
+	zk edit --interactive --match "$@"
+}
+function zt(){
+	zk edit --interactive --tag "$@"
+}
+function zp(){
+	zk edit --limit 1 --sort modified- "$@"
+}
 
 
 # Quarto
