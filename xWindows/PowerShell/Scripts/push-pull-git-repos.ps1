@@ -36,7 +36,6 @@ param (
         $changes = git diff --name-only
         $commitMessage = Read-Host "Enter a commit message for $repo (or press Enter for default)"
         if (-not $commitMessage) {
-            # $commitMessage = "up vuz $($changes -join ', ') ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))"
             $commitMessage = "up $env:UserName $($changes -join ', ') ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))"
 
         }

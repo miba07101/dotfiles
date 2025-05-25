@@ -27,17 +27,27 @@ function lsi {
 $scriptPath = "C:\Users\$env:UserName\Documents\PowerShell\Scripts"
 
 function push {
-  # . "$scriptPath\vuz-copy-dotfiles.ps1"
-    # CopyGitRepoReverse
-    . "$scriptPath\push-pull-git-repos.ps1"
-    PushAllGitRepos
+    if ($env:UserName -eq "mech") {
+        . "$scriptPath\vuz-copy-dotfiles.ps1"
+        CopyGitRepoReverse
+        . "$scriptPath\push-pull-git-repos.ps1"
+        PushAllGitRepos
+    } else {
+        . "$scriptPath\push-pull-git-repos.ps1"
+        PushAllGitRepos
+    }
 }
 
 function pull {
-  . "$scriptPath\push-pull-git-repos.ps1"
-    PullAllGitRepos
-    # . "$scriptPath\vuz-copy-dotfiles.ps1"
-    # CopyGitRepo
+    if ($env:UserName -eq "mech") {
+        . "$scriptPath\push-pull-git-repos.ps1"
+        PullAllGitRepos
+        . "$scriptPath\vuz-copy-dotfiles.ps1"
+        CopyGitRepo
+    } else {
+        . "$scriptPath\push-pull-git-repos.ps1"
+        PullAllGitRepos
+    }
 }
 
 # function on {
@@ -66,31 +76,8 @@ function ytd {
 # firefox copy prefs.js to user.js for sync
 # pouzivam na synchronizaciu ulozenuych serialov
 function fireup {
-    $firefoxDir = Get-ChildItem "$env:APPDATA\Mozilla\Firefox\Profiles" -Directory |
-        Where-Object { $_.Name -like "*default-release*" } |
-        Select-Object -First 1 -ExpandProperty FullName
-
-    if (-not $firefoxDir) {
-        Write-Host "Firefox profile directory not found."
-        exit 1
-    }
-
-    Write-Host "Full Firefox path: $firefoxDir"
-
-    $userJsPath = Join-Path $firefoxDir "user.js"
-    $prefsJsPath = Join-Path $firefoxDir "prefs.js"
-
-    if (-not (Test-Path $userJsPath)) {
-        New-Item -Path $userJsPath -ItemType File | Out-Null
-    }
-
-    # Remove lines containing "browser.newtabpage.pinned"
-    (Get-Content $userJsPath) | Where-Object { $_ -notmatch "browser\.newtabpage\.pinned" } | Set-Content $userJsPath
-
-    # Append matching lines from prefs.js to user.js
-    Get-Content $prefsJsPath | Where-Object { $_ -match "browser\.newtabpage\.pinned" } | Add-Content $userJsPath
-
-    Write-Host "Firefox prefs.js and user.js updated"
+  . "$scriptPath\firefox-backup.ps1"
+    FirefoxBackup
 }
 
 # -----------------------------------------------------------------------------
