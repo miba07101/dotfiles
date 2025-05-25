@@ -9,7 +9,7 @@ edit = [
 
 play = [
   { run = 'mpv "$@"', orphan = true, for = "unix" },
-  { run = '"C:\Users\%USERNAME%\AppData\Local\Microsoft\WindowsApps\mpv.exe %*"', orphan = true, for = "windows" }
+  { run = '"C:\Users\%USERNAME%\scoop\apps\mpv.net\current\mpvnet.exe %*"', orphan = true, for = "windows" }
 ]
 
 [open]
