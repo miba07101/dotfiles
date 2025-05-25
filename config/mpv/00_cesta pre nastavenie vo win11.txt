@@ -1,3 +1,8 @@
+Plati pr mpv unofficial instalovany skrz windows store
 sem nahram scripts, input a mpv subory
 
 C:\Users\vimi\AppData\Local\Packages\519Ezhik.mpvUnofficial_xfkyq1j2kc7zp\LocalCache\Roaming\mpv
+
+Pre mpv.net instalovany skrz scoop:
+sem nahram input a mpv.conf
+C:\Users\vimi\scoop\apps\mpv.net\current\portable_config

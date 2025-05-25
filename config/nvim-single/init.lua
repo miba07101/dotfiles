@@ -2337,12 +2337,24 @@ end, {})-- }}}
 
 -- {{{ [ LSP Diagnostic ]
 vim.diagnostic.config({
-  virtual_text = { current_line = true },
+  virtual_text = {
+  current_line = true,
+  prefix = function(diagnostic)
+    if diagnostic.severity == vim.diagnostic.severity.ERROR then
+      return "🭰× "
+    elseif diagnostic.severity == vim.diagnostic.severity.WARN then
+      return "🭰▲ "
+    else
+      return "🭰• "
+    end
+  end,
+  suffix = "🭵",
+},
   underline = true,
   severity_sort = true,
   float = { border = "rounded" },
   hover = true,
-})
+  })
 
 for _, sign in ipairs({ { "Error", "" }, { "Warn", "" }, { "Hint", "󰌵" }, { "Info", "" } }) do
   vim.fn.sign_define("DiagnosticSign" .. sign[1], { texthl = "DiagnosticSign" .. sign[1], text = sign[2] })
