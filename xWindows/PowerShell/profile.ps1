@@ -100,36 +100,6 @@ function fireup {
     FirefoxBackup
 }
 
-# zk notes
-function zk-nn {
-    param([string[]]$args)
-    # Join all arguments as title string
-    $title = $args -join ' '
-    zk new --title "$title" "$env:ZK_NOTEBOOK_DIR\inbox"
-}
-
-function zk-ls {
-    param([string[]]$args)
-    zk edit --interactive @args
-}
-
-function zk-search {
-    param([string[]]$args)
-    $match = $args -join ' '
-    zk edit --interactive --match "$match"
-}
-
-function zk-tags {
-    param([string[]]$args)
-    $tag = $args -join ' '
-    zk edit --interactive --tag "$tag"
-}
-
-function zk-last {
-    param([string[]]$args)
-    zk edit --limit 1 --sort modified- @args
-}
-
 # -----------------------------------------------------------------------------
 # aliases
 # -----------------------------------------------------------------------------
@@ -177,6 +147,30 @@ function whereis {
     & where.exe $commands
 }
 
+# zk new note
+function zn {
+    zk new --title @args "$env:ZK_NOTEBOOK_DIR\inbox"
+}
+
+# zk list notes
+function zl {
+    zk edit --interactive @args
+}
+
+# zk find notes
+function zf {
+    zk edit --interactive --match @args
+}
+
+# zk tag find notes
+function zt {
+    zk edit --interactive --tag @args
+}
+
+# zk past note edit
+function zp {
+    zk edit --limit 1 --sort modified- @args
+}
 
 # recording stream video
 # uz velmi nefunguje

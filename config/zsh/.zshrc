@@ -325,6 +325,14 @@ alias on='obsidian-create-note.sh'
 alias ok='obsidian-kategorize-notes.sh'
 alias or='nvim $OneDrive_DIR/Dokumenty/zPoznamky/Obsidian/inbox/*.md'
 
+# ZK notes
+alias nn='zk new --title "$@" "$ZK_NOTEBOOK_DIR/inbox"'
+alias ls='zk edit --interactive "$@"'
+alias search='zk edit --interactive --match "$@"'
+alias tags='zk edit --interactive --tag "$@"'
+alias last='zk edit --limit 1 --sort modified- "$@"'
+
+
 # Quarto
 alias qut='quarto use template'
 alias qce='quarto create extension format'
