@@ -1428,7 +1428,34 @@ require("lazy").setup({
         --         })
         -- -- }}}
 
-        require("mini.files").setup({ -- {{{
+        local minifiles = require("mini.files")-- {{{
+
+        -- Create mappings which use data from entry under cursor{{{
+        -- yank in register full path of entry under cursor
+        local yank_path = function()
+          local path = (minifiles.get_fs_entry() or {}).path
+          if path == nil then return vim.notify('Cursor is not on valid entry') end
+          vim.fn.setreg(vim.v.register, path)
+        end
+
+        -- set focused directory as current working directory
+        local set_cwd = function()
+          local path = (minifiles.get_fs_entry() or {}).path
+          if path == nil then return vim.notify('Cursor is not on valid entry') end
+          vim.fn.chdir(vim.fs.dirname(path))
+        end
+
+        vim.api.nvim_create_autocmd('User', {
+          pattern = 'MiniFilesBufferCreate',
+          callback = function(args)
+            local b = args.data.buf_id
+            vim.keymap.set('n', 'gy', yank_path, { buffer = b, desc = 'Yank path' })
+            vim.keymap.set('n', 'g~', set_cwd,   { buffer = b, desc = 'Set cwd' })
+          end,
+        })
+        -- }}}
+
+        minifiles.setup({
           mappings = {
             close = "<ESC>",
             go_in = "<Right>",
@@ -2283,7 +2310,14 @@ require("lazy").setup({
 
 -- [[ LSP ]]{{{
 -- Path to Mason-installed binaries and formatters missing packages{{{
-vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
+local separator = function()
+  if osvar.os_type == "windows" then
+    return ";"
+  else
+    return ":"
+  end
+end
+vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin" .. separator() .. vim.env.PATH
 
 -- solving problem with missing python packages "setuptools" for formatters, in shell run:
 -- /home/vimi/.local/share/nvim/mason/packages/beautysh/venv/bin/pip install setuptools
@@ -2338,18 +2372,8 @@ end, {})-- }}}
 -- {{{ [ LSP Diagnostic ]
 vim.diagnostic.config({
   virtual_text = {
-  current_line = true,
-  prefix = function(diagnostic)
-    if diagnostic.severity == vim.diagnostic.severity.ERROR then
-      return "🭰× "
-    elseif diagnostic.severity == vim.diagnostic.severity.WARN then
-      return "🭰▲ "
-    else
-      return "🭰• "
-    end
-  end,
-  suffix = "🭵",
-},
+    current_line = true,
+  },
   underline = true,
   severity_sort = true,
   float = { border = "rounded" },
