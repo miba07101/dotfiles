@@ -24,48 +24,36 @@ function lsi {
 # load scripts/functions
 # -----------------------------------------------------------------------------
 
-$scriptPath = "C:\Users\$env:UserName\Documents\PowerShell"
-
-# function pull {
-#   # dot-source the script
-#   . "$scriptPath\vuz-copy-git-repo.ps1"
-#   # call function
-#   CopyGitRepo
-# }
-#
-# function push {
-#   . "$scriptPath\vuz-copy-git-repo.ps1"
-#   CopyGitRepoReverse
-# }
+$scriptPath = "C:\Users\$env:UserName\Documents\PowerShell\Scripts"
 
 function push {
-  . "$scriptPath\vuz-copy-dotfiles.ps1"
-    CopyGitRepoReverse
-    . "$scriptPath\vuz-git-auto-all.ps1"
+  # . "$scriptPath\vuz-copy-dotfiles.ps1"
+    # CopyGitRepoReverse
+    . "$scriptPath\push-pull-git-repos.ps1"
     PushAllGitRepos
 }
 
 function pull {
-  . "$scriptPath\vuz-git-auto-all.ps1"
+  . "$scriptPath\push-pull-git-repos.ps1"
     PullAllGitRepos
-    . "$scriptPath\vuz-copy-dotfiles.ps1"
-    CopyGitRepo
+    # . "$scriptPath\vuz-copy-dotfiles.ps1"
+    # CopyGitRepo
 }
 
-function on {
-param (
-    [Parameter(Mandatory = $true)]
-    [string]$NoteTitle
-  )
+# function on {
+# param (
+#     [Parameter(Mandatory = $true)]
+#     [string]$NoteTitle
+#   )
 
-  # Call the function from the script with the correct parameter
-  . "$scriptPath\obsidian-create-note.ps1"
-  New-ObsidianNote -NoteTitle $NoteTitle
-}
+#   # Call the function from the script with the correct parameter
+#   . "$scriptPath\obsidian-create-note.ps1"
+#   New-ObsidianNote -NoteTitle $NoteTitle
+# }
 
-function okn {
-  . "$scriptPath\obsidian-categorize-notes.ps1"
-  Obsidian-KategorizeNotes
+function nk {
+  . "$scriptPath\notes-categorize.ps1"
+  NotesCategorize
 }
 
 # download youtube videos
@@ -75,31 +63,33 @@ function ytd {
     YoutubeDownload
 }
 
+# firefox copy prefs.js to user.js for sync
+# pouzivam na synchronizaciu ulozenuych serialov
 function fireup {
     $firefoxDir = Get-ChildItem "$env:APPDATA\Mozilla\Firefox\Profiles" -Directory |
         Where-Object { $_.Name -like "*default-release*" } |
         Select-Object -First 1 -ExpandProperty FullName
-    
+
     if (-not $firefoxDir) {
         Write-Host "Firefox profile directory not found."
         exit 1
     }
-    
+
     Write-Host "Full Firefox path: $firefoxDir"
-    
+
     $userJsPath = Join-Path $firefoxDir "user.js"
     $prefsJsPath = Join-Path $firefoxDir "prefs.js"
-    
+
     if (-not (Test-Path $userJsPath)) {
         New-Item -Path $userJsPath -ItemType File | Out-Null
     }
-    
+
     # Remove lines containing "browser.newtabpage.pinned"
     (Get-Content $userJsPath) | Where-Object { $_ -notmatch "browser\.newtabpage\.pinned" } | Set-Content $userJsPath
-    
+
     # Append matching lines from prefs.js to user.js
     Get-Content $prefsJsPath | Where-Object { $_ -match "browser\.newtabpage\.pinned" } | Add-Content $userJsPath
-    
+
     Write-Host "Firefox prefs.js and user.js updated"
 }
 
@@ -121,7 +111,8 @@ if (-not $env:OneDrive_DIR) {
 }
 
 # premenna pre zk notes default vault notebook
-$env:ZK_NOTEBOOK_DIR = "C:\Users\$env:UserName\OneDrive\Dokumenty\zPoznamky\Obsidian\inbox"
+$env:ZK_NOTEBOOK_DIR = "C:\Users\$env:UserName\OneDrive\Dokumenty\zPoznamky\Obsidian"
+
 # -----------------------------------------------------------------------------
 # aliases
 # -----------------------------------------------------------------------------
@@ -145,11 +136,6 @@ function vv {
 function base {
   . "C:\Users\$env:USERNAME\.py-venv\base-venv\Scripts\Activate.ps1"
 }
-
-function io {
-  . "C:\Users\$env:USERNAME\.py-venv\io-venv\Scripts\Activate.ps1"
-}
-Set-Alias dea deactivate
 
 # lazygit
 function lg {
