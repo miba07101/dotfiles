@@ -119,6 +119,11 @@ function vv {
   nvim C:\Users\$env:USERNAME\AppData\Local\nvim\init.lua
 }
 
+# neovim
+function v {
+  nvim
+}
+
 # python virtual enviroment
 function base {
   . "C:\Users\$env:USERNAME\.py-venv\base-venv\Scripts\Activate.ps1"
