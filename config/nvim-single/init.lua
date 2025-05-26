@@ -687,13 +687,111 @@ end, {
 }) -- }}}
 
 -- keymap for new Jupyter notebook creation
-map("n", "<leader>pj", function()
+map("n", "<leader>cj", function()
   local file_name = vim.fn.input("Notebook name: ")
   if file_name ~= "" then
     vim.cmd("NewNotebook " .. file_name)
   end
 end, { desc = "Create Jupyter Notebook" })
 --}}}
+
+-- convert markdown/quarto to raw python code{{{
+vim.api.nvim_create_user_command("ConvertMarkdownToPython", function()-- {{{
+  local buf = 0
+  local ft = vim.bo[buf].filetype
+  if ft ~= "markdown" and ft ~= "quarto" then
+    vim.notify("This command only works for Markdown or Quarto files", vim.log.levels.WARN)
+    return
+  end
+
+  -- Get source and target filenames
+  local source = vim.api.nvim_buf_get_name(buf)
+  local base = vim.fn.fnamemodify(source, ":t:r")
+  local filename = base .. ".py"
+
+  -- Always use markdown parser regardless of filetype
+  local parser = vim.treesitter.get_parser(buf, "markdown")
+  local tree = parser:parse()[1]
+  local root = tree:root()
+
+  local query = vim.treesitter.query.parse("markdown", [[
+    ((code_fence_content) @code)
+  ]])
+
+  local lines = {}
+
+  for _, node in query:iter_captures(root, buf) do
+    local text = vim.treesitter.get_node_text(node, buf)
+    for _, line in ipairs(vim.fn.split(text, "\n")) do
+      table.insert(lines, line)
+    end
+    table.insert(lines, "") -- Add blank line between blocks
+  end
+
+  -- Write to output file
+  local file, err = io.open(filename, "w")
+  if not file then
+    vim.notify("Failed to write file: " .. err, vim.log.levels.ERROR)
+    return
+  end
+  for _, line in ipairs(lines) do
+    file:write(line .. "\n")
+  end
+  file:close()
+
+  vim.cmd("edit " .. filename)
+
+  -- After buffer loads, move imports to top
+  vim.defer_fn(function()
+    local py_buf = 0
+    local py_parser = vim.treesitter.get_parser(py_buf, "python")
+    local root = py_parser:parse()[1]:root()
+
+    local py_query = vim.treesitter.query.parse("python", [[
+      (import_statement) @imp
+      (import_from_statement) @imp
+    ]])
+
+    local import_nodes = {}
+    for _, node in py_query:iter_captures(root, py_buf) do
+      table.insert(import_nodes, node)
+    end
+
+    table.sort(import_nodes, function(a, b) return a:start() < b:start() end)
+
+    local lines_to_remove = {}
+    local import_texts = {}
+
+    for _, node in ipairs(import_nodes) do
+      local s, _, e, _ = node:range()
+      for i = s, e do lines_to_remove[i] = true end
+      table.insert(import_texts, vim.treesitter.get_node_text(node, py_buf))
+    end
+
+    local buf_lines = vim.api.nvim_buf_get_lines(py_buf, 0, -1, false)
+    for i = #buf_lines - 1, 0, -1 do
+      if lines_to_remove[i] then table.remove(buf_lines, i + 1) end
+    end
+
+    local import_lines = {}
+    for _, text in ipairs(import_texts) do
+      for line in text:gmatch("[^\r\n]+") do
+        table.insert(import_lines, line)
+      end
+    end
+    table.insert(import_lines, "") -- Blank line after imports
+
+    for i = #import_lines, 1, -1 do
+      table.insert(buf_lines, 1, import_lines[i])
+    end
+
+    vim.api.nvim_buf_set_lines(py_buf, 0, -1, false, buf_lines)
+  end, 100)
+end, { desc = "Convert markdown or quarto code blocks to a Python script" })-- }}}
+
+-- keymap for convert to raw python
+map("n", "<leader>cp", "<cmd>ConvertMarkdownToPython<cr>", { desc = "Convert To Python Code" })
+-- }}}
 
 -- {{{ python
 vim.api.nvim_create_autocmd("FileType", {
