@@ -79,7 +79,10 @@ function NotesCategorize {
         continue
       }
 
-      $TargetDir = Join-Path $WorkDir $Parts[0]
+      $TargetDir = $WorkDir
+      foreach ($part in $Parts) {
+        $TargetDir = Join-Path $TargetDir $part
+      }
 
     } elseif ($Area -eq "contacts") {
       $TargetDir = $ContactsDir
