@@ -1,8 +1,14 @@
 [manager]
 prepend_keymap = [
-	{ on = [ "g", "D" ], run = "cd D:", desc = "go D: drive" },
-	{ on = [ "g", "g" ], run = "cd ~/git-repos/", desc = "go git-repos" },
-	{ on = [ "g", "." ], run = "cd ~/git-repos/dotfiles/", desc = "go dotfiles" },
-	{ on = [ "g", "O" ], run = "cd ~/OneDrive", desc = "go Onedrive" },
-	{ on = [ "g", "w" ], run = "cd //wsl.localhost/openSUSE-Tumbleweed/home/vimi", desc = "go WSL" },
+  { on = [ "g", "D" ], run = "cd D:", desc = "go D: drive" },
+  { on = [ "g", "m" ], run = "cd D:\\Media", desc = "go Media" },
+  { on = [ "g", "g" ], run = "cd ~/git-repos/", desc = "go git-repos" },
+  { on = [ "g", "." ], run = "cd ~/git-repos/dotfiles/", desc = "go dotfiles" },
+  { on = [ "g", "O" ], run = "cd ~/OneDrive", desc = "go Onedrive" },
+  { on = [ "g", "w" ], run = "cd //wsl.localhost/openSUSE-Tumbleweed/home/vimi", desc = "go WSL" },
+  { on = "u", run = 'shell --block "7z x "%*""', desc = "Unzip with 7-Zip", for = "windows" },
+  { on = "u", run = 'shell --block "7z x "$(1)""', desc = "Unzip with 7-Zip", for = "linux" },
+  # Unbind default delete (Shift+D)
+  { on = "D", run = "noop" },
+  { on = "<S-Delete>", run = "remove --permanently", desc = "Permanently delete" }
 ]

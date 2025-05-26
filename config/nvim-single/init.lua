@@ -204,6 +204,7 @@ local indent_config = {
   typst      = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   jupyter    = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   lua        = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  toml        = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   ps1        = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   bash       = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
 }
