@@ -145,19 +145,16 @@ config.wsl_domains = {
 }
 
 -- keybidings
-config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 }
+config.leader = { key = 'Space', mods = 'CTRL', timeout_milliseconds = 1000 }
 config.keys = {
-  { key = 'q', mods = 'LEADER|CTRL', action = wezterm.action.QuitApplication },
-  { key = 'c', mods = 'CTRL', action = wezterm.action.CopyTo 'ClipboardAndPrimarySelection', },
-  { key = 'v', mods = 'CTRL', action = wezterm.action.PasteFrom 'Clipboard', },
-  { key = 'v', mods = 'CTRL', action = wezterm.action.PasteFrom 'PrimarySelection', },
-  {
-    key = "t",
-    mods = "CTRL|ALT",
-    action = wezterm.action.SpawnTab {
-      DomainName = "Tumbleweed",
-    },
-  },
+  -- { key = 'q', mods = 'LEADER', action = wezterm.action.QuitApplication },
+  { key = 'c',  mods = 'CTRL',   action = wezterm.action.CopyTo 'ClipboardAndPrimarySelection', },
+  { key = 'v',  mods = 'CTRL',   action = wezterm.action.PasteFrom 'Clipboard',                 },
+  { key = 'v',  mods = 'CTRL',   action = wezterm.action.PasteFrom 'PrimarySelection',          },
+  { key = '-',  mods = 'LEADER', action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' }},
+  { key = '\\', mods = 'LEADER', action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }},
+  { key = "1",  mods = 'LEADER', action = wezterm.action.SpawnTab { DomainName = "local" }},
+  { key = "2",  mods = 'LEADER', action = wezterm.action.SpawnTab { DomainName = "Tumbleweed" }},
 }
 
 -- and finally, return the configuration to wezterm
