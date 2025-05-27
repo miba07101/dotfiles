@@ -1792,7 +1792,7 @@ require("lazy").setup({
                 "%<", -- Mark general truncate point
                 { hl = mode_hl, strings = { filename, macro_recording } },
                 "%= ", -- End left alignment
-                { hl = mode_hl, strings = { python_venv, lsp, location },},
+                { hl = mode_hl, strings = { lsp, python_venv, location },},
               })
             end,
           },
@@ -2353,6 +2353,7 @@ require("lazy").setup({
         uv.setup({
           keymaps = false,
           -- keymaps = { prefix = "<leader>x" }
+          auto_activate_venv = false,
         })
       end, -- }}}
       keys = { -- {{{
