@@ -2485,6 +2485,9 @@ vim.diagnostic.config({
 for _, sign in ipairs({ { "Error", "" }, { "Warn", "" }, { "Hint", "󰌵" }, { "Info", "" } }) do
   vim.fn.sign_define("DiagnosticSign" .. sign[1], { texthl = "DiagnosticSign" .. sign[1], text = sign[2] })
 end
+
+-- inlay_hints - napr. pre basedpyright
+vim.lsp.inlay_hint.enable()
 -- }}}
 
 -- {{{ [ LSP Capabilities ]
@@ -2522,11 +2525,17 @@ local lsp_configs = {
       ".git",
     },
     settings = {
-      python = {
+      basedpyright = {
         analysis = {
           autoSearchPaths = true,
           diagnosticMode = "openFilesOnly",
           useLibraryCodeForTypes = true,
+          inlayHints = {
+            variableTypes = true,
+            callArgumentNames = true,
+            functionReturnTypes = true,
+            genericTypes = true,
+          },
         },
       },
     },
@@ -2579,5 +2588,7 @@ map("n", "<leader>lr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "Refere
 map("n", "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "Rename" })
 map("n", "<leader>lh", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "Signature Help" })
 map("n", "<leader>lx", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Diagnostic Open Float" })
+-- inlay-hint toggle
+map("n", "\\I", "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<cr>", { desc = "Toggle 'inlay_hint'" })
 -- }}}
 -- LSP ends }}}
