@@ -794,6 +794,33 @@ end, { desc = "Convert markdown or quarto code blocks to a Python script" })-- }
 map("n", "<leader>cp", "<cmd>ConvertMarkdownToPython<cr>", { desc = "Convert To Python Code" })
 -- }}}
 
+vim.api.nvim_create_user_command("SetProjectVenv", function()
+  local client = vim.lsp.get_active_clients({ bufnr = 0 })[1]
+  if not client or not client.config.root_dir then
+    print("No LSP root found.")
+    return
+  end
+
+  local root = client.config.root_dir
+  local sep = package.config:sub(1,1) -- OS path separator
+  local venv_dir = root .. sep .. ".venv"
+  local python_path = venv_dir .. sep ..
+    (sep == "\\" and "Scripts\\python.exe" or "bin/python")
+
+  if vim.fn.filereadable(python_path) == 1 then
+    vim.g.python3_host_prog = python_path
+    vim.env.VIRTUAL_ENV = venv_dir
+    print("Activated venv: " .. venv_dir)
+  else
+    print("No .venv found at: " .. venv_dir)
+  end
+end, {
+  desc = "Set Python venv from LSP root",
+})
+
+vim.keymap.set("n", "<leader>pv", ":SetProjectVenv<CR>", { desc = "Set project .venv" })
+
+
 -- {{{ python
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "python",
