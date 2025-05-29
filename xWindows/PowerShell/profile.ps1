@@ -100,6 +100,23 @@ function fireup {
     FirefoxBackup
 }
 
+# ffmpeg-metadata
+# ffmpeg must be installed
+function ffmpeg-metadata {
+  . "$scriptPath\ffmpeg-metadata.ps1"
+    ffmpegMetadata
+}
+
+# photo-file-rename
+function photo-file-rename {
+param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string]$Path
+    )
+    . "$scriptPath\photo-file-rename.ps1"
+    PhotoFileRename $Path
+}
+
 # -----------------------------------------------------------------------------
 # aliases
 # -----------------------------------------------------------------------------
