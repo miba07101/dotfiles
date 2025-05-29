@@ -1,7 +1,9 @@
 function FirefoxBackup {
-    $firefoxDir = Get-ChildItem "$env:APPDATA\Mozilla\Firefox\Profiles" -Directory |
-        Where-Object { $_.Name -like "*default-release*" } |
-        Select-Object -First 1 -ExpandProperty FullName
+    # $firefoxDir = Get-ChildItem "$env:APPDATA\Mozilla\Firefox\Profiles" -Directory |
+    #     Where-Object { $_.Name -like "*default-release*" } |
+    #     Select-Object -First 1 -ExpandProperty FullName
+
+    $firefoxDir = "C:\Users\$env:Username\scoop\persist\firefox\profile"
 
     if (-not $firefoxDir) {
         Write-Host "Firefox profile directory not found."
