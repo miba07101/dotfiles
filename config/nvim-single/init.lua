@@ -2429,6 +2429,20 @@ require("lazy").setup({
       }, -- }}}
     }, -- }}}
 
+    { "chomosuke/typst-preview.nvim",-- {{{
+      ft = "typst",
+      version = "1.*",
+      opts = {
+        dependencies_bin = {
+          ['tinymist'] = nil, -- point to Mason's installation of tinymist
+          ['websocat'] = nil
+        },
+      },
+      keys = { -- {{{
+        { "\\t", mode = { "n" }, "<cmd>TypstPreviewToggle<cr>", desc = "Toggle 'typst preview'", noremap = true, silent = true },
+      }, -- }}}
+    },-- }}}
+
     -- }}}
   }, -- spec end }}}
 
