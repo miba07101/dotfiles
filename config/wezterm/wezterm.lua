@@ -153,8 +153,9 @@ config.keys = {
   { key = 'v',  mods = 'CTRL',   action = wezterm.action.PasteFrom 'PrimarySelection',          },
   { key = '-',  mods = 'LEADER', action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' }},
   { key = '\\', mods = 'LEADER', action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }},
-  { key = "1",  mods = 'CTRL', action = wezterm.action.SpawnTab { DomainName = "local" }},
-  { key = "2",  mods = 'CTRL', action = wezterm.action.SpawnTab { DomainName = "Tumbleweed" }},
+  { key = '1',  mods = 'CTRL', action = wezterm.action.SpawnTab { DomainName = 'local' }},
+  { key = '2',  mods = 'CTRL', action = wezterm.action.SpawnTab { DomainName = 'Tumbleweed' }},
+  { key = 'x',  mods = 'ALT', action = wezterm.action.SpawnCommandInNewTab { args = {'ticker'} }},
 }
 
 -- and finally, return the configuration to wezterm
