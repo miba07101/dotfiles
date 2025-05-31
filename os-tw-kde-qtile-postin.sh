@@ -377,6 +377,7 @@ other_apps(){
       codium --install-extension detachhead.basedpyright
       codium --install-extension charliermarsh.ruff # linters, formatters for python
       codium --install-extension esbenp.prettier-vscode # linters, formatters for html, markdown, json ...
+      codium --install-extension myriad-dreamin.tinymist # typst file preview
       # codium --install-extension vspacecode.whichkey
       # codium --install-extension ms-python.black-formatter
       # codium --install-extension Continue.continue # ai for ollama
