@@ -596,6 +596,15 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 -- }}}
 
+-- markdown filetype{{{
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+  pattern = { "*.md" },
+  callback = function()
+    vim.cmd("setlocal filetype=markdown")
+  end,
+})
+-- }}}
+
 -- htmldjango / jinja.html filetypes and comment{{{
 local function select_html_filetype()
   local max_lines = math.min(50, vim.fn.line("$"))
