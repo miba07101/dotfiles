@@ -962,8 +962,8 @@ require("lazy").setup({
       version = false,
       build = ":TSUpdate",
       -- lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
-      event = { "BufReadPre", "BufNewFile" },
-      cmd = { "TSBufEnable" },
+      -- event = { "BufReadPre", "BufNewFile" },
+      -- cmd = { "TSBufEnable" },
       dependencies = { -- {{{
         -- "windwp/nvim-ts-autotag",
         "nvim-treesitter/nvim-treesitter-textobjects",
