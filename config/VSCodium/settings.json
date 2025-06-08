@@ -127,7 +127,10 @@
       "textMateRules": [
         {
           "name": "Comment",
-          "scope": ["comment", "punctuation.definition.comment"],
+          "scope": [
+            "comment",
+            "punctuation.definition.comment"
+          ],
           "settings": {
             "foreground": "#717C7C",
             "fontStyle": "italic"
@@ -139,7 +142,10 @@
       "textMateRules": [
         {
           "name": "Comment",
-          "scope": ["comment", "punctuation.definition.comment"],
+          "scope": [
+            "comment",
+            "punctuation.definition.comment"
+          ],
           "settings": {
             "fontStyle": "italic"
           }
@@ -165,110 +171,202 @@
   "vim.leader": "<space>",
   "vim.insertModeKeyBindingsNonRecursive": [
     {
-      "before": ["i", "j"],
-      "after": ["<Esc>"],
+      "before": [
+        "i",
+        "j"
+      ],
+      "after": [
+        "<Esc>"
+      ],
       "silent": true
     }
   ],
   "vim.normalModeKeyBindingsNonRecursive": [
     // Explorer
     {
-      "before": ["<leader>", "e"],
-      "commands": ["workbench.view.explorer"],
+      "before": [
+        "<leader>",
+        "e"
+      ],
+      "commands": [
+        "workbench.view.explorer"
+      ],
       "silent": true
     },
     // Comments
     {
-      "before": ["<leader>", "/"],
-      "commands": ["editor.action.commentLine"],
+      "before": [
+        "<leader>",
+        "/"
+      ],
+      "commands": [
+        "editor.action.commentLine"
+      ],
       "silent": true
     },
     // Duplicate selection
     {
-      "before": ["<Leader>", "d"],
-      "commands": ["editor.action.duplicateSelection"],
+      "before": [
+        "<Leader>",
+        "d"
+      ],
+      "commands": [
+        "editor.action.duplicateSelection"
+      ],
       "silent": true
     },
     // Formating
     {
-      "before": ["<Leader>", "f", "d"],
-      "commands": ["editor.action.formatDocument"],
+      "before": [
+        "<Leader>",
+        "f",
+        "d"
+      ],
+      "commands": [
+        "editor.action.formatDocument"
+      ],
       "silent": true
     },
     {
-      "before": ["<Leader>", "f", "c"],
-      "commands": ["notebook.formatCell"],
+      "before": [
+        "<Leader>",
+        "f",
+        "c"
+      ],
+      "commands": [
+        "notebook.formatCell"
+      ],
       "silent": true
     },
     // Quit
     {
-      "before": ["<Leader>", "q"],
-      "commands": ["workbench.action.closeActiveEditor"],
+      "before": [
+        "<Leader>",
+        "q"
+      ],
+      "commands": [
+        "workbench.action.closeActiveEditor"
+      ],
       "silent": true
     },
     // Window split vertical
     {
-      "before": ["<leader>", "w", "v"],
-      "commands": ["workbench.action.splitEditor"],
+      "before": [
+        "<leader>",
+        "w",
+        "v"
+      ],
+      "commands": [
+        "workbench.action.splitEditor"
+      ],
       "silent": true
     },
     // Files
     {
-      "before": ["<leader>", "o", "f"],
-      "commands": ["workbench.action.quickOpen"],
+      "before": [
+        "<leader>",
+        "o",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ],
       "silent": true
     },
     // Clear search with <esc>
     {
-      "before": ["<Esc>"],
-      "commands": [":nohl"],
+      "before": [
+        "<Esc>"
+      ],
+      "commands": [
+        ":nohl"
+      ],
       "silent": true
     },
     // Show commands prompt
     {
-      "before": [":"],
-      "commands": ["workbench.action.showCommands"],
+      "before": [
+        ":"
+      ],
+      "commands": [
+        "workbench.action.showCommands"
+      ],
       "silent": true
     },
     // Better move in wrapp
     {
-      "before": ["j"],
-      "after": ["g", "j"],
+      "before": [
+        "j"
+      ],
+      "after": [
+        "g",
+        "j"
+      ],
       "silent": true
     },
     {
-      "before": ["Down"],
-      "after": ["g", "j"],
+      "before": [
+        "Down"
+      ],
+      "after": [
+        "g",
+        "j"
+      ],
       "silent": true
     },
     {
-      "before": ["k"],
-      "after": ["g", "k"],
+      "before": [
+        "k"
+      ],
+      "after": [
+        "g",
+        "k"
+      ],
       "silent": true
     },
     {
-      "before": ["Up"],
-      "after": ["g", "k"],
+      "before": [
+        "Up"
+      ],
+      "after": [
+        "g",
+        "k"
+      ],
       "silent": true
     }
   ],
   "vim.visualModeKeyBindingsNonRecursive": [
     // Comments
     {
-      "before": ["<leader>", "/"],
-      "commands": ["editor.action.commentLine"],
+      "before": [
+        "<leader>",
+        "/"
+      ],
+      "commands": [
+        "editor.action.commentLine"
+      ],
       "silent": true
     },
     // Duplicate selection
     {
-      "before": ["<Leader>", "d"],
-      "commands": ["editor.action.duplicateSelection"],
+      "before": [
+        "<Leader>",
+        "d"
+      ],
+      "commands": [
+        "editor.action.duplicateSelection"
+      ],
       "silent": true
     },
     // Formating
     {
-      "before": ["<Leader>", "f"],
-      "commands": ["editor.action.formatSelection"],
+      "before": [
+        "<Leader>",
+        "f"
+      ],
+      "commands": [
+        "editor.action.formatSelection"
+      ],
       "silent": true
     }
   ],
@@ -281,7 +379,10 @@
   "vim.surround": true,
   "vim.sneak": false,
   "vim.statusBarColorControl": true,
-  "vim.statusBarColors.normal": ["#67217A", "#FFFFFF"],
+  "vim.statusBarColors.normal": [
+    "#67217A",
+    "#FFFFFF"
+  ],
   "vim.statusBarColors.insert": "#007ACD",
   "vim.statusBarColors.visual": "#427B00",
   "vim.statusBarColors.visualline": "#427B00",
