@@ -598,7 +598,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- markdown filetype{{{
 -- pretoze snacks.dashboard pri otvarani markdown suborov nevedel spravne priradit filetype
-vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufEnter" }, {
   pattern = { "*.md" },
   callback = function()
     vim.cmd("setlocal filetype=markdown")
@@ -1915,7 +1915,7 @@ require("lazy").setup({
     },-- }}}
 
     { "MeanderingProgrammer/render-markdown.nvim", -- {{{
-      enabled = false,
+      -- enabled = false,
       event = {
         "BufReadPost *.md",
         "BufNewFile  *.md",
