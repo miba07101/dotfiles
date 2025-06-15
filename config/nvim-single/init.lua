@@ -806,22 +806,24 @@ map("n", "<leader>cp", "<cmd>ConvertMarkdownToPython<cr>", { desc = "Convert To 
 
 -- auto find and set python environment in project folder{{{
 vim.api.nvim_create_user_command("SetProjectVenv", function()
-  local clients = vim.lsp.get_clients({ bufnr = 0 })
-  local client = clients[1]
-
-  if not client or not client.config or not client.config.root_dir then
+  local client = vim.lsp.get_active_clients({ bufnr = 0 })[1]
+  if not client or not client.config.root_dir then
     print("No LSP root found.")
     return
   end
 
   local root = client.config.root_dir
-  local sep = package.config:sub(1,1) -- OS path separator
+  local sep = package.config:sub(1, 1) -- OS path separator
   local venv_dir = root .. sep .. ".venv"
-  local python_path = venv_dir .. sep .. (sep == "\\" and "Scripts\\python.exe" or "bin/python")
+  local python_path = venv_dir .. sep ..
+    (sep == "\\" and "Scripts\\python.exe" or "bin/python")
 
   if vim.fn.filereadable(python_path) == 1 then
     vim.g.python3_host_prog = python_path
-    vim.env.VIRTUAL_ENV = venv_dir
+
+    -- ✨ Set VIRTUAL_ENV to project root so Starship shows "ppc-onrender"
+    vim.env.VIRTUAL_ENV = root
+
     print("Activated venv: " .. venv_dir)
   else
     print("No .venv found at: " .. venv_dir)

@@ -146,6 +146,11 @@ function base {
   . "C:\Users\$env:USERNAME\.py-venv\base-venv\Scripts\Activate.ps1"
 }
 
+function ppc {
+    cd C:\Users\$env:USERNAME\git-repos\ppc-onrender
+  . "C:\Users\$env:USERNAME\git-repos\ppc-onrender\.venv\Scripts\Activate.ps1"
+}
+
 # lazygit
 function lg {
   lazygit
