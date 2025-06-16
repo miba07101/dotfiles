@@ -2,24 +2,32 @@ local wezterm = require 'wezterm'
 local act = wezterm.action
 
 -- ─────────────────── Tab Title Formatting ───────────────────
-local function format_tab(tab, _, _, _, _, max_width)
-  local domain = tab.active_pane.domain_name or ''
-  local icon = ({
-    ["local"] = '',
-    ["Tumbleweed"] = '',
-  })[domain] or ''
-  local name = (domain == 'local' and 'PowerShell') or domain
-
-  return {
-    { Text = wezterm.truncate_right(
-        (' %s    %s '):format(icon, name),
-        max_width
-      )
-    }
-  }
+-- Extract just the executable name from path
+local function basename(path)
+  return path:match("([^/\\]+)$") or path
 end
 
-wezterm.on('format-tab-title', format_tab)
+wezterm.on('format-tab-title', function(tab, _, _, _, _, max_width)
+  local pane = tab.active_pane
+  local domain = pane.domain_name or ""
+
+  -- Decide icon: Windows local → PowerShell icon; otherwise Linux icon
+  local icon
+  if wezterm.target_triple:find("windows") then
+    icon = domain == "local" and "" or ""
+  else
+    icon = ""
+  end
+
+  -- Use the actual process that's running (e.g., nvim, bash, pwsh)
+  local proc = basename(pane.foreground_process_name or "")
+  local title = proc ~= "" and proc or domain
+
+  local text = string.format(" %s   %s ", icon, title)
+  return {
+    { Text = wezterm.truncate_right(text, max_width) }
+  }
+end)
 
 -- ─────────────────── Color Schemes & Toggle ───────────────────
 local dark_scheme  = 'kanagawa-dark'
@@ -40,16 +48,16 @@ config.color_schemes = {
   [dark_scheme] = {
     foreground='#dcd7ba', background='#1f1f28',
     cursor_bg='#c8c093', cursor_fg='#1f1f28',
-    selection_bg='#2d4f67', selection_fg='#c8c093',
-    ansi={'#090618','#c34043','#76946a','#c0a36e','#7e9cd8','#957fb8','#6a9589','#c8c093'},
-    brights={'#727169','#e82424','#98bb6c','#e6c384','#7fb4ca','#938aa9','#7aa89f','#dcd7ba'},
+    selection_bg='#2d4f67', selection_fg='#dcd7ba',
+    ansi={'#1f1f28','#c34043','#76946a','#c0a36e','#7e9cd8','#957fb8','#6a9589','#dcd7ba'},
+    brights={'#727169','#e82424','#98bb6c','#e6c384','#7fb4ca','#938aa9','#7aa89f','#fefefa'},
   },
   [light_scheme] = {
-    foreground='#6B7089', background='#F2ECBC',
-    cursor_bg='#6B7089', cursor_fg='#F2ECBC',
-    selection_bg='#DCD7BA', selection_fg='#1F1F28',
-    ansi={'#1F1F28','#C34043','#76946A','#C0A36E','#7E9CD8','#957FB8','#6A9589','#DCD7BA'},
-    brights={'#727169','#E82424','#98BB6C','#E6C384','#7FB4CA','#938AA9','#7AA89F','#DCD7BA'},
+    foreground='#1f1f28', background='#fefefa',
+    cursor_bg='#1f1f28', cursor_fg='#fefefa', cursor_border = "#1f1f28",
+    selection_bg='#2d4f67', selection_fg='#fefefa',
+    ansi = {'#1f1f28', '#c34043', '#76946a', '#c0a36e', '#7e9cd8', '#957fb8', '#6a9589', '#1f1f28',},
+    brights = {'#727169', '#e82424', '#98bb6c', '#e6c384', '#7fb4ca', '#938aa9', '#7aa89f', '#1f1f28',},
   },
 }
 
