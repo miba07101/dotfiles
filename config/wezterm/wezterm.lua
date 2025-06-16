@@ -109,7 +109,23 @@ config.wsl_domains = {
 config.leader = { key = 'Space', mods = 'CTRL', timeout_milliseconds = 1000 }
 
 config.keys = {
-  { key='c', mods='CTRL', action=act.CopyTo 'ClipboardAndPrimarySelection' },
+  -- { key='c', mods='CTRL', action=act.CopyTo 'ClipboardAndPrimarySelection' },
+  {
+      key = 'c',
+      mods = 'CTRL',
+      action = wezterm.action_callback(function(window, pane)
+        -- Check if there's selected text in the current pane
+        local has_selection = window:get_selection_text_for_pane(pane) ~= ''
+        if has_selection then
+          -- Copy selected text and clear selection
+          window:perform_action(act.CopyTo 'ClipboardAndPrimarySelection', pane)
+          window:perform_action(act.ClearSelection, pane)
+        else
+          -- No selection: send a true Ctrl+C (SIGINT) to the child process
+          window:perform_action(act.SendKey { key = 'c', mods = 'CTRL' }, pane)
+        end
+      end),
+    },
   { key='v', mods='CTRL', action=act.PasteFrom 'Clipboard' },
   { key='v', mods='CTRL', action=act.PasteFrom 'PrimarySelection' },
   { key='-', mods='LEADER', action=act.SplitVertical { domain='CurrentPaneDomain' } },
