@@ -47,14 +47,14 @@ local config = wezterm.config_builder()
 config.color_schemes = {
   [dark_scheme] = {
     foreground='#dcd7ba', background='#1f1f28',
-    cursor_bg='#c8c093', cursor_fg='#1f1f28',
+    cursor_bg = '#c8c093', cursor_fg = '#c8c093', cursor_border = '#c8c093',
     selection_bg='#2d4f67', selection_fg='#dcd7ba',
     ansi={'#1f1f28','#c34043','#76946a','#c0a36e','#7e9cd8','#957fb8','#6a9589','#dcd7ba'},
     brights={'#727169','#e82424','#98bb6c','#e6c384','#7fb4ca','#938aa9','#7aa89f','#fefefa'},
   },
   [light_scheme] = {
     foreground='#1f1f28', background='#fefefa',
-    cursor_bg='#1f1f28', cursor_fg='#fefefa', cursor_border = "#1f1f28",
+    cursor_bg = '#363646', cursor_fg = '#fefefa', cursor_border = '#363646',
     selection_bg='#2d4f67', selection_fg='#fefefa',
     ansi = {'#1f1f28', '#c34043', '#76946a', '#c0a36e', '#7e9cd8', '#957fb8', '#6a9589', '#1f1f28',},
     brights = {'#727169', '#e82424', '#98bb6c', '#e6c384', '#7fb4ca', '#938aa9', '#7aa89f', '#1f1f28',},
@@ -130,6 +130,7 @@ config.keys = {
   { key='v', mods='CTRL', action=act.PasteFrom 'PrimarySelection' },
   { key='-', mods='LEADER', action=act.SplitVertical { domain='CurrentPaneDomain' } },
   { key='\\', mods='LEADER', action=act.SplitHorizontal { domain='CurrentPaneDomain' } },
+  { key='w', mods = 'LEADER', action = wezterm.action.CloseCurrentPane { confirm = false },},
   { key='1', mods='CTRL', action=act.SpawnTab { DomainName='local' } },
   { key='2', mods='CTRL', action=act.SpawnTab { DomainName='Tumbleweed' } },
   { key='x', mods='ALT', action=act.SpawnCommandInNewTab { args = { 'ticker' } } },
