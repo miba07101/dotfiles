@@ -12,5 +12,7 @@ prepend_keymap = [
   { on = "z", run = 'shell --block "7z a "$(1).zip" "$(1)""', desc = "Zip with 7z", for = "unix" },
   # Unbind default delete (Shift+D)
   { on = "D", run = "noop" },
-  { on = "<S-Delete>", run = "remove --permanently", desc = "Permanently delete" }
+  { on = "<S-Delete>", run = "remove --permanently", desc = "Permanently delete" },
+  # Smart-enter plugin
+  { on = "<Enter>", run = "plugin smart-enter", desc = "Enter the child directory, or open the file" }
 ]
