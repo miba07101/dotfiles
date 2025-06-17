@@ -306,6 +306,7 @@ alias freecad='$HOME/Applications/FreeCAD_0.20-1-2022-08-20-conda-Linux-x86_64-p
 # Python
 # alias epd='source $HOME/.py-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd'
 alias epd='source $HOME/python-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd'
+alias ppc='source $HOME/git-repos/ppc-onrender/.venv/bin/activate && cd $HOME/git-repos/ppc-onrender'
 # alias io='source $HOME/.py-venv/isitobo-venv/bin/activate && cd $HOME/git-repos/isitobo'
 alias io='source $HOME/python-venv/isitobo-venv/bin/activate && cd $HOME/git-repos/isitobo'
 alias test-env='source $HOME/python-venv/test-venv/bin/activate && cd $HOME/git-repos/test'
@@ -327,19 +328,19 @@ alias or='nvim $OneDrive_DIR/Dokumenty/zPoznamky/Obsidian/inbox/*.md'
 
 # ZK notes
 function zn(){
-	zk new --title "$@" "$ZK_NOTEBOOK_DIR/inbox"
+    zk new --title "$@" "$ZK_NOTEBOOK_DIR/inbox"
 }
 function zl(){
-	zk edit --interactive "$@"
+    zk edit --interactive "$@"
 }
 function zf(){
-	zk edit --interactive --match "$@"
+    zk edit --interactive --match "$@"
 }
 function zt(){
-	zk edit --interactive --tag "$@"
+    zk edit --interactive --tag "$@"
 }
 function zp(){
-	zk edit --limit 1 --sort modified- "$@"
+    zk edit --limit 1 --sort modified- "$@"
 }
 
 
