@@ -3,7 +3,7 @@
 {"_id":"backendPreference","value":"local"}
 {"_id":"barColor","value":false}
 {"_id":"baseTheme","value":"dracula"}
-{"_id":"bounds","value":{"x":0,"y":0,"width":800,"height":606,"maximized":true,"fullScreen":false}}
+{"_id":"bounds","value":{"x":0,"y":0,"width":800,"height":608,"maximized":true,"fullScreen":false}}
 {"_id":"checkForBlogPosts","value":false}
 {"_id":"checkForUpdates","value":false}
 {"_id":"defaultInvidiousInstance","value":"https://yt.artemislena.eu"}
