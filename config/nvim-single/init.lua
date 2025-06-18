@@ -200,7 +200,7 @@ local indent_config = {
   json       = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   jinja      = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   django     = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
-  htmldjango = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  -- htmldjango = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   typst      = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   jupyter    = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   lua        = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
@@ -607,21 +607,23 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufEnter" }, {
 -- }}}
 
 -- htmldjango / jinja.html filetypes and comment{{{
-local function select_html_filetype()
-  local max_lines = math.min(50, vim.fn.line("$"))
-  for n = 1, max_lines do
-    local line = vim.fn.getline(n)
-    if line:match("{{.*}}") or line:match("{%%%-?%s*(end.*|extends|block|macro|set|if|for|include|trans)%f[%W]") then
-      vim.bo.filetype = "htmldjango"
-      return
-    end
-  end
-end
+-- local function select_html_filetype()
+--   local max_lines = math.min(50, vim.fn.line("$"))
+--   for n = 1, max_lines do
+--     local line = vim.fn.getline(n)
+--     if line:match("{{.*}}") or line:match("{%%%-?%s*(end.*|extends|block|macro|set|if|for|include|trans)%f[%W]") then
+--       vim.bo.filetype = "htmldjango"
+--       return
+--     end
+--   end
+-- end
 
-vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-  pattern = { "*.html", "*.htm" },
-  callback = select_html_filetype
-})
+-- vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+--   pattern = { "*.html", "*.htm" },
+--   callback = select_html_filetype
+-- })
+-- map("n", "<leader>.", "<cmd>set filetype=htmldjango<CR>", { desc = "Set filetype to htmldjango" })
+map("n", "<leader>.", function() vim.bo.filetype = "htmldjango" end, { desc = "Set filetype to htmldjango" })
 
 -- for commenting
 vim.api.nvim_create_autocmd("FileType", {
@@ -1000,7 +1002,7 @@ require("lazy").setup({
           "latex",
           "regex",
         }, -- }}}
-        auto_install = true,
+        -- auto_install = true,
         highlight = { enable = true },
         indent = { enable = true },
         incremental_selection = { -- oznacujem casti definovane pomocou treesitteru
@@ -1063,7 +1065,7 @@ require("lazy").setup({
           -- linters
           "shellcheck",
           "eslint_d",
-          "djlint",
+          -- "djlint",
           "htmlhint",
           -- "vale",
         }
@@ -1092,13 +1094,13 @@ require("lazy").setup({
             css = { "prettier" },
             lua = { "stylua" },
             html = { "prettier" },
-            htmldjango = { "djlint" },
+            -- htmldjango = { "djlint" },
             -- python = { "ruff_fix", "ruff_organize_imports", "black", lsp_format = "first" },
             python = { "ruff_format", "black" },
             ["_"] = { "trim_whitespace", "trim_newlines" },
           },
           format_on_save = function(bufnr)
-            local disable_filetypes = { htmldjango = true, lua = true, json = true }
+            local disable_filetypes = { lua = true, json = true }
             if disable_filetypes[vim.bo[bufnr].filetype] then
               return nil -- Disable format on save
             end
@@ -1120,7 +1122,7 @@ require("lazy").setup({
           javascript = { "eslint_d" },
           python = { "ruff" },
           html = { "htmlhint" },
-          htmldjango = { "djlint" },
+          -- htmldjango = { "djlint" },
           -- markdown = { "vale" },
         }
         -- Automatically run linters on file events
@@ -1615,7 +1617,8 @@ require("lazy").setup({
             trim_right = ">",
           },
         })
-        map( "n", "<leader>-", function() if not MiniFiles.close() then MiniFiles.open() end end, { desc = "Mini files" })
+        -- map( "n", "<leader>-", function() if not MiniFiles.close() then MiniFiles.open(vim.api.nvim_buf_get_name(0), false) end end, { desc = "Mini files" })
+        map( "n", "<leader>-", function() if not MiniFiles.close() then MiniFiles.open(nil, false) end end, { desc = "Mini files" })
         -- }}}
 
         local hipatterns = require("mini.hipatterns") -- {{{
