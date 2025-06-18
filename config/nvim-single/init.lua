@@ -2411,22 +2411,8 @@ require("lazy").setup({
       }, -- }}}
     }, -- }}}
 
-    { "lepture/vim-jinja", -- syntax/indent for jinja.html files {{{
-      enabled = false,
-      ft = { "jinja", "htmldjango", "html", "jinja.html" },
-    }, -- }}}
-
-    { "HiPhish/jinja.vim", -- syntax/indent for jinja.html files {{{
-      enabled = false,
-      -- ft = { "jinja", "htmldjango", "html", "jinja.html" },
-      -- config = function()
-      --   vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-      --     pattern = "*.html",
-      --     callback = function()
-      --       vim.fn["jinja#AdjustFiletype"]()
-      --     end,
-      --   })
-      -- end,
+    { "Glench/Vim-Jinja2-Syntax", -- syntax/indent for jinja.html files {{{
+      -- enabled = false,
     }, -- }}}
 
     { "brenoprata10/nvim-highlight-colors", -- show colors {{{
