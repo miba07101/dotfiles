@@ -607,27 +607,25 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufEnter" }, {
 -- }}}
 
 -- htmldjango / jinja.html filetypes and comment{{{
--- local function select_html_filetype()
---   local max_lines = math.min(50, vim.fn.line("$"))
---   for n = 1, max_lines do
---     local line = vim.fn.getline(n)
---     if line:match("{{.*}}") or line:match("{%%%-?%s*(end.*|extends|block|macro|set|if|for|include|trans)%f[%W]") then
---       vim.bo.filetype = "htmldjango"
---       return
---     end
---   end
--- end
-
--- vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+-- vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 --   pattern = { "*.html", "*.htm" },
---   callback = select_html_filetype
+--   callback = function()
+--     local max_lines = math.min(50, vim.fn.line("$"))
+--     for n = 1, max_lines do
+--       local line = vim.fn.getline(n)
+--       if line:match("{{.*}}") or line:match("{%%%-?%s*(end.*|extends|block|macro|set|if|for|include|trans)%f[%W]") then
+--         vim.bo.filetype = "htmldjango.jinja"
+--         break
+--       end
+--     end
+--   end,
 -- })
--- map("n", "<leader>.", "<cmd>set filetype=htmldjango<CR>", { desc = "Set filetype to htmldjango" })
-map("n", "<leader>.", function() vim.bo.filetype = "htmldjango" end, { desc = "Set filetype to htmldjango" })
+
+map("n", "<leader>.", function() vim.bo.filetype = "htmldjango" vim.cmd("set syntax=on") end, { desc = "Htmldjango filetype" })
 
 -- for commenting
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "htmldjango",
+  pattern = {"htmldjango","htmldjango.jinja", "jinja", "jinja.html"},
   callback = function()
     vim.bo.commentstring = "{# %s #}"
   end,
@@ -2416,6 +2414,19 @@ require("lazy").setup({
     { "lepture/vim-jinja", -- syntax/indent for jinja.html files {{{
       enabled = false,
       ft = { "jinja", "htmldjango", "html", "jinja.html" },
+    }, -- }}}
+
+    { "HiPhish/jinja.vim", -- syntax/indent for jinja.html files {{{
+      enabled = false,
+      -- ft = { "jinja", "htmldjango", "html", "jinja.html" },
+      config = function()
+        vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+          pattern = "*.html",
+          callback = function()
+            vim.fn["jinja#AdjustFiletype"]()
+          end,
+        })
+      end,
     }, -- }}}
 
     { "brenoprata10/nvim-highlight-colors", -- show colors {{{
