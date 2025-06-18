@@ -2419,14 +2419,14 @@ require("lazy").setup({
     { "HiPhish/jinja.vim", -- syntax/indent for jinja.html files {{{
       enabled = false,
       -- ft = { "jinja", "htmldjango", "html", "jinja.html" },
-      config = function()
-        vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-          pattern = "*.html",
-          callback = function()
-            vim.fn["jinja#AdjustFiletype"]()
-          end,
-        })
-      end,
+      -- config = function()
+      --   vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+      --     pattern = "*.html",
+      --     callback = function()
+      --       vim.fn["jinja#AdjustFiletype"]()
+      --     end,
+      --   })
+      -- end,
     }, -- }}}
 
     { "brenoprata10/nvim-highlight-colors", -- show colors {{{
