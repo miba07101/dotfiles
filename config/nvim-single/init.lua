@@ -1063,7 +1063,7 @@ require("lazy").setup({
           -- linters
           "shellcheck",
           "eslint_d",
-          -- "djlint",
+          "djlint",
           "htmlhint",
           -- "vale",
         }
@@ -1091,8 +1091,8 @@ require("lazy").setup({
             javascript = { "prettier" },
             css = { "prettier" },
             lua = { "stylua" },
-            html = { "prettier" },
-            -- htmldjango = { "djlint" },
+            html = { "prettier", "djlint" },
+            htmldjango = { "djlint" },
             -- python = { "ruff_fix", "ruff_organize_imports", "black", lsp_format = "first" },
             python = { "ruff_format", "black" },
             ["_"] = { "trim_whitespace", "trim_newlines" },
@@ -1119,8 +1119,9 @@ require("lazy").setup({
           bash = { "shellcheck" },
           javascript = { "eslint_d" },
           python = { "ruff" },
-          html = { "htmlhint" },
-          -- htmldjango = { "djlint" },
+          -- html = { "htmlhint" },
+          htmldjango = { "djlint" },
+          html = { "djlint" },
           -- markdown = { "vale" },
         }
         -- Automatically run linters on file events
