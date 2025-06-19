@@ -1673,8 +1673,10 @@ require("lazy").setup({
             [')'] = { action = 'close', pair = '()', neigh_pattern = '[^\\].' },
             [']'] = { action = 'close', pair = '[]', neigh_pattern = '[^\\].' },
             ['}'] = { action = 'close', pair = '{}', neigh_pattern = '[^\\].' },
-            ["<"] = { action = "open", pair = "<>", neigh_pattern = "[^\\].", register = { cr = false } },
-            [">"] = { action = "close", pair = "<>", neigh_pattern = "[^\\].", register = { cr = false } },
+            -- ["<"] = { action = "open", pair = "<>", neigh_pattern = "[^\\].", register = { cr = false } },
+            -- [">"] = { action = "close", pair = "<>", neigh_pattern = "[^\\].", register = { cr = false } },
+            ["<"] = false, -- vypni auto-pairing pre `<`
+            [">"] = false,
             -- Prevents the action if the cursor is just before or next to any character.
             ['"'] = {action = 'closeopen', pair = '""', neigh_pattern = '[^%w][^%w]', register = { cr = false },},
             ["'"] = {action = 'closeopen', pair = "''", neigh_pattern = '[^%w][^%w]', register = { cr = false },},
@@ -2437,6 +2439,22 @@ require("lazy").setup({
         -- vim.g.matchup_matchpref = { html = { tagnameonly = 1 }, jinja = { tagnameonly = 1 } }
       end,
     },-- }}}
+
+    {
+  "alvan/vim-closetag",
+  ft = { "html", "xhtml", "jinja", "jinja.html", "htmldjango" },
+  config = function()
+    vim.g.closetag_filenames = "*.html,*.xhtml,*.jinja,*.jinja.html,*.htmldjango"
+    vim.g.closetag_filetypes = "html,xhtml,jinja,jinja.html,htmldjango"
+    vim.g.closetag_regions = {
+      ["jinja"] = "template",
+      ["jinja.html"] = "template",
+      ["htmldjango"] = "template",
+    }
+    vim.g.closetag_shortcut = '>'
+    vim.g.closetag_close_shortcut = '<BS>'
+  end,
+},
 
     { "brenoprata10/nvim-highlight-colors", -- show colors {{{
       enabled = false,
