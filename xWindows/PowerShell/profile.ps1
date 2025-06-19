@@ -147,8 +147,8 @@ function base {
 }
 
 function ppc {
-    cd C:\Users\$env:USERNAME\git-repos\ppc-onrender
-  . "C:\Users\$env:USERNAME\git-repos\ppc-onrender\.venv\Scripts\Activate.ps1"
+    cd C:\Users\$env:USERNAME\git-repos\ppc-pyapp
+  . "C:\Users\$env:USERNAME\git-repos\ppc-pyapp\.venv\Scripts\Activate.ps1"
 }
 
 # lazygit
