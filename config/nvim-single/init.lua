@@ -191,21 +191,21 @@ vim.opt.pumheight   = 10                        -- completion menu height
 
 -- Indention{{{
 local indent_config = {
-  vim        = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  python     = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
-  html       = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
-  css        = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  javascript = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  typescript = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  json       = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  -- ["jinja.html"]      = { shiftwidth = 8, softtabstop = 8, tabstop = 8 },
-  -- htmldjango = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
-  typst      = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  jupyter    = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
-  lua        = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  toml        = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  ps1        = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
-  bash       = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  vim            = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  python         = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  html           = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  css            = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  javascript     = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  typescript     = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  json           = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  typst          = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  jupyter        = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  lua            = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  toml           = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  ps1            = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  bash           = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  ["jinja.html"] = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  htmldjango     = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
 }
 
 -- Create autocommand group
@@ -1090,25 +1090,24 @@ require("lazy").setup({
             javascript = { "prettier" },
             css = { "prettier" },
             lua = { "stylua" },
-            -- html = { "prettier" },
-            html = { "djlint" },
+            html = { "prettier" },
             htmldjango = { "djlint" },
-            -- python = { "ruff_fix", "ruff_organize_imports", "black", lsp_format = "first" },
             python = { "ruff_format", "black" },
             ["_"] = { "trim_whitespace", "trim_newlines" },
             ["jinja.html"] = { "djlint" },
           },
           formatters = {
-    djlint = {
-      prepend_args = {
-        "--quiet", -- hide lint warnings
-        "--ignore=jinja", -- don't touch {% %} or {{ }}
-        "--preserve-blank-lines", -- don't collapse your layout
-      },
-    },
-  },
+            djlint = {
+              prepend_args = {
+                "--indent=2",
+                "--profile=jinja",
+                -- "--preserve-blank-lines",
+                -- "--quiet", -- hide lint warnings
+              },
+            },
+          },
           format_on_save = function(bufnr)
-            local disable_filetypes = { lua = true, json = true }
+            local disable_filetypes = { ["jinja.html"] = true, lua = true, json = true }
             if disable_filetypes[vim.bo[bufnr].filetype] then
               return nil -- Disable format on save
             end
