@@ -204,8 +204,8 @@ local indent_config = {
   toml           = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   ps1            = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   bash           = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
-  ["jinja.html"] = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
-  htmldjango     = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  ["jinja.html"] = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  htmldjango     = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
 }
 
 -- Create autocommand group
@@ -1099,9 +1099,9 @@ require("lazy").setup({
           formatters = {
             djlint = {
               prepend_args = {
-                "--indent=2",
+                "--indent=4",
                 "--profile=jinja",
-                -- "--preserve-blank-lines",
+                "--preserve-blank-lines",
                 -- "--quiet", -- hide lint warnings
               },
             },
@@ -2424,6 +2424,19 @@ require("lazy").setup({
     { "Glench/Vim-Jinja2-Syntax", -- syntax/indent for jinja.html files {{{
       -- enabled = false,
     }, -- }}}
+
+    { "andymass/vim-matchup", -- g% jump between tags in jinja.html files {{{
+      -- enabled = false,
+      ft = { "html", "htmldjango", "jinja.html", "jinja" },
+      config = function()
+        vim.g.matchup_matchparen_offscreen = { method = "popup" }
+        -- vim.g.matchup_matchparen_enabled = 1
+        -- vim.g.matchup_matchparen_deferred = 1
+        -- vim.g.matchup_matchparen_hi_surround_always = 1
+        -- vim.g.matchup_enable_arbitrary_pairs = 1
+        -- vim.g.matchup_matchpref = { html = { tagnameonly = 1 }, jinja = { tagnameonly = 1 } }
+      end,
+    },-- }}}
 
     { "brenoprata10/nvim-highlight-colors", -- show colors {{{
       enabled = false,
