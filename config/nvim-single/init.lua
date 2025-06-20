@@ -2425,6 +2425,16 @@ require("lazy").setup({
 
     { "Glench/Vim-Jinja2-Syntax", -- syntax/indent for jinja.html files {{{
       -- enabled = false,
+      config = function()
+        -- tento plugin vytvori "jinja.html" filetype, ale nie je mozne potom pouzit snippety "jinja-html.json"
+        -- takze, autocommand na premenovanie "jinja.html" na "jinja-html"
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = "jinja.html",
+          callback = function()
+            vim.bo.filetype = "jinja-html"
+          end,
+        })
+      end,
     }, -- }}}
 
     { "andymass/vim-matchup", -- g% jump between tags in jinja.html files {{{
@@ -2439,22 +2449,6 @@ require("lazy").setup({
         -- vim.g.matchup_matchpref = { html = { tagnameonly = 1 }, jinja = { tagnameonly = 1 } }
       end,
     },-- }}}
-
-    {
-  "alvan/vim-closetag",
-  ft = { "html", "xhtml", "jinja", "jinja.html", "htmldjango" },
-  config = function()
-    vim.g.closetag_filenames = "*.html,*.xhtml,*.jinja,*.jinja.html,*.htmldjango"
-    vim.g.closetag_filetypes = "html,xhtml,jinja,jinja.html,htmldjango"
-    vim.g.closetag_regions = {
-      ["jinja"] = "template",
-      ["jinja.html"] = "template",
-      ["htmldjango"] = "template",
-    }
-    vim.g.closetag_shortcut = '>'
-    vim.g.closetag_close_shortcut = '<BS>'
-  end,
-},
 
     { "brenoprata10/nvim-highlight-colors", -- show colors {{{
       enabled = false,

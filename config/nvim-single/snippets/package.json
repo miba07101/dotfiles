@@ -6,9 +6,17 @@
         "language": [
           "htmldjango",
           "markdown",
-          "quarto"
+          "quarto",
+          "jinja-html",
+          "pyhon"
         ],
         "path": "./snippets/all.json"
+      },
+      {
+        "language": [
+          "jinja-html"
+        ],
+        "path": "./jinja-html.json"
       },
       {
         "language": [

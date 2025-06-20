@@ -1,0 +1,237 @@
+{
+  "block": {
+    "prefix": "block",
+    "description": "Jinja block",
+    "body": [
+      "{% block ${1:name} %}",
+      "  $2",
+      "{% endblock ${1:name} %}"
+    ]
+  },
+  "if": {
+    "prefix": "if",
+    "description": "Jinja if",
+    "body": [
+      "{% if ${1:condition} %}",
+      "  $2",
+      "{% endif %}"
+    ]
+  },
+  "else": {
+    "prefix": "else",
+    "description": "Jinja else",
+    "body": [
+      "{% else %}"
+    ]
+  },
+  "elif": {
+    "prefix": "elif",
+    "description": "Jinja elif",
+    "body": [
+      "{% elif ${1:condition} %}"
+    ]
+  },
+  "for": {
+    "prefix": "for",
+    "description": "Jinja for",
+    "body": [
+      "{% for ${1:item} in ${2:items} %}",
+      "  $3",
+      "{% endfor %}"
+    ]
+  },
+  "include": {
+    "prefix": "include",
+    "description": "Jinja include",
+    "body": [
+      "{% include '${1:filename}.html' %}"
+    ]
+  },
+  "extends": {
+    "prefix": "extends",
+    "description": "Jinja extends",
+    "body": [
+      "{% extends '${1:base}.html' %}"
+    ]
+  },
+  "set": {
+    "prefix": "set",
+    "description": "Jinja set variable",
+    "body": [
+      "{% set ${1:var} = ${2:value} %}"
+    ]
+  },
+  "macro": {
+    "prefix": "macro",
+    "description": "Jinja macro",
+    "body": [
+      "{% macro ${1:name}(${2:args}) %}",
+      "  $3",
+      "{% endmacro %}"
+    ]
+  },
+  "filter": {
+    "prefix": "filter",
+    "description": "Jinja filter block",
+    "body": [
+      "{% filter ${1:filtername} %}",
+      "  $2",
+      "{% endfilter %}"
+    ]
+  },
+  "raw": {
+    "prefix": "raw",
+    "description": "Jinja raw block",
+    "body": [
+      "{% raw %}",
+      "$1",
+      "{% endraw %}"
+    ]
+  },
+  "comment": {
+    "prefix": "comment",
+    "description": "Jinja comment block",
+    "body": [
+      "{# $1 #}"
+    ]
+  },
+  "div": {
+    "prefix": "div",
+    "body": [
+      "<div>$1</div>"
+    ]
+  },
+  "section": {
+    "prefix": "section",
+    "body": [
+      "<section>$1</section>"
+    ]
+  },
+  "span": {
+    "prefix": "span",
+    "body": [
+      "<span>$1</span>"
+    ]
+  },
+  "a": {
+    "prefix": "a",
+    "body": [
+      "<a href=\"$1\">$2</a>"
+    ]
+  },
+  "img": {
+    "prefix": "img",
+    "body": [
+      "<img src=\"$1\" alt=\"$2\">"
+    ]
+  },
+  "ul": {
+    "prefix": "ul",
+    "body": [
+      "<ul>",
+      "  <li>$1</li>",
+      "</ul>"
+    ]
+  },
+  "ol": {
+    "prefix": "ol",
+    "body": [
+      "<ol>",
+      "  <li>$1</li>",
+      "</ol>"
+    ]
+  },
+  "li": {
+    "prefix": "li",
+    "body": [
+      "<li>$1</li>"
+    ]
+  },
+  "p": {
+    "prefix": "p",
+    "body": [
+      "<p>$1</p>"
+    ]
+  },
+  "h1": {
+    "prefix": "h1",
+    "body": [
+      "<h1>$1</h1>"
+    ]
+  },
+  "h2": {
+    "prefix": "h2",
+    "body": [
+      "<h2>$1</h2>"
+    ]
+  },
+  "h3": {
+    "prefix": "h3",
+    "body": [
+      "<h3>$1</h3>"
+    ]
+  },
+  "h4": {
+    "prefix": "h4",
+    "body": [
+      "<h4>$1</h4>"
+    ]
+  },
+  "h5": {
+    "prefix": "h5",
+    "body": [
+      "<h5>$1</h5>"
+    ]
+  },
+  "h6": {
+    "prefix": "h6",
+    "body": [
+      "<h6>$1</h6>"
+    ]
+  },
+  "input": {
+    "prefix": "input",
+    "body": [
+      "<input type=\"$1\" name=\"$2\" value=\"$3\">"
+    ]
+  },
+  "form": {
+    "prefix": "form",
+    "body": [
+      "<form action=\"$1\" method=\"$2\">",
+      "  $3",
+      "</form>"
+    ]
+  },
+  "button": {
+    "prefix": "button",
+    "body": [
+      "<button type=\"$1\">$2</button>"
+    ]
+  },
+  "label": {
+    "prefix": "label",
+    "body": [
+      "<label for=\"$1\">$2</label>"
+    ]
+  },
+  "textarea": {
+    "prefix": "textarea",
+    "body": [
+      "<textarea name=\"$1\" rows=\"$2\" cols=\"$3\">$4</textarea>"
+    ]
+  },
+  "table": {
+    "prefix": "table",
+    "body": [
+      "<table>",
+      "  <tr>",
+      "    <th>$1</th>",
+      "  </tr>",
+      "  <tr>",
+      "    <td>$2</td>",
+      "  </tr>",
+      "</table>"
+    ]
+  }
+}
