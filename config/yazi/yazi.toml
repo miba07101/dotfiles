@@ -40,5 +40,5 @@ prepend_rules = [
 
 ]
 append_rules = [
-	{ name = "*", use = "edit" },
+	{ name = "*", use = "open" },
 ]

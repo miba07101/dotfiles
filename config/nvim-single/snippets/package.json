@@ -4,6 +4,7 @@
     "snippets": [
       {
         "language": [
+          "html",
           "htmldjango",
           "markdown",
           "quarto",
@@ -11,6 +12,12 @@
           "pyhon"
         ],
         "path": "./snippets/all.json"
+      },
+      {
+        "language": [
+          "html"
+        ],
+        "path": "./html.json"
       },
       {
         "language": [
