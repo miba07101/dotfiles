@@ -624,7 +624,7 @@ map("n", "<leader>.", function() vim.bo.filetype = "htmldjango" vim.cmd("set syn
 
 -- for commenting
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = {"htmldjango","htmldjango.jinja", "jinja", "jinja.html"},
+  pattern = {"htmldjango","htmldjango.jinja", "jinja", "jinja.html", "jinja-html"},
   callback = function()
     vim.bo.commentstring = "{# %s #}"
   end,
