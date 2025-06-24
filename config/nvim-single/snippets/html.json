@@ -1,6 +1,6 @@
 {
-    "doctype": {
-        "prefix": "doctype",
+    "html": {
+        "prefix": "html",
         "body": [
             "<!DOCTYPE html>",
             "<html lang=\"$1en\">",
