@@ -1930,7 +1930,7 @@ require("lazy").setup({
     },-- }}}
 
     { "MeanderingProgrammer/render-markdown.nvim", -- {{{
-      -- enabled = false,
+      enabled = false,
       event = {
         "BufReadPost *.md",
         "BufNewFile  *.md",
