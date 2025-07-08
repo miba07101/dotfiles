@@ -35,9 +35,7 @@
   //-------------------------------------------------------------------
   // LSP
   //-------------------------------------------------------------------
-  "python.languageServer": "Default",
   "basedpyright.analysis.diagnosticMode": "openFilesOnly",
-  // "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
@@ -401,5 +399,5 @@
   // OTHERS
   //-------------------------------------------------------------------
   "workbench.colorTheme": "Kanagawa Lotus",
-  "python.defaultInterpreterPath": "c:\\Users\\vimi\\.py-venv\\base-venv\\Scripts\\python.exe"
+  "python.defaultInterpreterPath": "c:\\Users\\vimi\\git-repos\\data-analyis\\prj-ceny-nehnutelnosti-svk\\.venv\\Scripts\\python.exe"
 }
