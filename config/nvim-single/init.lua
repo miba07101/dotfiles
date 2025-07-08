@@ -1930,28 +1930,29 @@ require("lazy").setup({
     },-- }}}
 
     { "MeanderingProgrammer/render-markdown.nvim", -- {{{
-      enabled = false,
-      event = {
-        "BufReadPost *.md",
-        "BufNewFile  *.md",
-        "BufReadPost *.qmd",
-        "BufNewFile  *.qmd",
-        "BufEnter  *.ipynb", -- pre jupyternotebooks
-      },
-      opts = {
-        file_types = { "markdown", "quarto" },
-        heading = {
-          icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
-        },
-        completions = { blink = { enabled = true } },
-        latex = {
-          enabled = (osvar.os_type ~= "windows"),
-          converter = "latex2text",
-          highlight = "RenderMarkdownMath",
-          top_pad = 0,
-          bottom_pad = 0,
-        },
-      },
+      -- enabled = false,
+      -- event = {
+      --   "BufReadPost *.md",
+      --   "BufNewFile  *.md",
+      --   "BufReadPost *.qmd",
+      --   "BufNewFile  *.qmd",
+      --   "BufEnter  *.ipynb", -- pre jupyternotebooks
+      -- },
+      -- opts = {
+      --   file_types = { "markdown", "quarto" },
+      --   heading = {
+      --     icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+      --   },
+      --   completions = { blink = { enabled = true } },
+      --   latex = {
+      --     enabled = (osvar.os_type ~= "windows"),
+      --     converter = "latex2text",
+      --     highlight = "RenderMarkdownMath",
+      --     top_pad = 0,
+      --     bottom_pad = 0,
+      --   },
+      -- },
+      opts = {},
       keys = { -- {{{
         { "\\m", mode = { "n" }, "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle 'markdown preview'", noremap = true, silent = true,},
       }, -- }}}
