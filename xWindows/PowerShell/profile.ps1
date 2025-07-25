@@ -151,6 +151,11 @@ function ppc {
   . "C:\Users\$env:USERNAME\git-repos\ppc-pyapp\.venv\Scripts\Activate.ps1"
 }
 
+function io {
+    cd C:\Users\$env:USERNAME\git-repos\isitobo
+  . "C:\Users\$env:USERNAME\git-repos\isitobo\.venv\Scripts\Activate.ps1"
+}
+
 # lazygit
 function lg {
   lazygit
