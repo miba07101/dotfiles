@@ -1094,7 +1094,7 @@ require("lazy").setup({
             htmldjango = { "djlint" },
             python = { "ruff_format", "black" },
             ["_"] = { "trim_whitespace", "trim_newlines" },
-            ["jinja.html"] = { "djlint" },
+            ["jinja-html"] = { "djlint" },
           },
           formatters = {
             djlint = {
@@ -1107,7 +1107,7 @@ require("lazy").setup({
             },
           },
           format_on_save = function(bufnr)
-            local disable_filetypes = { ["jinja.html"] = true, lua = true, json = true }
+            local disable_filetypes = { lua = true, json = true }
             if disable_filetypes[vim.bo[bufnr].filetype] then
               return nil -- Disable format on save
             end
