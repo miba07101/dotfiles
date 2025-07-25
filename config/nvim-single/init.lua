@@ -584,6 +584,17 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   group = mygroup,
   desc = "sass compilation on save",
 })
+-- vim.api.nvim_create_autocmd("BufWritePost", {
+--   pattern = { "*.sass", "*.scss" },
+--   callback = function()
+--     local input = vim.fn.expand("%:p")      -- absolútna cesta k aktuálnemu súboru
+--     local output = vim.fn.expand("%:r") .. ".css"  -- rovnaký názov ale s .css
+--     local cmd = string.format("sass --no-source-map %s %s", input, output)
+--     vim.fn.jobstart(cmd, { detach = true })
+--   end,
+--   group = mygroup,
+--   desc = "SASS compilation on save",
+-- })
 -- }}}
 
 -- {{{ windows to close with "q"
