@@ -8,7 +8,6 @@ local dashboard_header = [[
 ]]
 
 -- {{{ [[ UTILS ]]
-
 function _G.DetectOsType() -- {{{
   -- Detect OS Type
   local os_name = vim.loop.os_uname().sysname
@@ -23,6 +22,8 @@ function _G.DetectOsType() -- {{{
   local nvim_venv = venv_home .. "/base-venv"
   local debugpy_path = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe"
   local venv = os.getenv("VIRTUAL_ENV") -- Moved here for reuse
+  -- Define default city for weather
+  local city = "Bratislava"
 
   -- Function to determine Python interpreter
   local function PythonInterpreter()
@@ -69,6 +70,7 @@ function _G.DetectOsType() -- {{{
   return {
     os_type = os_type,
     username = username,
+    city=city,
     venv_home = venv_home,
     nvim_venv = nvim_venv,
     debugpy_path = debugpy_path,
@@ -83,9 +85,12 @@ end
 
 -- Initialize Environment
 _G.osvar = DetectOsType()
+-- Usage Example:
+-- osvar.ObsidianPath()
+-- osvar.ObsidianNewNote(true, "basic", "inbox")
+-- }}}
 
--- Usage Example:-- osvar.ObsidianPath()-- osvar.ObsidianNewNote(true, "basic", "inbox")-- }}}local city = "Bratislava" -- Default city, will be updated asynchronously-- Asynchronously get city for weathervim.api.nvim_create_autocmd("VimEnter", {  callback = function()    vim.fn.jobstart(      (osvar.os_type == "windows" and "powershell -NoProfile -Command \"(Invoke-RestMethod ipinfo.io/city).Trim()\"")        or "curl -s ipinfo.io/city",      {        on_stdout = vim.schedule_wrap(function(err, data, event)          if data and #data > 0 then            city = data[1]:gsub("%s+", "")            -- Trigger a redraw of the dashboard if it's open            if package.loaded["snacks.dashboard"] and require("snacks.dashboard").is_open() then              require("snacks.dashboard").open()            end          end        end),        on_stderr = vim.schedule_wrap(function(err, data, event)          -- Handle errors if necessary        end),        on_exit = vim.schedule_wrap(function(err, data, event)          -- Cleanup or finalization if necessary        end),      }    )  end,})-- f. pre mini.ai selekciu blokov kodu oddelenych "% ##" v python/jupyter suboroch{{{
-local function python_code_cell(ai_type)
+local function python_code_cell(ai_type)-- {{{
   if vim.bo.filetype ~= "python" then
     return nil
   end
@@ -143,11 +148,7 @@ local function python_code_cell(ai_type)
     from = { line = start_line, col = 1 },
     to = { line = end_line, col = end_col },
   }
-end
--- }}}
-
-
-
+end-- }}}
 -- }}}
 
 -- {{{ [[ OPTIONS ]]
@@ -1230,7 +1231,15 @@ require("lazy").setup({
                 and ('powershell -NoLogo -Command "Write-Host \'Hello ' .. osvar.username .. '\' -ForegroundColor Magenta"')
                 or  ("echo '\27[1;35mHello " .. osvar.username .. "\27[0m'"),
               indent = 28, padding = 2, height = 1 },
-            -- { section = "terminal",              cmd = (osvar.os_type == "windows")                and ('powershell -Command "Invoke-RestMethod wttr.in/' .. city .. '?format=`"%l: %c %t %w %T`""')                or  ('curl -s "wttr.in/' .. city .. '?format=%l:+%c+%t+%w+%T\n" | sed \'s/.*/\\x1b[34m&\\x1b[0m/\'),              indent = 8, padding = 2, height = 1 },
+            {
+              section = "terminal",
+              cmd = (osvar.os_type == "windows")
+                and ('powershell -Command "Invoke-RestMethod wttr.in/' .. osvar.city .. '?format=`"%l: %c %t %w %T`""')
+                or  ('curl -s "wttr.in/' .. osvar.city .. '?format=%l:+%c+%t+%w+%T\\n" | sed \'s/.*/\\x1b[34m&\\x1b[0m/\''),
+              indent = 8,
+              padding = 2,
+              height = 1,
+            },
             { section = "keys", gap = 1, padding = 1 },
             { section = "startup", padding = 2 },
           },
