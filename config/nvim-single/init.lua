@@ -84,12 +84,7 @@ end
 -- Initialize Environment
 _G.osvar = DetectOsType()
 
--- Usage Example:
--- osvar.ObsidianPath()
--- osvar.ObsidianNewNote(true, "basic", "inbox")
--- }}}
-
--- f. pre mini.ai selekciu blokov kodu oddelenych "% ##" v python/jupyter suboroch{{{
+-- Usage Example:-- osvar.ObsidianPath()-- osvar.ObsidianNewNote(true, "basic", "inbox")-- }}}local city = "Bratislava" -- Default city, will be updated asynchronously-- Asynchronously get city for weathervim.api.nvim_create_autocmd("VimEnter", {  callback = function()    vim.fn.jobstart(      (osvar.os_type == "windows" and "powershell -NoProfile -Command \"(Invoke-RestMethod ipinfo.io/city).Trim()\"")        or "curl -s ipinfo.io/city",      {        on_stdout = vim.schedule_wrap(function(err, data, event)          if data and #data > 0 then            city = data[1]:gsub("%s+", "")            -- Trigger a redraw of the dashboard if it's open            if package.loaded["snacks.dashboard"] and require("snacks.dashboard").is_open() then              require("snacks.dashboard").open()            end          end        end),        on_stderr = vim.schedule_wrap(function(err, data, event)          -- Handle errors if necessary        end),        on_exit = vim.schedule_wrap(function(err, data, event)          -- Cleanup or finalization if necessary        end),      }    )  end,})-- f. pre mini.ai selekciu blokov kodu oddelenych "% ##" v python/jupyter suboroch{{{
 local function python_code_cell(ai_type)
   if vim.bo.filetype ~= "python" then
     return nil
@@ -151,9 +146,7 @@ local function python_code_cell(ai_type)
 end
 -- }}}
 
--- for snacks.dashboard.sections.terminal "weather wttr.in app"{{{
-local city = vim.fn.system("curl -s ipinfo.io/city"):gsub("%s+", "")
--- }}}
+
 
 -- }}}
 
@@ -173,7 +166,6 @@ vim.opt.splitbelow    = true          -- splitting window below
 vim.opt.splitright    = true          -- splitting window right
 vim.opt.swapfile      = false         -- create a swap file
 vim.opt.syntax        = "on"
-vim.opt.termguicolors = true          -- terminal supports more colors
 vim.opt.termguicolors = true          -- terminal supports more colors
 vim.opt.timeoutlen    = 300           -- time to wait for a mapped sequence to complete, default 1000
 vim.opt.updatetime    = 200           -- speed up response time
@@ -423,8 +415,7 @@ map("t", "<C-Down>", "<cmd>wincmd j<cr>", { desc = "Down from Terminal" })
 map("t", "<C-Left>", "<cmd>wincmd h<cr>", { desc = "Left from Terminal" })
 map("t", "<C-Right>", "<cmd>wincmd l<cr>", { desc = "Right from Terminal" })
 
--- Terminal Toggle{{{
-map({ "n", "t" }, "<C-\\>", function()
+local function toggle_terminal(cmd)
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(win)
     if vim.bo[buf].buftype == "terminal" then
@@ -433,26 +424,18 @@ map({ "n", "t" }, "<C-\\>", function()
       return
     end
   end
-  vim.cmd("below split | terminal")
-  vim.cmd("resize " .. math.floor(vim.o.lines * 0.4)) -- Adjust the height of the terminal split to 40% of the screen height
+  vim.cmd("below split | terminal " .. cmd)
+  vim.cmd("resize " .. math.floor(vim.o.lines * 0.4))
   vim.cmd("startinsert")
-end, { desc = "Terminal" })
+end
+
+-- Terminal Toggle{{{
+map({ "n", "t" }, "<C-\\>", function() toggle_terminal("") end, { desc = "Terminal" })
 -- }}}
 
 -- Ipython terminal REPL{{{
-map({ "n", "t" }, "<leader>ti", function()
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    if vim.bo[buf].buftype == "terminal" then
-      vim.api.nvim_win_close(win, true)
-      vim.cmd("bwipeout! " .. buf) -- Completely remove the terminal buffer
-      return
-    end
-  end
-  vim.cmd("below split | terminal ipython --no-autoindent")
-  vim.cmd("resize " .. math.floor(vim.o.lines * 0.4)) -- Adjust the height of the terminal split to 40% of the screen height
-  vim.cmd("startinsert")
-end, { desc = "Ipython Terminal REPL" })
+map({ "n", "t" }, "<leader>ti", function() toggle_terminal("ipython --no-autoindent") end, { desc = "Ipython Terminal REPL" })
+
 -- }}}
 
 -- Send line to terminal{{{
@@ -1247,11 +1230,7 @@ require("lazy").setup({
                 and ('powershell -NoLogo -Command "Write-Host \'Hello ' .. osvar.username .. '\' -ForegroundColor Magenta"')
                 or  ("echo '\27[1;35mHello " .. osvar.username .. "\27[0m'"),
               indent = 28, padding = 2, height = 1 },
-            { section = "terminal",
-              cmd = (osvar.os_type == "windows")
-                and ('powershell -Command "Invoke-RestMethod wttr.in/' .. city .. '?format=`"%l: %c %t %w %T`""')
-                or  ('curl -s "wttr.in/' .. city .. '?format=%l:+%c+%t+%w+%T\\n" | sed \'s/.*/\\x1b[34m&\\x1b[0m/\''),
-              indent = 8, padding = 2, height = 1 },
+            -- { section = "terminal",              cmd = (osvar.os_type == "windows")                and ('powershell -Command "Invoke-RestMethod wttr.in/' .. city .. '?format=`"%l: %c %t %w %T`""')                or  ('curl -s "wttr.in/' .. city .. '?format=%l:+%c+%t+%w+%T\n" | sed \'s/.*/\\x1b[34m&\\x1b[0m/\'),              indent = 8, padding = 2, height = 1 },
             { section = "keys", gap = 1, padding = 1 },
             { section = "startup", padding = 2 },
           },
