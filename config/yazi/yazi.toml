@@ -13,6 +13,10 @@ play = [
   { run = '"C:\Users\%USERNAME%\scoop\apps\mpv.net\current\mpvnet.exe %*"', orphan = true, for = "windows" }
 ]
 
+open = [
+  { run= 'cmd /c ""C:\Users\%USERNAME%\scoop\apps\sqlitebrowser\current\DB Browser for SQLite.exe" "%*""', orphan = true, for = "windows" }
+]
+
 [open]
 prepend_rules = [
   { name = "*.qmd", use = "edit" },
@@ -32,6 +36,7 @@ prepend_rules = [
 	{ name = "*.lua", use = "edit" },
 	{ name = "*.xml", use = "edit" },
 	{ name = "*.log", use = "edit" },
+	{ name = "*.db", use = "open" },
 # open with normal / gnome / kde
 	{ name = "*.ods", use = "open" },
 	{ name = "*.pdf", use = "open" },
