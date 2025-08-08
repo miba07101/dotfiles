@@ -1266,7 +1266,7 @@ require("lazy").setup({
           layout = { preset = "ivy", preview = false },
           sources = {
             explorer = { -- {{{
-              auto_close = true,
+              -- auto_close = true,
               win = {
                 list = {
                   keys = {
