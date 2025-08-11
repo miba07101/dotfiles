@@ -36,6 +36,7 @@ prepend_rules = [
 	{ name = "*.lua", use = "edit" },
 	{ name = "*.xml", use = "edit" },
 	{ name = "*.log", use = "edit" },
+  { name = "*.html", use = "edit" },
 	{ name = "*.db", use = "open" },
 # open with normal / gnome / kde
 	{ name = "*.ods", use = "open" },
