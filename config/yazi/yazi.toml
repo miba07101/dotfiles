@@ -14,7 +14,8 @@ play = [
 ]
 
 open = [
-  { run= 'cmd /c ""C:\Users\%USERNAME%\scoop\apps\sqlitebrowser\current\DB Browser for SQLite.exe" "%*""', orphan = true, for = "windows" }
+  { run= 'cmd /c ""C:\Users\%USERNAME%\scoop\apps\sqlitebrowser\current\DB Browser for SQLite.exe" "%*""', orphan = true, for = "windows" },
+  { run = 'sqlitebrowser "$@"', orphan = true, for = "unix" }
 ]
 
 [open]
