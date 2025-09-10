@@ -1102,7 +1102,7 @@ require("lazy").setup({
             },
           },
           format_on_save = function(bufnr)
-            local disable_filetypes = { lua = true, json = true }
+            local disable_filetypes = { html = true, lua = true, json = true }
             if disable_filetypes[vim.bo[bufnr].filetype] then
               return nil -- Disable format on save
             end

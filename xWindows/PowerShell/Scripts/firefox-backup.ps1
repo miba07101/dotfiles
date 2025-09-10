@@ -3,7 +3,8 @@ function FirefoxBackup {
     #     Where-Object { $_.Name -like "*default-release*" } |
     #     Select-Object -First 1 -ExpandProperty FullName
 
-    $firefoxDir = "C:\Users\$env:Username\scoop\persist\firefox\profile"
+    # $firefoxDir = "C:\Users\$env:Username\scoop\persist\firefox\profile"
+    $firefoxDir = "C:\Users\$env:Username\scoop\apps\firefox\current\profile"
 
     if (-not $firefoxDir) {
         Write-Host "Firefox profile directory not found."
