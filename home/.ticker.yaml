@@ -49,7 +49,7 @@ lots:
     quantity: 70
     unit_cost: 246.68
   - symbol: "SOFI"
-    quantity: 1000
+    quantity: 900
     unit_cost: 10.50
   - symbol: "INTC"
     quantity: 1700
@@ -64,4 +64,3 @@ lots:
 #   text-line: "#00ffff"
 #   text-tag: "#005fff"
 #   background-tag: "#0087ff"
-
