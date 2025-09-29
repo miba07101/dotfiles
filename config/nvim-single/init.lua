@@ -1211,7 +1211,10 @@ require("lazy").setup({
           preset = {
             keys = {
               { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
-              { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+              -- { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+              -- { icon = " ", key = "n", desc = "New File", action = ":lua vim.ui.input({ prompt = "Title: " }, function(i) if i then vim.cmd("enew | file " .. i .. " | startinsert") end end)" },
+              { icon = " ", key = "n", desc = "New File", action = ':lua vim.ui.input({ prompt = "Title: " }, function(i) if i then vim.cmd("enew | file " .. i .. " | startinsert") end end)' },
+
               -- { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
               { icon = " ", key = "o", desc = "Old Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
               { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",},
