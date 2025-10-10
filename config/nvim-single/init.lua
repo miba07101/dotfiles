@@ -198,6 +198,7 @@ local indent_config = {
   ps1            = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   bash           = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   ["jinja.html"] = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
+  ["jinja-html"] = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
   htmldjango     = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
 }
 
@@ -615,7 +616,7 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufEnter" }, {
 --   end,
 -- })
 
-map("n", "<leader>.", function() vim.bo.filetype = "htmldjango" vim.cmd("set syntax=on") end, { desc = "Htmldjango filetype" })
+map("n", "<leader>.", function() vim.bo.filetype = "jinja-html" vim.cmd("set syntax=on") end, { desc = "jijnja-html filetype" })
 
 -- for commenting
 vim.api.nvim_create_autocmd("FileType", {
@@ -1086,6 +1087,7 @@ require("lazy").setup({
             css = { "prettier" },
             lua = { "stylua" },
             html = { "prettier" },
+            json = { "prettier" },
             htmldjango = { "djlint" },
             python = { "ruff_format", "black" },
             ["_"] = { "trim_whitespace", "trim_newlines" },
@@ -2442,7 +2444,7 @@ require("lazy").setup({
 
     { "andymass/vim-matchup", -- g% jump between tags in jinja.html files {{{
       -- enabled = false,
-      ft = { "html", "htmldjango", "jinja.html", "jinja" },
+      ft = { "html", "htmldjango", "jinja.html", "jinja-html" },
       config = function()
         vim.g.matchup_matchparen_offscreen = { method = "popup" }
         -- vim.g.matchup_matchparen_enabled = 1
