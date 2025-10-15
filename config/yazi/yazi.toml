@@ -13,7 +13,7 @@ play = [
   { run = '"C:\Users\%USERNAME%\scoop\apps\mpv.net\current\mpvnet.exe %*"', orphan = true, for = "windows" }
 ]
 
-open = [
+data = [
   { run= 'cmd /c ""C:\Users\%USERNAME%\scoop\apps\sqlitebrowser\current\DB Browser for SQLite.exe" "%*""', orphan = true, for = "windows" },
   { run = 'sqlitebrowser "$@"', orphan = true, for = "unix" }
 ]
@@ -39,7 +39,7 @@ prepend_rules = [
 	{ name = "*.log", use = "edit" },
   { name = "*.html", use = "edit" },
   { name = "*.svg", use = "edit" },
-	{ name = "*.db", use = "open" },
+	{ name = "*.db", use = "data" },
 # open with normal / gnome / kde
 	{ name = "*.ods", use = "open" },
 	{ name = "*.pdf", use = "open" },
