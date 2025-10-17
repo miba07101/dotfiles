@@ -117,6 +117,18 @@ param (
     PhotoFileRename $Path
 }
 
+# qpdf extrakcia pdf stranok
+function qpdf-pages {
+param(
+    [Parameter(Mandatory=$true, Position=0)]
+    [string]$InputPdf,
+
+    [Parameter(Mandatory=$true, Position=1)]
+    [string]$PageRange
+)
+  . "$scriptPath\qpdf-extract-pages.ps1"
+    QpdfExtractPages $InputPdf $PageRange
+}
 # -----------------------------------------------------------------------------
 # aliases
 # -----------------------------------------------------------------------------
