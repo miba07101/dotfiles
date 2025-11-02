@@ -14,5 +14,5 @@ prepend_keymap = [
   { on = "D", run = "noop" },
   { on = "<S-Delete>", run = "remove --permanently", desc = "Permanently delete" },
   # Smart-enter plugin
-  { on = "<Enter>", run = "plugin smart-enter", desc = "Enter the child directory, or open the file" }
+  { on = "<Enter>", run = "plugin smart-enter", desc = "Enter the child directory, or open the file" },
 ]
