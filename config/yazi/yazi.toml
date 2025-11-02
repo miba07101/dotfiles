@@ -1,6 +1,7 @@
 [mgr]
 show_hidden = true
 scrolloff = 8 # default = 5
+linemode = "mtime"
 
 [opener]
 edit = [
