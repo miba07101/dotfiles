@@ -18,4 +18,5 @@ prepend_keymap = [
   # toggle-preview-pane
   { on = ["T"], run = "plugin toggle-pane min-preview", desc = "Show or hide the preview pane" },
   # { on = ["p", "M"], run = "plugin toggle-pane max-preview", desc = "Maximize or restore the preview pane" },
+  { on = "<C-y>", run = "plugin system-clipboard", desc = "Copy system clipboard" },
 ]
