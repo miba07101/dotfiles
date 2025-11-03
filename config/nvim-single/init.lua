@@ -1541,6 +1541,7 @@ require("lazy").setup({
             { mode = "n", keys = "<Leader>q", desc = "+Quarto" },
             { mode = "n", keys = "<Leader>qr", desc = "+Runner" },
             { mode = "n", keys = "<Leader>i", desc = "+Image" },
+            { mode = "n", keys = "<Leader>j", desc = "+Jump HTML tags" },
             { mode = "x", keys = "<Leader>n", desc = "+Notes" },
             { mode = "x", keys = "<Leader>g", desc = "+Grep" },
             { mode = "x", keys = "<Leader>p", desc = "+Python" },
@@ -2496,6 +2497,17 @@ require("lazy").setup({
         { "\\t", mode = { "n" }, "<cmd>TypstPreviewToggle<cr>", desc = "Toggle 'typst preview'", noremap = true, silent = true },
       }, -- }}}
     },-- }}}
+
+    { "harrisoncramer/jump-tag", -- jump-tag {{{
+      enabled = true,
+      ft = { "html", "htmldjango", "jinja.html", "jinja-html" },
+      keys = { -- {{{
+        { "<leader>jp", mode = "n", ':lua require("jump-tag").jumpParent()<CR>', desc = "Jumps to the parent", noremap = true, silent = true },
+        { "<leader>jn", mode = "n", ':lua require("jump-tag").jumpNextSibling()<CR>', desc = "Jumps to the next", noremap = true, silent = true },
+        { "<leader>jb", mode = "n", ':lua require("jump-tag").jumpPrevSibling()<CR>', desc = "Jumps to the previous", noremap = true, silent = true },
+        { "<leader>jc", mode = "n", ':lua require("jump-tag").jumpChild()<CR>', desc = "Jumps to the child", noremap = true, silent = true },
+      }, -- }}}
+    }, -- }}}
 
     -- }}}
   }, -- spec end }}}
