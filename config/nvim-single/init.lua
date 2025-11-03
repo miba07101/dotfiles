@@ -1047,8 +1047,6 @@ require("lazy").setup({
           "basedpyright",
           "marksman",
           "tinymist",
-          "json-lsp",
-          "htmx-lsp",
           --formatters
           "beautysh",
           "prettier",
@@ -2670,11 +2668,6 @@ local lsp_configs = {
   tinymist = {
     cmd = { "tinymist" },
     filetypes = { "typst" },
-    root_markers = { ".git" },
-  },
-  htmx = {
-    cmd = { "htmx-lsp" },
-    filetypes = { "django-html", "htmldjango", "html", "jinja.html" },
     root_markers = { ".git" },
   },
 }
