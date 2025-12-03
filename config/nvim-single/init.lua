@@ -190,6 +190,7 @@ local indent_config = {
   css            = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   javascript     = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   typescript     = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
+  vue            = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   json           = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   typst          = { shiftwidth = 2, softtabstop = 2, tabstop = 2 },
   jupyter        = { shiftwidth = 4, softtabstop = 4, tabstop = 4 },
@@ -984,7 +985,12 @@ require("lazy").setup({
           "bash",
           "lua",
           "html",
+          "css",
           "scss",
+          "javascript",
+          "typescript",
+          "vue",
+          "json",
           "markdown",
           "markdown_inline",
           "query",
@@ -1047,6 +1053,11 @@ require("lazy").setup({
           "basedpyright",
           "marksman",
           "tinymist",
+          "typescript-language-server",
+          "vue-language-server",
+          "json-lsp",
+          "css-lsp",
+          "html-lsp",
           --formatters
           "beautysh",
           "prettier",
@@ -1082,6 +1093,10 @@ require("lazy").setup({
           formatters_by_ft = {
             bash = { "beautysh" },
             javascript = { "prettier" },
+            javascriptreact = { "prettier" },
+            typescript = { "prettier" },
+            typescriptreact = { "prettier" },
+            vue = { "prettier" },
             css = { "prettier" },
             lua = { "stylua" },
             html = { "prettier" },
@@ -1122,6 +1137,10 @@ require("lazy").setup({
         require("lint").linters_by_ft = {
           bash = { "shellcheck" },
           javascript = { "eslint_d" },
+          javascriptreact = { "eslint_d" },
+          typescript = { "eslint_d" },
+          typescriptreact = { "eslint_d" },
+          vue = { "eslint_d" },
           python = { "ruff" },
           -- html = { "htmlhint" },
           htmldjango = { "djlint" },
@@ -2645,6 +2664,42 @@ local lsp_configs = {
         },
       },
     },
+  },
+  tsserver = {
+    cmd = { "typescript-language-server", "--stdio" },
+    filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue" },
+    root_markers = { "package.json", ".git" },
+    init_options = {
+      plugins = {
+        {
+          name = "@vue/typescript-plugin",
+          location = vim.fn.stdpath("data") .. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+          languages = { "javascript", "typescript", "vue" },
+        },
+      },
+    },
+    settings = {
+      typescript = {
+        inlayHints = {
+          parameterNames = { enabled = "literals" },
+          parameterTypes = { enabled = true },
+          variableTypes = { enabled = true },
+          propertyDeclarationTypes = { enabled = true },
+          functionLikeReturnTypes = { enabled = true },
+          enumMemberValues = { enabled = true },
+        },
+      },
+    },
+  },
+  volar = {
+    cmd = { "vue-language-server", "--stdio" },
+    filetypes = { "vue" },
+    root_markers = { "package.json", ".git" },
+    init_options = {
+        typescript = {
+            tsdk = "node_modules/typescript/lib"
+        }
+    }
   },
   bashls = {
     cmd = { "bash-language-server", "start" },
