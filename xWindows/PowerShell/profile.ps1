@@ -168,6 +168,16 @@ function io {
   . "C:\Users\$env:USERNAME\git-repos\isitobo\.venv\Scripts\Activate.ps1"
 }
 
+function epd {
+    cd C:\Users\$env:USERNAME\git-repos\epd
+  . "C:\Users\$env:USERNAME\git-repos\epd\.venv\Scripts\Activate.ps1"
+}
+
+function ng {
+    cd C:\Users\$env:USERNAME\git-repos\io-nicegui
+  . "C:\Users\$env:USERNAME\git-repos\io-nicegui\.venv\Scripts\Activate.ps1"
+}
+
 # lazygit
 function lg {
   lazygit
