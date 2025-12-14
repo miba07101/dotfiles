@@ -129,6 +129,25 @@ param(
   . "$scriptPath\qpdf-extract-pages.ps1"
     QpdfExtractPages $InputPdf $PageRange
 }
+
+# pydel - Delete Python cache priecinky
+function pydel {
+    param(
+        [string]$Path = ".",
+        [switch]$Force,
+        [switch]$WhatIf
+    )
+
+    $OriginalLocation = Get-Location
+    try {
+        . "$scriptPath\pycache-delete.ps1"
+        PycacheDelete -Path $Path -Force:$Force -WhatIf:$WhatIf
+    }
+    finally {
+        Set-Location $OriginalLocation
+    }
+}
+
 # -----------------------------------------------------------------------------
 # aliases
 # -----------------------------------------------------------------------------
