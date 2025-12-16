@@ -107,6 +107,30 @@ function ffmpeg-metadata {
     ffmpegMetadata
 }
 
+# video player with fzf and mpv.net
+function pv {
+  . "$scriptPath\video-player.ps1"
+    VideoPlayer
+}
+
+# interactive video player with fzf playlist
+function pvi {
+  . "$scriptPath\video-player.ps1"
+    VideoPlayerInteractive
+}
+
+# video player for tutorials path
+function pp {
+  . "$scriptPath\video-player.ps1"
+    VideoPlayer -MediaPath "D:\Media\Tutorialy\.capture\a"
+}
+
+# interactive video player for tutorials path
+function ppi {
+  . "$scriptPath\video-player.ps1"
+  VideoPlayerInteractive -MediaPath "D:\Media\Tutorialy\.capture\a"
+}
+
 # photo-file-rename
 function photo-file-rename {
 param (
