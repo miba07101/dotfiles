@@ -2526,6 +2526,19 @@ require("lazy").setup({
       }, -- }}}
     }, -- }}}
 
+    { "Davidyz/inlayhint-filler.nvim", -- fill-inline-hints {{{
+      keys = {
+        {
+          "<Leader>I", -- Use whatever keymap you want.
+          function()
+            require("inlayhint-filler").fill()
+          end,
+          desc = "Insert the inlay-hint under cursor into the buffer.",
+          mode = { "n", "v" }, -- include 'v' if you want to use it in visual selection mode
+        },
+      },
+    }, -- }}}
+
     -- }}}
   }, -- spec end }}}
 
