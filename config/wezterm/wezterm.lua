@@ -105,6 +105,8 @@ config.wsl_domains = {
   { name = 'Tumbleweed', distribution = 'openSUSE-Tumbleweed' },
 }
 
+
+
 -- ─────────────────── Keybindings ───────────────────
 config.leader = { key = 'Space', mods = 'CTRL', timeout_milliseconds = 1000 }
 
@@ -122,7 +124,7 @@ config.keys = {
           window:perform_action(act.ClearSelection, pane)
         else
           -- No selection: send a true Ctrl+C (SIGINT) to the child process
-          window:perform_action(act.SendKey { key = 'c', mods = 'CTRL' }, pane)
+          window:perform_action(act.SendString '\x03', pane)
         end
       end),
     },
