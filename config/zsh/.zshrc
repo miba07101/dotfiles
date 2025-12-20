@@ -306,7 +306,7 @@ alias freecad='$HOME/Applications/FreeCAD_0.20-1-2022-08-20-conda-Linux-x86_64-p
 # Python
 alias epd='source $HOME/git-repos/epd/.venv/bin/activate && cd $HOME/git-repos/epd'
 alias io='source $HOME/git-repos/isitobo/.venv/bin/activate && cd $HOME/git-repos/isitobo'
-alias ng='source $HOME/git-repos/io-nicegui/bin/activate && cd $HOME/git-repos/git-repos/io-nicegui'
+alias ng='source $HOME/git-repos/io-nicegui/.venv/bin/activate && cd $HOME/git-repos/git-repos/io-nicegui'
 alias ppc='source $HOME/git-repos/ppc-onrender/.venv/bin/activate && cd $HOME/git-repos/ppc-onrender'
 alias test-env='source $HOME/python-venv/test-venv/bin/activate && cd $HOME/git-repos/test'
 alias yafin='source $HOME/python-venv/yafin-venv/bin/activate && python3 $SCRIPTS_DIR/yafin.py'
