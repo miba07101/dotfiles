@@ -304,11 +304,10 @@ alias salome='$HOME/salome-meca/./salome_meca-lgpl-2021.0.0-2-20211014-scibian-9
 alias freecad='$HOME/Applications/FreeCAD_0.20-1-2022-08-20-conda-Linux-x86_64-py310_b6b0ddf25121b8cf8cc18f02e81151b7.AppImage'
 
 # Python
-# alias epd='source $HOME/.py-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd'
-alias epd='source $HOME/python-venv/epd-venv/bin/activate && cd $HOME/git-repos/epd'
-alias ppc='source $HOME/git-repos/ppc-onrender/.venv/bin/activate && cd $HOME/git-repos/ppc-onrender'
-# alias io='source $HOME/.py-venv/isitobo-venv/bin/activate && cd $HOME/git-repos/isitobo'
+alias epd='source $HOME/git-repos/epd/.venv/bin/activate && cd $HOME/git-repos/epd'
 alias io='source $HOME/git-repos/isitobo/.venv/bin/activate && cd $HOME/git-repos/isitobo'
+alias ng='source $HOME/git-repos/io-nicegui/bin/activate && cd $HOME/git-repos/git-repos/io-nicegui'
+alias ppc='source $HOME/git-repos/ppc-onrender/.venv/bin/activate && cd $HOME/git-repos/ppc-onrender'
 alias test-env='source $HOME/python-venv/test-venv/bin/activate && cd $HOME/git-repos/test'
 alias yafin='source $HOME/python-venv/yafin-venv/bin/activate && python3 $SCRIPTS_DIR/yafin.py'
 alias mcad='source $HOME/python-venv/mcad-venv/bin/activate && cd $HOME/git-repos/mcad'
