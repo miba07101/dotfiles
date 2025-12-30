@@ -186,6 +186,13 @@ function y {
   Remove-Item -Path $tmp
 }
 
+# mobile camera recording using scrcpy
+function rec {
+    # Získanie aktuálneho dátumu a času
+    $timestamp = Get-Date -Format "yyyy-MM-dd_HHmmss"
+    scrcpy --video-source=camera --camera-id=0 --camera-size=1280x720 --camera-fps=30 --audio-source=mic-voice-communication --no-audio-playback --record="D:\video_$timestamp.mp4"
+}
+
 # neovim config init.lua
 function vv {
   nvim C:\Users\$env:USERNAME\AppData\Local\nvim\init.lua
