@@ -24,7 +24,7 @@ watchlist:
   - msft
   - amd
   - t
-  - vz
+  # - vz
   - ibe1.de
   - fb
   - pypl
@@ -52,11 +52,14 @@ lots:
     quantity: 900
     unit_cost: 10.50
   - symbol: "INTC"
-    quantity: 1700
+    quantity: 1200
     unit_cost: 23.95
   - symbol: "MO"
     quantity: 500
     unit_cost: 40.1
+  - symbol: "VZ"
+    quantity: 500
+    unit_cost: 39.52
 # colors:
 #   text: "#005fff"
 #   text-light: "#0087ff"
