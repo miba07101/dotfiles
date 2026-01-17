@@ -58,8 +58,8 @@ lots:
     quantity: 500
     unit_cost: 40.1
   - symbol: "VZ"
-    quantity: 500
-    unit_cost: 39.52
+    quantity: 1000
+    unit_cost: 39.26
 # colors:
 #   text: "#005fff"
 #   text-light: "#0087ff"
