@@ -11,12 +11,12 @@ edit = [
 
 play = [
   { run = 'mpv "$@"', orphan = true, for = "unix" },
-  { run = '"C:\Users\%USERNAME%\scoop\apps\mpv.net\current\mpvnet.exe %*"', orphan = true, for = "windows" }
+  { run = '"C:\Users\%USERNAME%\scoop\apps\mpv.net\current\mpvnet.exe %*"', orphan = true, for = "windows" },
 ]
 
 data = [
-  { run= 'cmd /c ""C:\Users\%USERNAME%\scoop\apps\sqlitebrowser\current\DB Browser for SQLite.exe" "%*""', orphan = true, for = "windows" },
-  { run = 'sqlitebrowser "$@"', orphan = true, for = "unix" }
+  # { run= 'cmd /c ""C:\Users\%USERNAME%\scoop\apps\sqlitebrowser\current\DB Browser for SQLite.exe" "%*""', orphan = true, for = "windows" },
+  { run = 'sqlitebrowser "$@"', orphan = true, for = "unix" },
 ]
 
 [open]

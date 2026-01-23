@@ -276,6 +276,14 @@ function zp {
     zk edit --limit 1 --sort modified- @args
 }
 
+# sqlitebrowser
+function sqlitebrowser {
+    $path = Get-Location
+    Start-Process `
+        "$env:USERPROFILE\scoop\apps\sqlitebrowser\current\DB Browser for SQLite.exe" `
+        -WorkingDirectory $path
+}
+
 # recording stream video
 # uz velmi nefunguje
 # Set-Alias -Name rec -Value "C:\Users\$env:UserName\OneDrive\Linux\Skripty\stream_record_win.ps1"
