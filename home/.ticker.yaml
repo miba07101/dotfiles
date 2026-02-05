@@ -27,7 +27,7 @@ watchlist:
   # - vz
   - ibe1.de
   - fb
-  - pypl
+  # - pypl
   - u
   - qs
   - cat
@@ -58,8 +58,11 @@ lots:
     quantity: 500
     unit_cost: 40.1
   - symbol: "VZ"
-    quantity: 1000
-    unit_cost: 39.26
+    quantity: 1500
+    unit_cost: 39.35
+  - symbol: "PYPL"
+    quantity: 200
+    unit_cost: 41.55
 # colors:
 #   text: "#005fff"
 #   text-light: "#0087ff"
