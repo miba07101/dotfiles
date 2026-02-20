@@ -63,6 +63,9 @@ lots:
   - symbol: "PYPL"
     quantity: 200
     unit_cost: 41.55
+  - symbol: "HPQ"
+    quantity: 500
+    unit_cost: 18.36
 # colors:
 #   text: "#005fff"
 #   text-light: "#0087ff"
