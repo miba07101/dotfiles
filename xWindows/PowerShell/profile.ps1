@@ -208,24 +208,40 @@ function base {
   . "C:\Users\$env:USERNAME\.py-venv\base-venv\Scripts\Activate.ps1"
 }
 
+# spustenie demo ppc app
 function ppc {
     cd C:\Users\$env:USERNAME\git-repos\ppc-pyapp
   . "C:\Users\$env:USERNAME\git-repos\ppc-pyapp\.venv\Scripts\Activate.ps1"
 }
 
+# spustenie isitobo app
 function io {
     cd C:\Users\$env:USERNAME\git-repos\isitobo
   . "C:\Users\$env:USERNAME\git-repos\isitobo\.venv\Scripts\Activate.ps1"
 }
 
+# spustenie epipingdesign app
 function epd {
     cd C:\Users\$env:USERNAME\git-repos\epd
   . "C:\Users\$env:USERNAME\git-repos\epd\.venv\Scripts\Activate.ps1"
 }
 
+# spustenie Nicegui app
 function ng {
     cd C:\Users\$env:USERNAME\git-repos\io-nicegui
   . "C:\Users\$env:USERNAME\git-repos\io-nicegui\.venv\Scripts\Activate.ps1"
+}
+
+# spustenie Redis, PostgreSql, Nicegui app v samostatnych Wezterm Taboch
+function sng {
+    $projectDir = "C:\Users\vimi\git-repos\io-nicegui"
+    # 1. Otvoríme NOVÝ TAB pre PostgreSQL
+    # wezterm cli spawn --cwd "$projectDir" -- powershell -NoExit -Command "Tvoj PG príkaz"
+    # 2. Otvoríme NOVÝ TAB pre NiceGUI App
+    wezterm cli spawn --cwd "$projectDir" -- powershell -NoExit -Command "echo 'Starting NiceGui'; uv run main.py"
+    # 3. Spustíme Redis priamo TU (toto zablokuje tento tab a uvidíš tu logy redisu)
+    Set-Location "$projectDir"
+    redis-server
 }
 
 # lazygit
