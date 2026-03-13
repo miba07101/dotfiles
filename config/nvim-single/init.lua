@@ -1117,7 +1117,7 @@ require("lazy").setup({
             },
           },
           format_on_save = function(bufnr)
-            local disable_filetypes = { html = true, lua = true, json = true }
+            local disable_filetypes = { html = true, lua = true, json = true, markdown = true }
             if disable_filetypes[vim.bo[bufnr].filetype] then
               return nil -- Disable format on save
             end
@@ -1880,6 +1880,9 @@ require("lazy").setup({
         require("mini.trailspace").setup() -- {{{
         vim.api.nvim_create_autocmd("BufWritePre", {
           callback = function()
+            if vim.bo.filetype == "markdown" then
+              return
+            end
             MiniTrailspace.trim()
             MiniTrailspace.trim_last_lines()
           end,
