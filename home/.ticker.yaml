@@ -66,6 +66,9 @@ lots:
   - symbol: "HPQ"
     quantity: 500
     unit_cost: 18.36
+  - symbol: "KHC"
+    quantity: 500
+    unit_cost: 22.53
 # colors:
 #   text: "#005fff"
 #   text-light: "#0087ff"
