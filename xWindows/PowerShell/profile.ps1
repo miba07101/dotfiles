@@ -154,6 +154,24 @@ param(
     QpdfExtractPages $InputPdf $PageRange
 }
 
+# pandoc konverzia docx na md
+function doc-to-md {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$InputFile,
+
+        [Parameter(Mandatory=$false)]
+        [string]$OutputFile
+    )
+
+    if (-not $OutputFile) {
+        $OutputFile = [System.IO.Path]::ChangeExtension($InputFile, ".md")
+    }
+
+    pandoc -s $InputFile -t gfm -o $OutputFile
+    Write-Host "Converted: $InputFile -> $OutputFile"
+}
+
 # pydel - Delete Python cache priecinky
 function pydel {
     param(
@@ -298,6 +316,11 @@ function sqlitebrowser {
     Start-Process `
         "$env:USERPROFILE\scoop\apps\sqlitebrowser\current\DB Browser for SQLite.exe" `
         -WorkingDirectory $path
+}
+
+# open profile.ps1 in neovim
+function vp {
+    nvim "$env:USERPROFILE\Documents\PowerShell\profile.ps1"
 }
 
 # recording stream video
